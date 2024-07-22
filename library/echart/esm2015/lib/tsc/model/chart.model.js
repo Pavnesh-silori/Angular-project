@@ -1,0 +1,7 @@
+export class ChartTitle {
+    constructor() {
+        this.name = '';
+        this.color = 'black';
+    }
+}
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiY2hhcnQubW9kZWwuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi8uLi8uLi8uLi8uLi9wcm9qZWN0cy9saWJyYXJ5L2VjaGFydC9zcmMvbGliL3RzYy9tb2RlbC9jaGFydC5tb2RlbC50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFLQSxNQUFNLE9BQU8sVUFBVTtJQUF2QjtRQUNJLFNBQUksR0FBRyxFQUFFLENBQUM7UUFDVixVQUFLLEdBQUcsT0FBTyxDQUFDO0lBQ3BCLENBQUM7Q0FBQSIsInNvdXJjZXNDb250ZW50IjpbImV4cG9ydCBpbnRlcmZhY2UgQ2hhcnRUaXRsZU0ge1xuICAgIG5hbWU6IHN0cmluZztcbiAgICBjb2xvcjogc3RyaW5nO1xufVxuXG5leHBvcnQgY2xhc3MgQ2hhcnRUaXRsZSBpbXBsZW1lbnRzIENoYXJ0VGl0bGVNIHtcbiAgICBuYW1lID0gJyc7XG4gICAgY29sb3IgPSAnYmxhY2snO1xufSJdfQ==

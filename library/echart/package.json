@@ -1,0 +1,18 @@
+{
+  "name": "@library/echart",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^12.2.0",
+    "@angular/core": "^12.2.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "main": "bundles/library-echart.umd.js",
+  "module": "fesm2015/library-echart.js",
+  "es2015": "fesm2015/library-echart.js",
+  "esm2015": "esm2015/library-echart.js",
+  "fesm2015": "fesm2015/library-echart.js",
+  "typings": "library-echart.d.ts",
+  "sideEffects": false
+}

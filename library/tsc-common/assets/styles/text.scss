@@ -1,0 +1,48 @@
+// text color
+
+.textActiveStatus {
+    color: rgb(79, 200, 79);
+}
+
+.textInvitedStatus {
+    color: rgb(255, 156, 5);
+}
+
+.textInActiveStatus {
+    color: rgb(255, 31, 31);
+}
+
+.textRequestedStatus {
+    color: #fd7e14;
+}
+
+.textDoneStatus {
+    color: rgb(79, 200, 79);
+}
+
+.textPendingStatus {
+    color: rgb(255, 156, 5);
+}
+
+.textCancelledStatus {
+    color: rgb(101, 115, 126);
+}
+
+.textDeclinedStatus {
+    color: rgb(255, 31, 31);
+}
+
+.textMatError {
+    color: #F44336;
+    font-size: 12px;
+}
+
+.textDurationWithAgoTime {
+    font-size: 0.77rem;
+    color: #1d712b;
+}
+
+.inputHeaderTextMatLabel {
+    color: gray;
+    font-size: 12px;
+}

@@ -1,0 +1,7 @@
+export var DialogOneEnum;
+(function (DialogOneEnum) {
+    DialogOneEnum["DELETE"] = "delete";
+    DialogOneEnum["INFO"] = "info";
+    DialogOneEnum["CONFIRMATION"] = "confirmation";
+})(DialogOneEnum || (DialogOneEnum = {}));
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiZGlhbG9nLW9uZS5lbnVtLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiLi4vLi4vLi4vLi4vLi4vLi4vcHJvamVjdHMvbGlicmFyeS90c2MtY29tbW9uL3NyYy9saWIvdHNjL2VudW0vZGlhbG9nLW9uZS5lbnVtLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBLE1BQU0sQ0FBTixJQUFZLGFBSVg7QUFKRCxXQUFZLGFBQWE7SUFDckIsa0NBQWlCLENBQUE7SUFDakIsOEJBQWEsQ0FBQTtJQUNiLDhDQUE2QixDQUFBO0FBQ2pDLENBQUMsRUFKVyxhQUFhLEtBQWIsYUFBYSxRQUl4QiIsInNvdXJjZXNDb250ZW50IjpbImV4cG9ydCBlbnVtIERpYWxvZ09uZUVudW17XG4gICAgREVMRVRFID0gJ2RlbGV0ZScsXG4gICAgSU5GTyA9ICdpbmZvJyxcbiAgICBDT05GSVJNQVRJT04gPSAnY29uZmlybWF0aW9uJ1xufSJdfQ==

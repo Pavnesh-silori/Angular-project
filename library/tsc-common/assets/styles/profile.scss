@@ -1,0 +1,42 @@
+.profileImageDropdownView {
+    height: 30px;
+    width: 30px;
+}
+
+.profileImageBodyView {
+    height: 24px;
+    width: 24px;
+}
+
+.profileImgContainer {
+    width: 90px;
+    min-height: 95px;
+    max-height: auto;
+    float: left;
+    margin: 3px;
+    padding: 3px;
+}
+
+// Multiple profile images
+.multipleProfileImg {
+	position: relative;
+	border-color: rgb(102, 101, 101) !important;
+	width: 25px;
+	margin-left: -10px;
+	transition: transform .25s;
+
+	&:hover {
+		z-index: 100 !important;
+		transform: scale(1.2);
+	}
+}
+
+.countCircleBtn {
+	background-color: lightgray;
+	height: 29px;
+	width: 29px;
+	font-size: 9px;
+	font-weight: bold;
+    padding: 7px 2px;
+}
+// /Multiple profile images/

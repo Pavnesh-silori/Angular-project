@@ -1,0 +1,6 @@
+export var VehicleTypeEnum;
+(function (VehicleTypeEnum) {
+    VehicleTypeEnum["ON_ROAD"] = "on-road";
+    VehicleTypeEnum["NON_ROAD"] = "non-road";
+})(VehicleTypeEnum || (VehicleTypeEnum = {}));
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoidmVjaGlsZS10eXBlLmVudW0uanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi8uLi8uLi8uLi8uLi9wcm9qZWN0cy9saWJyYXJ5L25ldHplcm8vc3JjL2xpYi90c2MvZW51bS92ZWNoaWxlLXR5cGUuZW51bS50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSxNQUFNLENBQU4sSUFBWSxlQUdYO0FBSEQsV0FBWSxlQUFlO0lBQ3ZCLHNDQUFtQixDQUFBO0lBQ25CLHdDQUFxQixDQUFBO0FBQ3pCLENBQUMsRUFIVyxlQUFlLEtBQWYsZUFBZSxRQUcxQiIsInNvdXJjZXNDb250ZW50IjpbImV4cG9ydCBlbnVtIFZlaGljbGVUeXBlRW51bSB7XG4gICAgT05fUk9BRCA9ICdvbi1yb2FkJyxcbiAgICBOT05fUk9BRCA9ICdub24tcm9hZCdcbn1cbiJdfQ==

@@ -1,0 +1,37 @@
+import { EventEmitter, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { MatDatepicker } from '@angular/material/datepicker';
+import { DaterangepickerDirective } from 'ngx-daterangepicker-material';
+import { Moment } from 'moment';
+import { FrequencyEnum } from '../../enum/frequency.enum';
+import { StorageService } from '@library/storage-service';
+import * as i0 from "@angular/core";
+export declare class DateFilterComponent implements OnInit {
+    private storageService;
+    frequency: any[];
+    defaultFlag: string;
+    emitFilter: EventEmitter<any>;
+    FrequencyEnum: FrequencyEnum;
+    rootOrgID: any;
+    currentOrgType: any;
+    today: Date;
+    durationField: any;
+    durationValueFC: FormControl;
+    daterange: FormControl;
+    startDate: FormControl;
+    endDate: FormControl;
+    frequencyKeyIDFC: FormControl;
+    pickerDirective: DaterangepickerDirective;
+    constructor(storageService: StorageService);
+    ngOnInit(): void;
+    frequencyChange(): void;
+    openDatepicker(): void;
+    openDatepickerOnClick(datepicker: MatDatepicker<Moment>): void;
+    takeFocusAway(durationField: any): void;
+    dateSelectedHandler(chosenDate: Moment): void;
+    monthSelectedHandler(normalizedMonthAndYear: Moment, datepicker: MatDatepicker<Moment>): void;
+    yearSelectedHandler(normalizedYear: Moment, datepicker: MatDatepicker<Moment>): void;
+    customDateRange(selectedValue: any): void;
+    static ɵfac: i0.ɵɵFactoryDeclaration<DateFilterComponent, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<DateFilterComponent, "lib-date-filter", never, { "frequency": "frequency"; "defaultFlag": "defaultFlag"; }, { "emitFilter": "emitFilter"; }, never, never>;
+}

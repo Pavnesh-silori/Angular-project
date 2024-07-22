@@ -1,0 +1,44 @@
+import { EventEmitter, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { EntityType } from '../../../model/entity.model';
+import { EntityService } from '../../../service/entity.service';
+import { StorageService } from '@library/storage-service';
+import { FormErrorEnum, MatSelectSearchService, MaterialFormFieldAppearance } from '@library/tsc-common';
+import * as i0 from "@angular/core";
+export declare class EntityTypeComponent implements OnInit {
+    private storageService;
+    private entityService;
+    materialFormFieldAppearance: typeof MaterialFormFieldAppearance;
+    commonConstant: {
+        PRIVACY: string;
+        TERMS: string;
+        PRICING: string;
+        SUPPORT_EMAIL: string;
+        HYPHEN: string;
+        NO_DATA_FOUND: string;
+        NO_DATA: string;
+        EMAIL_PATTERN: string;
+        ZIPCODE_PATTERN: string;
+        GST_NUMBER_PATTERN: string;
+        SPECIAL_CHARACTERS_PATTERN: string;
+        ALLOWED_IMAGE_TYPES: string[];
+        DECIMAL_PATTERN: string;
+        MAX_IMAGE_SIZE: number;
+        ASIAN_KOLKATA: string;
+        VIEW_API_KEY_ID: string;
+        NO_MATCH_FOUND: string;
+    };
+    FormErrorEnum: typeof FormErrorEnum;
+    orgID: any;
+    layoutID: any;
+    entityTypeM: EntityType[];
+    entityTypeFC: FormControl;
+    entityTypeSearchUtil: MatSelectSearchService;
+    emitFilter: EventEmitter<any>;
+    constructor(storageService: StorageService, entityService: EntityService);
+    ngOnInit(): void;
+    getEntityTypeByLayoutID(): Promise<void>;
+    onChange(selectedType: any): void;
+    static ɵfac: i0.ɵɵFactoryDeclaration<EntityTypeComponent, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<EntityTypeComponent, "lib-entity-type", never, {}, { "emitFilter": "emitFilter"; }, never, never>;
+}

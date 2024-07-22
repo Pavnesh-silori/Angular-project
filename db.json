@@ -1,0 +1,3719 @@
+{
+    "failedRunDetails": {
+        "totalCount": 3,
+        "records": [
+            {
+                "errorNumber": 5,
+                "recordID": 123,
+                "activityName": "CHP Attribution",
+                "errorName": "No custom emission factor",
+                "correctiveAction": "Some link"
+            },
+            {
+                "errorNumber": 4,
+                "recordID": 258,
+                "activityName": "Electricity Consumption",
+                "errorName": "No standard emission factor",
+                "correctiveAction": "Some link"
+            },
+            {
+                "errorNumber": 3,
+                "recordID": 698,
+                "activityName": "Heat Consumption",
+                "errorName": "No custom receive factor",
+                "correctiveAction": "Some link"
+            }
+        ]
+    },
+    "cbamReportPage": {
+        "totalCount": 3,
+        "records": [
+            {
+                "cnCode": 5,
+                "productName": "some product 1",
+                "reportingPeriod": "23-jan-2024 to 22-nov-2024",
+                "quantityProduct": "55 t",
+                "emissions": 256
+            },
+            {
+                "cnCode": 4,
+                "productName": "some product 2",
+                "reportingPeriod": "13-feb-2024 to 12-oct-2024",
+                "quantityProduct": "55 t",
+                "emissions": 582
+            },
+            {
+                "cnCode": 3,
+                "productName": "some product 3",
+                "reportingPeriod": "5-mar-2024 to 6-dec-2024",
+                "quantityProduct": "55 t",
+                "emissions": 978
+            }
+        ]
+    },
+    "posts": [
+        {
+            "id": 1,
+            "title": "json-server",
+            "author": "typicode"
+        }
+    ],
+    "comments": [
+        {
+            "id": 1,
+            "body": "some comment",
+            "postId": 1
+        }
+    ],
+    "getTrackRecords": [
+        {
+            "id": 429,
+            "name": "Test m-26 01",
+            "input": [],
+            "output": []
+        },
+        {
+            "id": 446,
+            "name": "test m-27 05",
+            "input": [],
+            "output": [
+                {
+                    "id": 1,
+                    "name": "Electricity",
+                    "keyID": "electricity",
+                    "source": [
+                        {
+                            "id": 5,
+                            "name": "Generated within this process using fuel and exported from the production process",
+                            "keyID": "electricity-generated-within-process-using-fuel-and-exported",
+                            "processInputOutputID": 26,
+                            "activity": [
+                                {
+                                    "id": 26,
+                                    "name": "Process electricity export",
+                                    "keyID": "process-electricity-export",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to electricity exported out of this process",
+                                    "mappedFormCount": 0
+                                }
+                            ],
+                            "allocations": []
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 448,
+            "name": "Test m-27 06",
+            "input": [
+                {
+                    "id": 1,
+                    "name": "Electricity",
+                    "keyID": "electricity",
+                    "source": [
+                        {
+                            "id": 1,
+                            "name": "CHP",
+                            "keyID": "chp",
+                            "processInputOutputID": 55,
+                            "activity": [
+                                {
+                                    "id": 4,
+                                    "name": "Stationary Combustion",
+                                    "keyID": "stationary-combustion",
+                                    "type": [
+                                        {
+                                            "id": 1,
+                                            "name": "GHG form",
+                                            "keyID": "ghg-form",
+                                            "description": null,
+                                            "isStandard": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to fuels combusted in the CHP equipment",
+                                    "mappedFormCount": 0
+                                },
+                                {
+                                    "id": 19,
+                                    "name": "Process Emissions",
+                                    "keyID": "process-emission",
+                                    "type": [
+                                        {
+                                            "id": 1,
+                                            "name": "GHG form",
+                                            "keyID": "ghg-form",
+                                            "description": null,
+                                            "isStandard": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to gases released from flue gas cleaning",
+                                    "mappedFormCount": 0
+                                },
+                                {
+                                    "id": 20,
+                                    "name": "CHP attribution",
+                                    "keyID": "chp-attribution",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to heat and electricity produced from the CHP",
+                                    "mappedFormCount": 0
+                                },
+                                {
+                                    "id": 21,
+                                    "name": "Process electricity consumption",
+                                    "keyID": "process-electricity-consumption",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null
+                                        }
+                                    ],
+                                    "isVisible": false,
+                                    "description": "Requires information related to electricity consumed in this process ",
+                                    "mappedFormCount": 0
+                                }
+                            ],
+                            "allocations": [
+                                {
+                                    "id": 1,
+                                    "name": "Process sub-metering",
+                                    "description": "Select if you track CHP generated electricity consumed by this process using a sub-meter",
+                                    "rootID": 1,
+                                    "subtype": [
+                                        {
+                                            "id": 2,
+                                            "name": "Single source sub-meter- This sub-meter only tracks electricity coming from CHP",
+                                            "description": null,
+                                            "rootID": 1,
+                                            "subtype": []
+                                        },
+                                        {
+                                            "id": 3,
+                                            "name": "Common sub-meter- This sub-meter tracks electricity coming from multiple sources (Requires allocation)",
+                                            "description": null,
+                                            "rootID": 1,
+                                            "subtype": []
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": 4,
+                                    "name": "Allocation method",
+                                    "description": "Select if you track total electricity generated by the CHP at the facility level and want to allocate it to this process on a percentage basis",
+                                    "rootID": 4,
+                                    "subtype": []
+                                }
+                            ]
+                        },
+                        {
+                            "id": 3,
+                            "name": "Non CHP",
+                            "keyID": "non-chp",
+                            "processInputOutputID": 54,
+                            "activity": [
+                                {
+                                    "id": 4,
+                                    "name": "Stationary Combustion",
+                                    "keyID": "stationary-combustion",
+                                    "type": [
+                                        {
+                                            "id": 1,
+                                            "name": "GHG form",
+                                            "keyID": "ghg-form",
+                                            "description": null,
+                                            "isStandard": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to fuels combusted in any combustion equipment",
+                                    "mappedFormCount": 0
+                                },
+                                {
+                                    "id": 19,
+                                    "name": "Process Emissions",
+                                    "keyID": "process-emission",
+                                    "type": [
+                                        {
+                                            "id": 1,
+                                            "name": "GHG form",
+                                            "keyID": "ghg-form",
+                                            "description": null,
+                                            "isStandard": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to gases released from flue gas cleaning",
+                                    "mappedFormCount": 0
+                                },
+                                {
+                                    "id": 21,
+                                    "name": "Process electricity consumption",
+                                    "keyID": "process-electricity-consumption",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null
+                                        }
+                                    ],
+                                    "isVisible": false,
+                                    "description": "Requires information related to electricity consumed in this process",
+                                    "mappedFormCount": 0
+                                }
+                            ],
+                            "allocations": [
+                                {
+                                    "id": 5,
+                                    "name": "Process sub-metering",
+                                    "description": "Select if you track non-CHP generated electricity consumed by this process using a sub-meter",
+                                    "rootID": 5,
+                                    "subtype": [
+                                        {
+                                            "id": 6,
+                                            "name": "Single source sub-meter- This sub-meter only tracks electricity coming from non-CHP",
+                                            "description": null,
+                                            "rootID": 5,
+                                            "subtype": []
+                                        },
+                                        {
+                                            "id": 7,
+                                            "name": "Common sub-meter- This sub-meter tracks electricity coming from multiple sources (Requires allocation)",
+                                            "description": null,
+                                            "rootID": 5,
+                                            "subtype": []
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": 8,
+                                    "name": "Allocation method",
+                                    "description": "Select if you track total electricity generated by the stationary combustion asset at the facility level and want to allocate it to this process on a percentage basis",
+                                    "rootID": 8,
+                                    "subtype": []
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "name": "Heat",
+                    "keyID": "heat",
+                    "source": [
+                        {
+                            "id": 1,
+                            "name": "CHP",
+                            "keyID": "chp",
+                            "processInputOutputID": 56,
+                            "activity": [
+                                {
+                                    "id": 4,
+                                    "name": "Stationary Combustion",
+                                    "keyID": "stationary-combustion",
+                                    "type": [
+                                        {
+                                            "id": 1,
+                                            "name": "GHG form",
+                                            "keyID": "ghg-form",
+                                            "description": null,
+                                            "isStandard": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to fuels combusted in the CHP equipment",
+                                    "mappedFormCount": 0
+                                },
+                                {
+                                    "id": 19,
+                                    "name": "Process Emissions",
+                                    "keyID": "process-emission",
+                                    "type": [
+                                        {
+                                            "id": 1,
+                                            "name": "GHG form",
+                                            "keyID": "ghg-form",
+                                            "description": null,
+                                            "isStandard": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to gases released from flue gas cleaning",
+                                    "mappedFormCount": 0
+                                },
+                                {
+                                    "id": 20,
+                                    "name": "CHP attribution",
+                                    "keyID": "chp-attribution",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to heat and electricity produced from the CHP",
+                                    "mappedFormCount": 0
+                                },
+                                {
+                                    "id": 22,
+                                    "name": "Process heat consumption",
+                                    "keyID": "process-heat-consumption",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null
+                                        }
+                                    ],
+                                    "isVisible": false,
+                                    "description": "Requires information related to heat consumed in this process",
+                                    "mappedFormCount": 0
+                                }
+                            ],
+                            "allocations": [
+                                {
+                                    "id": 17,
+                                    "name": "Process sub-metering",
+                                    "description": "Select if you track CHP generated heat consumed by this process using a sub-meter",
+                                    "rootID": 17,
+                                    "subtype": [
+                                        {
+                                            "id": 18,
+                                            "name": "Single source sub-meter- This sub-meter only tracks heat coming from CHP",
+                                            "description": null,
+                                            "rootID": 17,
+                                            "subtype": []
+                                        },
+                                        {
+                                            "id": 19,
+                                            "name": "Common sub-meter- This sub-meter tracks heat coming from multiple sources (Requires allocation)",
+                                            "description": null,
+                                            "rootID": 17,
+                                            "subtype": []
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": 20,
+                                    "name": "Allocation method",
+                                    "description": "Select if you track total heat generated by the CHP at the facility level and want to allocate it to this process on a percentage basis",
+                                    "rootID": 20,
+                                    "subtype": []
+                                }
+                            ]
+                        },
+                        {
+                            "id": 2,
+                            "name": "Grid",
+                            "keyID": "grid",
+                            "processInputOutputID": 545,
+                            "activity": [
+                                {
+                                    "id": 2,
+                                    "name": "Purchased Heat/Steam",
+                                    "keyID": "purchased-heat-steam",
+                                    "type": [
+                                        {
+                                            "id": 1,
+                                            "name": "GHG form",
+                                            "keyID": "ghg-form",
+                                            "description": null,
+                                            "isStandard": null
+                                        }
+                                    ],
+                                    "isVisible": false,
+                                    "description": "Requires information related to heat purchased from the grid",
+                                    "mappedFormCount": 0
+                                },
+                                {
+                                    "id": 22,
+                                    "name": "Process heat consumption",
+                                    "keyID": "process-heat-consumption",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null
+                                        }
+                                    ],
+                                    "isVisible": false,
+                                    "description": "Requires information related to heat consumed in this process",
+                                    "mappedFormCount": 0
+                                }
+                            ],
+                            "allocations": [
+                                {
+                                    "id": 25,
+                                    "name": "Process sub-metering",
+                                    "description": "Select if you track grid heat consumed by this process using a sub-meter",
+                                    "rootID": 25,
+                                    "subtype": [
+                                        {
+                                            "id": 26,
+                                            "name": "Single source sub-meter- This sub-meter only tracks heat coming from grid",
+                                            "description": null,
+                                            "rootID": 25,
+                                            "subtype": []
+                                        },
+                                        {
+                                            "id": 27,
+                                            "name": "Common sub-meter- This sub-meter tracks heat coming from multiple sources (Requires allocation)",
+                                            "description": null,
+                                            "rootID": 25,
+                                            "subtype": []
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": 28,
+                                    "name": "Allocation method",
+                                    "description": "Select if you track total heat received from the grid at the facility level and want to allocate it to this process on a percentage basis",
+                                    "rootID": 28,
+                                    "subtype": []
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "name": "Fuel",
+                    "keyID": "fuel",
+                    "source": [
+                        {
+                            "id": null,
+                            "name": null,
+                            "keyID": null,
+                            "processInputOutputID": 58,
+                            "activity": [
+                                {
+                                    "id": 4,
+                                    "name": "Stationary Combustion",
+                                    "keyID": "stationary-combustion",
+                                    "type": [
+                                        {
+                                            "id": 1,
+                                            "name": "GHG form",
+                                            "keyID": "ghg-form",
+                                            "description": null,
+                                            "isStandard": null
+                                        }
+                                    ],
+                                    "isVisible": false,
+                                    "description": "Requires information related to fuels combusted in any combustion equipment",
+                                    "mappedFormCount": 0
+                                },
+                                {
+                                    "id": 23,
+                                    "name": "Process fuel consumption",
+                                    "keyID": "process-fuel-consumption",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null
+                                        }
+                                    ],
+                                    "isVisible": false,
+                                    "description": "Requires information related to fuel consumed in this process",
+                                    "mappedFormCount": 0
+                                }
+                            ],
+                            "allocations": [
+                                {
+                                    "id": 33,
+                                    "name": "Process sub-metering",
+                                    "description": "Select if you track fuel consumed by this process using a sub-meter",
+                                    "rootID": 33,
+                                    "subtype": []
+                                },
+                                {
+                                    "id": 34,
+                                    "name": "Allocation method",
+                                    "description": "Select if you track total fuel consumed by the combustion equipment at the facility level and want to allocate it to this process on a percentage basis",
+                                    "rootID": 34,
+                                    "subtype": []
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": 4,
+                    "name": "Raw material",
+                    "keyID": "raw-material",
+                    "source": [
+                        {
+                            "id": null,
+                            "name": null,
+                            "keyID": null,
+                            "processInputOutputID": 61,
+                            "activity": [],
+                            "allocations": []
+                        }
+                    ]
+                },
+                {
+                    "id": 10,
+                    "name": "Intermediate product",
+                    "keyID": "intermediate-product",
+                    "source": [
+                        {
+                            "id": null,
+                            "name": null,
+                            "keyID": null,
+                            "processInputOutputID": 63,
+                            "activity": [],
+                            "allocations": []
+                        }
+                    ]
+                }
+            ],
+            "output": [
+                {
+                    "id": 11,
+                    "name": "Precursor product",
+                    "keyID": "precursor-product",
+                    "source": [
+                        {
+                            "id": 17,
+                            "name": "Exported from this process",
+                            "keyID": "exported-from-this-process",
+                            "processInputOutputID": 34,
+                            "activity": [
+                                {
+                                    "id": 28,
+                                    "name": "Process precursor export",
+                                    "keyID": "process-precursor-export",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to precursor exported out of this process",
+                                    "mappedFormCount": 0
+                                }
+                            ],
+                            "allocations": []
+                        },
+                        {
+                            "id": 18,
+                            "name": "Consumed in this production route",
+                            "keyID": "consumed-in-this-production-route",
+                            "processInputOutputID": 38,
+                            "activity": [],
+                            "allocations": []
+                        }
+                    ]
+                },
+                {
+                    "id": 9,
+                    "name": "Process Emissions",
+                    "keyID": "process-emissions",
+                    "source": [
+                        {
+                            "id": null,
+                            "name": null,
+                            "keyID": null,
+                            "processInputOutputID": 36,
+                            "activity": [
+                                {
+                                    "id": 19,
+                                    "name": "Process Emissions",
+                                    "keyID": "process-emission",
+                                    "type": [
+                                        {
+                                            "id": 1,
+                                            "name": "GHG form",
+                                            "keyID": "ghg-form",
+                                            "description": null,
+                                            "isStandard": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to gases released during this process",
+                                    "mappedFormCount": 0
+                                }
+                            ],
+                            "allocations": []
+                        }
+                    ]
+                },
+                {
+                    "id": 1,
+                    "name": "Electricity",
+                    "keyID": "electricity",
+                    "source": [
+                        {
+                            "id": 5,
+                            "name": "Generated within this process using fuel and exported from the production process",
+                            "keyID": "electricity-generated-within-process-using-fuel-and-exported",
+                            "processInputOutputID": 308,
+                            "activity": [
+                                {
+                                    "id": 26,
+                                    "name": "Process electricity export",
+                                    "keyID": "process-electricity-export",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to electricity exported out of this process",
+                                    "mappedFormCount": 0
+                                }
+                            ],
+                            "allocations": []
+                        }
+                    ]
+                },
+                {
+                    "id": 7,
+                    "name": "Co-product",
+                    "keyID": "co-product",
+                    "source": [
+                        {
+                            "id": null,
+                            "name": null,
+                            "keyID": null,
+                            "processInputOutputID": 39,
+                            "activity": [
+                                {
+                                    "id": 31,
+                                    "name": "Process production level",
+                                    "keyID": "process-production-level",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to quantity of co-products produced from this process",
+                                    "mappedFormCount": 0
+                                }
+                            ],
+                            "allocations": []
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "getAllocationData": [
+        {
+            "id": 493,
+            "name": "CBAM P1",
+            "input": [
+                {
+                    "id": 1,
+                    "name": "Electricity",
+                    "keyID": "electricity",
+                    "source": [
+                        {
+                            "id": 1,
+                            "name": "CHP",
+                            "keyID": "chp",
+                            "processInputOutputID": 233,
+                            "allocationMethodStdID": [
+                                4
+                            ],
+                            "activity": [
+                                {
+                                    "id": 4,
+                                    "name": "Stationary Combustion",
+                                    "keyID": "stationary-combustion",
+                                    "type": [
+                                        {
+                                            "id": 1,
+                                            "name": "GHG form",
+                                            "keyID": "ghg-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to fuels combusted in the CHP equipment",
+                                    "mappedFormCount": 1,
+                                    "mappedActivityFormID": [
+                                        145
+                                    ],
+                                    "config": null
+                                },
+                                {
+                                    "id": 19,
+                                    "name": "Process Emissions",
+                                    "keyID": "process-emission",
+                                    "type": [
+                                        {
+                                            "id": 1,
+                                            "name": "GHG form",
+                                            "keyID": "ghg-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to gases released from flue gas cleaning",
+                                    "mappedFormCount": 2,
+                                    "mappedActivityFormID": [
+                                        24,
+                                        103
+                                    ],
+                                    "config": null
+                                },
+                                {
+                                    "id": 20,
+                                    "name": "CHP attribution",
+                                    "keyID": "chp-attribution",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to heat and electricity produced from the CHP",
+                                    "mappedFormCount": 1,
+                                    "mappedActivityFormID": [
+                                        144
+                                    ],
+                                    "config": null
+                                },
+                                {
+                                    "id": 21,
+                                    "name": "Process electricity consumption",
+                                    "keyID": "process-electricity-consumption",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": false,
+                                    "description": "Requires information related to electricity consumed in this process ",
+                                    "mappedFormCount": 0,
+                                    "mappedActivityFormID": [],
+                                    "config": null
+                                }
+                            ],
+                            "allocations": [
+                                {
+                                    "id": 1,
+                                    "name": "Process sub-metering",
+                                    "description": "Select if you track CHP generated electricity consumed by this process using a sub-meter",
+                                    "rootID": 1,
+                                    "isAllocationRequired": true,
+                                    "subtype": [
+                                        {
+                                            "id": 2,
+                                            "name": "Single source sub-meter- This sub-meter only tracks electricity coming from CHP",
+                                            "description": null,
+                                            "rootID": 1,
+                                            "isAllocationRequired": false,
+                                            "subtype": []
+                                        },
+                                        {
+                                            "id": 3,
+                                            "name": "Common sub-meter- This sub-meter tracks electricity coming from multiple sources (Requires allocation)",
+                                            "description": null,
+                                            "rootID": 1,
+                                            "isAllocationRequired": true,
+                                            "subtype": []
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": 4,
+                                    "name": "Allocation method",
+                                    "description": "Select if you track total electricity generated by the CHP at the facility level and want to allocate it to this process on a percentage basis",
+                                    "rootID": 4,
+                                    "isAllocationRequired": false,
+                                    "subtype": []
+                                }
+                            ],
+                            "data": [
+                                {
+                                    "entity": {
+                                        "id": 1,
+                                        "name": "Anthracite Coal",
+                                        "keyID": null,
+                                        "description": null,
+                                        "isStandard": null,
+                                        "entityID": null,
+                                        "recordID": null
+                                    },
+                                    "amount": 37087,
+                                    "unit": {
+                                        "unitID": 3,
+                                        "uomName": "Tonne",
+                                        "uomCode": "t",
+                                        "unitTypeName": "Mass",
+                                        "unitType": "MASS",
+                                        "unitSubType": "MASS"
+                                    }
+                                }
+                            ],
+                            "linkedRecords": 0,
+                            "activityCount": 0
+                        },
+                        {
+                            "id": 2,
+                            "name": "Grid",
+                            "keyID": "grid",
+                            "processInputOutputID": 234,
+                            "allocationMethodStdID": [
+                                12
+                            ],
+                            "activity": [
+                                {
+                                    "id": 1,
+                                    "name": "Purchased Electricity",
+                                    "keyID": "purchased-electricity",
+                                    "type": [
+                                        {
+                                            "id": 1,
+                                            "name": "GHG form",
+                                            "keyID": "ghg-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": false,
+                                    "description": "Requires information related to electricity purchased from the grid",
+                                    "mappedFormCount": 1,
+                                    "mappedActivityFormID": [
+                                        187
+                                    ],
+                                    "config": null
+                                },
+                                {
+                                    "id": 21,
+                                    "name": "Process electricity consumption",
+                                    "keyID": "process-electricity-consumption",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": false,
+                                    "description": "Requires information related to electricity consumed in this process",
+                                    "mappedFormCount": 0,
+                                    "mappedActivityFormID": [],
+                                    "config": null
+                                }
+                            ],
+                            "allocations": [
+                                {
+                                    "id": 9,
+                                    "name": "Process sub-metering",
+                                    "description": "Select if you track grid electricity consumed by this process using a sub-meter",
+                                    "rootID": 9,
+                                    "isAllocationRequired": true,
+                                    "subtype": [
+                                        {
+                                            "id": 10,
+                                            "name": "Single source sub-meter- This sub-meter only tracks electricity coming from grid",
+                                            "description": null,
+                                            "rootID": 9,
+                                            "isAllocationRequired": true,
+                                            "subtype": []
+                                        },
+                                        {
+                                            "id": 11,
+                                            "name": "Common sub-meter- This sub-meter tracks electricity coming from multiple sources (Requires allocation)",
+                                            "description": null,
+                                            "rootID": 9,
+                                            "isAllocationRequired": true,
+                                            "subtype": []
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": 12,
+                                    "name": "Allocation method",
+                                    "description": "Select if you track total electricity received from the grid at the facility level and want to allocate it to this process on a percentage basis",
+                                    "rootID": 12,
+                                    "isAllocationRequired": true,
+                                    "subtype": []
+                                }
+                            ],
+                            "data": [],
+                            "linkedRecords": 0,
+                            "activityCount": 0
+                        },
+                        {
+                            "id": 3,
+                            "name": "Non CHP",
+                            "keyID": "non-chp",
+                            "processInputOutputID": 235,
+                            "allocationMethodStdID": [
+                                8
+                            ],
+                            "activity": [
+                                {
+                                    "id": 4,
+                                    "name": "Stationary Combustion",
+                                    "keyID": "stationary-combustion",
+                                    "type": [
+                                        {
+                                            "id": 1,
+                                            "name": "GHG form",
+                                            "keyID": "ghg-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to fuels combusted in any combustion equipment",
+                                    "mappedFormCount": 1,
+                                    "mappedActivityFormID": [
+                                        145
+                                    ],
+                                    "config": null
+                                },
+                                {
+                                    "id": 19,
+                                    "name": "Process Emissions",
+                                    "keyID": "process-emission",
+                                    "type": [
+                                        {
+                                            "id": 1,
+                                            "name": "GHG form",
+                                            "keyID": "ghg-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to gases released from flue gas cleaning",
+                                    "mappedFormCount": 3,
+                                    "mappedActivityFormID": [
+                                        24,
+                                        25,
+                                        103
+                                    ],
+                                    "config": null
+                                },
+                                {
+                                    "id": 21,
+                                    "name": "Process electricity consumption",
+                                    "keyID": "process-electricity-consumption",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": false,
+                                    "description": "Requires information related to electricity consumed in this process",
+                                    "mappedFormCount": 0,
+                                    "mappedActivityFormID": [],
+                                    "config": null
+                                }
+                            ],
+                            "allocations": [
+                                {
+                                    "id": 5,
+                                    "name": "Process sub-metering",
+                                    "description": "Select if you track non-CHP generated electricity consumed by this process using a sub-meter",
+                                    "rootID": 5,
+                                    "isAllocationRequired": true,
+                                    "subtype": [
+                                        {
+                                            "id": 6,
+                                            "name": "Single source sub-meter- This sub-meter only tracks electricity coming from non-CHP",
+                                            "description": null,
+                                            "rootID": 5,
+                                            "isAllocationRequired": false,
+                                            "subtype": []
+                                        },
+                                        {
+                                            "id": 7,
+                                            "name": "Common sub-meter- This sub-meter tracks electricity coming from multiple sources (Requires allocation)",
+                                            "description": null,
+                                            "rootID": 5,
+                                            "isAllocationRequired": true,
+                                            "subtype": []
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": 8,
+                                    "name": "Allocation method",
+                                    "description": "Select if you track total electricity generated by the stationary combustion asset at the facility level and want to allocate it to this process on a percentage basis",
+                                    "rootID": 8,
+                                    "isAllocationRequired": true,
+                                    "subtype": []
+                                }
+                            ],
+                            "data": [
+                                {
+                                    "entity": {
+                                        "id": 1,
+                                        "name": "Anthracite Coal",
+                                        "keyID": null,
+                                        "description": null,
+                                        "isStandard": null,
+                                        "entityID": null,
+                                        "recordID": null
+                                    },
+                                    "amount": 37087,
+                                    "unit": {
+                                        "unitID": 3,
+                                        "uomName": "Tonne",
+                                        "uomCode": "t",
+                                        "unitTypeName": "Mass",
+                                        "unitType": "MASS",
+                                        "unitSubType": "MASS"
+                                    }
+                                }
+                            ],
+                            "linkedRecords": 0,
+                            "activityCount": 0
+                        },
+                        {
+                            "id": 4,
+                            "name": "Private supplier",
+                            "keyID": "private-supplier",
+                            "processInputOutputID": 236,
+                            "allocationMethodStdID": [
+                                16
+                            ],
+                            "activity": [
+                                {
+                                    "id": 1,
+                                    "name": "Purchased Electricity",
+                                    "keyID": "purchased-electricity",
+                                    "type": [
+                                        {
+                                            "id": 1,
+                                            "name": "GHG form",
+                                            "keyID": "ghg-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": false,
+                                    "description": "Requires information related to electricity purchased from the private supplier",
+                                    "mappedFormCount": 1,
+                                    "mappedActivityFormID": [
+                                        187
+                                    ],
+                                    "config": null
+                                },
+                                {
+                                    "id": 21,
+                                    "name": "Process electricity consumption",
+                                    "keyID": "process-electricity-consumption",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": false,
+                                    "description": "Requires information related to electricity consumed in this process",
+                                    "mappedFormCount": 0,
+                                    "mappedActivityFormID": [],
+                                    "config": null
+                                }
+                            ],
+                            "allocations": [
+                                {
+                                    "id": 13,
+                                    "name": "Process sub-metering",
+                                    "description": "Select if you track private supplier electricity consumed by this process using a sub-meter",
+                                    "rootID": 13,
+                                    "isAllocationRequired": true,
+                                    "subtype": [
+                                        {
+                                            "id": 14,
+                                            "name": "Single source sub-meter- This sub-meter only tracks electricity coming from private supplier",
+                                            "description": null,
+                                            "rootID": 13,
+                                            "isAllocationRequired": false,
+                                            "subtype": []
+                                        },
+                                        {
+                                            "id": 15,
+                                            "name": "Common sub-meter- This sub-meter tracks electricity coming from multiple sources (Requires allocation)",
+                                            "description": null,
+                                            "rootID": 13,
+                                            "isAllocationRequired": true,
+                                            "subtype": []
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": 16,
+                                    "name": "Allocation method",
+                                    "description": "Select if you track total electricity received from the private supplier at the facility level and want to allocate it to this process on a percentage basis",
+                                    "rootID": 16,
+                                    "isAllocationRequired": true,
+                                    "subtype": []
+                                }
+                            ],
+                            "data": [],
+                            "linkedRecords": 0,
+                            "activityCount": 0
+                        }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "name": "Heat",
+                    "keyID": "heat",
+                    "source": [
+                        {
+                            "id": 1,
+                            "name": "CHP",
+                            "keyID": "chp",
+                            "processInputOutputID": 237,
+                            "allocationMethodStdID": [
+                                20
+                            ],
+                            "activity": [
+                                {
+                                    "id": 4,
+                                    "name": "Stationary Combustion",
+                                    "keyID": "stationary-combustion",
+                                    "type": [
+                                        {
+                                            "id": 1,
+                                            "name": "GHG form",
+                                            "keyID": "ghg-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to fuels combusted in the CHP equipment",
+                                    "mappedFormCount": 1,
+                                    "mappedActivityFormID": [
+                                        145
+                                    ],
+                                    "config": null
+                                },
+                                {
+                                    "id": 19,
+                                    "name": "Process Emissions",
+                                    "keyID": "process-emission",
+                                    "type": [
+                                        {
+                                            "id": 1,
+                                            "name": "GHG form",
+                                            "keyID": "ghg-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to gases released from flue gas cleaning",
+                                    "mappedFormCount": 2,
+                                    "mappedActivityFormID": [
+                                        24,
+                                        25
+                                    ],
+                                    "config": null
+                                },
+                                {
+                                    "id": 20,
+                                    "name": "CHP attribution",
+                                    "keyID": "chp-attribution",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to heat and electricity produced from the CHP",
+                                    "mappedFormCount": 1,
+                                    "mappedActivityFormID": [
+                                        144
+                                    ],
+                                    "config": null
+                                },
+                                {
+                                    "id": 22,
+                                    "name": "Process heat consumption",
+                                    "keyID": "process-heat-consumption",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": false,
+                                    "description": "Requires information related to heat consumed in this process",
+                                    "mappedFormCount": 0,
+                                    "mappedActivityFormID": [],
+                                    "config": null
+                                }
+                            ],
+                            "allocations": [
+                                {
+                                    "id": 17,
+                                    "name": "Process sub-metering",
+                                    "description": "Select if you track CHP generated heat consumed by this process using a sub-meter",
+                                    "rootID": 17,
+                                    "isAllocationRequired": true,
+                                    "subtype": [
+                                        {
+                                            "id": 18,
+                                            "name": "Single source sub-meter- This sub-meter only tracks heat coming from CHP",
+                                            "description": null,
+                                            "rootID": 17,
+                                            "isAllocationRequired": false,
+                                            "subtype": []
+                                        },
+                                        {
+                                            "id": 19,
+                                            "name": "Common sub-meter- This sub-meter tracks heat coming from multiple sources (Requires allocation)",
+                                            "description": null,
+                                            "rootID": 17,
+                                            "isAllocationRequired": true,
+                                            "subtype": []
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": 20,
+                                    "name": "Allocation method",
+                                    "description": "Select if you track total heat generated by the CHP at the facility level and want to allocate it to this process on a percentage basis",
+                                    "rootID": 20,
+                                    "isAllocationRequired": false,
+                                    "subtype": []
+                                }
+                            ],
+                            "data": [
+                                {
+                                    "entity": {
+                                        "id": 1,
+                                        "name": "Anthracite Coal",
+                                        "keyID": null,
+                                        "description": null,
+                                        "isStandard": null,
+                                        "entityID": null,
+                                        "recordID": null
+                                    },
+                                    "amount": 37087,
+                                    "unit": {
+                                        "unitID": 3,
+                                        "uomName": "Tonne",
+                                        "uomCode": "t",
+                                        "unitTypeName": "Mass",
+                                        "unitType": "MASS",
+                                        "unitSubType": "MASS"
+                                    }
+                                }
+                            ],
+                            "linkedRecords": 0,
+                            "activityCount": 0
+                        },
+                        {
+                            "id": 2,
+                            "name": "Grid",
+                            "keyID": "grid",
+                            "processInputOutputID": 238,
+                            "allocationMethodStdID": [
+                                28
+                            ],
+                            "activity": [
+                                {
+                                    "id": 2,
+                                    "name": "Purchased Heat/Steam",
+                                    "keyID": "purchased-heat-steam",
+                                    "type": [
+                                        {
+                                            "id": 1,
+                                            "name": "GHG form",
+                                            "keyID": "ghg-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": false,
+                                    "description": "Requires information related to heat purchased from the grid",
+                                    "mappedFormCount": 1,
+                                    "mappedActivityFormID": [
+                                        205
+                                    ],
+                                    "config": null
+                                },
+                                {
+                                    "id": 22,
+                                    "name": "Process heat consumption",
+                                    "keyID": "process-heat-consumption",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": false,
+                                    "description": "Requires information related to heat consumed in this process",
+                                    "mappedFormCount": 0,
+                                    "mappedActivityFormID": [],
+                                    "config": null
+                                }
+                            ],
+                            "allocations": [
+                                {
+                                    "id": 25,
+                                    "name": "Process sub-metering",
+                                    "description": "Select if you track grid heat consumed by this process using a sub-meter",
+                                    "rootID": 25,
+                                    "isAllocationRequired": true,
+                                    "subtype": [
+                                        {
+                                            "id": 26,
+                                            "name": "Single source sub-meter- This sub-meter only tracks heat coming from grid",
+                                            "description": null,
+                                            "rootID": 25,
+                                            "isAllocationRequired": true,
+                                            "subtype": []
+                                        },
+                                        {
+                                            "id": 27,
+                                            "name": "Common sub-meter- This sub-meter tracks heat coming from multiple sources (Requires allocation)",
+                                            "description": null,
+                                            "rootID": 25,
+                                            "isAllocationRequired": true,
+                                            "subtype": []
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": 28,
+                                    "name": "Allocation method",
+                                    "description": "Select if you track total heat received from the grid at the facility level and want to allocate it to this process on a percentage basis",
+                                    "rootID": 28,
+                                    "isAllocationRequired": true,
+                                    "subtype": []
+                                }
+                            ],
+                            "data": [],
+                            "linkedRecords": 0,
+                            "activityCount": 0
+                        },
+                        {
+                            "id": 3,
+                            "name": "Non CHP",
+                            "keyID": "non-chp",
+                            "processInputOutputID": 239,
+                            "allocationMethodStdID": [
+                                24
+                            ],
+                            "activity": [
+                                {
+                                    "id": 4,
+                                    "name": "Stationary Combustion",
+                                    "keyID": "stationary-combustion",
+                                    "type": [
+                                        {
+                                            "id": 1,
+                                            "name": "GHG form",
+                                            "keyID": "ghg-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to fuels combusted in any combustion equipment",
+                                    "mappedFormCount": 1,
+                                    "mappedActivityFormID": [
+                                        145
+                                    ],
+                                    "config": null
+                                },
+                                {
+                                    "id": 19,
+                                    "name": "Process Emissions",
+                                    "keyID": "process-emission",
+                                    "type": [
+                                        {
+                                            "id": 1,
+                                            "name": "GHG form",
+                                            "keyID": "ghg-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to gases released from flue gas cleaning",
+                                    "mappedFormCount": 2,
+                                    "mappedActivityFormID": [
+                                        24,
+                                        25
+                                    ],
+                                    "config": null
+                                },
+                                {
+                                    "id": 22,
+                                    "name": "Process heat consumption",
+                                    "keyID": "process-heat-consumption",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": false,
+                                    "description": "Requires information related to heat consumed in this process",
+                                    "mappedFormCount": 0,
+                                    "mappedActivityFormID": [],
+                                    "config": null
+                                }
+                            ],
+                            "allocations": [
+                                {
+                                    "id": 21,
+                                    "name": "Process sub-metering",
+                                    "description": "Select if you track non-CHP generated heat consumed by this process using a sub-meter",
+                                    "rootID": 21,
+                                    "isAllocationRequired": false,
+                                    "subtype": [
+                                        {
+                                            "id": 22,
+                                            "name": "Single source sub-meter- This sub-meter only tracks heat coming from non-CHP",
+                                            "description": null,
+                                            "rootID": 21,
+                                            "isAllocationRequired": false,
+                                            "subtype": []
+                                        },
+                                        {
+                                            "id": 23,
+                                            "name": "Common sub-meter- This sub-meter tracks heat coming from multiple sources (Requires allocation)",
+                                            "description": null,
+                                            "rootID": 21,
+                                            "isAllocationRequired": true,
+                                            "subtype": []
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": 24,
+                                    "name": "Allocation method",
+                                    "description": "Select if you track total heat generated by the stationary combustion asset at the facility level and want to allocate it to this process on a percentage basis",
+                                    "rootID": 24,
+                                    "isAllocationRequired": false,
+                                    "subtype": []
+                                }
+                            ],
+                            "data": [
+                                {
+                                    "entity": {
+                                        "id": 1,
+                                        "name": "Anthracite Coal",
+                                        "keyID": null,
+                                        "description": null,
+                                        "isStandard": null,
+                                        "entityID": null,
+                                        "recordID": null
+                                    },
+                                    "amount": 37087,
+                                    "unit": {
+                                        "unitID": 3,
+                                        "uomName": "Tonne",
+                                        "uomCode": "t",
+                                        "unitTypeName": "Mass",
+                                        "unitType": "MASS",
+                                        "unitSubType": "MASS"
+                                    }
+                                }
+                            ],
+                            "linkedRecords": 0,
+                            "activityCount": 0
+                        },
+                        {
+                            "id": 4,
+                            "name": "Private supplier",
+                            "keyID": "private-supplier",
+                            "processInputOutputID": 240,
+                            "allocationMethodStdID": [
+                                32
+                            ],
+                            "activity": [
+                                {
+                                    "id": 2,
+                                    "name": "Purchased Heat/Steam",
+                                    "keyID": "purchased-heat-steam",
+                                    "type": [
+                                        {
+                                            "id": 1,
+                                            "name": "GHG form",
+                                            "keyID": "ghg-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": false,
+                                    "description": "Requires information related to heat purchased from the private supplier",
+                                    "mappedFormCount": 1,
+                                    "mappedActivityFormID": [
+                                        205
+                                    ],
+                                    "config": null
+                                },
+                                {
+                                    "id": 22,
+                                    "name": "Process heat consumption",
+                                    "keyID": "process-heat-consumption",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": false,
+                                    "description": "Requires information related to heat consumed in this process",
+                                    "mappedFormCount": 0,
+                                    "mappedActivityFormID": [],
+                                    "config": null
+                                }
+                            ],
+                            "allocations": [
+                                {
+                                    "id": 29,
+                                    "name": "Process sub-metering",
+                                    "description": "Select if you track private supplier heat consumed by this process using a sub-meter",
+                                    "rootID": 29,
+                                    "isAllocationRequired": true,
+                                    "subtype": [
+                                        {
+                                            "id": 30,
+                                            "name": "Single source sub-meter- This sub-meter only tracks heat coming from private supplier",
+                                            "description": null,
+                                            "rootID": 29,
+                                            "isAllocationRequired": true,
+                                            "subtype": []
+                                        },
+                                        {
+                                            "id": 31,
+                                            "name": "Common sub-meter- This sub-meter tracks heat coming from multiple sources (Requires allocation)",
+                                            "description": null,
+                                            "rootID": 29,
+                                            "isAllocationRequired": true,
+                                            "subtype": []
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": 32,
+                                    "name": "Allocation method",
+                                    "description": "Select if you track total heat received from the private supplier at the facility level and want to allocate it to this process on a percentage basis",
+                                    "rootID": 32,
+                                    "isAllocationRequired": true,
+                                    "subtype": []
+                                }
+                            ],
+                            "data": [],
+                            "linkedRecords": 0,
+                            "activityCount": 0
+                        }
+                    ]
+                },
+                {
+                    "id": 4,
+                    "name": "Raw material",
+                    "keyID": "raw-material",
+                    "source": [
+                        {
+                            "id": null,
+                            "name": null,
+                            "keyID": null,
+                            "processInputOutputID": 241,
+                            "allocationMethodStdID": [],
+                            "activity": [],
+                            "allocations": [],
+                            "data": [],
+                            "linkedRecords": 0,
+                            "activityCount": 0
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "name": "Fuel",
+                    "keyID": "fuel",
+                    "source": [
+                        {
+                            "id": null,
+                            "name": null,
+                            "keyID": null,
+                            "processInputOutputID": 242,
+                            "allocationMethodStdID": [
+                                34
+                            ],
+                            "activity": [
+                                {
+                                    "id": 4,
+                                    "name": "Stationary Combustion",
+                                    "keyID": "stationary-combustion",
+                                    "type": [
+                                        {
+                                            "id": 1,
+                                            "name": "GHG form",
+                                            "keyID": "ghg-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": false,
+                                    "description": "Requires information related to fuels combusted in any combustion equipment",
+                                    "mappedFormCount": 1,
+                                    "mappedActivityFormID": [
+                                        145
+                                    ],
+                                    "config": null
+                                },
+                                {
+                                    "id": 23,
+                                    "name": "Process fuel consumption",
+                                    "keyID": "process-fuel-consumption",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": false,
+                                    "description": "Requires information related to fuel consumed in this process",
+                                    "mappedFormCount": 0,
+                                    "mappedActivityFormID": [],
+                                    "config": null
+                                }
+                            ],
+                            "allocations": [
+                                {
+                                    "id": 33,
+                                    "name": "Process sub-metering",
+                                    "description": "Select if you track fuel consumed by this process using a sub-meter",
+                                    "rootID": 33,
+                                    "isAllocationRequired": true,
+                                    "subtype": []
+                                },
+                                {
+                                    "id": 34,
+                                    "name": "Allocation method",
+                                    "description": "Select if you track total fuel consumed by the combustion equipment at the facility level and want to allocate it to this process on a percentage basis",
+                                    "rootID": 34,
+                                    "isAllocationRequired": true,
+                                    "subtype": []
+                                }
+                            ],
+                            "data": [],
+                            "linkedRecords": 0,
+                            "activityCount": 0
+                        },
+                        {
+                            "id": null,
+                            "name": null,
+                            "keyID": null,
+                            "processInputOutputID": 243,
+                            "allocationMethodStdID": [
+                                34
+                            ],
+                            "activity": [
+                                {
+                                    "id": 4,
+                                    "name": "Stationary Combustion",
+                                    "keyID": "stationary-combustion",
+                                    "type": [
+                                        {
+                                            "id": 1,
+                                            "name": "GHG form",
+                                            "keyID": "ghg-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": false,
+                                    "description": "Requires information related to fuels combusted in any combustion equipment",
+                                    "mappedFormCount": 1,
+                                    "mappedActivityFormID": [
+                                        145
+                                    ],
+                                    "config": null
+                                },
+                                {
+                                    "id": 23,
+                                    "name": "Process fuel consumption",
+                                    "keyID": "process-fuel-consumption",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": false,
+                                    "description": "Requires information related to fuel consumed in this process",
+                                    "mappedFormCount": 0,
+                                    "mappedActivityFormID": [],
+                                    "config": null
+                                }
+                            ],
+                            "allocations": [
+                                {
+                                    "id": 33,
+                                    "name": "Process sub-metering",
+                                    "description": "Select if you track fuel consumed by this process using a sub-meter",
+                                    "rootID": 33,
+                                    "isAllocationRequired": true,
+                                    "subtype": []
+                                },
+                                {
+                                    "id": 34,
+                                    "name": "Allocation method",
+                                    "description": "Select if you track total fuel consumed by the combustion equipment at the facility level and want to allocate it to this process on a percentage basis",
+                                    "rootID": 34,
+                                    "isAllocationRequired": true,
+                                    "subtype": []
+                                }
+                            ],
+                            "data": [],
+                            "linkedRecords": 0,
+                            "activityCount": 0
+                        }
+                    ]
+                }
+            ],
+            "output": [
+                {
+                    "id": 1,
+                    "name": "Electricity",
+                    "keyID": "electricity",
+                    "source": [
+                        {
+                            "id": 5,
+                            "name": "Generated within this process using fuel and exported from the production process",
+                            "keyID": "electricity-generated-within-process-using-fuel-and-exported",
+                            "processInputOutputID": 71,
+                            "allocationMethodStdID": [],
+                            "activity": [
+                                {
+                                    "id": 26,
+                                    "name": "Process electricity export",
+                                    "keyID": "process-electricity-export",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to electricity exported out of this process",
+                                    "mappedFormCount": 1,
+                                    "mappedActivityFormID": [
+                                        206
+                                    ],
+                                    "config": null
+                                }
+                            ],
+                            "allocations": [],
+                            "data": [
+                                {
+                                    "entity": {
+                                        "id": 14,
+                                        "name": "Agricultural Byproducts",
+                                        "keyID": null,
+                                        "description": null,
+                                        "isStandard": null,
+                                        "entityID": null,
+                                        "recordID": null
+                                    },
+                                    "amount": 1.001172284,
+                                    "unit": {
+                                        "unitID": 7,
+                                        "uomName": "Kilowatt Hour",
+                                        "uomCode": "kWh",
+                                        "unitTypeName": "Electric",
+                                        "unitType": "ENERGY",
+                                        "unitSubType": "ELECTRIC"
+                                    }
+                                }
+                            ],
+                            "linkedRecords": 0,
+                            "activityCount": 0
+                        }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "name": "Heat",
+                    "keyID": "heat",
+                    "source": [
+                        {
+                            "id": 6,
+                            "name": "Generated within this process using fuel and exported from the production process",
+                            "keyID": "heat-generated-within-process-using-fuel-and-exported",
+                            "processInputOutputID": 72,
+                            "allocationMethodStdID": [],
+                            "activity": [
+                                {
+                                    "id": 27,
+                                    "name": "Process heat export",
+                                    "keyID": "process-heat-export",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to heat exported out of this process",
+                                    "mappedFormCount": 1,
+                                    "mappedActivityFormID": [
+                                        207
+                                    ],
+                                    "config": null
+                                }
+                            ],
+                            "allocations": [],
+                            "data": [
+                                {
+                                    "entity": {
+                                        "id": 1,
+                                        "name": "Anthracite Coal",
+                                        "keyID": null,
+                                        "description": null,
+                                        "isStandard": null,
+                                        "entityID": null,
+                                        "recordID": null
+                                    },
+                                    "amount": 35.790709733,
+                                    "unit": {
+                                        "unitID": 7,
+                                        "uomName": "Kilowatt Hour",
+                                        "uomCode": "kWh",
+                                        "unitTypeName": "Electric",
+                                        "unitType": "ENERGY",
+                                        "unitSubType": "ELECTRIC"
+                                    }
+                                }
+                            ],
+                            "linkedRecords": 0,
+                            "activityCount": 0
+                        },
+                        {
+                            "id": 7,
+                            "name": "Heat recovered from Nitric acid production",
+                            "keyID": "heat-recovered-from-nitric-acid-production",
+                            "processInputOutputID": 73,
+                            "allocationMethodStdID": [],
+                            "activity": [],
+                            "allocations": [],
+                            "data": [],
+                            "linkedRecords": 0,
+                            "activityCount": 0
+                        },
+                        {
+                            "id": 8,
+                            "name": "Return flow",
+                            "keyID": "return-flow",
+                            "processInputOutputID": 74,
+                            "allocationMethodStdID": [],
+                            "activity": [],
+                            "allocations": [],
+                            "data": [],
+                            "linkedRecords": 0,
+                            "activityCount": 0
+                        },
+                        {
+                            "id": 10,
+                            "name": "Heat recovered from electricity driven process",
+                            "keyID": "Heat recovered from electricity driven process",
+                            "processInputOutputID": 75,
+                            "allocationMethodStdID": [],
+                            "activity": [],
+                            "allocations": [],
+                            "data": [],
+                            "linkedRecords": 0,
+                            "activityCount": 0
+                        }
+                    ]
+                },
+                {
+                    "id": 11,
+                    "name": "Precursor product",
+                    "keyID": "precursor-product",
+                    "source": [
+                        {
+                            "id": 17,
+                            "name": "Exported from this process",
+                            "keyID": "exported-from-this-process",
+                            "processInputOutputID": 76,
+                            "allocationMethodStdID": [],
+                            "activity": [
+                                {
+                                    "id": 28,
+                                    "name": "Process precursor export",
+                                    "keyID": "process-precursor-export",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to precursor exported out of this process",
+                                    "mappedFormCount": 1,
+                                    "mappedActivityFormID": [
+                                        208
+                                    ],
+                                    "config": null
+                                }
+                            ],
+                            "allocations": [],
+                            "data": [
+                                {
+                                    "entity": {
+                                        "id": 8,
+                                        "name": "ads",
+                                        "keyID": null,
+                                        "description": null,
+                                        "isStandard": null,
+                                        "entityID": null,
+                                        "recordID": null
+                                    },
+                                    "amount": 0.000586142,
+                                    "unit": {
+                                        "unitID": 7,
+                                        "uomName": "Kilowatt Hour",
+                                        "uomCode": "kWh",
+                                        "unitTypeName": "Electric",
+                                        "unitType": "ENERGY",
+                                        "unitSubType": "ELECTRIC"
+                                    }
+                                }
+                            ],
+                            "linkedRecords": 0,
+                            "activityCount": 0
+                        },
+                        {
+                            "id": 18,
+                            "name": "Consumed in this production route",
+                            "keyID": "consumed-in-this-production-route",
+                            "processInputOutputID": 77,
+                            "allocationMethodStdID": [],
+                            "activity": [],
+                            "allocations": [],
+                            "data": [],
+                            "linkedRecords": 0,
+                            "activityCount": 0
+                        }
+                    ]
+                }
+            ],
+            "linkedRecords": 0,
+            "activityCount": 0
+        },
+        {
+            "id": 494,
+            "name": "CBAM P2",
+            "input": [
+                {
+                    "id": 11,
+                    "name": "Precursor product",
+                    "keyID": "precursor-product",
+                    "source": [
+                        {
+                            "id": 14,
+                            "name": "Self produced within this production route",
+                            "keyID": "self-produced-within-this-production-route",
+                            "processInputOutputID": 244,
+                            "allocationMethodStdID": [],
+                            "activity": [
+                                {
+                                    "id": 25,
+                                    "name": "Process precursor consumption",
+                                    "keyID": "process-precursor-consumption",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to precursor consumed in this process",
+                                    "mappedFormCount": 1,
+                                    "mappedActivityFormID": [
+                                        210
+                                    ],
+                                    "config": null
+                                }
+                            ],
+                            "allocations": [],
+                            "data": [],
+                            "linkedRecords": 0,
+                            "activityCount": 0
+                        },
+                        {
+                            "id": 15,
+                            "name": "Self produced using separate production route",
+                            "keyID": "self-produced-using-separate-production-route",
+                            "processInputOutputID": 245,
+                            "allocationMethodStdID": [],
+                            "activity": [
+                                {
+                                    "id": 25,
+                                    "name": "Process precursor consumption",
+                                    "keyID": "process-precursor-consumption",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to precursor consumed in this process",
+                                    "mappedFormCount": 1,
+                                    "mappedActivityFormID": [
+                                        210
+                                    ],
+                                    "config": null
+                                }
+                            ],
+                            "allocations": [],
+                            "data": [],
+                            "linkedRecords": 0,
+                            "activityCount": 0
+                        },
+                        {
+                            "id": 16,
+                            "name": "Purchased from a supplier",
+                            "keyID": "purchased-from-a-supplier",
+                            "processInputOutputID": 246,
+                            "allocationMethodStdID": [],
+                            "activity": [
+                                {
+                                    "id": 24,
+                                    "name": "Purchased precursor",
+                                    "keyID": "purchased-precursor",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to precursors purchased from a supplier",
+                                    "mappedFormCount": 1,
+                                    "mappedActivityFormID": [
+                                        211
+                                    ],
+                                    "config": null
+                                },
+                                {
+                                    "id": 25,
+                                    "name": "Process precursor consumption",
+                                    "keyID": "process-precursor-consumption",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to precursor consumed in this process",
+                                    "mappedFormCount": 1,
+                                    "mappedActivityFormID": [
+                                        210
+                                    ],
+                                    "config": null
+                                }
+                            ],
+                            "allocations": [],
+                            "data": [],
+                            "linkedRecords": 0,
+                            "activityCount": 0
+                        }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "name": "Heat",
+                    "keyID": "heat",
+                    "source": [
+                        {
+                            "id": 1,
+                            "name": "CHP",
+                            "keyID": "chp",
+                            "processInputOutputID": 247,
+                            "allocationMethodStdID": [
+                                20
+                            ],
+                            "activity": [
+                                {
+                                    "id": 4,
+                                    "name": "Stationary Combustion",
+                                    "keyID": "stationary-combustion",
+                                    "type": [
+                                        {
+                                            "id": 1,
+                                            "name": "GHG form",
+                                            "keyID": "ghg-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to fuels combusted in the CHP equipment",
+                                    "mappedFormCount": 1,
+                                    "mappedActivityFormID": [
+                                        145
+                                    ],
+                                    "config": null
+                                },
+                                {
+                                    "id": 19,
+                                    "name": "Process Emissions",
+                                    "keyID": "process-emission",
+                                    "type": [
+                                        {
+                                            "id": 1,
+                                            "name": "GHG form",
+                                            "keyID": "ghg-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to gases released from flue gas cleaning",
+                                    "mappedFormCount": 6,
+                                    "mappedActivityFormID": [
+                                        24,
+                                        25,
+                                        33,
+                                        34,
+                                        44,
+                                        54
+                                    ],
+                                    "config": null
+                                },
+                                {
+                                    "id": 20,
+                                    "name": "CHP attribution",
+                                    "keyID": "chp-attribution",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to heat and electricity produced from the CHP",
+                                    "mappedFormCount": 1,
+                                    "mappedActivityFormID": [
+                                        144
+                                    ],
+                                    "config": null
+                                },
+                                {
+                                    "id": 22,
+                                    "name": "Process heat consumption",
+                                    "keyID": "process-heat-consumption",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": false,
+                                    "description": "Requires information related to heat consumed in this process",
+                                    "mappedFormCount": 1,
+                                    "mappedActivityFormID": [
+                                        218
+                                    ],
+                                    "config": null
+                                }
+                            ],
+                            "allocations": [
+                                {
+                                    "id": 17,
+                                    "name": "Process sub-metering",
+                                    "description": "Select if you track CHP generated heat consumed by this process using a sub-meter",
+                                    "rootID": 17,
+                                    "isAllocationRequired": true,
+                                    "subtype": [
+                                        {
+                                            "id": 18,
+                                            "name": "Single source sub-meter- This sub-meter only tracks heat coming from CHP",
+                                            "description": null,
+                                            "rootID": 17,
+                                            "isAllocationRequired": false,
+                                            "subtype": []
+                                        },
+                                        {
+                                            "id": 19,
+                                            "name": "Common sub-meter- This sub-meter tracks heat coming from multiple sources (Requires allocation)",
+                                            "description": null,
+                                            "rootID": 17,
+                                            "isAllocationRequired": true,
+                                            "subtype": []
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": 20,
+                                    "name": "Allocation method",
+                                    "description": "Select if you track total heat generated by the CHP at the facility level and want to allocate it to this process on a percentage basis",
+                                    "rootID": 20,
+                                    "isAllocationRequired": false,
+                                    "subtype": []
+                                }
+                            ],
+                            "data": [
+                                {
+                                    "entity": {
+                                        "id": 1,
+                                        "name": "Anthracite Coal",
+                                        "keyID": null,
+                                        "description": null,
+                                        "isStandard": null,
+                                        "entityID": null,
+                                        "recordID": null
+                                    },
+                                    "amount": 37087,
+                                    "unit": {
+                                        "unitID": 3,
+                                        "uomName": "Tonne",
+                                        "uomCode": "t",
+                                        "unitTypeName": "Mass",
+                                        "unitType": "MASS",
+                                        "unitSubType": "MASS"
+                                    }
+                                }
+                            ],
+                            "linkedRecords": 0,
+                            "activityCount": 0
+                        },
+                        {
+                            "id": 2,
+                            "name": "Grid",
+                            "keyID": "grid",
+                            "processInputOutputID": 248,
+                            "allocationMethodStdID": [
+                                28
+                            ],
+                            "activity": [
+                                {
+                                    "id": 2,
+                                    "name": "Purchased Heat/Steam",
+                                    "keyID": "purchased-heat-steam",
+                                    "type": [
+                                        {
+                                            "id": 1,
+                                            "name": "GHG form",
+                                            "keyID": "ghg-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": false,
+                                    "description": "Requires information related to heat purchased from the grid",
+                                    "mappedFormCount": 1,
+                                    "mappedActivityFormID": [
+                                        205
+                                    ],
+                                    "config": null
+                                },
+                                {
+                                    "id": 22,
+                                    "name": "Process heat consumption",
+                                    "keyID": "process-heat-consumption",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": false,
+                                    "description": "Requires information related to heat consumed in this process",
+                                    "mappedFormCount": 0,
+                                    "mappedActivityFormID": [],
+                                    "config": null
+                                }
+                            ],
+                            "allocations": [
+                                {
+                                    "id": 25,
+                                    "name": "Process sub-metering",
+                                    "description": "Select if you track grid heat consumed by this process using a sub-meter",
+                                    "rootID": 25,
+                                    "isAllocationRequired": true,
+                                    "subtype": [
+                                        {
+                                            "id": 26,
+                                            "name": "Single source sub-meter- This sub-meter only tracks heat coming from grid",
+                                            "description": null,
+                                            "rootID": 25,
+                                            "isAllocationRequired": true,
+                                            "subtype": []
+                                        },
+                                        {
+                                            "id": 27,
+                                            "name": "Common sub-meter- This sub-meter tracks heat coming from multiple sources (Requires allocation)",
+                                            "description": null,
+                                            "rootID": 25,
+                                            "isAllocationRequired": true,
+                                            "subtype": []
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": 28,
+                                    "name": "Allocation method",
+                                    "description": "Select if you track total heat received from the grid at the facility level and want to allocate it to this process on a percentage basis",
+                                    "rootID": 28,
+                                    "isAllocationRequired": true,
+                                    "subtype": []
+                                }
+                            ],
+                            "data": [],
+                            "linkedRecords": 0,
+                            "activityCount": 0
+                        },
+                        {
+                            "id": 3,
+                            "name": "Non CHP",
+                            "keyID": "non-chp",
+                            "processInputOutputID": 249,
+                            "allocationMethodStdID": [
+                                24
+                            ],
+                            "activity": [
+                                {
+                                    "id": 4,
+                                    "name": "Stationary Combustion",
+                                    "keyID": "stationary-combustion",
+                                    "type": [
+                                        {
+                                            "id": 1,
+                                            "name": "GHG form",
+                                            "keyID": "ghg-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to fuels combusted in any combustion equipment",
+                                    "mappedFormCount": 1,
+                                    "mappedActivityFormID": [
+                                        145
+                                    ],
+                                    "config": null
+                                },
+                                {
+                                    "id": 19,
+                                    "name": "Process Emissions",
+                                    "keyID": "process-emission",
+                                    "type": [
+                                        {
+                                            "id": 1,
+                                            "name": "GHG form",
+                                            "keyID": "ghg-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to gases released from flue gas cleaning",
+                                    "mappedFormCount": 2,
+                                    "mappedActivityFormID": [
+                                        24,
+                                        25
+                                    ],
+                                    "config": null
+                                },
+                                {
+                                    "id": 22,
+                                    "name": "Process heat consumption",
+                                    "keyID": "process-heat-consumption",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": false,
+                                    "description": "Requires information related to heat consumed in this process",
+                                    "mappedFormCount": 0,
+                                    "mappedActivityFormID": [],
+                                    "config": null
+                                }
+                            ],
+                            "allocations": [
+                                {
+                                    "id": 21,
+                                    "name": "Process sub-metering",
+                                    "description": "Select if you track non-CHP generated heat consumed by this process using a sub-meter",
+                                    "rootID": 21,
+                                    "isAllocationRequired": false,
+                                    "subtype": [
+                                        {
+                                            "id": 22,
+                                            "name": "Single source sub-meter- This sub-meter only tracks heat coming from non-CHP",
+                                            "description": null,
+                                            "rootID": 21,
+                                            "isAllocationRequired": false,
+                                            "subtype": []
+                                        },
+                                        {
+                                            "id": 23,
+                                            "name": "Common sub-meter- This sub-meter tracks heat coming from multiple sources (Requires allocation)",
+                                            "description": null,
+                                            "rootID": 21,
+                                            "isAllocationRequired": true,
+                                            "subtype": []
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": 24,
+                                    "name": "Allocation method",
+                                    "description": "Select if you track total heat generated by the stationary combustion asset at the facility level and want to allocate it to this process on a percentage basis",
+                                    "rootID": 24,
+                                    "isAllocationRequired": false,
+                                    "subtype": []
+                                }
+                            ],
+                            "data": [
+                                {
+                                    "entity": {
+                                        "id": 1,
+                                        "name": "Anthracite Coal",
+                                        "keyID": null,
+                                        "description": null,
+                                        "isStandard": null,
+                                        "entityID": null,
+                                        "recordID": null
+                                    },
+                                    "amount": 37087,
+                                    "unit": {
+                                        "unitID": 3,
+                                        "uomName": "Tonne",
+                                        "uomCode": "t",
+                                        "unitTypeName": "Mass",
+                                        "unitType": "MASS",
+                                        "unitSubType": "MASS"
+                                    }
+                                }
+                            ],
+                            "linkedRecords": 0,
+                            "activityCount": 0
+                        },
+                        {
+                            "id": 4,
+                            "name": "Private supplier",
+                            "keyID": "private-supplier",
+                            "processInputOutputID": 250,
+                            "allocationMethodStdID": [
+                                32
+                            ],
+                            "activity": [
+                                {
+                                    "id": 2,
+                                    "name": "Purchased Heat/Steam",
+                                    "keyID": "purchased-heat-steam",
+                                    "type": [
+                                        {
+                                            "id": 1,
+                                            "name": "GHG form",
+                                            "keyID": "ghg-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": false,
+                                    "description": "Requires information related to heat purchased from the private supplier",
+                                    "mappedFormCount": 1,
+                                    "mappedActivityFormID": [
+                                        205
+                                    ],
+                                    "config": null
+                                },
+                                {
+                                    "id": 22,
+                                    "name": "Process heat consumption",
+                                    "keyID": "process-heat-consumption",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": false,
+                                    "description": "Requires information related to heat consumed in this process",
+                                    "mappedFormCount": 0,
+                                    "mappedActivityFormID": [],
+                                    "config": null
+                                }
+                            ],
+                            "allocations": [
+                                {
+                                    "id": 29,
+                                    "name": "Process sub-metering",
+                                    "description": "Select if you track private supplier heat consumed by this process using a sub-meter",
+                                    "rootID": 29,
+                                    "isAllocationRequired": true,
+                                    "subtype": [
+                                        {
+                                            "id": 30,
+                                            "name": "Single source sub-meter- This sub-meter only tracks heat coming from private supplier",
+                                            "description": null,
+                                            "rootID": 29,
+                                            "isAllocationRequired": true,
+                                            "subtype": []
+                                        },
+                                        {
+                                            "id": 31,
+                                            "name": "Common sub-meter- This sub-meter tracks heat coming from multiple sources (Requires allocation)",
+                                            "description": null,
+                                            "rootID": 29,
+                                            "isAllocationRequired": true,
+                                            "subtype": []
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": 32,
+                                    "name": "Allocation method",
+                                    "description": "Select if you track total heat received from the private supplier at the facility level and want to allocate it to this process on a percentage basis",
+                                    "rootID": 32,
+                                    "isAllocationRequired": true,
+                                    "subtype": []
+                                }
+                            ],
+                            "data": [],
+                            "linkedRecords": 0,
+                            "activityCount": 0
+                        }
+                    ]
+                }
+            ],
+            "output": [
+                {
+                    "id": 8,
+                    "name": "Finished product",
+                    "keyID": "finished-product",
+                    "source": [
+                        {
+                            "id": null,
+                            "name": null,
+                            "keyID": null,
+                            "processInputOutputID": 78,
+                            "allocationMethodStdID": [],
+                            "activity": [
+                                {
+                                    "id": 31,
+                                    "name": "Process production level",
+                                    "keyID": "process-production-level",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to quantity of finished good produced from this process",
+                                    "mappedFormCount": 1,
+                                    "mappedActivityFormID": [
+                                        212
+                                    ],
+                                    "config": null
+                                }
+                            ],
+                            "allocations": [],
+                            "data": [],
+                            "linkedRecords": 0,
+                            "activityCount": 0
+                        }
+                    ]
+                },
+                {
+                    "id": 1,
+                    "name": "Electricity",
+                    "keyID": "electricity",
+                    "source": [
+                        {
+                            "id": 5,
+                            "name": "Generated within this process using fuel and exported from the production process",
+                            "keyID": "electricity-generated-within-process-using-fuel-and-exported",
+                            "processInputOutputID": 79,
+                            "allocationMethodStdID": [],
+                            "activity": [
+                                {
+                                    "id": 26,
+                                    "name": "Process electricity export",
+                                    "keyID": "process-electricity-export",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to electricity exported out of this process",
+                                    "mappedFormCount": 1,
+                                    "mappedActivityFormID": [
+                                        213
+                                    ],
+                                    "config": null
+                                }
+                            ],
+                            "allocations": [],
+                            "data": [
+                                {
+                                    "entity": {
+                                        "id": 8,
+                                        "name": "ads",
+                                        "keyID": null,
+                                        "description": null,
+                                        "isStandard": null,
+                                        "entityID": null,
+                                        "recordID": null
+                                    },
+                                    "amount": 0.000586142,
+                                    "unit": {
+                                        "unitID": 7,
+                                        "uomName": "Kilowatt Hour",
+                                        "uomCode": "kWh",
+                                        "unitTypeName": "Electric",
+                                        "unitType": "ENERGY",
+                                        "unitSubType": "ELECTRIC"
+                                    }
+                                }
+                            ],
+                            "linkedRecords": 0,
+                            "activityCount": 0
+                        }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "name": "Heat",
+                    "keyID": "heat",
+                    "source": [
+                        {
+                            "id": 6,
+                            "name": "Generated within this process using fuel and exported from the production process",
+                            "keyID": "heat-generated-within-process-using-fuel-and-exported",
+                            "processInputOutputID": 80,
+                            "allocationMethodStdID": [],
+                            "activity": [
+                                {
+                                    "id": 27,
+                                    "name": "Process heat export",
+                                    "keyID": "process-heat-export",
+                                    "type": [
+                                        {
+                                            "id": 2,
+                                            "name": "CBAM form",
+                                            "keyID": "cbam-form",
+                                            "description": null,
+                                            "isStandard": null,
+                                            "entityID": null,
+                                            "recordID": null
+                                        }
+                                    ],
+                                    "isVisible": true,
+                                    "description": "Requires information related to heat exported out of this process",
+                                    "mappedFormCount": 1,
+                                    "mappedActivityFormID": [
+                                        214
+                                    ],
+                                    "config": null
+                                }
+                            ],
+                            "allocations": [],
+                            "data": [],
+                            "linkedRecords": 0,
+                            "activityCount": 0
+                        },
+                        {
+                            "id": 7,
+                            "name": "Heat recovered from Nitric acid production",
+                            "keyID": "heat-recovered-from-nitric-acid-production",
+                            "processInputOutputID": 81,
+                            "allocationMethodStdID": [],
+                            "activity": [],
+                            "allocations": [],
+                            "data": [],
+                            "linkedRecords": 0,
+                            "activityCount": 0
+                        },
+                        {
+                            "id": 8,
+                            "name": "Return flow",
+                            "keyID": "return-flow",
+                            "processInputOutputID": 82,
+                            "allocationMethodStdID": [],
+                            "activity": [],
+                            "allocations": [],
+                            "data": [],
+                            "linkedRecords": 0,
+                            "activityCount": 0
+                        },
+                        {
+                            "id": 10,
+                            "name": "Heat recovered from electricity driven process",
+                            "keyID": "Heat recovered from electricity driven process",
+                            "processInputOutputID": 83,
+                            "allocationMethodStdID": [],
+                            "activity": [],
+                            "allocations": [],
+                            "data": [],
+                            "linkedRecords": 0,
+                            "activityCount": 0
+                        }
+                    ]
+                }
+            ],
+            "linkedRecords": 0,
+            "activityCount": 0
+        }
+    ],
+    "cbamLedger": {
+        "pageNo": 0,
+        "totalCount": 0,
+        "record": []
+    },
+<<<<<<< HEAD
+    "reporting-framework": [
+        {
+            "id": 1,
+            "name": "BRSR",
+            "keyID": "brsr",
+            "categoryName": "ESG Reporting",
+            "categoryKeyID": "esg-reporting",
+            "type": "STANDARD",
+            "logoUrl": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob"
+        },
+        {
+            "id": 2,
+            "name": "SASB",
+            "keyID": "sasb",
+            "categoryName": "Climate Related Financial Disclosures",
+            "categoryKeyID": "climate-related-financial-disclosures",
+            "type": "STANDARD",
+            "logoUrl": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob"
+        },
+        {
+            "id": 3,
+            "name": "CDP",
+            "keyID": "cdp",
+            "categoryName": "Cilmate Disclosures",
+            "categoryKeyID": "climate-disclosures",
+            "type": "STANDARD",
+            "logoUrl": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob"
+        },
+        {
+            "id": 4,
+            "name": "GRI",
+            "keyID": "gri",
+            "categoryName": "ESG Reporting",
+            "categoryKeyID": "esg-reporting",
+            "type": "STANDARD",
+            "logoUrl": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob"
+        },
+        {
+            "id": 5,
+            "name": "IFRS-S1",
+            "keyID": "ifrs-s1",
+            "categoryName": "Climate Related Financial Disclosures",
+            "categoryKeyID": "climate-related-financial-disclosures",
+            "type": "STANDARD",
+            "logoUrl": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob"
+        },
+        {
+            "id": 6,
+            "name": "IFRS-S2",
+            "keyID": "ifrs-s2",
+            "categoryName": "Climate Related Financial Disclosures",
+            "categoryKeyID": "climate-related-financial-disclosures",
+            "type": "STANDARD",
+            "logoUrl": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob"
+        },
+        {
+            "id": 7,
+            "name": "CSRD",
+            "keyID": "csrd",
+            "categoryName": "ESG Reporting",
+            "categoryKeyID": "esg-reporting",
+            "type": "STANDARD",
+            "logoUrl": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob"
+        }
+    ],
+    "reporting-framewoke-category": [
+        {
+            "id": 1,
+            "name": "ESG Reporting",
+            "keyID": "esg-reporting"
+        },
+        {
+            "id": 2,
+            "name": "Cilmate Disclosures",
+            "keyID": "climate-disclosures"
+        },
+        {
+            "id": 3,
+            "name": "Climate Related Financial Disclosures",
+            "keyID": "climate-related-financial-disclosures"
+        },
+        {
+            "id": 1,
+            "name": "Custom ESG Reporting",
+            "keyID": "custom-esg-reporting"
+        }
+    ],
+    "reporting-pref": {
+        "reportingPreference": [
+            {
+                "reportingFramework": {
+                    "id": 1,
+                    "name": "BRSR",
+                    "keyID": "brsr",
+                    "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob",
+                    "categoryName": "ESG Reporting",
+                    "categoryKeyID": "esg-reporting"
+                },
+                "isEnabled": true,
+                "sectorID": null,
+                "reportingIntervalID": 2,
+                "type": "STANDARD"
+            },
+            {
+                "reportingFramework": {
+                    "id": 2,
+                    "name": "SASB",
+                    "keyID": "sasb",
+                    "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob",
+                    "categoryName": "Climate Related Financial Disclosures",
+                    "categoryKeyID": "climate-related-financial-disclosures"
+                },
+                "isEnabled": true,
+                "sectorID": 2,
+                "reportingIntervalID": 1,
+                "reportingFrameworkID": 1,
+                "type": "STANDARD"
+            },
+            {
+                "reportingFramework": {
+                    "id": 3,
+                    "name": "CDP",
+                    "keyID": "cdp",
+                    "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob",
+                    "categoryName": "Cilmate Disclosures",
+                    "categoryKeyID": "climate-disclosures"
+                },
+                "isEnabled": false,
+                "sectorID": null,
+                "reportingIntervalID": null,
+                "type": "STANDARD"
+            },
+            {
+                "reportingFramework": {
+                    "id": 4,
+                    "name": "GRI",
+                    "keyID": "gri",
+                    "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob",
+                    "categoryName": "ESG Reporting",
+                    "categoryKeyID": "esg-reporting"
+                },
+                "isEnabled": true,
+                "sectorID": null,
+                "reportingIntervalID": 1,
+                "type": "STANDARD"
+            },
+            {
+                "reportingFramework": {
+                    "id": 6,
+                    "name": "IFRS-S2",
+                    "keyID": "ifrs-s2",
+                    "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob",
+                    "categoryName": "Climate Related Financial Disclosures",
+                    "categoryKeyID": "climate-related-financial-disclosures"
+                },
+                "isEnabled": false,
+                "sectorID": null,
+                "reportingIntervalID": null,
+                "type": "STANDARD"
+            },
+            {
+                "reportingFramework": {
+                    "id": 7,
+                    "name": "CSRD",
+                    "keyID": "csrd",
+                    "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob",
+                    "categoryName": "ESG Reporting",
+                    "categoryKeyID": "esg-reporting"
+                },
+                "isEnabled": false,
+                "sectorID": null,
+                "reportingIntervalID": null,
+                "type": "STANDARD"
+            },
+            {
+                "reportingFramework": {
+                    "id": 1,
+                    "name": "CUSTOM 1",
+                    "keyID": null,
+                    "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob",
+                    "categoryName": "Custom ESG Reporting",
+                    "categoryKeyID": "custom-esg-reporting"
+                },
+                "isEnabled": true,
+                "sectorID": null,
+                "reportingIntervalID": 1,
+                "type": "CUSTOM"
+            }
+        ]
+    },
+    "esc-metrics": {
+        "pageNo": 1,
+        "totalCount": 10,
+        "records": [
+            {
+                "id": 1,
+                "metricName": "abc",
+                "esgTypeName": "Governance",
+                "type": "STANDARD",
+                "esgTypeKeyID": "governance",
+                "activityName": "Employee",
+                "isRecordLinkFlag": false,
+                "framework": [
+                    {
+                        "name": "BRSR",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob",
+                        "isRecordLinkFlag": false
+                    },
+                    {
+                        "name": "SASB",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob",
+                        "isRecordLinkFlag": false
+                    },
+                    {
+                        "name": "GRI",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob",
+                        "isRecordLinkFlag": false
+                    },
+                    {
+                        "name": "CSRD",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/50c188de-6a6c-42a5-8114-eca347d17ecb_blob",
+                        "isRecordLinkFlag": false
+                    }
+                ],
+                "control": "Quantitative",
+                "controlKeyID": "quantitative"
+
+            },
+            {
+                "id": 2,
+                "metricName": "bcd",
+                "esgTypeName": "Social",
+                "type": "STANDARD",
+                "esgTypeKeyID": "social",
+                "activityName": "Employee",
+                "isRecordLinkFlag": false,
+                "framework": [
+                    {
+                        "name": "BRSR",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob",
+                        "isRecordLinkFlag": false
+                    },
+                    {
+                        "name": "SASB",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/50c188de-6a6c-42a5-8114-eca347d17ecb_blob",
+                        "isRecordLinkFlag": false
+                    },
+                    {
+                        "name": "GRI",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob",
+                        "isRecordLinkFlag": false
+                    },
+                    {
+                        "name": "CSRD",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob",
+                        "isRecordLinkFlag": false
+                    },
+                    {
+                        "name": "CDP",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob",
+                        "isRecordLinkFlag": false
+                    }
+                ],
+                "control": "Quantitative",
+                "controlKeyID": "quantitative"
+            },
+            {
+                "id": 3,
+                "metricName": "efc",
+                "esgTypeName": "Environmental",
+                "esgTypeKeyID": "environmental",
+                "type": "STANDARD",
+                "activityName": "Employee",
+                "isRecordLinkFlag": false,
+                "framework": [
+                    {
+                        "name": "BRSR",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/50c188de-6a6c-42a5-8114-eca347d17ecb_blob",
+                        "isRecordLinkFlag": false
+                    }
+                ],
+                "control": "Quantitative",
+                "controlKeyID": "quantitative"
+            },
+            {
+                "id": 1,
+                "metricName": "abc",
+                "esgTypeName": "Governance",
+                "type": "CUSTOM",
+                "esgTypeKeyID": "governance",
+                "activityName": "Employee",
+                "isRecordLinkFlag": true,
+                "framework": [
+                    {
+                        "name": "BRSR",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob",
+                        "isRecordLinkFlag": false
+                    },
+                    {
+                        "name": "SASB",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob",
+                        "isRecordLinkFlag": true
+                    },
+                    {
+                        "name": "GRI",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob",
+                        "isRecordLinkFlag": false
+                    },
+                    {
+                        "name": "CSRD",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/50c188de-6a6c-42a5-8114-eca347d17ecb_blob",
+                        "isRecordLinkFlag": true
+                    }
+                ],
+                "control": "Quantitative",
+                "controlKeyID": "quantitative"
+
+            },
+            {
+                "id": 2,
+                "metricName": "abc",
+                "esgTypeName": "Governance",
+                "type": "CUSTOM",
+                "esgTypeKeyID": "governance",
+                "activityName": "Employee",
+                "isRecordLinkFlag": true,
+                "framework": [
+                    {
+                        "name": "BRSR",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob",
+                        "isRecordLinkFlag": false
+                    },
+                    {
+                        "name": "SASB",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob",
+                        "isRecordLinkFlag": true
+                    },
+                    {
+                        "name": "GRI",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob",
+                        "isRecordLinkFlag": false
+                    },
+                    {
+                        "name": "CSRD",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/50c188de-6a6c-42a5-8114-eca347d17ecb_blob",
+                        "isRecordLinkFlag": false
+                    }
+                ],
+                "control": "Quantitative",
+                "controlKeyID": "quantitative"
+
+            },
+            {
+                "id": 3,
+                "metricName": "abc",
+                "esgTypeName": "Governance",
+                "type": "CUSTOM",
+                "esgTypeKeyID": "governance",
+                "activityName": "Employee",
+                "isRecordLinkFlag": true,
+                "framework": [
+                    {
+                        "id": 1,
+                        "name": "BRSR",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob",
+                        "isRecordLinkFlag": true
+                    },
+                    {
+                        "id": 2,
+                        "name": "SASB",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob",
+                        "isRecordLinkFlag": true
+                    },
+                    {
+                        "id": 3,
+                        "name": "GRI",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob",
+                        "isRecordLinkFlag": false
+                    },
+                    {
+                        "id": 4,
+                        "name": "CSRD",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/50c188de-6a6c-42a5-8114-eca347d17ecb_blob",
+                        "isRecordLinkFlag": false
+                    }
+                ],
+                "control": "Quantitative",
+                "controlKeyID": "quantitative"
+
+            },
+            {
+                "id": 4,
+                "metricName": "abc",
+                "esgTypeName": "Governance",
+                "type": "CUSTOM",
+                "esgTypeKeyID": "governance",
+                "activityName": "Employee",
+                "isRecordLinkFlag": false,
+                "framework": [
+                    {
+                        "id": 1,
+                        "name": "BRSR",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob",
+                        "isRecordLinkFlag": false
+                    },
+                    {
+                        "id": 2,
+                        "name": "SASB",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob",
+                        "isRecordLinkFlag": false
+                    },
+                    {
+                        "id": 3,
+                        "name": "GRI",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob",
+                        "isRecordLinkFlag": false
+                    },
+                    {
+                        "id": 1,
+                        "name": "CSRD",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/50c188de-6a6c-42a5-8114-eca347d17ecb_blob",
+                        "isRecordLinkFlag": false
+                    }
+                ],
+                "control": "Quantitative",
+                "controlKeyID": "quantitative"
+
+            },
+            {
+                "id": 5,
+                "metricName": "abc",
+                "esgTypeName": "Governance",
+                "type": "CUSTOM",
+                "esgTypeKeyID": "governance",
+                "activityName": "Employee",
+                "isRecordLinkFlag": true,
+                "framework": [
+                    {
+                        "id": 1,
+                        "name": "C1",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/50c188de-6a6c-42a5-8114-eca347d17ecb_blob",
+                        "isRecordLinkFlag": true
+                    }
+                ],
+                "control": "Quantitative",
+                "controlKeyID": "quantitative"
+
+            },
+            {
+                "id": 6,
+                "metricName": "abc",
+                "esgTypeName": "Governance",
+                "type": "CUSTOM",
+                "esgTypeKeyID": "governance",
+                "activityName": "Employee",
+                "isRecordLinkFlag": true,
+                "framework": [
+                    {
+                        "id": 1,
+                        "name": "C1",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob",
+                        "isRecordLinkFlag": true
+                    },
+                    {
+                        "id": 2,
+                        "name": "C2",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob",
+                        "isRecordLinkFlag": false
+                    },
+                    {
+                        "id": 3,
+                        "name": "C3",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob",
+                        "isRecordLinkFlag": false
+                    },
+                    {
+                        "id": 4,
+                        "name": "C4",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/50c188de-6a6c-42a5-8114-eca347d17ecb_blob",
+                        "isRecordLinkFlag": true
+                    }
+                ],
+                "control": "Quantitative",
+                "controlKeyID": "quantitative"
+
+            },
+            {
+                "id": 7,
+                "metricName": "abc",
+                "esgTypeName": "Governance",
+                "type": "CUSTOM",
+                "esgTypeKeyID": "governance",
+                "activityName": "Employee",
+                "isRecordLinkFlag": true,
+                "framework": [
+                    {
+                        "id": 1,
+                        "name": "A",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob",
+                        "isRecordLinkFlag": true
+                    },
+                    {
+                        "id": 2,
+                        "name": "B",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob",
+                        "isRecordLinkFlag": false
+                    },
+                    {
+                        "id": 3,
+                        "name": "C",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/800504a5-9a18-4f62-b703-709e253687ae_blob",
+                        "isRecordLinkFlag": false
+                    },
+                    {
+                        "id": 4,
+                        "name": "D",
+                        "logo": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/dev/images/50c188de-6a6c-42a5-8114-eca347d17ecb_blob",
+                        "isRecordLinkFlag": true
+                    }
+                ],
+                "control": "Quantitative",
+                "controlKeyID": "quantitative"
+
+            }
+        ]
+    },
+    "metric-type": [
+        {
+            "id": 1,
+            "name": "Governance",
+            "keyID": "governance"
+        },
+        {
+            "id": 2,
+            "name": "Social",
+            "keyID": "social"
+        },
+        {
+            "id": 3,
+            "name": "Environmental",
+            "keyID": "environmental"
+        }
+    ],
+
+    "activity-type": [
+        {
+            "id": 1,
+            "name": "Aviation Safety",
+            "esgTypeName": "Governance",
+            "esgTypeKeyID": "governance"
+        },
+        {
+            "id": 2,
+            "name": "Business Operations",
+            "esgTypeName": "Social",
+            "esgTypeKeyID": "social"
+        },
+        {
+            "id": 3,
+            "name": "Customer Service",
+            "esgTypeName": "Environmental",
+            "esgTypeKeyID": "environmental"
+        }
+    ],
+
+    "custom-framework": [
+        {
+            "id": 1,
+            "name": "C1",
+            "type": "CUSTOM"
+        },
+        {
+            "id": 2,
+            "name": "C2",
+            "type": "CUSTOM"
+        },
+        {
+            "id": 3,
+            "name": "C3",
+            "type": "CUSTOM"
+        },
+        {
+            "id": 4,
+            "name": "C4",
+            "type": "CUSTOM"
+        }
+    ],
+
+    "esg-mteric":[
+        {
+            "id": 1,
+            "name": "abc",
+            "type": "STANDARD"
+        },
+        {
+            "id": 2,
+            "name": "bcd",
+            "type": "STANDARD"
+        },
+        {
+            "id": 3,
+            "name": "efc",
+            "type": "STANDARD"
+        }
+    ],
+
+    "consolidation-logic-list": [
+        {
+            "id": 1,
+            "name": "Summation",
+            "keyID": "summation"
+        },
+        {
+            "id": 2,
+            "name": "Carry-On from last entry",
+            "keyID": "carry-on-from-last-entry"
+        }
+    ],
+
+    "custom-metric-get-by-id": {
+        "activityStdID": 1,
+        "esgTypeName": "Social",
+        "esgTypeKeyID": "social",
+        "metricName": "abc",
+        "control": "number",
+        "unit": 1,
+        "consolidationLogicID": 1
+    },
+
+    "pref-enable-framework": [
+        {
+            "id": 1,
+            "name": "BRSR",
+            "keyID": "brsr",
+            "type": "STANDARD"
+        },
+        {
+            "id": 2,
+            "name": "SASB",
+            "keyID": "sasb",
+            "type": "STANDARD"
+        },
+        {
+            "id": 3,
+            "name": "GRI",
+            "keyID": "gri",
+            "type": "STANDARD"
+        },
+        {
+            "id": 1,
+            "name": "C1",
+            "keyID": null,
+            "type": "CUSTOM"
+        },
+        {
+            "id": 2,
+            "name": "C2",
+            "keyID": null,
+            "type": "CUSTOM"
+        }
+=======
+
+    "ipcc-technology-parameter":[
+        {
+            "id": 1,
+            "name": "S1",
+            "technology": [
+                {
+                    "id": 1,
+                    "name": "T1",
+                    "keyID": "t1",
+                    "parameter": [
+                        {
+                            "id": 1,
+                            "name": "P1",
+                            "keyID": "p1"
+                        },
+                        {
+                            "id": 2,
+                            "name": "P2",
+                            "keyID": "p2"
+                        },
+                        {
+                            "id": 3,
+                            "name": "P3",
+                            "keyID": "p3"
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "name": "T2",
+                    "keyID": "t2",
+                    "parameter": [
+                        {
+                            "id": 4,
+                            "name": "P4",
+                            "keyID": "p4"
+                        },
+                        {
+                            "id": 5,
+                            "name": "P5",
+                            "keyID": "p5"
+                        },
+                        {
+                            "id": 6,
+                            "name": "P6",
+                            "keyID": "p6"
+                        }
+                    ]
+                }
+            ]
+        }
+
+>>>>>>> aa93a0218e8c9ebb14d63d22b3fb16e543a76eb2
+    ]
+}

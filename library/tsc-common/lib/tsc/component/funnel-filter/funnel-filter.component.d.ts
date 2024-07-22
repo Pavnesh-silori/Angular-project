@@ -1,0 +1,44 @@
+import { EventEmitter, OnInit, SimpleChanges } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { MatSelectSearchService } from '../../service/mat-select-search.service';
+import * as i0 from "@angular/core";
+export declare class FunnelFilterComponent implements OnInit {
+    MATERIAL_CONSTANT: {
+        MAT_RIPPLE_CENTER: boolean;
+    };
+    header: string;
+    active: boolean;
+    showSearchBar: boolean;
+    searchByPlaceholder: string;
+    searchBy: string[];
+    selectAllLabel: string;
+    entityList: any;
+    view: string;
+    value: string;
+    type: 'mono' | 'multi';
+    selectFC: FormControl;
+    resetFlag: boolean;
+    mono: EventEmitter<any>;
+    multi: EventEmitter<any>;
+    selected: EventEmitter<any>;
+    all_entities_length: number;
+    filterFC: FormControl;
+    init: boolean;
+    all_entities_value: any[];
+    selected_entities: Set<any>;
+    prev: any;
+    multiFilterApplied: boolean;
+    searchUtil: MatSelectSearchService;
+    constructor();
+    ngOnInit(): void;
+    ngOnChanges(changes: SimpleChanges): void;
+    addAllEntities(): void;
+    selectionChange(value: any): void;
+    selectedEntity(entity: any): void;
+    resetOnNoChange(event: any): void;
+    selectEntity(entity: any): void;
+    applyFilter(): void;
+    selectAllEntities(): void;
+    static ɵfac: i0.ɵɵFactoryDeclaration<FunnelFilterComponent, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<FunnelFilterComponent, "funnel-filter", never, { "header": "header"; "active": "active"; "showSearchBar": "showSearchBar"; "searchByPlaceholder": "searchByPlaceholder"; "searchBy": "searchBy"; "selectAllLabel": "selectAllLabel"; "entityList": "entityList"; "view": "view"; "value": "value"; "type": "type"; "selectFC": "selectFC"; "resetFlag": "resetFlag"; }, { "mono": "mono"; "multi": "multi"; "selected": "selected"; }, never, never>;
+}

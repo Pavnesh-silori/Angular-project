@@ -1,0 +1,57 @@
+import { ElementRef, OnInit } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
+import { AlertTypeLabelEnum, AlertTypeEnum } from '../../../../enum/alert.enum';
+import { AlertRuleController } from '../../../../controller/alert.controller';
+import { StorageService } from '@library/storage-service';
+import { StatusEnum, SearchBarOneComponent } from '@library/tsc-common';
+import * as i0 from "@angular/core";
+export declare class ConfiguredAlarmPageComponent implements OnInit {
+    private storageService;
+    private alertController;
+    TABLE_CONSTANT: {
+        TABLE_NO_DATA: string;
+        DEFAULT_PAGE_SIZE: number;
+        PAGE_SIZE_OPTION: number[];
+    };
+    COMMON_CONSTANT: {
+        PRIVACY: string;
+        TERMS: string;
+        PRICING: string;
+        SUPPORT_EMAIL: string;
+        HYPHEN: string;
+        NO_DATA_FOUND: string;
+        NO_DATA: string;
+        EMAIL_PATTERN: string;
+        ZIPCODE_PATTERN: string;
+        GST_NUMBER_PATTERN: string;
+        SPECIAL_CHARACTERS_PATTERN: string;
+        ALLOWED_IMAGE_TYPES: string[];
+        DECIMAL_PATTERN: string;
+        MAX_IMAGE_SIZE: number;
+        ASIAN_KOLKATA: string;
+        VIEW_API_KEY_ID: string;
+        NO_MATCH_FOUND: string;
+    };
+    AlertTypeEnum: typeof AlertTypeEnum;
+    AlertTypeLabelEnum: typeof AlertTypeLabelEnum;
+    StatusEnum: typeof StatusEnum;
+    orgID: any;
+    displayedColumn: string[];
+    resultLength: number;
+    dataSource: any[];
+    searchFlag: boolean;
+    searchValue: string;
+    searchArr: any[];
+    sort: MatSort;
+    paginator: MatPaginator;
+    refreshBtn: ElementRef;
+    searchBar: SearchBarOneComponent;
+    constructor(storageService: StorageService, alertController: AlertRuleController);
+    ngOnInit(): void;
+    ngAfterViewInit(): void;
+    searchFn(value: string): void;
+    resetSearch(): void;
+    static ɵfac: i0.ɵɵFactoryDeclaration<ConfiguredAlarmPageComponent, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<ConfiguredAlarmPageComponent, "lib-page", never, {}, {}, never, never>;
+}
