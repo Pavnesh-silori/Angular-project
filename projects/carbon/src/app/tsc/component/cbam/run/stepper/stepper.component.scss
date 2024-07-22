@@ -1,0 +1,27 @@
+::ng-deep .mat-step-header {
+    background-color: #f0f0f0;
+    box-shadow: none !important;
+    border-radius: 16px !important;
+    height: 45px !important;
+    pointer-events: none !important;
+}
+
+::ng-deep .mat-step-header .mat-step-icon-state-done {
+    background-color: #198754;
+    color: white;
+}
+
+:host ::ng-deep .cbamRunStepper {
+
+    .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:first-child)::before,
+    [dir=rtl] .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:last-child)::before,
+    .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:last-child)::after,
+    [dir=rtl] .mat-stepper-label-position-bottom .mat-horizontal-stepper-header:not(:first-child)::after {
+        border-top-width: 0px;
+        border-top-style: none;
+    }
+}
+
+::ng-deep .cbamRunStepper .mat-horizontal-content-container {
+    padding: 0px !important;
+}

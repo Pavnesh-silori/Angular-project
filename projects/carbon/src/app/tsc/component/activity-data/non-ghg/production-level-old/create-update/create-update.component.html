@@ -1,0 +1,7 @@
+<app-meter-reading *ngIf="dataInputMethoutStdKeyID == DataInputMethodKeyIDEnum.METER_READING"
+    [activityDataFG]="activityDataFG" [activityConfig]="activityConfig" [docFileList]="docFileList"
+    [defaultDataCollectionMethodID]="defaultDataCollectionMethodID" [sourceTypeID]="sourceTypeID" [entity]="entity" (validFields)="setValidFields($event)" #MeterReadingComponent></app-meter-reading>
+
+<app-total-amount *ngIf="(dataInputMethoutStdKeyID == DataInputMethodKeyIDEnum.TOTAL_AMOUNT)"
+    [activityDataFG]="activityDataFG" [activityConfig]="activityConfig" [docFileList]="docFileList"
+    [defaultDataCollectionMethodID]="defaultDataCollectionMethodID" [sourceTypeID]="sourceTypeID" [entity]="entity" (validFields)="setValidFields($event)" #TotalAmountComponent></app-total-amount>

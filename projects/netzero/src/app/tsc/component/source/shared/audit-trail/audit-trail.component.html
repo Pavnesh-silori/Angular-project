@@ -1,0 +1,31 @@
+<div class="card cardOverwrite">
+    <div class="card-body">
+        <ng-container *ngIf="msgTrail.length; else noAuditTrail">
+            <div class="line-container" *ngFor="let item of msgTrail">
+                <div class="container-item mt-2">
+                    <div class="col-sm-1 container-item-image">
+                        <img class="rounded-circle border profileImageHeaderView"
+                            [src]="item.profileImgUrl || defaultImage(item)" alt="Profile image">
+                    </div>
+                    <div class="col-sm-11">
+                        {{ item.firstName }} {{ item.lastName || ''}} {{ item.message }} {{
+                        getDateTime(item.messageDate) }}
+                    </div>
+                </div>
+            </div>
+
+            <ng-container>
+                <button class="btn btn-link ms-auto viewBtn" (click)="viewChanges()">
+                    View changes
+                </button>
+            </ng-container>
+        </ng-container>
+
+        <ng-template #noAuditTrail>
+            <lib-message-alert [messageAlertTypeInp]="messageAlertTypeEnum.INFO"
+                [messageAlertIconInp]="messageAlertIconEnum.INFO_ICON"
+                contentInp="No audit trail has been found for this product">
+            </lib-message-alert>
+        </ng-template>
+    </div>
+</div>

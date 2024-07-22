@@ -1,0 +1,22 @@
+<div class="mx-2 my-3 h-auto">
+    <span *ngFor="let activePills of activePill; let i = index">
+        <ng-container *ngIf="activePill.length > 1">
+            <div class="d-inline-block">
+                <a class="btn folder rounded-pill fs-5" [routerLink]="activePills['route']"
+                    [queryParams]="activePills?.queryParams" (click)="removeFolder(i)"
+                    [ngClass]="{'current': i == activePill.length-1}" #tooltip="matTooltip" matTooltipPosition="above"
+                    [matTooltip]="activePills['name'].length > 24? activePills['name']: ''"
+                    matTooltipClass="folder_pill">
+                    {{ activePills['name'] | dotdotdot: 24 }}
+                </a>
+            </div>
+            <ng-container *ngIf="activePill.length > 1 && i < activePill.length-1">
+                <div class="d-inline-block">
+                    <span class="material-symbols-outlined btn rounded-pill noFocus chevron-right p-0">
+                        chevron_right
+                    </span>
+                </div>
+            </ng-container>
+        </ng-container>
+    </span>
+</div>

@@ -1,0 +1,192 @@
+<div class="card main-card cardOverwrite">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">
+                Subsidiary/JV emission request
+            </div>
+        </div>
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <ng-container *ngIf="request?.['status'] == RequestStatus.PENDING">
+                    <div class="col-sm-4">
+                        <div class="float-end">
+                            <a mat-icon-button (click)="editEmissionRequest()" matTooltip="Edit"
+                                matTooltipClass="nameTooltip" matTooltipPosition="below">
+                                <span class="material-symbols-outlined text-primary updateIconHover fs-5">
+                                    edit
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+
+    <div class="row p-3">
+        <div class="col-sm-12">
+            <ng-container *ngTemplateOutlet="value; 
+                context:{ 
+                    title: 'Request ID', 
+                    value: request?.['id'] 
+                }">
+            </ng-container>
+            <ng-container *ngTemplateOutlet="value; 
+                context:{ 
+                    title: 'Subsidiary/JV name', 
+                    value: request?.['requestee']['name'] 
+                }">
+            </ng-container>
+            <div class="row pb-1">
+                <div class="d-flex justify-content-between">
+                    <div class="col-form-label ms-1"> Type </div>
+                    <div class="col-sm-8 centerAlignVertical">
+                        <div class="col-form-value">
+                            <ng-container [ngSwitch]="request?.['requestee']['type']">
+                                <span *ngSwitchCase="SubsidiaryType.SUBSIDIARY" class="fw-bold">
+                                    Subsidiary
+                                </span>
+                                <span *ngSwitchCase="SubsidiaryType.JOINT_VENTURE" class="fw-bold">
+                                    Joint venture
+                                </span>
+                                <span *ngSwitchDefault>
+                                    {{ request?.['name'] }}
+                                </span>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row pb-1">
+                <div class="d-flex justify-content-between">
+                    <div class="col-form-label ms-1"> Status </div>
+                    <div class="col-sm-8 centerAlignVertical">
+                        <div class="col-form-value">
+                            <ng-container [ngSwitch]="request?.['status']">
+                                <span *ngSwitchCase="RequestStatus.DONE" class="textActiveStatus">
+                                    Done
+                                </span>
+                                <span *ngSwitchCase="RequestStatus.PENDING" class="textPendingStatus">
+                                    Pending
+                                </span>
+                                <span *ngSwitchCase="RequestStatus.CANCELLED" class="textCancelledStatus">
+                                    Cancelled
+                                </span>
+                                <span *ngSwitchCase="RequestStatus.DECLINED" class="textDeclinedStatus">
+                                    Declined
+                                </span>
+                                <span *ngSwitchDefault>
+                                    {{ request?.['status'] }}
+                                </span>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <ng-container *ngTemplateOutlet="value; 
+                context:{ 
+                    title: 'Request created by', 
+                    value: request?.['requester']['user'] 
+                }">
+            </ng-container>
+            <ng-container *ngTemplateOutlet="valueList; 
+                context:{ 
+                    title: 'Request created for', 
+                    entityList: assignee
+                }">
+            </ng-container>
+            <ng-container *ngTemplateOutlet="value; 
+                context:{ 
+                    title: 'Accounting period', 
+                    value: request?.['accountingPeriod'] 
+                }">
+            </ng-container>
+            <ng-container *ngTemplateOutlet="valueList; 
+                context:{ 
+                    title: 'Consolidation approach', 
+                    entityList: consolidationApproaches 
+                }">
+            </ng-container>
+            <div class="row pb-1">
+                <div class="d-flex justify-content-between">
+                    <div class="col-form-label ms-1"> {{ '% control on Subsidiary/JV' }} </div>
+                    <div class="col-sm-8 py-2">
+                        <div class="col-form-value fw-bold" *ngIf="value; else hyphen;">
+                            <ng-container *ngFor="let control of request?.['control'] ">
+                                <div class="pb-1">
+                                    <span> {{ control['control'] + '%' }} {{ control['approach'] }} </span>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <ng-container *ngTemplateOutlet="value; 
+                context:{ 
+                    title: 'Request note', 
+                    value: request?.['requestNote'] 
+                }">
+            </ng-container>
+            <ng-container *ngIf="request?.['status'] == RequestStatus.DECLINED">
+                <ng-container *ngTemplateOutlet="value; 
+                context:{ 
+                    title: 'Declination node', 
+                    value: request?.['responseNote'] 
+                }">
+                </ng-container>
+            </ng-container>
+        </div>
+    </div>
+</div>
+
+<ng-template #value let-title="title" let-value="value">
+    <div class="row pb-1">
+        <div class="d-flex justify-content-between">
+            <div class="col-form-label ms-1"> {{ title }} </div>
+            <div class="col-sm-8 centerAlignVertical">
+                <div class="col-form-value fw-bold" *ngIf="value; else hyphen;">
+                    {{ value }}
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #objectList let-title="title" let-entityList="entityList" let-view="view" let-value="value">
+    <div class="row pb-1">
+        <div class="d-flex justify-content-between">
+            <div class="col-form-label ms-1"> {{ title }} </div>
+            <div class="col-sm-8 py-2">
+                <div class="col-form-value fw-bold" *ngIf="value; else hyphen;">
+                    <ng-container *ngFor="let entity of entityList">
+                        <div class="pb-1">
+                            <span> {{ entity[value] }} {{ entity[view] }} </span>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #valueList let-title="title" let-entityList="entityList">
+    <div class="row pb-1">
+        <div class="d-flex justify-content-between">
+            <div class="col-form-label ms-1"> {{ title }} </div>
+            <div class="col-sm-8 py-2">
+                <div class="col-form-value fw-bold" *ngIf="value; else hyphen;">
+                    <!-- <ul *ngFor="let entity of entityList">
+                        <li> {{ entity }} </li>
+                    </ul> -->
+                    <ng-container *ngFor="let entity of entityList">
+                        <div class="pb-1"> {{ entity }} </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #hyphen>
+    <span class="fw-bold"> {{ COMMON_CONSTANT.HYPHEN }} </span>
+</ng-template>

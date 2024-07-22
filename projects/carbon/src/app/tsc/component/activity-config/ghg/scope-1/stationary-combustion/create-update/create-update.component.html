@@ -1,0 +1,111 @@
+<mat-card class="cardOverwrite border">
+    <div class="cardTitle pb-2">
+        Details
+    </div>
+
+    <div [formGroup]="activityConfigFG">
+        <div class="col-sm-6">
+            <mat-form-field
+                *ngIf="queryParam.origin !== 'ad-hoc' && !queryParam.activityDataID || queryParam.usePFF == 'YES'"
+                formGroupName="activityConfig" class="matFieldWidth100"
+                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                <mat-label class="formLabel"> Activity form name </mat-label>
+                <input matInput formControlName="configName" required />
+                <mat-error *ngIf="activityConfigFG.get('activityConfig').get('configName').hasError('required')">
+                    Enter an activity form name
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <ng-container formGroupName="activityConfigData">
+            <div>What do you monitor during fuel combustion?</div>
+            <div class="row">
+                <mat-radio-group formControlName="fuelMonitorDataInputMethodID">
+                    <div class="row my-2">
+                        <div class="col-sm-3 columnRadioBtn" *ngFor="let input of fuelEnergyMonitor">
+                            <div class="flex">
+                                <mat-radio-button class="radioBtnLabel" [value]="input.id"
+                                    (change)="alterValidators(input.keyID)">
+                                    {{ input.name }}
+                                </mat-radio-button>
+                            </div>
+                        </div>
+                    </div>
+                </mat-radio-group>
+            </div>
+            <mat-error *ngIf="requiredCheck('fuelMonitorDataInputMethodID')">Select an option </mat-error>
+
+            <div class="mt-2" *ngIf="isDataButton">
+                <div>Enter data using</div>
+                <div class="row">
+                    <mat-radio-group formControlName="dataInputMethodID">
+                        <div class="row my-2">
+                            <div class="col-sm-3 columnRadioBtn" *ngFor="let input of statndardMointor">
+                                <div class="flex">
+                                    <mat-radio-button class="radioBtnLabel" [value]="input.id"
+                                        (change)="alterValidatorsForDataInput(input.keyID)">
+                                        {{ input.name }}
+                                    </mat-radio-button>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-radio-group>
+                </div>
+                <mat-error *ngIf="requiredCheck('dataInputMethodID')">Select an option </mat-error>
+            </div>
+
+            <ng-container *ngIf="isMeterReading">
+                <div class="row pt-2">
+                    <mat-form-field class="col-sm-3 mat-field columnWidth"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel"> Meter rollover value </mat-label>
+                        <input matInput formControlName="meterRollOver" type="number" min="0" />
+                        <mat-error *ngIf="requiredCheck('meterRollOver')">Enter a meter rollover value</mat-error>
+                        <mat-error *ngIf="minCheck('meterRollOver')">Meter rollover value can not be
+                            negative</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE" class="col-sm-3">
+                        <mat-label class="formLabel"> Select Unit </mat-label>
+                        <mat-select formControlName="meterUnitID">
+                            <mat-option>
+                                <ngx-mat-select-search [formControl]="unitSearchUtil.filterFC"
+                                    placeholderLabel="Search by name" noEntriesFoundLabel="No matching name found.">
+                                </ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option *ngFor="let input of unitSearchUtil.filteredEntities | async"
+                                [value]="input.id">
+                                <div class="miterRoll">
+                                    <span> {{ input.name + ' - ' }}</span>
+                                    <span>{{input.uomCode}}</span>
+                                </div>
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="requiredCheck('meterUnitID')">Select Unit</mat-error>
+                    </mat-form-field>
+                </div>
+            </ng-container>
+        </ng-container>
+
+        <mat-form-field formGroupName="activityConfigSource" class="mat-field-width-100 mt-2 col-sm-6"
+            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel"> Select Combustion equipment </mat-label>
+            <mat-select multiple="true" formControlName="sourceID">
+                <mat-option>
+                    <ngx-mat-select-search [formControl]="sourceSearchUtil.filterFC" placeholderLabel="Search by name"
+                        noEntriesFoundLabel="No matching name found.">
+                    </ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let input of sourceSearchUtil.filteredEntities | async" [value]="input.assetID"
+                    (click)="setSourceTypeID(input)">
+                    {{ input.assetName }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</mat-card>
+
+<!-- check  -->
+<!-- <button (click)="save()">
+    Save
+</button> -->

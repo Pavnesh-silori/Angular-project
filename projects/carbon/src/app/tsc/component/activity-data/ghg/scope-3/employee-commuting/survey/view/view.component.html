@@ -1,0 +1,57 @@
+<div class="h100">
+    <div class="card main-card cardOverwrite cardHeaderBlock">
+        <div class="row centerAlign">
+            <div class="col-sm-6">
+                <div class="pageTitle">
+                    <span> Employee Commute </span>
+                </div>
+                <div class="pageSubtitle">Analyzing commuting patterns and transportation choices of your team</div>
+            </div>
+            <div class="col-sm-6 pt-3">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div *ngIf="buttonFlag === false; else elseBlock" ngbDropdown>
+                            <button class="btn btn-sm btn-danger float-end ms-2" (click)="endSurvey()"
+                                [disabled]="!buttonFlag" matTooltipPosition="above" matTooltip="survey already ended">
+                                End Survey
+                            </button>
+
+                            <button class="btn btn-sm btn-warning float-end ms-2" (click)="sendReminder()"
+                                [disabled]="!buttonFlag" matTooltip="Survey already ended" matTooltipPosition="above">
+                                Send Reminder
+                            </button>
+                        </div>
+                        <button type="button" class="d-none" #refreshBtn>refresh</button>
+
+                        <ng-template #elseBlock>
+                            <div ngbDropdown>
+                                <button class="btn btn-sm btn-danger float-end ms-2" (click)="endSurvey()"
+                                    [disabled]="!buttonFlag" matTooltip="End Survey" matTooltipPosition="above">
+                                    End Survey
+                                </button>
+
+                                <button class="btn btn-sm btn-warning float-end ms-2" (click)="sendReminder()"
+                                    [disabled]="!buttonFlag" matTooltip="Send Reminder" matTooltipPosition="above">
+                                    Send Reminder
+                                </button>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row ps-1 pt-4">
+        <div class="col-sm-8">
+            <app-survey-summary [surveyID]="surveyID" [graphHeader]="'Survey Summary'" ></app-survey-summary>
+        </div>
+        <div class="col-sm-4 ">
+            <app-survey-details [surveyID]="surveyID" (status)="getStatus($event)"></app-survey-details>
+        </div>
+    </div>
+    <div class="row ps-1 pt-4">
+        <div class="col-sm-12">
+            <app-list [surveyID]="surveyID"></app-list>
+        </div>
+    </div>
+</div>

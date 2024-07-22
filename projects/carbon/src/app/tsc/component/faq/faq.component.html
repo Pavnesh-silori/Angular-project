@@ -1,0 +1,544 @@
+<!-- SCOPE ONE -->
+<div class="container">
+    <div class="card main-card cardOverwrite">
+        <div class="card-header roundedBorder">
+            <div class="pageTitle">
+                FAQ: Scope 1
+            </div>
+        </div>
+    </div>
+
+    <mat-accordion id="stationaryCombustion">
+        <mat-expansion-panel class="cardOverwrite my-1" [expanded]="defaultOpen === 'stationaryCombustion'">
+            <mat-expansion-panel-header>
+                <mat-panel-title class="faqTitleText">
+                    What is Stationary Combustion?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p class="lh-lg">
+                Combustion emission sources are stationary sources that combust fuel, like a natural gas
+                hot water heater for an office building or an oil burning boiler. Emissions result from the
+                actual combustion of the fuels to produce useful products, like heat and hot water.
+            </p>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-accordion id="mobileCombustion">
+        <mat-expansion-panel class="cardOverwrite mb-1" [expanded]="defaultOpen === 'mobileCombustion'">
+            <mat-expansion-panel-header>
+                <mat-panel-title class="faqTitleText">
+                    What is Mobile Combustion?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p class="lh-lg">
+                Mobile sources, like company owned or leased cars and heavy duty vehicles generate emissions
+                by burning fuel. The fuel usage for any vehicle that is under the company's operational control
+                should be reported here as direct emissions.
+            </p>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-accordion id="refrigerationAndAirConditioning">
+        <mat-expansion-panel class="cardOverwrite mb-1" [expanded]="defaultOpen === 'refrigerationAndAirConditioning'">
+            <mat-expansion-panel-header>
+                <mat-panel-title class="faqTitleText">
+                    What is Refrigeration and Air Conditioning?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p class="lh-lg">
+                Refrigeration and Air Conditioning (AC) equipment sources can vary in size based on the type of
+                organization.
+                Emissions from refrigeration and AC devices, in facilities or vehicles, are caused by the leakage of
+                chemicals
+                with global warming impact during use, maintenance and/or disposal of the device. They are often small
+                sources
+                for office-based organizations. For example, a small office building may have one rooftop AC unit while
+                a
+                grocery store chain may have several rooftop AC units per store as well as a multitude of other
+                refrigeration equipment.
+            </p>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-accordion id="fireSuppressants">
+        <mat-expansion-panel class="cardOverwrite mb-1" [expanded]="defaultOpen === 'fireSuppressants'">
+            <mat-expansion-panel-header>
+                <mat-panel-title class="faqTitleText">
+                    What are Fire Suppressants?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p class="lh-lg">
+                Fire suppression emission sources can range in scale from a small portable fire extinguisher to a large
+                scale fire
+                suppression system for an office building or warehouse. The emissions are caused by chemicals (e.g.,
+                HFCs or CO2)
+                emitted from fire suppression devices during use, maintenance, and disposal.
+            </p>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-accordion id="purchasedGas">
+        <mat-expansion-panel class="cardOverwrite mb-1" [expanded]="defaultOpen === 'purchasedGas'">
+            <mat-expansion-panel-header>
+                <mat-panel-title class="faqTitleText">
+                    What is Purchased gas?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p class="lh-lg">
+                Industrial gases are sometimes used in processes such as manufacturing, testing, or laboratory uses.
+                For example, CO2 gas is often used in welding operations.
+                These gases are typically released to the atmosphere after use.
+                Any releases of the seven major greenhouse gases (CO2, CH4, N2O, PFCs, HFCs, SF6, and NF3) must be
+                included in the GHG inventory.
+                Ozone depleting substances, such as CFCs and HCFCs, are regulated internationally and are typically
+                excluded from a GHG inventory
+                or reported as a memo item.
+            </p>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-accordion id="wasteGas">
+        <mat-expansion-panel class="cardOverwrite mb-1" [expanded]="defaultOpen === 'wasteGas'">
+            <mat-expansion-panel-header>
+                <mat-panel-title class="faqTitleText">
+                    What is Waste gas?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p class="lh-lg">
+                Some operations, such as printing operations or paint booths, emit organic compounds. In some cases
+                these
+                waste gas streams are combusted with a flare or thermal oxidizer. This combustion results in CO2
+                emissions
+                that should be included in GHG inventories. These are uncommon sources for most office-based
+                organizations.
+            </p>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>
+<!-- /SCOPE ONE -->
+
+<!-- SCOPE TWO -->
+<div class="container">
+    <div class="card main-card mt-3 cardOverwrite">
+        <div class="card-header roundedBorder">
+            <div class="pageTitle">
+                FAQ: Scope 2
+            </div>
+        </div>
+    </div>
+
+    <mat-accordion id="locationBasedMethod">
+        <mat-expansion-panel class="cardOverwrite my-1" [expanded]="defaultOpen === 'locationBasedMethod'">
+            <mat-expansion-panel-header>
+                <mat-panel-title class="faqTitleText">
+                    What is Location based method?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p class="lh-lg">
+                A method to quantify scope 2 GHG emissions based on average energy generation emission
+                factors for defined geographic locations, including local, subnational, or national boundaries.
+            </p>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-accordion id="marketBasedMethod">
+        <mat-expansion-panel class="cardOverwrite mb-1" [expanded]="defaultOpen === 'marketBasedMethod'">
+            <mat-expansion-panel-header>
+                <mat-panel-title class="faqTitleText">
+                    What is Market based method?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p class="lh-lg">
+                A method to quantify the scope 2 GHG emissions of a reporter based on GHG emissions emitted
+                by the generators from which the reporter contractually purchases electricity bundled with
+                contractual instruments, or contractual instruments on their own
+            </p>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-accordion id="contractualInstruments">
+        <mat-expansion-panel class="cardOverwrite mb-1" [expanded]="defaultOpen === 'contractualInstruments'">
+            <mat-expansion-panel-header>
+                <mat-panel-title class="faqTitleText">
+                    What are contractual instruments?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p class="lh-lg">
+                Under the market-based method, different contractual instruments become carriers of GHG-emission rate
+                information that function as emission factors for consumers to use to calculate their GHG emissions.
+            </p>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-accordion id="lOContractualInstruments">
+        <mat-expansion-panel class="cardOverwrite mb-1" [expanded]="defaultOpen === 'lOContractualInstruments'">
+            <mat-expansion-panel-header>
+                <mat-panel-title class="faqTitleText">
+                    List of contractual instruments used for Market based Scope 2 calculation.
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <ul class="lh-lg">
+                <li>Energy attribute certificates</li>
+                <li>Contracts such as power purchase agreements (PPAs)</li>
+                <li>Supplier-specific emission rate</li>
+                <li>Residual mix</li>
+            </ul>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-accordion id="qualityCriteria">
+        <mat-expansion-panel class="cardOverwrite mb-1" [expanded]="defaultOpen === 'qualityCriteria'">
+            <mat-expansion-panel-header>
+                <mat-panel-title class="faqTitleText">
+                    What is Scope 2 Quality Criteria?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <strong>All contractual instruments used in the market-based method for scope 2 accounting shall:</strong>
+            <ul class="lh-lg">
+                <li>Convey the direct GHG emission rate attribute associated with the unit of electricity produced.</li>
+                <li>Be the only instruments that carry the GHG emission rate attribute claim associated with that
+                    quantity
+                    of electricity generation.
+                </li>
+                <li>Be tracked and redeemed, retired, or canceled by or on behalf of the reporting entity.</li>
+                <li>Be issued and redeemed as close as possible to the period of energy consumption to which the
+                    instrument
+                    is applied.
+                </li>
+                <li>Be sourced from the same market in which the reporting entity's electricity-consuming operations are
+                    located and to which the instrument is applied.
+                </li>
+            </ul>
+            <strong>In addition, utility-specific emission factors shall:</strong>
+            <ul class="lh-lg">
+                <li>Be calculated based on delivered electricity, incorporating certificates sourced and retired on
+                    behalf of its
+                    customers. Electricity from renewable facilities for which the attributes have been sold off (via
+                    contracts or
+                    certificates) shall be characterized as having the GHG attributes of the residual mix in the utility
+                    or supplier-specific
+                    emission factor.
+                </li>
+            </ul>
+            <strong>In addition, companies purchasing electricity directly from generators or consuming on-site
+                generation shall:</strong>
+            <ul class="lh-lg">
+                <li>Ensure all contractual instruments conveying emissions claims be transferred to the reporting entity
+                    only.
+                    No other instruments that convey this claim to another end user shall be issued for the contracted
+                    electricity.
+                    The electricity from the facility shall not carry the GHG emission rate claim for use by a utility,
+                    for example,
+                    for the purpose of delivery and use claims.
+                </li>
+            </ul>
+            <strong>Finally, to use any contractual instrument in the market-based method requires that:</strong>
+            <ul class="lh-lg">
+                <li>An adjusted, residual mix characterizing the GHG intensity of unclaimed or publicly shared
+                    electricity shall
+                    be made available for consumer scope 2 calculations, or its absence shall be disclosed by the
+                    reporting entity.
+                </li>
+            </ul>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>
+<!-- /SCOPE TWO -->
+
+
+<!-- SCOPE THREE -->
+<div class="container">
+    <div class="card main-card mt-3 cardOverwrite">
+        <div class="card-header roundedBorder">
+            <div class="pageTitle">
+                FAQ: Scope 3
+            </div>
+        </div>
+    </div>
+
+    <mat-accordion id="purchasedGoodsAndServices">
+        <mat-expansion-panel class="cardOverwrite my-1" [expanded]="defaultOpen === 'purchasedGoodsAndServices'">
+            <mat-expansion-panel-header>
+                <mat-panel-title class="faqTitleText">
+                    What is Scope 3 Category 1: Purchased goods and services?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p class="lh-lg">
+                This category includes all upstream (i.e., cradle-to-gate) emissions from the production of
+                products purchased or acquired by the reporting company in the reporting year. Products include
+                both goods (tangible products) and services (intangible products).
+            </p>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-accordion id="capitalGoods">
+        <mat-expansion-panel class="cardOverwrite mb-1" [expanded]="defaultOpen === 'capitalGoods'">
+            <mat-expansion-panel-header>
+                <mat-panel-title class="faqTitleText">
+                    What is Scope 3 Category 2: Capital goods?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p class="lh-lg">
+                This category includes all upstream (i.e., cradle-to-gate) emissions from the production of capital
+                goods purchased or acquired by the reporting company in the reporting year. Capital goods are final
+                products that have an extended life and are used by the company to manufacture a product; provide a
+                service; or sell, store, and deliver merchandise. In financial accounting, capital goods are treated
+                as fixed assets or as plant, property, and equipment (PP&E). Examples of capital goods include
+                equipment,
+                machinery, buildings, facilities, and vehicles.
+            </p>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-accordion id="fuelAndEnergyRelatedActivities">
+        <mat-expansion-panel class="cardOverwrite mb-1" [expanded]="defaultOpen === 'fuelAndEnergyRelatedActivities'">
+            <mat-expansion-panel-header>
+                <mat-panel-title class="faqTitleText">
+                    What is Scope 3 Category 3: Fuel- and energy related activities (not included in scope 1 or scope
+                    2)?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p class="lh-lg">
+                This category includes emissions related to the production of fuels and energy purchased and consumed by
+                the
+                reporting company in the reporting year that are not included in scope 1 or scope 2. Emissions from four
+                broad
+                categories are included-
+            </p>
+            <ul class="lh-lg">
+                <li>A. Upstream emissions of purchased fuels</li>
+                <li>B. Upstream emissions of purchased electricity</li>
+                <li>C. Transmission and distribution (T&D) losses</li>
+                <li>D. Generation of purchased electricity that is sold to end users</li>
+            </ul>
+            <strong>Out of these four, only the ones applicable to your organization will be included in your Scope 3
+                inventory.</strong>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-accordion id="upstreamTransportAndDistribution">
+        <mat-expansion-panel class="cardOverwrite mb-1" [expanded]="defaultOpen === 'upstreamTransportAndDistribution'">
+            <mat-expansion-panel-header>
+                <mat-panel-title class="faqTitleText">
+                    What is Scope 3 Category 4: Upstream transportation and distribution?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <strong>This category includes emissions from:</strong>
+            <ul class="lh-lg">
+                <li>Transportation and distribution of products purchased in the reporting year, between a company’s
+                    tier 1
+                    suppliers and its own operations in vehicles not owned or operated by the reporting company
+                    (including
+                    multimodal shipping where multiple carriers are involved in the delivery of a product, but excluding
+                    fuel
+                    and energy products).
+                </li>
+                <li>Third-party transportation and distribution services purchased by the reporting company in the
+                    reporting
+                    year (either directly or through an intermediary), including inbound logistics, outbound logistics
+                    (e.g.,
+                    of sold products), and third-party transportation and distribution between a company’s own
+                    facilities.
+                </li>
+            </ul>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-accordion id="wasteGenerated">
+        <mat-expansion-panel class="cardOverwrite mb-1" [expanded]="defaultOpen === 'wasteGenerated'">
+            <mat-expansion-panel-header>
+                <mat-panel-title class="faqTitleText">
+                    What is Scope 3 Category 5: Waste generated in operations?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p class="lh-lg">
+                This category includes emissions from third-party disposal and treatment of waste generated in the
+                reporting
+                company’s owned or controlled operations in the reporting year. This includes emissions from disposal of
+                both
+                solid waste and wastewater.
+            </p>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-accordion id="businessTravel">
+        <mat-expansion-panel class="cardOverwrite mb-1" [expanded]="defaultOpen === 'businessTravel'">
+            <mat-expansion-panel-header>
+                <mat-panel-title class="faqTitleText">
+                    What is Scope 3 Category 6: Business travel?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p class="lh-lg">
+                This category includes emissions from the transportation of employees for business related activities in
+                vehicles owned or operated by third parties, such as aircraft, trains, buses, and passenger cars.
+            </p>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-accordion id="employeeCommute">
+        <mat-expansion-panel class="cardOverwrite mb-1" [expanded]="defaultOpen === 'employeeCommute'">
+            <mat-expansion-panel-header>
+                <mat-panel-title class="faqTitleText">
+                    What is Scope 3 Category 7: Employee commuting?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <strong>This category includes emissions from the transportation of employees between their homes and their
+                worksites. Emissions from employee commuting may arise from:
+            </strong>
+            <ul class="lh-lg">
+                <li>Automobile travel</li>
+                <li>Bus travel</li>
+                <li>Rail travel</li>
+                <li>Air travel</li>
+                <li>Other modes of transportation (e.g., subway, bicycling, walking).</li>
+            </ul>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-accordion id="upstreamLeasedAssets">
+        <mat-expansion-panel class="cardOverwrite mb-1" [expanded]="defaultOpen === 'upstreamLeasedAssets'">
+            <mat-expansion-panel-header>
+                <mat-panel-title class="faqTitleText">
+                    What is Scope 3 Category 8: Upstream leased assets?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p class="lh-lg">
+                This category includes emissions from the operation of assets that are leased by the reporting company
+                in the reporting year and not already included in the reporting company’s scope 1 or scope 2
+                inventories.
+                This category is applicable only to companies that operate leased assets (i.e., lessees). For companies
+                that own and lease assets to others (i.e., lessors), see category 13 (Downstream leased assets).
+            </p>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-accordion id="downstreamTransportAndDistribution">
+        <mat-expansion-panel class="cardOverwrite mb-1"
+            [expanded]="defaultOpen === 'downstreamTransportAndDistribution'">
+            <mat-expansion-panel-header>
+                <mat-panel-title class="faqTitleText">
+                    What is Scope 3 Category 9: Downstream transportation and distribution?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p class="lh-lg">
+                This category includes emissions that occur in the reporting year from transportation and distribution
+                of
+                sold products in vehicles and facilities not owned or controlled by the reporting company.This category
+                also includes emissions from retail and storage. Outbound transportation and distribution services that
+                are
+                purchased by the reporting company are excluded from category 9 and included in category 4 (Upstream
+                transportation and distribution) because the reporting company purchases the service. Category 9
+                includes
+                only emissions from transportation and distribution of products after the point of sale.
+            </p>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-accordion id="processingSoldProducts">
+        <mat-expansion-panel class="cardOverwrite mb-1" [expanded]="defaultOpen === 'processingSoldProducts'">
+            <mat-expansion-panel-header>
+                <mat-panel-title class="faqTitleText">
+                    What is Scope 3 Category 10: Processing of sold products?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p class="lh-lg">
+                This category includes emissions from processing of sold intermediate products by third parties (e.g.,
+                manufacturers) subsequent to sale by the reporting company. Intermediate products are products that
+                require
+                further processing, transformation, or inclusion in another product before use, and therefore result in
+                emissions from processing subsequent to sale by the reporting company and before use by the end
+                consumer.
+                Emissions from processing should be allocated to the intermediate product.
+            </p>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-accordion id="useSoldProduct">
+        <mat-expansion-panel class="cardOverwrite mb-1" [expanded]="defaultOpen === 'useSoldProduct'">
+            <mat-expansion-panel-header>
+                <mat-panel-title class="faqTitleText">
+                    What is Scope 3 Category 11: Use of sold products?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p class="lh-lg">
+                This category includes emissions from the use of goods and services sold by the reporting company in the
+                reporting year. A reporting company’s scope 3 emissions from use of sold products include the scope 1
+                and
+                scope 2 emissions of end users. End users include both consumers and business customers that use final
+                products.
+            </p>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-accordion id="eolTreatmentSoldProduct">
+        <mat-expansion-panel class="cardOverwrite mb-1" [expanded]="defaultOpen === 'eolTreatmentSoldProduct'">
+            <mat-expansion-panel-header>
+                <mat-panel-title class="faqTitleText">
+                    What is Scope 3 Category 12: End-of-life treatment of sold products?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p class="lh-lg">
+                This category includes emissions from the waste disposal and treatment of products sold by the reporting
+                company (in the reporting year) at the end of their life. This category includes the total expected
+                end-of-life emissions from all products sold in the reporting year.
+            </p>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-accordion id="downstreamLeasedAsset">
+        <mat-expansion-panel class="cardOverwrite mb-1" [expanded]="defaultOpen === 'downstreamLeasedAsset'">
+            <mat-expansion-panel-header>
+                <mat-panel-title class="faqTitleText">
+                    What is Scope 3 Category 13: Downstream leased assets?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p class="lh-lg">
+                This category includes emissions from the operation of assets that are owned by the reporting company
+                (acting as lessor) and leased to other entities in the reporting year that are not already included in
+                scope 1 or scope 2. This category is applicable to lessors (i.e., companies that receive payments from
+                lessees).
+            </p>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-accordion id="franchises">
+        <mat-expansion-panel class="cardOverwrite mb-1" [expanded]="defaultOpen === 'franchises'">
+            <mat-expansion-panel-header>
+                <mat-panel-title class="faqTitleText">
+                    What is Scope 3 Category 14: Franchises?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p class="lh-lg">
+                This category includes emissions from the operation of franchises not included in scope 1 or scope 2.
+                A franchise is a business operating under a license to sell or distribute another company’s goods or
+                services within a certain location. This category is applicable to franchisors (i.e., companies that
+                grant licenses to other entities to sell or distribute its goods or services in return for payments,
+                such as royalties for the use of trademarks and other services). Franchisors should account for
+                emissions
+                that occur from the operation of franchises (i.e., the scope 1 and scope 2 emissions of franchisees) in
+                this category.
+            </p>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-accordion id="investments">
+        <mat-expansion-panel class="cardOverwrite mb-1" [expanded]="defaultOpen === 'investments'">
+            <mat-expansion-panel-header>
+                <mat-panel-title class="faqTitleText">
+                    What is Scope 3 Category 15: Investments?
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <p class="lh-lg">
+                This category includes scope 3 emissions associated with the reporting company’s investments in the
+                reporting year, not already included in scope 1 or scope 2. This category is applicable to investors
+                (i.e., companies that make an investment with the objective of making a profit) and companies that
+                provide financial services. This category also applies to investors that are not profit driven (e.g.
+                multilateral development banks), and the same calculation methods should be used. Investments are
+                categorized as a downstream scope 3 category because providing capital or financing is a service
+                provided
+                by the reporting company.
+            </p>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>
+<!-- /SCOPE THREE -->

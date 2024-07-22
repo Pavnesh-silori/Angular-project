@@ -1,0 +1,43 @@
+<div mat-dialog-header>
+    <div class="row">
+        <div class="col-sm-11 centerAlignVertical">
+            <div class="pageTitle">Audit Trail</div>
+        </div>
+        <div class="col-sm-1">
+            <button mat-icon-button mat-dialog-close cdkFocusInitial class="float-end matDialogClose" matTooltip="Close"
+                matTooltipPosition="before">
+                <span class="material-symbols-outlined">
+                    close
+                </span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div mat-dialog-content class="mt-3">
+    <div class="row">
+        <span class="dialogTitle fs-5">Section - {{ auditT.sectionName }}</span>
+    </div>
+    <div class="row">
+        <span class="pageSubtitle mb-4">Group - {{ auditT.groupName }}</span>
+    </div>
+    <div *ngIf="msgTrail.length == 0">
+        <lib-message-alert [messageAlertTypeInp]="messageAlertTypeEnum.INFO"
+            [messageAlertIconInp]="messageAlertIconEnum.INFO_ICON"
+            contentInp="No audit trail has been found for this question">
+        </lib-message-alert>
+    </div>
+    <div *ngIf="msgTrail.length > 0">
+        <div class="line-container" *ngFor="let item of auditT.msgTrail">
+            <div class="container-item mt-2">
+                <div class=" col-sm-1 container-item-image ">
+                    <img class="rounded-circle border profileImageHeaderView"
+                        [src]=" item.profileImgUrl || defaultImage(item)" alt="Profile image">
+                </div>
+                <div class="col-sm-11 ">
+                  {{ item.firstName }} {{ item.lastName != null ? item.lastName : ''}}  {{ item.message }} {{ getDateTime(item.messageDate) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

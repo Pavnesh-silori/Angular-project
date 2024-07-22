@@ -1,0 +1,96 @@
+<ng-container *ngIf="employee">
+    <mat-card class="cardOverwrite">
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Employee Code',
+                        value: employee.code,
+                        class: ''
+                    }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'First Name',
+                        value: employee.firstName,
+                        class: 'pt-3'
+                    }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Last Name',
+                        value: employee.lastName,
+                        class: 'pt-3'
+                    }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Email ID',
+                        value: employee.emailID,
+                        class: 'pt-3'
+                    }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Department',
+                        value: employee.department,
+                        class: 'pt-3'
+                    }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Designation',
+                        value: employee.designation,
+                        class: 'pt-3'
+                    }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Contact Number',
+                        value: employee.contactNumber,
+                        class: 'pt-3'
+                    }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Joining Date',
+                        value: employee.joiningDate,
+                        class: 'pt-3'
+                    }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Leaving Date',
+                        value: employee.leavingDate,
+                        class: 'pt-3'
+                    }">
+        </ng-container>
+
+        <div class="row pt-3">
+            <div class="col-sm-4">
+                Status
+            </div>
+            <div class="col-sm-8 fw-bold">
+                <span [ngClass]="employee.status ? 'text-success' : 'text-danger'">
+                    {{ employee.status ? 'Active' : 'Inactive' }}
+                </span>
+            </div>
+        </div>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'API Key ID',
+                        value: employee.assetKeyID,
+                        class: 'pt-3'
+                    }">
+        </ng-container>
+
+    </mat-card>
+</ng-container>
+
+<ng-template #labelValue let-label="label" let-value="value" let-class="class" let-valueClass="valueClass">
+    <div class="row" [class]="class">
+        <div class="col-sm-4">
+            {{ label }}
+        </div>
+        <div class="col-sm-8 fw-bold" [class]="valueClass">
+            {{ value ? value : COMMON_CONSTANT.HYPHEN }}
+        </div>
+    </div>
+</ng-template>

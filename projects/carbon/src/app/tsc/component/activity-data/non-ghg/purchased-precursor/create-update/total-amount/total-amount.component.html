@@ -1,0 +1,629 @@
+<mat-card class="cardOverwrite border">
+    <div class="cardTitle pb-2"> Activity Data</div>
+    <form [formGroup]="activityDataFG">
+        <ng-container formArrayName="activityDataDetails">
+            <ng-container *ngFor="let activityData of activityDataFA.controls; let i = index">
+                <ng-container [formGroupName]="i">
+                    <div class="row">
+                        <div class="col-sm-8 mb-3">
+                            Precursor:
+                            <span class="cardTitle pb-2"> {{ sourceName }} </span>
+                        </div>
+                    </div>
+
+                    <mat-card class="cardOverwrite border mb-2">
+                        <div class="col-sm-8 mb-3">
+                            Supplier:
+                            <span class="cardTitle pb-2"> {{ supplierName }} </span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Country of origin of precursor</mat-label>
+                                    <mat-select formControlName="countryCode"
+                                        (selectionChange)="onCountrySelectionChange($event)" required>
+                                        <mat-option>
+                                            <ngx-mat-select-search [formControl]="countryFiltered.filterFC"
+                                                placeholderLabel="Search by country name"
+                                                [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                            </ngx-mat-select-search>
+                                        </mat-option>
+                                        <mat-option *ngFor="let countriesM of countryFiltered.filteredEntities | async"
+                                            [value]="countriesM.countryCode">
+                                            <span class="d-flex justify-content-between">
+                                                {{countriesM.countryName}} - {{countriesM.countryCode}}
+                                            </span>
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="errorHandlingForFormArrayData('countryCode', 'required', i)">
+                                        {{ formErrorEnum.REQUIRED }}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <ng-container *ngIf="activityData.get('countryCode').value">
+                                <div class="col-sm-6">
+                                    <mat-form-field class="matFieldWidth100"
+                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <mat-label class="formLabel">UN/LOCODE of the location</mat-label>
+                                        <mat-select formControlName="unlCode"
+                                            (selectionChange)="getCordinates($event.value)" required>
+                                            <mat-option>
+                                                <ngx-mat-select-search [formControl]="unlCodeFiltered.filterFC"
+                                                    placeholderLabel="Search by UN location code"
+                                                    [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                                </ngx-mat-select-search>
+                                            </mat-option>
+                                            <mat-option *ngFor="let UNLcode of unlCodeFiltered.filteredEntities | async"
+                                                [value]="UNLcode.locationCode">
+                                                <span class="d-flex justify-content-between">
+                                                    {{UNLcode.name}} - {{UNLcode.locationCode}}
+                                                </span>
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="errorHandlingForFormArrayData('unlCode', 'required', i)">
+                                            {{ formErrorEnum.REQUIRED }}
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </ng-container>
+                        </div>
+
+                        <div formGroupName="cordinates" class="row">
+                            <div class="col-sm-6">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Longitude</mat-label>
+                                    <input matInput type="text" formControlName="longitude" required>
+                                    <mat-error *ngIf="errorHandlingForFormArrayData('longitude', 'required', i)">
+                                        {{ formErrorEnum.REQUIRED }}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Latitude</mat-label>
+                                    <input matInput type="text" formControlName="latitude" required />
+                                    <mat-error *ngIf="errorHandlingForFormArrayData('latitude', 'required', i)">
+                                        {{ formErrorEnum.REQUIRED }}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Unique installation identifier</mat-label>
+                                    <input matInput type="text" formControlName="identifier">
+                                    <mat-error *ngIf="errorHandlingForFormArrayData('identifier', 'required', i)">
+                                        {{ formErrorEnum.REQUIRED }}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Installation address</mat-label>
+                                    <input matInput type="text" formControlName="address" required>
+                                    <mat-error *ngIf="errorHandlingForFormArrayData('address', 'required', i)">
+                                        {{ formErrorEnum.REQUIRED }}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </mat-card>
+
+                    <mat-card class="cardOverwrite border">
+                        <div class="col-sm-8 mb-3">
+                            Precursor:
+                            <span class="cardTitle pb-2"> {{ sourceName }} </span>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <lib-date-input class="cursorPointer" #customDateInput
+                                            (emitFilter)="dateInpChange(i)" [materialFieldWidthInp]="true"
+                                            [materialFormFieldAppearanceInp]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE"
+                                            [isMandatoryFieldInp]="true"
+                                            [dateInputTypeInp]="dateInputTypeEnum.CUSTOM_INPUT"
+                                            [labelInp]="'Accounting Period'"
+                                            [cdrFormatInp]="DateFormatEnum.DD_MMM_YYYY"></lib-date-input>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <ng-container *ngIf="haveStandardName">
+                                            <mat-form-field class="matFieldWidth100"
+                                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                <mat-label>Select standard production route</mat-label>
+                                                <mat-select formControlName="standardPRID">
+                                                    <mat-option>
+                                                        <ngx-mat-select-search
+                                                            [formControl]="productionRouteSearchUtil.filterFC"
+                                                            placeholderLabel="Search by production route name"
+                                                            noEntriesFoundLabel="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                                        </ngx-mat-select-search>
+                                                    </mat-option>
+                                                    <mat-option
+                                                        *ngFor="let productionRoute of productionRouteSearchUtil.filteredEntities | async"
+                                                        [value]="productionRoute.id">
+                                                        {{ productionRoute.name }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error
+                                                    *ngIf="errorHandlingForFormArrayData('standardPRID', 'required', i)">
+                                                    {{ formErrorEnum.REQUIRED }}
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </ng-container>
+
+                                        <mat-form-field class="matFieldWidth100"
+                                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                            <mat-label class="formLabel">Production route used</mat-label>
+                                            <input matInput type="text" formControlName="name" required>
+                                            <mat-error *ngIf="errorHandlingForFormArrayData('name', 'required', i)">
+                                                {{ formErrorEnum.REQUIRED }}
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <mat-form-field class="matFieldWidth100"
+                                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                            <mat-label class="formLabel">Quantity</mat-label>
+                                            <input matInput type="text" formControlName="quantity" min="0" required>
+                                            <mat-error *ngIf="errorHandlingForFormArrayData('quantity', 'required', i)">
+                                                {{ formErrorEnum.REQUIRED }}
+                                            </mat-error>
+                                            <mat-error *ngIf="errorHandlingForFormArrayData('quantity', 'min', i)">
+                                                {{ formErrorEnum.NEGATIVE }}
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <mat-form-field class="matFieldWidth100"
+                                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                            <mat-label class="formLabel">Select Purchased precursor unit</mat-label>
+                                            <mat-select formControlName="quantityUnitID" required>
+                                                <mat-option>
+                                                    <ngx-mat-select-search
+                                                        [formControl]="quantityUnitSearchUtil.filterFC"
+                                                        placeholderLabel="Search by unit name"
+                                                        [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                                    </ngx-mat-select-search>
+                                                </mat-option>
+                                                <mat-option
+                                                    *ngFor="let unit of quantityUnitSearchUtil.filteredEntities | async"
+                                                    [value]="unit.id">
+                                                    <span class="d-flex justify-content-between">
+                                                        {{unit.name}} - {{unit.uomCode}}
+                                                    </span>
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error
+                                                *ngIf="errorHandlingForFormArrayData('quantityUnitID', 'required', i)">
+                                                {{ formErrorEnum.REQUIRED }}
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+
+                                <ng-container *ngIf="showSpecificParameter">
+                                    <mat-card class="cardOverwrite border mb-2">
+                                        <div class="col-sm-8">
+                                            Sector specific parameters
+                                            <div *ngIf="parentKeyID == 'Mixed fertilisers'" class="mt-3">
+                                                Information required anyway under Regulation (EU) 2019/1009:
+                                            </div>
+                                        </div>
+                                        <ng-container formArrayName="sectorSpecificParameter">
+                                            <ng-container
+                                                *ngFor="let subGroup of getAggregatedArray(activityData).controls; let j = index">
+                                                <ng-container [formGroupName]="j">
+                                                    <div *ngIf="subGroup.get('type').value != 'radio'" class="row">
+                                                        <div class="col-sm-6">
+                                                            <mat-form-field class="matFieldWidth100"
+                                                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                                <mat-label class="formLabel">{{
+                                                                    subGroup.get('keyID').value
+                                                                    }}</mat-label>
+                                                                <input *ngIf="subGroup.get('type').value == 'number'"
+                                                                    matInput [attr.type]="subGroup.get('type').value"
+                                                                    formControlName="value"
+                                                                    oninput="this.value >= 0 ? null : this.value=0"
+                                                                    required>
+
+                                                                <input *ngIf="subGroup.get('type').value != 'number'"
+                                                                    matInput [attr.type]="subGroup.get('type').value"
+                                                                    formControlName="value" required>
+                                                                <mat-error
+                                                                    *ngIf="subGroup.get('value').hasError('required') && (subGroup.get('value').dirty || subGroup.get('value').touched)">
+                                                                    {{ formErrorEnum.REQUIRED }}
+                                                                </mat-error>
+                                                            </mat-form-field>
+                                                        </div>
+                                                    </div>
+
+                                                    <div *ngIf="subGroup.get('type').value == 'radio'" class="row">
+                                                        <div class="radioBtnGroupLabel"> {{ subGroup.get('keyID').value
+                                                            }}
+                                                        </div>
+                                                        <mat-radio-group formControlName="value">
+                                                            <div class="row my-2">
+                                                                <div class="col-sm-6">
+                                                                    <mat-radio-button class="radioBtnLabel" value="YES">
+                                                                        Yes
+                                                                    </mat-radio-button>
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <mat-radio-button class="radioBtnLabel" value="NO">
+                                                                        No
+                                                                    </mat-radio-button>
+                                                                </div>
+                                                                <mat-error
+                                                                    *ngIf="subGroup.get('value').hasError('required') && (subGroup.get('value').dirty || subGroup.get('value').touched)">
+                                                                    {{ formErrorEnum.REQUIRED }}
+                                                                </mat-error>
+                                                            </div>
+                                                        </mat-radio-group>
+                                                    </div>
+                                                </ng-container>
+                                            </ng-container>
+                                        </ng-container>
+                                    </mat-card>
+                                </ng-container>
+
+                                <div class="row mt-2">
+                                    <div class="col-sm-6">
+                                        <mat-form-field class="matFieldWidth100"
+                                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                            <mat-label class="formLabel">Embeded direct emissions of the
+                                                precursor</mat-label>
+                                            <input matInput type="number" min="0"
+                                                formControlName="precursorDirectEmission" required>
+                                            <mat-error
+                                                *ngIf="errorHandlingForFormArrayData('precursorDirectEmission', 'required', i)">
+                                                {{ formErrorEnum.REQUIRED }}
+                                            </mat-error>
+                                            <mat-error
+                                                *ngIf="errorHandlingForFormArrayData('precursorDirectEmission', 'min', i)">
+                                                {{ formErrorEnum.NEGATIVE }}
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <mat-form-field class="matFieldWidth100"
+                                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                            <mat-label class="formLabel">Select embeded direct unit</mat-label>
+                                            <mat-select formControlName="precursorDirectEmissionUnitID" required>
+                                                <mat-option>
+                                                    <ngx-mat-select-search [formControl]="unitFiltered.filterFC"
+                                                        placeholderLabel="Search by unit name"
+                                                        [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                                    </ngx-mat-select-search>
+                                                </mat-option>
+                                                <mat-option *ngFor="let unit of unitFiltered.filteredEntities | async"
+                                                    [value]="unit.id">
+                                                    <span class="d-flex justify-content-between">{{unit.name}} -
+                                                        {{unit.uomCode}}</span>
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error
+                                                *ngIf="errorHandlingForFormArrayData('precursorDirectEmissionUnitID', 'required', i)">
+                                                {{ formErrorEnum.REQUIRED }}
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <mat-form-field class="matFieldWidth100"
+                                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                            <mat-label class="formLabel">Embeded indirect emissions of the
+                                                precursor</mat-label>
+                                            <input matInput type="number" min="0"
+                                                formControlName="precursorIndirectEmission" required>
+                                            <mat-error
+                                                *ngIf="errorHandlingForFormArrayData('precursorIndirectEmission', 'required', i)">
+                                                {{ formErrorEnum.REQUIRED }}
+                                            </mat-error>
+                                            <mat-error
+                                                *ngIf="errorHandlingForFormArrayData('precursorIndirectEmission', 'min', i)">
+                                                {{ formErrorEnum.NEGATIVE }}
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div class="col-sm-6">
+                                        <mat-form-field class="matFieldWidth100"
+                                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                            <mat-label class="formLabel">Select embeded indirect unit</mat-label>
+                                            <mat-select formControlName="precursorIndirectEmissionUnitID" required>
+                                                <mat-option>
+                                                    <ngx-mat-select-search [formControl]="unitFiltered.filterFC"
+                                                        placeholderLabel="Search by unit name"
+                                                        [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                                    </ngx-mat-select-search>
+                                                </mat-option>
+                                                <mat-option *ngFor="let unit of unitFiltered.filteredEntities | async"
+                                                    [value]="unit.id">
+                                                    <span class="d-flex justify-content-between">{{unit.name}} -
+                                                        {{unit.uomCode}}</span>
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error
+                                                *ngIf="errorHandlingForFormArrayData('precursorIndirectEmissionUnitID', 'required', i)">
+                                                {{ formErrorEnum.REQUIRED }}
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mb-2">
+                            <div class="col-sm-12">
+                                <mat-label>Is there any carbon price due for this precursor?*</mat-label>
+                                <mat-radio-group formControlName="dueCarbonPrice" (change)="alterValidators(i)"
+                                    required>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <mat-radio-button class="pt-2" [value]="true">Yes
+                                            </mat-radio-button>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <mat-radio-button class="pt-2" [value]="false">No
+                                            </mat-radio-button>
+                                        </div>
+                                        <mat-error class="mt-2"
+                                            *ngIf="errorHandlingForFormArrayData('dueCarbonPrice', 'required', i) && 
+                                    activityDataFG.get('activityDataDetails').at(i).controls['dueCarbonPrice'].touched">
+                                            {{ formErrorEnum.REQUIRED }}
+                                        </mat-error>
+                                    </div>
+                                </mat-radio-group>
+                            </div>
+                        </div>
+
+                        <mat-card class="mt-2 cardOverwrite border"
+                            *ngIf="this.activityDataFG.get('activityDataDetails').at(i).controls['dueCarbonPrice'].value === true ">
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <mat-form-field class="matFieldWidth100"
+                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <mat-label class="formLabel">Share of emissions covered by the carbon price
+                                        </mat-label>
+                                        <input matInput type="number" min="0" formControlName="dueCarbonPriceEmission"
+                                            required>
+                                        <mat-error
+                                            *ngIf="errorHandlingForFormArrayData('dueCarbonPriceEmission', 'required', i)">
+                                            {{ formErrorEnum.REQUIRED }}
+                                        </mat-error>
+                                        <mat-error
+                                            *ngIf="errorHandlingForFormArrayData('dueCarbonPriceEmission', 'min', i)">
+                                            {{ formErrorEnum.NEGATIVE }}
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-sm-1 pt-3">
+                                    <span class="material-symbols-outlined fs-4 cursorPointer"
+                                        matTooltipPosition="above" matTooltipClass="infoTooltip"
+                                        matTooltip="Please enter here the share of the TOTAL (direct + indirect) specific emissions that are subject to carbon pricing. For instance, if only direct emissions are covered by a carbon pricing system, the share to be provided here would be exactly the share of the direct emissions of the total emissions.">
+                                        info
+                                    </span>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <mat-form-field class="matFieldWidth100"
+                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <mat-label class="formLabel">Select emissions covered unit</mat-label>
+                                        <mat-select formControlName="dueCarbonPriceEmissionUnitID" required>
+                                            <mat-option>
+                                                <ngx-mat-select-search [formControl]="unitFiltered.filterFC"
+                                                    placeholderLabel="Search by unit name"
+                                                    [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                                </ngx-mat-select-search>
+                                            </mat-option>
+                                            <mat-option *ngFor="let unit of unitFiltered.filteredEntities | async"
+                                                [value]="unit.id">
+                                                <span class="d-flex justify-content-between">{{unit.name}} -
+                                                    {{unit.uomCode}}</span>
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error
+                                            *ngIf="errorHandlingForFormArrayData('dueCarbonPriceEmissionUnitID', 'required', i)">
+                                            {{ formErrorEnum.REQUIRED }}
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <mat-form-field class="matFieldWidth100"
+                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <mat-label class="formLabel">Select Currency</mat-label>
+                                        <mat-select formControlName="currencyID" required>
+                                            <mat-option>
+                                                <ngx-mat-select-search [formControl]="currencyTypeSearchUtil.filterFC"
+                                                    placeholderLabel="Search by currency name"
+                                                    [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                                </ngx-mat-select-search>
+                                            </mat-option>
+                                            <mat-option
+                                                *ngFor="let currency of currencyTypeSearchUtil.filteredEntities| async"
+                                                [value]="currency.currencyID">
+                                                {{ currency.currencyName }} -
+                                                {{currency.currencySymbol}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="errorHandlingForFormArrayData('currencyID', 'required', i)">
+                                            {{ formErrorEnum.REQUIRED }}
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <mat-form-field class="matFieldWidth100"
+                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <mat-label class="formLabel">Carbon price (CP) due</mat-label>
+                                        <input matInput type="number" min="0" formControlName="dueCarbonPriceValue"
+                                            required>
+                                        <mat-error
+                                            *ngIf="errorHandlingForFormArrayData('dueCarbonPriceValue', 'required', i)">
+                                            {{ formErrorEnum.REQUIRED }}
+                                        </mat-error>
+                                        <mat-error
+                                            *ngIf="errorHandlingForFormArrayData('dueCarbonPriceValue', 'min', i)">
+                                            {{ formErrorEnum.NEGATIVE }}
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-sm-1 pt-3">
+                                    <span class="material-symbols-outlined fs-4 cursorPointer"
+                                        matTooltipPosition="above" matTooltipClass="infoTooltip"
+                                        matTooltip="Please enter here the carbon price due per tonne of CO2e in the relevant currency. This value shall not include any rebate such as free allocation or financial compensation. It shall also not include any carbon price due for any precursors outside the production process to avoid double counting.">
+                                        info
+                                    </span>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <mat-form-field class="matFieldWidth100"
+                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <mat-label class="formLabel">Amount of rebate</mat-label>
+                                        <input matInput type="number" formControlName="rebate" min="0" required>
+                                        <mat-error *ngIf="errorHandlingForFormArrayData('rebate', 'required', i)">
+                                            {{ formErrorEnum.REQUIRED }}
+                                        </mat-error>
+                                        <mat-error *ngIf="errorHandlingForFormArrayData('rebate', 'min', i)">
+                                            {{ formErrorEnum.NEGATIVE }}
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-sm-1 pt-3">
+                                    <span class="material-symbols-outlined fs-4 cursorPointer"
+                                        matTooltipPosition="above" matTooltipClass="infoTooltip"
+                                        matTooltip="Please enter here the rebate per tonne of CO2e covered by the rebate in the relevant currency. It shall also not include any rebate for any precursors outside the production process to avoid double counting.">
+                                        info
+                                    </span>
+                                </div>
+                            </div>
+                        </mat-card>
+
+                        <ng-container *ngIf="activityData.get('docPath').value == null">
+                            <div class="row pt-2">
+                                <div class="col-sm-8 fileInput">
+                                    <input class="form-control" type="file"
+                                        accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                        #fileInput (change)="fileUpload($event, i)">
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <div class="centerAlign mt-2">
+                                        <span class="material-symbols-outlined fs-2">
+                                            download
+                                        </span>
+                                        <a [href]="templateFileSrc" download class="ms-2">Download template file</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row pt-2">
+                                <div class="col-sm-8">
+                                    <div class="border rounded d-flex" [ngClass]="{'d-none': (docFileList[i] == null)}">
+                                        <div class="p-1">
+                                            <ng-container *ngTemplateOutlet="docImg"></ng-container>
+                                        </div>
+
+                                        <div class="p-1">
+                                            <div class="centerAlignVertical p-1">
+                                                {{activityData.get('docName').value}} <br>
+                                                {{activityData.get('docSize').value}}
+                                            </div>
+                                        </div>
+
+                                        <div class="ms-auto p-1">
+                                            <button type="button" class="btn p-1" mat-icon-button
+                                                (click)="removeFile(i)">
+                                                <span class="material-symbols-outlined text-danger">
+                                                    delete
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                        <ng-conatiner *ngIf="activityData.get('docPath').value != null">
+                            <div class="row pt-2">
+                                <div class="col-sm-8">
+                                    <div class="border rounded d-flex">
+
+                                        <ng-container *ngTemplateOutlet="docImg"></ng-container>
+
+                                        <div class="p-1">
+                                            <div class="centerAlignVertical p-3">
+                                                <a href="{{activityData.get('docPath').value}}" target="_blank"
+                                                    [ngClass]="{'d-none': !activityData.get('docPath').value}">
+                                                    {{activityData.get('docName').value}}
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                        <div class="ms-auto p-1">
+                                            <button type="button" class="btn p-1" mat-icon-button matTooltip="Edit"
+                                                matTooltipClass="nameTooltip" matTooltipPosition="below"
+                                                (click)="fileInput.click()">
+                                                <span
+                                                    class="material-symbols-outlined text-primary updateIconHover fs-5">
+                                                    edit
+                                                </span>
+                                            </button>
+                                            <input class="form-control" type="file" accept="application/pdf" #fileInput
+                                                (change)="fileUpload($event, i)" style="display: none;">
+                                            <button type="button" class="btn p-1" mat-icon-button matTooltip="Delete"
+                                                matTooltipClass="nameTooltip" matTooltipPosition="below"
+                                                (click)="deleteConfirmation(activityData, i)">
+                                                <span class="material-symbols-outlined text-danger">
+                                                    delete
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-conatiner>
+                    </mat-card>
+                </ng-container>
+            </ng-container>
+        </ng-container>
+    </form>
+</mat-card>
+
+<ng-template #docImg>
+    <div class="p-1">
+        <div class="docIcon p-1" matSuffix mat-icon-button mat-raised-button [matTooltip]="billFileName"
+            matTooltipPosition="below">
+            <img height="40px" src="assets/images/default-doc.ico" alt="bill document preview">
+        </div>
+    </div>
+</ng-template>

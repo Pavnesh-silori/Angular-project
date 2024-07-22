@@ -1,0 +1,22 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Subsidiary/Joint Venture accounting </div>
+            <div class="pageSubtitle">
+                Create a Subsidiary/JV emission record, sent request to collect data and respond to emission requests
+                from parent organizations.
+            </div>
+        </div>
+    </div>
+
+    <nav mat-tab-nav-bar>
+        <ng-container *ngFor="let tab of tab; let i = index;">
+            <a mat-tab-link [routerLink]="tab['routerLink']" (click)="activeLink = tab['routerLink']"
+                [active]="activeLink == tab['routerLink']">
+                {{ tab['label'] }}
+            </a>
+        </ng-container>
+    </nav>
+
+    <router-outlet></router-outlet>
+</div>

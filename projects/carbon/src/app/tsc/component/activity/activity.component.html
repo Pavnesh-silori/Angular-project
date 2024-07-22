@@ -1,0 +1,53 @@
+<div class="card main-card cardOverwrite">
+
+    <div class="card-header mt-2 bottomBorderNone">
+        <div class="card-title my-auto">
+            <div class="pageTitle">
+                Activity Types
+            </div>
+            <div class="pageSubtitle">
+                Based on the boundary questions you answered, view activity types for each scope
+                that you should account for as per the GHG protocol.
+            </div>
+        </div>
+    </div>
+
+    <table class="w-100 customTable roundedBorder mb-4" mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="activityName">
+            <th mat-header-cell *matHeaderCellDef> Activity Type </th>
+            <td mat-cell *matCellDef="let row"> {{row.activityName}}
+                <p class="pageSubtitle"> {{ row?.activityDescription }} </p>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="scopeName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Scope </th>
+            <td mat-cell *matCellDef="let row"> {{row.scopeName}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="activityEnable">
+            <th class="text-center" mat-header-cell *matHeaderCellDef mat-sort-header></th>
+            <td class="text-center cursorDefaultHover" mat-cell *matCellDef="let row">
+                <ng-container *ngIf="row.activityEnable == 'YES'; else elseBlock">
+                    <span class="material-symbols-outlined text-success">
+                        check_circle
+                    </span>
+                </ng-container>
+                <ng-template #elseBlock>
+                    <span class="material-symbols-outlined text-danger">
+                        cancel
+                    </span>
+                </ng-template>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+            </td>
+        </tr>
+
+    </table>
+</div>

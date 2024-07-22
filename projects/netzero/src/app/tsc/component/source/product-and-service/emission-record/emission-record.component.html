@@ -1,0 +1,45 @@
+<div class="card main-card cardOverwrite">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-12">
+                <ng-container *ngFor="let record of emissionRecords; let i = index">
+                    <div class="fw-bold pb-1 pt-1">
+                        {{ record?.name }}
+                    </div>
+                    <div *ngIf="record" class="container">
+                        <div class="row pt-2">
+                            <div class="col-sm-3 mb-3" *ngIf="i === 0">
+                                <ng-container
+                                    *ngTemplateOutlet="cardTemplate; context: { details: record }"></ng-container>
+                            </div>
+                            <div class="col-sm-3 mb-3" *ngIf="i === 0">
+                                <ng-container
+                                    *ngTemplateOutlet="cardTemplate; context: { details: { emission: record.count } }"></ng-container>
+                            </div>
+                            <div class="col-sm-3 mb-3" *ngIf="i !== 0">
+                                <ng-container
+                                    *ngTemplateOutlet="cardTemplate; context: { details: { emission: record.count } }"></ng-container>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #cardTemplate let-details="details">
+        <mat-card class="cardOverwrite border">
+            <mat-card-content class="d-flex flex-column align-items-center justify-content-center">
+                <div>
+                    <span class="fs-1 text-secondary" [class]="details?.emission != null ? 'fw-bold' : 'fw-light'">
+                        {{ details?.emission == null ? 'No Data' : details?.emission | number: '1.2-2' }}
+                    </span>
+                    <span class="fw-bold">
+                        {{ details?.emission == null ? '&nbsp;' : details?.unitName }}
+                    </span>
+                </div>
+                <div class="text-secondary">Total emissions</div>
+            </mat-card-content>
+        </mat-card>
+    </ng-template>
+</div>

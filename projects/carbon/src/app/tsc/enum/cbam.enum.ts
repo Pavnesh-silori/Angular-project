@@ -1,0 +1,40 @@
+export enum CbamEnum {
+    LOCKED = 'LOCKED',
+    UNLOCKED = 'UNLOCKED',
+    FINISHED = 'FINISHED',
+    PENDING_CONFIGURATION = 'PENDING_CONFIGURATION',
+    PENDING_DATA_COLLECTION = 'PENDING_DATA_COLLECTION',
+    PENDING_VERIFICATION = 'PENDING_VERIFICATION'
+}
+
+export enum RunStatusKeyIDEnum {
+    INSTALLATION_DETAILS = 'INSTALLATION_DETAILS',
+    PROCESS_MAP = 'PROCESS_MAP',
+    CONFIGURE_DATA_COLLECTION = 'CONFIGURE_DATA_COLLECTION',
+    TRACK_PROGRESS = 'TRACK_PROGRESS',
+    ALLOCATE_REVIEW = 'ALLOCATE_REVIEW',
+    CALCULATION_PENDING = 'CALCULATION_PENDING',
+    RUN_ERROR = 'RUN_ERROR',
+    DONE = 'DONE'
+}
+
+export enum CBAM_RUN_CALCULATION_STATUS_KEYID_ENUM {
+    CALCULATION_SUCCESS = 'CALCULATION_SUCCESS',
+    CALCULATION_FAILED = 'CALCULATION_FAILED'
+}
+
+export enum SourceKeyID {
+    GRID = 'grid',
+    CHP = 'chp',
+    NON_CHP = 'non-chp',
+    PRIVATE_SUPPLIER = 'private-supplier',
+    SELF_PRODUCED_WITHIN_THIS_PRODUCTION_ROUTE = 'self-produced-within-this-production-route',
+    SELF_PRODUCED_USING_SEPERATE_PRODUCTION_ROUTE = 'self-produced-using-separate-production-route',
+    PURCHASED_FROM_A_SUPPLIER = 'purchased-from-a-supplier'
+}
+
+export enum HeatTransferMediumKeyIDEnum {
+    STEAM = 'steam',
+    DIRECT_USE_OF_EXHAUST_GASES = 'direct-use-of-exhaust-gases',
+    HOT_WATER = 'hot-water'
+}

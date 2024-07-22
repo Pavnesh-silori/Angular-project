@@ -1,0 +1,36 @@
+<div class="d-flex">
+    <div class="header-dots">
+
+        <lib-org-drawer-header [toggleOrgDrawer]="globals.toggleOrgDrawer"
+            (toggleOrgDrawerGlobal)="globals.toggleOrgDrawer=$event;"></lib-org-drawer-header>
+
+        <span class="ps-1 pt-3">
+            <button type="button" class="hamburger hamburger--elastic"
+                [ngClass]="{'is-active' : globals.toggleSettingDrawer}" (click)="toggleSettingDrawer()">
+                <span class="hamburger-box">
+                    <span class="material-symbols-outlined headerIcon">
+                        settings
+                    </span>
+                </span>
+            </button>
+        </span>
+
+        <span class="ps-2 pt-3">
+            <button type="button" class="hamburger hamburger--elastic">
+                <span class="hamburger-box">
+                    <span class="material-symbols-outlined headerIcon">
+                        notifications
+                    </span>
+                </span>
+            </button>
+        </span>
+
+        <span class="ps-2 pt-3">
+            <lib-user-drawer></lib-user-drawer>
+        </span>
+
+        <span class="ps-2 pt-3">
+            <lib-application-drawer></lib-application-drawer>
+        </span>
+    </div>
+</div>

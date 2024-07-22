@@ -1,0 +1,25 @@
+.progress-bar {
+    width: 75%;
+    height: 30px;
+    margin: 10 auto;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 50px;
+    overflow: hidden;
+    background-color: white;
+    border: 0.5px solid grey;
+}
+
+.progress {
+    height: 100%;
+    display: flex;
+}
+
+.labels {
+    display: flex;
+    width: fit-content;
+    position: relative;
+    padding-top: 25px;
+    justify-content: space-between;
+}

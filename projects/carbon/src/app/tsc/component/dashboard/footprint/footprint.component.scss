@@ -1,0 +1,10 @@
+.outerDiv {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.innerDiv {
+    flex: 1;
+}

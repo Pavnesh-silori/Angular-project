@@ -1,0 +1,215 @@
+<div class="card main-card cardOverwrite overflowX h100" >
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">
+                Scope 3 by average based method
+                <button type="button" class="btn" #tooltip="matTooltip" matTooltipPosition="right"
+                    matTooltip="This method includes 5 activity types (Purchased Goods and Services, Capital goods, Upstream Transportation and Distribution, Downstream Transportation and Distribution and Business travel).">
+                    <span class="material-symbols-outlined">
+                        info
+                    </span>
+                </button>
+            </div>
+            <div class="pageSubtitle">
+                Records of financial transactions used to calculate scope 3 emissions using the average based method.
+            </div>
+        </div>
+            <div class="headerRightContainerInner">
+                <button type="button" class="button ms-4 btn btn-primary"
+                    routerLink="/sustainability-accounting/carbon/import-history"
+                    [queryParams]="{methodID: this.methodID}">
+                    View all imports
+                </button>
+                <button type="button" class="button ms-1 btn btn-success" 
+                [routerLink]="['/sustainability-accounting/carbon/import-data']" 
+                [queryParams]="{methodID: this.methodID}">
+                
+                    New import
+                </button>
+                <div class="ms-1 btn-group" ngbDropdown placement="bottom-right">
+                    <button type="button" ngbDropdownToggle class="btn btn-success">
+                    </button>
+                    <div ngbDropdownMenu>
+                        <button class="dropdown-item" (click)="createImportRequestDialog(this.methodID)">
+                            Create import request
+                        </button>
+                    </div>
+                </div>
+            </div> 
+
+    </div>
+    <button type="button" class="d-none" #refreshBtn>refresh</button>
+    <div>
+        <div class="float-end px-4">
+            <!-- <app-search-bar #searchBar searchBy="supplier" (emitSearch)="searchFn($event)"></app-search-bar> -->
+        </div>
+    </div>
+
+    <div class="ms-3 me-3">
+        <!-- <app-filter #filterChild></app-filter> -->
+        <lib-date-filter #filterChild></lib-date-filter>
+    </div>
+
+    <div class="ms-3 mb-4">
+        <!-- Below records are from
+        <strong> {{this.filterChild.startDate.value | date: 'dd-MMM-yyyy' }} </strong> to
+        <strong> {{this.filterChild.endDate.value| date: 'dd-MMM-yyyy' }} </strong> -->
+    </div>
+
+
+    <table mat-table [dataSource]="dataSource" #sort="matSort" matSort matSortActive="recordID" matSortDirection="desc"
+        matSortDisableClear>
+
+        <ng-container matColumnDef="recordID">
+            <th class="ps-3 recordID justify-content-start" mat-header-cell *matHeaderCellDef mat-sort-header> Record ID
+            </th>
+            <td class="ps-3 justify-content-start" mat-cell *matCellDef="let row">
+                <ng-container
+						*ngIf="row.calculationErrorReason && row.calculationErrorReason.length !== 0; else noError">
+						<img matTooltipPosition="above" matTooltip="{{ row.calculationErrorReason }}" class="ps-2 img"
+							src="/assets/images/icons8-calculation-error-100.png" />
+						{{row.recordID}}
+					</ng-container>
+					<ng-template #noError>
+						<span class="noError">
+							{{row.recordID}}
+						</span>
+					</ng-template>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="transactionDate">
+				<th mat-header-cell class="ps-1 transactionDate" *matHeaderCellDef>Accounting period</th>
+            <td class="p-3" mat-cell *matCellDef="let row">
+                {{ row.transactionDate ? (row.transactionDate | date:'dd-MMM-yyyy') : globalConstant.HYPHEN }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="account">
+            <th class="ps-3 account text-center" mat-header-cell *matHeaderCellDef>
+                <div class="row">
+                    <div class="col-sm-6 centerAlignVertical justify-content-start">
+                        Account
+                    </div>
+                    <div class="col-sm-2 centerAlign">
+                        <button mat-icon-button (click)="accountSelect.open()">
+                            <span class="fs-4 material-symbols-outlined funnel"
+                                [ngClass]="{'text-primary': accountFlag}">
+                                filter_alt
+                            </span>
+                            <div class="funnelFilterDD">
+                                <mat-form-field>
+                                    <mat-select #accountSelect (openedChange)="resetOnNoChange($event)"
+                                        [formControl]="accountFC" multiple>
+                                        <mat-select-trigger class="d-none"></mat-select-trigger>
+                                        <mat-option value="all" (click)="selectAllAccount()">
+                                            All account
+                                        </mat-option>
+                                        <mat-option *ngFor="let account of accountList" [value]="account['name']"
+                                            (click)="selectAccount(account)">
+                                            {{ account.name }}
+                                        </mat-option>
+                                        <button #accountBtn class="button btn btn-primary applyBtn float-end"
+                                            (click)="accountFlag = true; applyAccountFilter(); accountSelect.close();"
+                                            matRipple [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" >
+                                            Apply
+                                        </button>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </th>
+            <td class="px-3" mat-cell *matCellDef="let row" [matTooltip]="row['account']?.length>17? row['account']: ''"
+                matTooltipPosition="above" matTooltipClass="nameTooltip">
+                {{ (row.account ? row.account : globalConstant.HYPHEN) | dotdotdot:17}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="supplier">
+            <th class="ps-2 supplier" mat-header-cell *matHeaderCellDef> Supplier </th>
+            <td class="px-2" mat-cell *matCellDef="let row"
+                [matTooltip]="row['supplier']?.length>25? row['supplier']: ''" matTooltipPosition="above"
+                matTooltipClass="nameTooltip">
+                {{ (row.supplier ? row.supplier : globalConstant.HYPHEN) | dotdotdot:25}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="amount">
+            <th class="ps-3 amount" mat-header-cell *matHeaderCellDef> Amount </th>
+            <td class="px-3 " mat-cell *matCellDef="let row">
+                {{ (row['currencySymbol'] ? row['currencySymbol'] : globalConstant.HYPHEN) + ' '+(row['amount'] ?
+                (row.amount | number: '1.2-2') : globalConstant.HYPHEN) }}
+            </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="emissions">
+            <th class="emissions pe-4" mat-header-cell *matHeaderCellDef> Emissions <span class="ps-1">(tCO<sub>2</sub>e)</span> </th>
+            <td class="emissions pe-4"  mat-cell [matTooltip]="row.emission" matTooltipPosition="above" *matCellDef="let row">
+                {{ (row.emission ? (row.emission| number: '1.2-2') : globalConstant.HYPHEN) }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="category">
+            <th class="ps-3 category" mat-header-cell *matHeaderCellDef> USEEIO Category </th>
+            <td class="px-3 " mat-cell *matCellDef="let row"
+                [matTooltip]="row['categoryName']?.length>20? row['categoryName']: ''" matTooltipPosition="above"
+                matTooltipClass="nameTooltip">
+                {{ (row.categoryName ? row.categoryName : globalConstant.HYPHEN) | dotdotdot:20}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="activityType">
+            <th class="ps-2 activity " mat-header-cell *matHeaderCellDef>
+                <funnel-filter #activityType header="Activity type " type="mono" value="value"
+						view="value" [entityList]="activityTypeList"
+						[active]="activityTypeFlag" [selectFC]="activityTypeFC"
+						(mono)="activityTypeFlag = true;" (selected)="toggleScopeChip($event)"></funnel-filter>
+				</th>
+            <td class="px-2 " mat-cell *matCellDef="let row"
+                [matTooltip]="row['activityType']?.length>20? row['activityType']: ''" matTooltipPosition="above"
+                matTooltipClass="nameTooltip">
+                {{ (row.activityType ? row.activityType : globalConstant.HYPHEN) | dotdotdot:20}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let row">
+                <div class="btn-group" ngbDropdown placement="left-top">
+                    <button type="button" ngbDropdownToggle class="dropdown-after dropdownAfter btn">
+                        <fa-icon [icon]="faEllipsisV" class="">
+                        </fa-icon>
+                    </button>
+                    <div ngbDropdownMenu>
+                        <button class="dropdown-item" *ngIf="row.categorizePermission == globalConstant['YES']"
+                            (click)="updateCategorizedRecordsDialog(row.activityDataID)">
+                            Edit
+                        </button>
+                        <button class="btn btn-outline-danger rounded-0 dropdown-item"
+                            (click)="deleteImportRecord(row.activityDataID)">
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let task; columns: displayedColumns;">
+        </tr>
+
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                {{ globalConstant.TABLE_NO_DATA }}
+            </td>
+        </tr>
+    </table>
+
+	<mat-paginator class="roundedBorder" #paginator [length]="resultLength"
+		[pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION" [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE"
+		showFirstLastButtons>
+	</mat-paginator>
+</div>

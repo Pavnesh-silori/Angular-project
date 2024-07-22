@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+    </symbol>
+</svg>
+
+<div class="headerContainer p-0">
+    <div class="headerLeftContainer">
+        <div class="headerRightContainerInner">
+            <div class="pageTitle">
+                Preview
+            </div>
+        </div>
+        <div class="subTitle">
+            Preview of production route you have created till now.
+        </div>
+    </div>
+    <div class="headerRightContainer">
+        <button mat-icon-button mat-dialog-close cdkFocusInitial class="float-end matDialogClose" matTooltip="Close"
+            matTooltipPosition="before">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+    </div>
+</div>
+
+<div class="card main-card cardOverwrite">
+    <div class="container previewContainer customScrollBar">
+        <div class="row m-5">
+            <ng-container *ngFor="let process of productionRoute; let i = index;">
+                <div class="col-sm-4 centerAlignVertical px-0">
+                    <div class="processContainer centerAlignVertical">
+                        <ng-container *ngIf="(i != 0 && i % 3 == 0)">
+                            <div class="d-inline-block upCurveWrapper w-20">
+                                <div class="upCurveContainer">
+                                    <div class="upCurve">
+                                        <div class="cardOverwrite upCurveLine"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="newLinePoint"></div>
+                        </ng-container>
+
+                        <div *ngIf="!(i != 0 && i % 3 == 0)" class="arrow d-inline-block">
+                            <div *ngIf="i == 0" class="ball"></div>
+                            <div class="line"></div>
+                            <div *ngIf="i != 0" class="point"></div>
+                        </div>
+
+                        <mat-card class="processBox border cardOverwrite p-0 d-inline-block">
+                            <mat-card-content class="m-1 centerAlign processCard"
+                                [matTooltip]="process.name?.length > max_process_name_char_length ? process.name : ''"
+                                matTooltipClass="infoTooltip" matTooltipPosition="above">
+                                <div class="process">
+                                    {{ process.name ? (process.name | dotdotdot: max_process_name_char_length) :
+                                    'Process name' }}
+                                </div>
+                            </mat-card-content>
+                        </mat-card>
+
+                        <div *ngIf="!(i != 0 && i % 3 == 2) && i != productionRoute.length - 1"
+                            class="d-inline-block w-20">
+                            <div class="nextConnect"></div>
+                        </div>
+
+                        <div *ngIf="i != 0 && i % 3 == 2 && i != productionRoute.length - 1"
+                            class="d-inline-block w-20 downCurveWrapper">
+                            <div class="downCurveContainer">
+                                <div class="downCurve">
+                                    <div class="cardOverwrite downCurveLine"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="mt-4" *ngIf="i != 0 && i % 3 == 2 && i != productionRoute.length - 1" />
+
+                <!-- TODO check do i need this -->
+                <ng-container *ngIf="i != 0 && i % 3 == 2 && productionRoute % 3 == 0 && i == productionRoute - 1">
+                    <div class="d-inline-block nextBoxCurveWrapper">
+                        <div class="nextBoxCurveContainer">
+                            <div class="nextBoxCurve">
+                                <div class="cardOverwrite createButtonCurveLine"></div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="i == productionRoute - 1">
+                    <div class="col-sm-4 ps-0 centerAlignVertical newButtonContainer">
+                        <ng-container *ngTemplateOutlet="createNew"></ng-container>
+                    </div>
+                </ng-container>
+            </ng-container>
+        </div>
+    </div>
+</div>
+
+<div mat-dialog-footer align="end">
+    <button mat-dialog-close class="btn btn-secondary float-end m-3">
+        Close
+    </button>
+</div>

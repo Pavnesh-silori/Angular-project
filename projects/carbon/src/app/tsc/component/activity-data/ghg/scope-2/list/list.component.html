@@ -1,0 +1,189 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">{{ activity.name }}</div>
+            <div *ngIf="activity.keyID== 'purchased-electricity'" class="pageSubtitle">Records of purchased electricity
+                used by your organization from the grid or a private supplier.</div>
+            <div *ngIf="activity.keyID== 'purchased-heat-steam'" class="pageSubtitle">Records of purchased heat-steam
+                used by your organization from the grid or a private supplier.</div>
+            <div *ngIf="activity.keyID== 'purchased-cooling'" class="pageSubtitle">Records of purchased cooling used by
+                your organization from the grid or a private supplier.</div>
+        </div>
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <lib-search-bar-one class="me-3" #searchBar searchBy="supplier"
+                    (emitSearch)="searchFn($event)"></lib-search-bar-one>
+            </div>
+        </div>
+
+        <div class="headerRightContainerInner">
+            <button class="btn btn-sm btn-light refreshBtn centerAlign me-3 py-1" #refreshBtn matRipple
+                [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                [matTooltip]="ButtonTooltipEnum.REFRESH">
+                <span class="material-symbols-outlined text-secondary">
+                    refresh
+                </span>
+            </button>
+            <!-- <button class="btn btn-sm btn-success" type="button" (click)="routeToAdHoc()">
+                <fa-icon [icon]="faPlus"></fa-icon> &nbsp;
+                Record
+            </button> -->
+
+            <div class="btn-group" ngbDropdown placement="bottom-right" matTooltipPosition="below"
+                [matTooltip]="ButtonTooltipEnum.MORE">
+                <button type="button" ngbDropdownToggle class="hideDropdownIcon btn btn-sm btn-success"><fa-icon
+                        [icon]="faPlus"></fa-icon>&nbsp;&nbsp;Record
+                        <fa-icon [icon]="faCaretDown" class="ms-2"></fa-icon>
+                </button>
+                <div ngbDropdownMenu>
+                    <button class="dropdown-item" matRipple [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER"
+                    (click)="routeToAdHoc()">
+                        Add New Record
+                    </button>
+                    <button class="dropdown-item" matRipple [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" (click)="showActivityConfigSelection()">
+                        Use Activity Form
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ms-3 me-3">
+        <lib-date-filter [ngClass]="{'d-none': !dateFlag}" #filterChild></lib-date-filter>
+    </div>
+
+    <div class="ms-3 mb-4">
+        <button matRipple [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" class="btn btn-link float-end me-2"
+            (click)="refreshFilter()" [disabled]="dataCollectionMethodFlag == false && dataInputMethodFlag == false">
+            <span class="material-symbols-outlined fs-6">
+                filter_list_off
+            </span> Reset Filters
+        </button>
+    </div>
+
+    <table mat-table [dataSource]="dataSource" #sort matSort matSortDirection="desc" matSortActive="recordID">
+
+        <ng-container matColumnDef="recordID">
+            <th mat-header-cell class="recordID" *matHeaderCellDef mat-sort-header disableClear>Record ID</th>
+            <td mat-cell *matCellDef="let row">
+                <ng-container
+                    *ngIf="row.calculationErrorReason && row.calculationErrorReason.length !== 0; else noError">
+                    <img matTooltipPosition="above" matTooltip="{{ row.calculationErrorReason }}" class="ps-2 img"
+                        src="/assets/images/icons8-calculation-error-100.png" />
+                    {{row.recordID}}
+                </ng-container>
+                <ng-template #noError>
+                    <span class="noError">
+                        {{row.recordID}}
+                    </span>
+                </ng-template>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="startDate">
+            <th mat-header-cell class="date" *matHeaderCellDef mat-sort-header disableClear>
+                Accounting Period
+            </th>
+            <td mat-cell *matCellDef="let row">
+                {{ row.startDate | date:'dd-MMM-yyyy'}} - {{ row.endDate | date:'dd-MMM-yyyy'}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="supplier">
+            <th mat-header-cell class=" supplier" *matHeaderCellDef disableClear>
+                Supplier
+            </th>
+            <td mat-cell *matCellDef="let row">{{ row.supplierName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="energyConsumed">
+            <th mat-header-cell class="energyConsumed text-end" *matHeaderCellDef disableClear>Energy Consumed</th>
+            <td mat-cell class=" text-end pe-4" *matCellDef="let row" matTooltipPosition="above"
+                matTooltip={{row.energyConsumed}}{{row.energyUnitName}}>
+                {{ row.energyConsumed !== null ? (row.energyConsumed | number:'1.0-2'): COMMON_CONSTANT.HYPHEN }}
+                {{row.energyUnitName}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="emission">
+            <th mat-header-cell class="ps-1  emission" *matHeaderCellDef disableClear>Emission<span
+                    class="ps-1">(tCO<sub>2</sub>e)</span></th>
+            <td mat-cell class=" emission  pe-4" *matCellDef="let row" matTooltipPosition="above"
+                matTooltip={{row.emission}}>
+                {{ row.emission !== null ? (row.emission | number:'1.0-2') : COMMON_CONSTANT.HYPHEN }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="dataInputMethod">
+            <th mat-header-cell class=" dataInputMethod " *matHeaderCellDef>
+                <funnel-filter #dataInputMethod header="Data Input Method" type="mono" value="keyID" view="name"
+                    [entityList]="dataInputMethodList" [selectFC]="dataInputMethodFC" [active]="dataInputMethodFlag"
+                    (mono)="dataInputMethodFlag = true;" (selected)="toggleScopeChip($event)"></funnel-filter>
+            </th>
+            <td mat-cell class=" dataInputMethod " *matCellDef="let row">
+                {{row.dataInputMethodName}}
+            </td>
+        </ng-container>
+
+        <ng-container class="row" matColumnDef="dataCollectionMethod">
+            <th mat-header-cell class="col-sm-1" *matHeaderCellDef>
+                <funnel-filter #dataCollectionMethod header="Data source" type="mono" value="keyID"
+                    view="dataCollectionMethodName" [entityList]="dataCollectionMethodlist"
+                    [selectFC]="dataCollectionMethodFC" [active]="dataCollectionMethodFlag"
+                    (mono)="dataCollectionMethodFlag = true;" (selected)="toggleScopeChip($event)"></funnel-filter>
+            </th>
+            <td mat-cell *matCellDef="let row">
+                {{row.dataCollectionMethodName}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="doc">
+            <th mat-header-cell *matHeaderCellDef class="option"></th>
+            <td mat-cell *matCellDef="let row">
+                <a href="{{row.docPath}}" target="_blank" [ngClass]="{'d-none': !row.docPath}"
+                    [matTooltip]="row.docName" matTooltipPosition="above" matTooltipClass="infoTooltip">
+                    <span class="material-symbols-outlined cursorPointer centerAlign"> description </span>
+                </a>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="option">
+            <th mat-header-cell class="option" *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let row">
+                <div class="centerAlignVertical">
+                    <ng-container *ngTemplateOutlet="icon; 
+                    context: {
+                        icon: 'edit',
+                        tooltip: ButtonTooltipEnum.UPDATE,
+                        iconClass: 'text-primary updateIconHover',
+                        function: routeToADUpdate,
+                        functionParameter: [row]
+                    }">
+                    </ng-container>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumn"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumn;"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumn.length">
+                {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+            </td>
+        </tr>
+    </table>
+    <mat-paginator class="roundedBorder" #paginator [length]="resultLength"
+        [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION" [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE"
+        showFirstLastButtons>
+    </mat-paginator>
+</div>
+
+<ng-template #icon let-icon="icon" let-tooltip="tooltip" let-iconClass="iconClass" let-function="function"
+    let-functionParameter="functionParameter">
+    <button class="iconBtn centerAlign" [class]="iconClass" matTooltipPosition="below" [matTooltip]="tooltip" matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" (click)="handleClick(function, functionParameter)">
+        <span class="material-symbols-outlined icon">
+            {{ icon }}
+        </span>
+    </button>
+</ng-template>

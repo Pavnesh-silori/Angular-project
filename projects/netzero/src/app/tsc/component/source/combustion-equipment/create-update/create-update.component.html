@@ -1,0 +1,65 @@
+<div class="headerContainer p-0" #header>
+    <div class="pageTitle">
+        {{ title }} Combustion Equipment
+    </div>
+
+    <div class="headerRightContainer">
+        <div class="headerRightContainerInner">
+            <button class="btn btn-sm centerAlign py-1 iconBtn" matRipple
+                [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                [matTooltip]="ButtonTooltipEnum.CLOSE" mat-dialog-close>
+                <span class="material-symbols-outlined">
+                    close
+                </span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<mat-dialog-content class="mat-typography customScrollBar pt-2" #body>
+    <form [formGroup]="assetFG">
+
+        <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel">Combustion Equipment Name</mat-label>
+            <input class="formPlaceholder" matInput type="text" placeholder="Combustion Equipment Name"
+                formControlName="assetName" required />
+            <mat-error *ngIf="errorHandling('assetName', 'required')">
+                {{ formErrorEnum.REQUIRED }}
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel">Combustion Equipment Code</mat-label>
+            <input class="formPlaceholder" matInput type="text" placeholder="Combustion Equipment Code"
+                formControlName="assetAssetID" />
+            <mat-error *ngIf="errorHandling('assetAssetID', 'duplicate_key')">
+                Combustion equipment code already exists
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel"> Description </mat-label>
+            <textarea matInput matTextareaAutosize matAutosizeMinRows="2" matAutosizeMaxRows="10"
+                [maxlength]="maxLength" formControlName="description"></textarea>
+            <mat-hint>Total number of character remaining: <span
+                    [class]="(charactersRemainingFn(assetFG) < 20)? 'text-danger': '' ">{{
+                    charactersRemainingFn(assetFG) }}</span>
+                /{{maxLength}}
+            </mat-hint>
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+
+<div class="tscDialogFooter" #footer>
+    <div [ngSwitch]="action" class="d-inline">
+        <button *ngSwitchCase="'create'" type="submit" class="button btn btn-success" (click)="checkKeyAvailability()">
+            Create
+        </button>
+        <button *ngSwitchCase="'update'" type="submit" class="button btn btn-primary" [ngClass]="{'disabled': isEqual}"
+            (click)="updateAsset()">
+            Update
+        </button>
+    </div>
+    <button class="btn btn-sm btn-secondary me-2" mat-dialog-close matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">Cancel</button>
+</div>

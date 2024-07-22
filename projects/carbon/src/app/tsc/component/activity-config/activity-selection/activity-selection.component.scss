@@ -1,0 +1,39 @@
+.activity-container {
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.activity-row {
+    align-items: center;
+}
+
+.activity-details {
+    display: flex;
+    align-items: center;
+}
+
+.scope-name {
+    font-weight: bold;
+}
+
+.description {
+    max-width: 375px;
+}
+
+.selected {
+    font-weight: bold;
+}
+
+.activityTitle {
+    color: #86878a;
+    text-transform: capitalize;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.activitySubtitle {
+    color: grey;
+    font-size: 12px;
+    font-weight: 200;
+    text-transform: none;
+}

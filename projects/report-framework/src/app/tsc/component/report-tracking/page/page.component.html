@@ -1,0 +1,118 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Ongoing reports</div>
+            <div class="pageSubtitle">
+                Keep track of your created report progress here. Click on each report to see its status.
+            </div>
+        </div>
+        <div class="headerRightContainer me-2">
+            <div class="headerRightContainerInner">
+                <lib-search-bar-one #searchBar searchBy="report name"
+                    (emitSearch)="searchFn($event)"></lib-search-bar-one>
+            </div>
+        </div>
+    </div>
+
+    <button type="button" class="d-none" #refreshBtn>refresh</button>
+
+    <div class="ms-3 mb-4 me-3">
+        <button matRipple [matRippleCentered]="true" class="btn btn-link float-end" (click)="refreshFilter();resetFlag=!resetFlag"
+            [disabled]="(frameworkFlag == false && intervalFlag == false)">
+            <span class="material-symbols-outlined fs-6">
+                filter_list_off
+            </span>
+            Reset Filters
+        </button>
+    </div>
+
+    <table class="rowActive" mat-table [dataSource]="dataSource" #sort matSort matSortActive="id"
+        matSortDirection="desc" matSortDisableClear>
+
+        <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear class="headerWidth"> Report ID </th>
+            <td mat-cell *matCellDef="let row" (click)="navigateToViewPage(row.id,row.name)" class="cursorPointer">
+                {{ row.id ? row.id : COMMON_CONSTANT.HYPHEN}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef class="headerWidth"> Report name </th>
+            <td mat-cell *matCellDef="let row" (click)="navigateToViewPage(row.id,row.name)" class="cursorPointer">
+                {{ row.name ? row.name : COMMON_CONSTANT.HYPHEN}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="framework">
+            <th class="px-3 reportingFrameWork" mat-header-cell *matHeaderCellDef>
+                <funnel-filter #frameworkSelect header="Reporting framework" type="multi"
+                    [entityList]="reportingFrameworkList" value="keyID" view="name" [selectFC]="frameworkFC" [searchBy]="searchBy"
+                    [active]="frameworkFlag" selectAllLabel="All Reporting framework" [resetFlag]="resetFlag" (multi)="frameworkFlag = true">
+                </funnel-filter>
+            </th>
+            <td class="ps-3 cursorPointer" mat-cell *matCellDef="let row" (click)="navigateToViewPage(row.id,row.name)">
+                {{row.reportingFrameworkName ? row.reportingFrameworkName : COMMON_CONSTANT.HYPHEN}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="startDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear class="headerWidth"> Reporting year </th>
+            <td mat-cell *matCellDef="let row" (click)="navigateToViewPage(row.id,row.name)" class="cursorPointer">
+                {{row.reportingYear ? row.reportingYear : COMMON_CONSTANT.HYPHEN}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="interval">
+            <th class="px-3 reportingFrameWork" mat-header-cell *matHeaderCellDef>
+                <funnel-filter #intervalSelect header="Reporting interval" type="multi" [entityList]="intervalList"
+                    value="keyID" view="name" [selectFC]="intervalFC" [active]="intervalFlag" [showSearchBar]="false"
+                    selectAllLabel="All Reporting interval" [resetFlag]="resetFlag" (multi)="intervalFlag = true">
+                </funnel-filter>
+            </th>
+            <td class="ps-3 cursorPointer" mat-cell *matCellDef="let row" (click)="navigateToViewPage(row.id,row.name)">
+                {{row.reportingInterval ? row.reportingInterval : COMMON_CONSTANT.HYPHEN}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="option">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td class="text-center" mat-cell *matCellDef="let row">
+                <div class="mt-2 btn-group" ngbDropdown placement="left">
+                    <button type="button" ngbDropdownToggle class="dropdown-after dropdownAfter btn">
+                        <fa-icon [icon]="faEllipsisV" class="me-2"></fa-icon>
+                    </button>
+                    <div ngbDropdownMenu>
+                        <button class="dropdown-item" [routerLink]="['/reporting-framework/config']"
+                            [queryParams]="{configID: row.id}">
+                            {{ ButtonLabelEnum.UPDATE_BTN_LABEL }}
+                        </button>
+                        <ng-container>
+                            <button class="dropdown-item" [routerLink]="['/reporting-framework/assignment']"
+                                [queryParams]="{configID: row.id, reportingFrameworkID: row.reportingFrameworkID}">
+                                Assign
+                            </button>
+                        </ng-container>
+                        <button class="btn btn-outline-danger rounded-0 dropdown-item"
+                            (click)="deleteConfirmation(row.id)">
+                            {{ ButtonLabelEnum.DELETE_BTN_LABEL }}
+                        </button>
+                    </div>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+            </td>
+        </tr>
+    </table>
+
+    <mat-paginator class="roundedBorder" #paginator [length]="resultLength"
+        [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION" [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE"
+        showFirstLastButtons>
+    </mat-paginator>
+
+</div>

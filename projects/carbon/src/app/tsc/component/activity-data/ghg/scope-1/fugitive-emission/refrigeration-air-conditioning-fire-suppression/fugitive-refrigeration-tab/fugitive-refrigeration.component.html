@@ -1,0 +1,49 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer mb-3">
+            <div class="pageTitle">Fugitive - Refrigeration</div>
+            <div class="pageSubtitle">Records of refrigeration, AC, or fire suppression equipment and gas
+                transactions (Purchase, sale and retrofitting).
+            </div>
+        </div>
+    </div>
+
+    <nav mat-tab-nav-bar>
+        <ng-container *ngIf="showServiceMyselfApproach">
+            <a mat-tab-link [routerLink]="tabs[0]['routerLink']" (click)="activeLink = tabs[0]['routerLink']"
+                [active]="activeLink == tabs[0]['activeLink']">
+                <span class="material-symbols-outlined">
+                    {{ tabs[0]['icon'] }}
+                </span>
+                <div class="ms-2">
+                    {{ tabs[0]['label'] }}
+                </div>
+            </a>
+        </ng-container>
+        <ng-container *ngIf="showServiceByContractorApproach">
+            <a mat-tab-link [routerLink]="tabs[1]['routerLink']" (click)="activeLink = tabs[1]['routerLink']"
+                [active]="activeLink == tabs[1]['activeLink']">
+                <span class="material-symbols-outlined">
+                    {{ tabs[1]['icon'] }}
+                </span>
+                <div class="ms-2">
+                    {{ tabs[1]['label'] }}
+                </div>
+            </a>
+        </ng-container>
+        <ng-container *ngIf="showScreeningApproach">
+            <a mat-tab-link [routerLink]="tabs[2]['routerLink']" (click)="activeLink = tabs[2]['routerLink']"
+                [active]="activeLink == tabs[2]['activeLink']">
+                <span class="material-symbols-outlined">
+                    {{ tabs[2]['icon'] }}
+                </span>
+                <div class="ms-2">
+                    {{ tabs[2]['label'] }}
+                </div>
+            </a>
+        </ng-container>
+    </nav>
+
+    <router-outlet></router-outlet>
+
+</div>

@@ -1,0 +1,22 @@
+<div class="card main-card cardOverwrite h100">
+
+    <header [recordData]="recordData" [gasName]="gasName"></header>
+    <hr class="mt-0">
+
+    <div class="row pb-2">
+        <div class="col-sm-4">
+            <factor-details [gwpResponse]="gwpResponse" *ngIf="isGwDataLoaded"></factor-details>
+        </div>
+
+        <div class="col-sm-8 recordData">
+            <app-details [recordData]="recordData" [gasName]="gasName" [screeningRecordData]="screeningRecordData">
+            </app-details>
+
+            <emission-details [recordData]="recordData" [emissionData]="emissionData">
+            </emission-details>
+
+            <calculation-details [emissionData]="emissionData">
+            </calculation-details>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,40 @@
+.funnelFilterDD {
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+::ng-deep.fuel {
+    position: absolute;
+    z-index: -999;
+    left: 175px;
+}
+
+::ng-deep.mat-menu-panel {
+    min-width: 0 !important;
+    min-height: 0 !important;
+}
+
+.fuelSelect {
+    height: 52px;
+    margin-top: 3px;
+    background-color: transparent;
+}
+
+.fuelSelectedLabel {
+    color: rgba(0, 0, 0, 0.87) !important; 
+}
+
+.fuelSelectFormField {
+    border: 1.5px rgba(26, 54, 126, 0.125) solid;
+}
+
+.fuelSelectErrorFormField {
+    border: 2px solid red !important;
+}
+
+.fuelSelectError {
+    font-size: 10.5px;
+    margin-top: 4px;
+    padding-left: 10px;
+}

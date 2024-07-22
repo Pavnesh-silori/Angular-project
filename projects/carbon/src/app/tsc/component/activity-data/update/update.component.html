@@ -1,0 +1,46 @@
+<div class="card main-card cardOverwrite main-container">
+    <!-- <div class="pffBody"> -->
+    <div class="headerContainer pb-0">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Update {{ activity.name }} record</div>
+        </div>
+    </div>
+    <div class="card-body">
+        <!-- <mat-card class="cardOverwrite border p-0"> -->
+        <router-outlet #activityConfig name="activityConfig" (activate)="activityConfigCompInit($event)">
+        </router-outlet>
+        <!-- </mat-card> -->
+
+        <!-- <mat-card class="cardOverwrite p-0 mt-3"> -->
+        <div class="mt-3">
+            <router-outlet name="activityData" (activate)="activityDataCompInit($event)"></router-outlet>
+        </div>
+        <!-- </mat-card> -->
+    </div>
+    <!-- </div> -->
+
+    <div class="fixed-footer">
+        <div class="float-end">
+            <!-- <a class="btn btn-secondary me-2" [routerLink]="['/activity-data', activityKeyID]"
+                [queryParams]="{ activityID: activityID, activityKeyID: activityKeyID }">
+                Cancel
+            </a> -->
+            <button class="btn btn-secondary me-2" type="button" (click)="cancelBtn()">
+                Cancel
+            </button>
+            
+            <button *ngIf="updateBtn" class="btn btn-primary" type="button" (click)="updateActivityData()">
+                Update
+            </button>
+
+            <button *ngIf="submitBtn" class="btn btn-success me-2" type="button" (click)="updateActivityData()"
+                [disabled]="isEqual">
+                Submit for approval
+            </button>
+
+            <button *ngIf="approveBtn" class="btn btn-success" type="button" (click)="updateActivityData()">
+                Save & Approve
+            </button>
+        </div>
+    </div>
+</div>

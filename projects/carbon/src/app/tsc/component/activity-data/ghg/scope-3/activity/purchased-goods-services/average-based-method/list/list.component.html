@@ -1,0 +1,237 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="mb-2">
+                <lib-message-alert [messageAlertTypeInp]="messageAlertTypeEnum.INFO"
+                    [messageAlertIconInp]="messageAlertIconEnum.INFO_ICON" [contentInp]="dynamicContent">
+                </lib-message-alert>
+
+            </div>
+        </div>
+
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <lib-search-bar-one class="me-3" #searchBar [searchBy]="'product name'"
+                    (emitSearch)="searchFn($event)"></lib-search-bar-one>
+
+                <button class="btn btn-sm btn-light centerAlign me-3 py-1 refreshBtn" #refreshBtn matRipple
+                    [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                    [matTooltip]="refreshBtnTooltip">
+                    <span class="material-symbols-outlined">
+                        refresh
+                    </span>
+                </button>
+                <button class="btn btn-sm btn-success" type="button" (click)="routeToCreate()">
+                    <fa-icon [icon]="faPlus"></fa-icon> &nbsp;
+                    Record
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="mb-2">
+                <lib-date-filter #filterChild></lib-date-filter>
+            </div>
+        </div>
+
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <button matRipple [matRippleCentered]="true" class="btn btn-link float-end" (click)="resetFilter();"
+                    [disabled]="dataCollectionMethodFilterFlag == false">
+                    <span class="material-symbols-outlined fs-6">
+                        filter_list_off
+                    </span>
+                    Reset Filters
+                </button>
+
+                <div class="btn-group float-end" ngbDropdown placement="bottom-right"
+                    [class]="bulkBtnFlag ? 'custom-cursor' : 'disableCursor'">
+                    <button type="button" ngbDropdownToggle class="btn btn-sm btn-secondary" [disabled]="!bulkBtnFlag">
+                        Bulk actions
+                    </button>
+
+                    <div ngbDropdownMenu *ngIf="bulkBtnFlag">
+                        <button class="dropdown-item" (click)="bulkUpdate('delete')">
+                            <span class="ms-2 text-danger">
+                                {{ ButtonLabelEnum.DELETE_BTN_LABEL }} all
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="overflowX customScrollBar h100">
+        <table class="w-100" mat-table [dataSource]="dataSource" matSort matSortActive="recordID"
+            matSortDirection="desc" matSortDisableClear>
+
+            <ng-container matColumnDef="recordID">
+                <th class="columnWidth" mat-header-cell *matHeaderCellDef>
+                    <div class="d-flex align-items-center">
+                        <mat-checkbox [(ngModel)]="allComplete" (change)="selectAll($event.checked)">
+                        </mat-checkbox>
+                        <span class="ms-2 mt-1" mat-sort-header disableClear>
+                            Record ID
+                        </span>
+                    </div>
+                </th>
+
+                <td mat-cell *matCellDef="let row">
+                    <mat-checkbox [(ngModel)]="row['completed']" (change)="rowSelected()"></mat-checkbox>
+                    <span class="ms-2 mt-1">
+                        {{ row.recordID ? row.recordID: COMMON_CONSTANT.HYPHEN }}
+                    </span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="sourceName">
+                <th mat-header-cell class="ps-3 name text-center" *matHeaderCellDef mat-sort-header disableClear>
+                    Product/Service Name
+                </th>
+
+                <td class="px-3" mat-cell *matCellDef="let row">
+                    <span class="cursorPointer" matTooltipPosition="above" matTooltip="{{row.sourceName}}"
+                        matTooltipClass="nameTooltip">
+                        {{ row.sourceName ? row.sourceName : COMMON_CONSTANT.HYPHEN}}
+                    </span>
+            </ng-container>
+
+            <ng-container matColumnDef="startDate">
+                <th mat-header-cell class="date ps-3" *matHeaderCellDef mat-sort-header disableClear>Accounting Period
+                </th>
+
+                <td class="p-3" mat-cell *matCellDef="let row">
+                    {{ row.startDate | date:'dd-MMM-yyyy'}} - {{ row.endDate | date:'dd-MMM-yyyy'}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="supplier">
+                <th class="ps-2 supplier" mat-header-cell *matHeaderCellDef> Supplier </th>
+
+                <td class="px-2" mat-cell *matCellDef="let row">
+                    {{ row.supplierName ? (row.supplierName) : COMMON_CONSTANT.HYPHEN }}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="quantityOrAmount">
+                <ng-container *ngIf="isAvgCalMethod(); else amount">
+                    <th mat-header-cell class="amount ps-3" *matHeaderCellDef>
+                        Quantity Purchased
+                    </th>
+
+                    <td class="px-3" mat-cell *matCellDef="let row">
+                        <span class="cursorPointer" matTooltipPosition="above"
+                            matTooltip="{{row.quantity}} {{row.quantityUnitName}}" matTooltipClass="nameTooltip">
+                            {{ row.quantity ? (row.quantity | number: '1.2-3') : COMMON_CONSTANT.HYPHEN}}
+                            {{ row.quantityUnitName }}
+                        </span>
+                    </td>
+                </ng-container>
+
+                <ng-template #amount>
+                    <th mat-header-cell class="amount ps-3" *matHeaderCellDef>
+                        Amount
+                    </th>
+
+                    <td class="px-3" mat-cell *matCellDef="let row">
+                        <span class="cursorPointer" matTooltipPosition="above"
+                            matTooltip="{{row.amount}} {{row.currencySymbol}}" matTooltipClass="nameTooltip">
+                            {{ row.amount ? (row.amount | number: '1.2-3') : COMMON_CONSTANT.HYPHEN }}
+                            {{ row.currencySymbol }}
+                        </span>
+                    </td>
+                </ng-template>
+            </ng-container>
+
+            <ng-container matColumnDef="emissions">
+                <th class="emissions pe-4" mat-header-cell *matHeaderCellDef> Emissions <span
+                        class="ps-1">(tCO<sub>2</sub>e)</span> </th>
+                <td class="emissions pe-4" mat-cell [matTooltip]="row.emission" matTooltipPosition="above"
+                    *matCellDef="let row">
+                    <ng-container *ngIf="row.emission; else noData">
+                        <a [routerLink]="routerLink(row)">
+                            {{ row.emission | number: '1.2-3' }}
+                        </a>
+                    </ng-container>
+                    <ng-template #noData> {{ COMMON_CONSTANT.HYPHEN }}</ng-template>
+                </td>
+            </ng-container>
+
+            <ng-container class="row" matColumnDef="dataCollectionMethod">
+                <th mat-header-cell class="ps-3" *matHeaderCellDef>
+                    <funnel-filter #dataCollectionMethod [header]="dataCollectionMethodFilterHeader"
+                        [active]="dataCollectionMethodFilterFlag"
+                        [showSearchBar]="dataCollectionMethodFilterShowSearchBar"
+                        [searchByPlaceholder]="dataCollectionMethodFiltersearchByPlaceholder"
+                        [searchBy]="dataCollectionMethodFilterSearchBy"
+                        [selectAllLabel]="dataCollectionMethodFilterAllLabel" [entityList]="dataCollectionMethodlist"
+                        [view]="dataCollectionMethodFilterView" [value]="dataCollectionMethodFilterValue"
+                        [type]="dataCollectionMethodFilterType" [selectFC]="dataCollectionMethodFilterFC"
+                        [resetFlag]="dataCollectionMethodFilterResetFlag"
+                        (mono)="dataCollectionMethodFilterFlag = true">
+                    </funnel-filter>
+
+                </th>
+                <td mat-cell *matCellDef="let row" class="px-3">
+                    {{ row.dataCollectionMethodName ? (row.dataCollectionMethodName) : COMMON_CONSTANT.HYPHEN }}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="doc">
+                <th class="ps-3" mat-header-cell *matHeaderCellDef> Document </th>
+                <td class="px-3 doc" mat-cell *matCellDef="let element">
+                    <ng-container *ngIf="element?.bill; else noDoc">
+                        <a href="{{element?.bill}}" target="_blank">
+                            <img src="assets/images/default-doc.ico" alt="Document"
+                                style="width: 30px; height: 30px;" />
+                        </a>
+                    </ng-container>
+                    <ng-template #noDoc>
+                        {{ COMMON_CONSTANT.HYPHEN }}
+                    </ng-template>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="option">
+                <th mat-header-cell *matHeaderCellDef class="ps-3">
+                </th>
+                <td mat-cell *matCellDef="let row" class="px-3">
+                    <div class="btn-group" ngbDropdown placement="left-top">
+                        <button type="button" ngbDropdownToggle class="dropdown-after dropdownAfter btn">
+                            <fa-icon [icon]="faEllipsisV"></fa-icon>
+                        </button>
+
+                        <div ngbDropdownMenu>
+                            <button class="dropdown-item" (click)="routeToUpdate(row)">
+                                {{ ButtonLabelEnum.UPDATE_BTN_LABEL }}
+                            </button>
+
+                            <button class="dropdown-item btn-outline-danger" (click)="removeItem(row)">
+                                {{ ButtonLabelEnum.DELETE_BTN_LABEL }}
+                            </button>
+                        </div>
+
+                    </div>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                    {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+                </td>
+            </tr>
+
+        </table>
+    </div>
+
+    <mat-paginator #paginator [length]="resultLength" [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION"
+        [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE" showFirstLastButtons>
+    </mat-paginator>
+
+</div>

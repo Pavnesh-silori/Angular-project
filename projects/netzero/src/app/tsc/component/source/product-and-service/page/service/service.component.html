@@ -1,0 +1,255 @@
+<div class="card main-card cardOverwrite">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Services</div>
+            <div class="pageSubtitle">Create purchased or sold services to track their emissions.
+            </div>
+        </div>
+
+        <div class="headerRightContaine">
+            <div class="headerRightContainerInner">
+                <lib-search-bar-one class="me-3" #searchBar [searchBy]="'name'"
+                    (emitSearch)="searchFn($event)"></lib-search-bar-one>
+
+                <button class="btn btn-sm btn-light refreshBtn centerAlign me-3 py-1" #refreshBtn matRipple
+                    [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                    [matTooltip]="ButtonTooltipEnum.REFRESH">
+                    <span class="material-symbols-outlined text-secondary">
+                        refresh
+                    </span>
+                </button>
+
+                <div class="headerRightContainerInner">
+                    <button type="button" class="btn btn-sm btn-success btnRightRadiusZero"
+                        (click)="openDialog('CREATE', '')">
+                        <fa-icon [icon]="faPlus" class="me-1"></fa-icon> Service
+                    </button>
+                </div>
+
+                <div class="btn-group" ngbDropdown placement="bottom-right">
+                    <button type="button" ngbDropdownToggle class="btn btn-sm btn-success btnLeftRadiusZero">
+                    </button>
+                    <div ngbDropdownMenu>
+                        <button class="dropdown-item " (click)="bulkUpload()">
+                            Import
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div [ngStyle]="{'display': isFirstTemplate ? '' : 'none'}">
+        <div class="pe-3 me-1 btn-group float-end" ngbDropdown placement="bottom-right"
+            [class]="bulkBtnFlag ? 'custom-cursor' : 'disableCursor'">
+            <button type="button" ngbDropdownToggle class="btn btn-sm btn-secondary" [disabled]="!bulkBtnFlag">
+                Bulk actions
+            </button>
+
+            <div ngbDropdownMenu *ngIf="bulkBtnFlag">
+                <button class="dropdown-item" (click)="bulkUpdate('active')">
+                    <span class="ms-2">Mark all as active</span>
+                </button>
+                <button class="dropdown-item" (click)="bulkUpdate('inactive')">
+                    <span class="ms-2">Mark all as inactive</span>
+                </button>
+                <button class="dropdown-item" (click)="bulkUpdate('delete')">
+                    <span class="ms-2 text-danger">
+                        {{ ButtonLabelEnum.DELETE_BTN_LABEL }} all
+                    </span>
+                </button>
+            </div>
+        </div>
+
+        <div class="me-2 mb-2">
+            <button matRipple [matRippleCentered]="true" class="btn btn-link float-end"
+                (click)="resetFilter(); resetFlag=!resetFlag" [disabled]="statusFlag == false">
+                <span class="material-symbols-outlined fs-6">
+                    filter_list_off
+                </span>
+                Reset Filters
+            </button>
+        </div>
+    </div>
+
+    <table class="rowActive" mat-table [dataSource]="dataSource" #sort matSort matSortActive="code"
+        matSortDirection="desc" matSortDisableClear [ngStyle]="{'display': isFirstTemplate ? '' : 'none'}">
+        <ng-container matColumnDef="code">
+            <th class="columnWidth" mat-header-cell *matHeaderCellDef>
+                <div class="d-flex align-items-center">
+                    <mat-checkbox [(ngModel)]="allComplete" (change)="selectAll($event.checked)">
+                    </mat-checkbox>
+
+                    <span class="ps-3 mt-1" mat-sort-header disableClear>
+                        Service code
+                    </span>
+                </div>
+            </th>
+            <td mat-cell *matCellDef="let row">
+                <mat-checkbox [(ngModel)]="row['completed']" (change)="rowSelected()">
+                </mat-checkbox>
+                <span class="ps-3 mt-1">
+                    {{ row.code ? row.code: COMMON_CONSTANT.HYPHEN }}
+                </span>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+            <th class="name" mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+                Name
+            </th>
+            <td class="cursorPointer text-primary name" mat-cell *matCellDef="let row"
+                (click)="navigateToViewPage(row.id)">
+                {{ row.name ? row.name : COMMON_CONSTANT.HYPHEN }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+            <th mat-header-cell class="col-sm-1 ps-5 serviceStatus" *matHeaderCellDef disableClear>
+                <span class="filter3">
+                    <funnel-filter #statusSelect header="Status" type="mono" [entityList]="statusList"
+                        [selectFC]="statusFC" [active]="statusFlag" (mono)="statusFlag = true;" [resetFlag]="resetFlag">
+                    </funnel-filter>
+                </span>
+            </th>
+            <td class="ps-5" mat-cell *matCellDef="let row" [ngClass]="StatusService.getStatusClass(row.status)">
+                {{ row.status ? StatusService.getStatusValue(row.status) : COMMON_CONSTANT.HYPHEN }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+            <th mat-header-cell class="description" *matHeaderCellDef disableClear> Description </th>
+            <td class="description" mat-cell *matCellDef="let row"
+                [matTooltip]="row.description?.length >= 40? row.description: ''" matTooltipClass="infoTooltip"
+                matTooltipPosition="above">
+                {{ row?.description? (row.description | dotdotdot: 40) : COMMON_CONSTANT.HYPHEN }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="keyID">
+            <th class="columnWidth px-3" mat-header-cell *matHeaderCellDef> API Key ID </th>
+            <td class="px-3" mat-cell *matCellDef="let row;">
+                <ng-container *ngIf="row.keyID; else noKey">
+                    <button class="mx-auto" mat-icon-button type="button" #tooltip="matTooltip"
+                        matTooltipPosition="above" matTooltipHideDelay="0"
+                        [matTooltip]="COMMON_CONSTANT.VIEW_API_KEY_ID" [popover]="myPopover" popoverPlacement="top"
+                        [popoverOnHover]="false" [popoverAnimation]="true">
+                        <span type="button" class="material-symbols-outlined fs-5">
+                            visibility
+                        </span>
+                    </button>
+
+                    <popover-content #myPopover [animation]="true" [closeOnClickOutside]="true">
+                        <span>{{ row.keyID }}</span>
+                        <button class="float-end" [cdkCopyToClipboard]="row.keyID" mat-icon-button type="button">
+                            <span class="material-symbols-outlined fs-5" #tooltip="matTooltip"
+                                matTooltipPosition="above" matTooltipHideDelay="0" matTooltipClass="nameTooltip"
+                                matTooltip="Copy">
+                                content_copy
+                            </span>
+                        </button>
+                    </popover-content>
+                </ng-container>
+                <ng-template #noKey>
+                    <span class="ps-3">{{COMMON_CONSTANT.HYPHEN}}</span>
+                </ng-template>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="option">
+            <th class="ps-5" mat-header-cell *matHeaderCellDef class=""></th>
+            <td class="ps-5" mat-cell class="option" *matCellDef="let row">
+                <div class="btn-group" ngbDropdown placement="left-top">
+                    <button type="button" ngbDropdownToggle class="dropdown-after dropdownAfter btn">
+                        <fa-icon [icon]="faEllipsisV"></fa-icon>
+                    </button>
+                    <div ngbDropdownMenu>
+                        <button class="dropdown-item" (click)="openDialog('UPDATE',row.id)">
+                            {{ ButtonLabelEnum.UPDATE_BTN_LABEL }}
+                        </button>
+
+                        <button class="dropdown-item" (click)="changeItemStatus(row)">
+                            <ng-container *ngIf="row.status === 'INACTIVE'; else activeContainer">
+                                Mark as active
+                            </ng-container>
+                            <ng-template #activeContainer>
+                                Mark as inactive
+                            </ng-template>
+                        </button>
+
+                        <button class="dropdown-item btn-outline-danger" (click)="removeItem(row)">
+                            {{ ButtonLabelEnum.DELETE_BTN_LABEL }}
+                        </button>
+                    </div>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="dataRow"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+            </td>
+        </tr>
+    </table>
+
+    <mat-paginator class="roundedBorder" [ngStyle]="{'display': isFirstTemplate ? '' : 'none'}" #paginator
+        [length]="resultLength" [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION"
+        [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE" showFirstLastButtons>
+    </mat-paginator>
+
+    <div class="row" [ngStyle]="{'display': isFirstTemplate ? 'none' : ''}">
+        <ng-container *ngIf="dataSource?.length !== 0">
+            <div class="col-sm-4 px-4 product-column">
+                <div class="row centerAlignHorizontal mt-3">
+                    <div class="row mb-4">
+                        <div class="product-list customScrollBar overflowY">
+                            <div class="col-sm-12 mb-3" *ngFor="let row of dataSource; let i=index"
+                                [ngClass]="{'cursorPointer': selectedServiceID != row.id}">
+                                <mat-card class="card cardOverwrite p-3 me-4" [showScrollbar]="scrollbarMode"
+                                    [id]="row.id"
+                                    [ngClass]="{'current-org': selectedServiceID == row.id, 'border': selectedServiceID != row.id}">
+                                    <div class="row">
+                                        <div class="col-sm-12 d-flex flex-column justify-content-center"
+                                            (click)="navigateToViewPage(row.id)">
+                                            <div class="fw-bold pb-1">
+                                                {{ row.name ? row.name : COMMON_CONSTANT.HYPHEN }}
+                                                <span *ngIf="row.isCbamComplaint"
+                                                    class="badge rounded-pill cbamBadge">CBAM
+                                                </span>
+                                            </div>
+
+                                            <div class="row text-secondary">
+                                                <div class="col-sm-4">Service Code:
+                                                </div>
+                                                <div class="col-sm-8 fw-bold">{{ row.code }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-card>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-8 px-4 product-column">
+                <div class="row centerAlignHorizontal mt-3">
+                    <mat-card class="row border cardOverwrite me-4 mb-4">
+                        <router-outlet></router-outlet>
+                    </mat-card>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>
+
+<ng-template #icon let-icon="icon" let-tooltip="tooltip" let-iconClass="iconClass" let-function="function"
+    let-functionParameter="functionParameter">
+    <button class="iconBtn centerAlign" [class]="iconClass" matTooltipPosition="below" [matTooltip]="tooltip" matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" (click)="handleClick(function, functionParameter)">
+        <span class="material-symbols-outlined icon">
+            {{ icon }}
+        </span>
+    </button>
+</ng-template>

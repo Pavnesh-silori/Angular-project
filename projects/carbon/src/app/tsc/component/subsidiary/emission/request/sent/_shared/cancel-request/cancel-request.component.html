@@ -1,0 +1,32 @@
+<h6 mat-dialog-title class="dialogTitle mb-0">
+    <div class="row">
+        <div class="col-sm-10 d-flex align-items-center text-danger">
+            <span class="material-symbols-outlined me-1">
+                dangerous
+            </span>
+            <strong> Cancel sent request? </strong>
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn float-end matDialogClose" mat-icon-button cdkFocusInitial mat-dialog-close
+                matTooltipPosition="above" matTooltip="Close">
+                <span class="material-symbols-outlined">
+                    close
+                </span>
+            </button>
+        </div>
+    </div>
+</h6>
+
+<mat-dialog-content class="mat-typography ps-5 py-0">
+    <div class="card-body breakLine">
+        Receiver won't be able to respond to this request.
+        <br />
+        Are you sure you want to cancel it?
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button class="btn btn-outline-danger border-0 me-2" type="button" [mat-dialog-close]="DialogEnum.CANCEL_DR">
+        Cancel request
+    </button>
+</mat-dialog-actions>

@@ -1,0 +1,221 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="headerRightContainerInner">
+                <div class="pageTitle">
+                    production route
+                </div>
+            </div>
+            <div *ngIf="!isUpdate" class="subTitle">
+                Create a production route by mapping physical or chemical processes that are carried out to make this
+                product.
+            </div>
+        </div>
+    </div>
+
+    <div class="px-3 pt-3">
+        <form [formGroup]="productionRouteFG">
+            <div class="row">
+                <div class="col-sm-8">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label>Select product</mat-label>
+                        <mat-select formControlName="productID" required>
+                            <mat-option>
+                                <ngx-mat-select-search [formControl]="productSearchUtil.filterFC"
+                                    placeholderLabel="Search by product name"
+                                    noEntriesFoundLabel="No matching product found.">
+                                </ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option *ngFor="let product of productSearchUtil.filteredEntities | async"
+                                [value]="product.id">
+                                {{product.name}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="errorHandling('productID', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <ng-container *ngIf="haveStandardName">
+                    <div class="col-sm-8">
+                        <mat-form-field class="matFieldWidth100"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label>Select standard production route</mat-label>
+                            <mat-select formControlName="standardPRID">
+                                <mat-option>
+                                    <ngx-mat-select-search [formControl]="productionRouteSearchUtil.filterFC"
+                                        placeholderLabel="Search by production route name"
+                                        noEntriesFoundLabel="No matching production route found.">
+                                    </ngx-mat-select-search>
+                                </mat-option>
+                                <mat-option
+                                    *ngFor="let productionRoute of productionRouteSearchUtil.filteredEntities | async"
+                                    [value]="productionRoute.id">
+                                    {{ productionRoute.name }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="errorHandling('standardPRID', 'required')">
+                                {{ FormErrorEnum.REQUIRED }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </ng-container>
+
+                <div class="col-sm-8">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label>Production route name</mat-label>
+                        <input matInput formControlName="name" placeholder="Route name" required />
+                        <mat-hint *ngIf="nameAC.value == null">Select a product to set route name</mat-hint>
+                        <mat-error *ngIf="errorHandling('name', 'required')">
+                            Production route name is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6 px-4">
+                    <div class="headerContainer px-0">
+                        <div class="headerLeftContainer">
+                            <div class="headerRightContainerInner">
+                                <h4>Production route</h4>
+                            </div>
+                        </div>
+                        <div class="headerRightContainer">
+                            <button type="button" class="btn btn-sm btn-link centerAlign"
+                                [ngClass]="{'text-secondary': done.length == 0}"
+                                (click)="done.length != 0? showPreview() : null"
+                                [matTooltip]="done.length != 0? null : 'Add process to view preview'"
+                                matTooltipPosition="above" matTooltipClass="infoTooltip">
+                                <span class="material-symbols-outlined"> play_circle </span> &nbsp; Show Preview
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="row centerAlignHorizontal mt-3">
+                        <div class="row border cardOverwrite">
+                            <div cdkDropList #doneList="cdkDropList" [cdkDropListData]="done"
+                                [cdkDropListConnectedTo]="[todoList]" class="example-list customScrollBar width100"
+                                (cdkDropListDropped)="drop($event)">
+                                <ng-container *ngIf="done.length != 0; else noProcess;">
+                                    <div class="example-box mx-4" *ngFor="let process of done; let index = index;"
+                                        cdkDrag>
+                                        <div class="row w-100">
+                                            <div class="col-sm-12 pr-process-box">
+                                                <div class="row w-100">
+                                                    <div class="col-sm-10">
+                                                        <button type="button" class="btn btn-link"
+                                                            (click)="viewProcess(process.id)">
+                                                            {{ process.name }}
+                                                        </button>
+                                                        <br />
+                                                        <span class="ms-3"
+                                                            [matTooltip]="process.description?.length >= 40? process.description : ''"
+                                                            matTooltipPosition="above" matTooltipClass="infoTooltip">
+                                                            {{ process.description | dotdotdot: 40 }}
+                                                        </span>
+                                                    </div>
+                                                    <div class="col-sm-2 centerAlign">
+                                                        <span class="material-symbols-outlined drag-handle">
+                                                            drag_handle
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-12 centerAlign arrow">
+                                                <img *ngIf="index != done.length - 1 "
+                                                    src="/assets/images/down-arrow.png"
+                                                    style="width: 80px; aspect-ratio: 3/2;">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                                <ng-template #noProcess>
+                                    <div class="noDataBox">
+                                        Add process to start
+                                    </div>
+                                </ng-template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 px-4">
+                    <div class="headerContainer px-0">
+                        <div class="headerLeftContainer">
+                            <div class="headerRightContainerInner">
+                                <h4>Process list</h4>
+                            </div>
+                        </div>
+                        <div class="headerRightContainer">
+                            <lib-search-bar-one #searchBar searchBy="process name" [emitValueOnChange]="true"
+                                (emitSearch)="SearchProcess($event)">
+                            </lib-search-bar-one>
+
+                            <!-- <div class="headerRightContainerInner">
+                                <button class="btn btn-sm btn-success" type="button"
+                                    [routerLink]="['/source/process/create']">
+                                    <fa-icon [icon]="faPlus"></fa-icon> &nbsp; New process
+                                </button>
+                            </div> -->
+                        </div>
+                    </div>
+
+                    <div class="row centerAlignHorizontal mt-3">
+                        <div class="row border cardOverwrite">
+                            <div cdkDropList #todoList="cdkDropList" [cdkDropListData]="todoFiltered"
+                                [cdkDropListConnectedTo]="[doneList]" class="process-list customScrollBar width100"
+                                (cdkDropListDropped)="drop($event)">
+                                <ng-container *ngIf="todoFiltered.length != 0; else noProcessFound;">
+                                    <ng-container *ngFor="let process of todoFiltered">
+                                        <div class="process-box mx-4" cdkDrag>
+                                            <div class="row w-100">
+                                                <div class="col-sm-10">
+                                                    <button type="button" class="btn btn-link"
+                                                        (click)="viewProcess(process.id)">
+                                                        {{ process.name }}
+                                                    </button>
+                                                    <br />
+                                                    <span class="ms-3"
+                                                        [matTooltip]="process.description?.length >= 40? process.description : null"
+                                                        matTooltipPosition="above" matTooltipClass="infoTooltip">
+                                                        {{ process.description | dotdotdot: 40 }}
+                                                    </span>
+                                                </div>
+                                                <div class="col-sm-2 centerAlign">
+                                                    <span class="material-symbols-outlined drag-handle">
+                                                        drag_handle
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </ng-container>
+                                <ng-template #noProcessFound>
+                                    <div *ngIf="searchEnabled; else noProcessAvailable" class="noDataBox">
+                                        No process found with this name
+                                    </div>
+                                    <ng-template #noProcessAvailable>
+                                        <div class="noDataBox">
+                                            No more processes
+                                        </div>
+                                    </ng-template>
+                                </ng-template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-100 my-4 d-flex justify-content-end">
+                <button type="button" class="btn btn-secondary me-2" (click)="tscCommonService.back()">
+                    {{ ButtonLabelEnum.CANCEL_BTN_LABEL }}
+                </button>
+                <button type="button" class="btn btn-success" (click)="saveProductionRoute()">
+                    {{ isUpdate? 'Update ' : 'Create '}}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

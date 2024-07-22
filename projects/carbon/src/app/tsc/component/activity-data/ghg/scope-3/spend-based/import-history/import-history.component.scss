@@ -1,0 +1,46 @@
+.name {
+    min-width: 140px;
+}
+
+.type {
+    min-width: 190px;
+}
+
+.accountingPeriod {
+    min-width: 180px;
+}
+
+.createdBy {
+    min-width: 160px;
+}
+
+.uploadedBy {
+    min-width: 160px;
+}
+
+.categorizedBy {
+    min-width: 160px;
+}
+
+.status {
+    min-width: 120px;
+}
+
+.record {
+    min-width: 130px;
+}
+
+.action {
+    min-width: 160px;
+}
+
+/* DD: dropdown */
+.funnelFilterDD {
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+.overflowX {
+    overflow-x: auto;
+}

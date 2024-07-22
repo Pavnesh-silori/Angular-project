@@ -1,0 +1,88 @@
+<div class="card main-card cardOverwrite h100">
+    <ng-container *ngIf="isSBTiSettingExist; else create">
+        <div class="headerContainer">
+            <div class="headerLeftContainer">
+                <div class="pageTitle">Science based targets</div>
+                <div class="pageSubtitle"></div>
+            </div>
+            <div class="headerRightContainer">
+                <div class="headerRightContainerInner">
+                </div>
+            </div>
+            <a class="text-secondary float-end" routerLink="/target-setting/sbti/update" matTooltip="Update"
+                matTooltipPosition="below">
+                <span class="material-symbols-outlined text-primary updateIconHover fs-5">
+                    edit
+                </span>
+            </a>
+        </div>
+
+        <div class="card-body pt-0">
+            <mat-card class="border cardOverwrite">
+
+                <ng-container *ngTemplateOutlet="labelValue; 
+                    context: {
+                        label: 'Organization size',
+                        value: (sbtiSetting.orgSizeKeyID == OrgSize.NON_SME ? 'Enterprise' : sbtiSetting.orgSizeName),
+                        class: 'pt-1'
+                    }">
+                </ng-container>
+
+                <ng-container *ngTemplateOutlet="labelValue; 
+                    context: {
+                        label: 'SBTi sector',
+                        value: sbtiSetting.sbtiSectorName,
+                        class: 'pt-3'
+                    }">
+                </ng-container>
+
+                <div class="row pt-3">
+                    <div class="col-sm-4">
+                        Is base year same as GHG
+                    </div>
+                    <div class="col-sm-8 fw-bold">
+                        {{ sbtiSetting.isBaseYearSameAsGHG ? 'Yes' : 'No' }}
+                    </div>
+                </div>
+
+                <ng-container *ngTemplateOutlet="labelValue; 
+                    context: {
+                        label: 'Scope 2 emissions method',
+                        value: sbtiSetting.calculationApproachName,
+                        class: 'pt-3'
+                    }">
+                </ng-container>
+
+                <ng-container *ngTemplateOutlet="labelValue; 
+                    context: {
+                        label: 'Preferred consolidation approach',
+                        value: sbtiSetting.consolidationApproachName,
+                        class: 'pt-3'
+                    }">
+                </ng-container>
+            </mat-card>
+        </div>
+    </ng-container>
+</div>
+<ng-template #create>
+    <sbti-setting-create (created)="getSBTiSettingsByOrgID()"></sbti-setting-create>
+</ng-template>
+
+
+<svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+    </symbol>
+</svg>
+
+<ng-template #labelValue let-label="label" let-value="value" let-class="class">
+    <div class="row" [class]="class">
+        <div class="col-sm-4">
+            {{ label }}
+        </div>
+        <div class="col-sm-8 fw-bold">
+            {{ value ? value : COMMON_CONSTANT.HYPHEN }}
+        </div>
+    </div>
+</ng-template>

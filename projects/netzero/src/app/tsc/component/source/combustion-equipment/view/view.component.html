@@ -1,0 +1,54 @@
+<ng-container *ngIf="asset">
+    <mat-card class="cardOverwrite">
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Equipment Code',
+                        value: asset.assetAssetID,
+                        class: ''
+                    }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Name',
+                        value: asset.assetName,
+                        class: 'pt-3'
+                    }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Description',
+                        value: asset.description,
+                        class: 'pt-3'
+                    }">
+        </ng-container>
+
+        <div class="row pt-3">
+            <div class="col-sm-4">
+                Status
+            </div>
+            <div class="col-sm-8 fw-bold">
+                <span [ngClass]="asset.assetStatus ? 'text-success' : 'text-danger'">
+                    {{ asset.assetStatus ? 'Active' : 'Inactive' }}
+                </span>
+            </div>
+        </div>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'API Key ID',
+                        value: asset.assetKeyID,
+                        class: 'pt-3'
+                    }">
+        </ng-container>
+
+    </mat-card>
+</ng-container>
+
+<ng-template #labelValue let-label="label" let-value="value" let-class="class" let-valueClass="valueClass">
+    <div class="row" [class]="class">
+        <div class="col-sm-4">
+            {{ label }}
+        </div>
+        <div class="col-sm-8 fw-bold" [class]="valueClass">
+            {{ value ? value : COMMON_CONSTANT.HYPHEN }}
+        </div>
+    </div>
+</ng-template>

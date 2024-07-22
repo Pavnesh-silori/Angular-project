@@ -1,0 +1,34 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="headerRightContainerInner">
+                <div class="pageTitle">
+                    Create processes
+                </div>
+            </div>
+            <div class="subTitle">
+                Create multiple processes by mapping physical or chemical processes that are carried out to make this
+                product.
+            </div>
+        </div>
+    </div>
+
+
+    <ng-container *ngFor="let processFG of processFA.controls; let i = index;">
+        <app-process [id]="i" [processFG]="processFG" [isSubmitClicked]="isSubmitClicked" [products]="products"
+            [processes]="processes" [input]=input [output]="output" [fuel]=fuel [standardFuel]="standardFuel"
+            (remove)="removeProcess(i)" (entitiyCreated)="getProducts()">
+        </app-process>
+    </ng-container>
+
+
+    <div class="centerAlign justify-content-end m-3">
+        <button type="button" class="btn btn-link" (click)="createProcess()">
+            Add another Process
+        </button>
+
+        <button type="button" class="btn btn-success ms-2" (click)="saveProcesses()">
+            Create
+        </button>
+    </div>
+</div>

@@ -1,0 +1,291 @@
+<mat-card class="cardOverwrite border">
+    <div class="cardTitle pb-2">
+        Details
+    </div>
+
+    <form [formGroup]="activityConfigFG">
+        <div class="row">
+            <div class="col-sm-8">
+                <div formGroupName="activityConfig">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Activity Form Name</mat-label>
+                        <input class="formPlaceholder" type="text" placeholder="Activity Form Name"
+                            formControlName="configName" matInput required>
+                        <mat-error *ngIf="errorHandling(activityConfigFG, 'activityConfig.configName', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <div formGroupName="activityConfigData">
+            <div class="row">
+                <div class="col-sm-8">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Select Process</mat-label>
+                        <mat-select formControlName="processRecordID" required
+                            (selectionChange)="processChange(currentOrgID, $event.value, true)">
+                            <mat-option>
+                                <ngx-mat-select-search [formControl]="processSelectSearch.filterFC"
+                                    placeholderLabel="Search by process name"
+                                    [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                </ngx-mat-select-search>
+                            </mat-option>
+
+                            <mat-option *ngFor="let process of processSelectSearch.filteredEntities | async"
+                                [value]="process.recordID">
+                                {{ process.name }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="errorHandling(activityConfigFG, 'activityConfigData.processID', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <!-- <ng-container *ngFor="let electricitySource of electricitySources">
+                        <mat-form-field class="matFieldWidth100"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-checkbox formControlName="electricitySourceCheckbox"
+                                [value]="electricitySource.id"
+                                (click)="onElectricitySourceCheckboxClicked(electricitySource.id)">
+                                {{ electricitySource.name }}
+                            </mat-checkbox>
+                            <mat-select *ngIf="isElectricitySourceSelected(electricitySource.id)" formControlName="electricitySourceSupplier"
+                                [ngModelOptions]="{standalone: true}">
+                                <mat-option>
+                                    <ngx-mat-select-search [formControl]="supplierSelectSearch.filterFC"
+                                        placeholderLabel="Search by supplier name"
+                                        [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                    </ngx-mat-select-search>
+                                </mat-option>
+
+                                <mat-option *ngFor="let supplier of supplierSelectSearch.filteredEntities | async"
+                                    [value]="supplier.id"
+                                    (click)="getSupplierByID(currentOrgID, supplier.recordID, false);patchSupplierRecordID(supplier.recordID)">
+                                    {{ supplier.name }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </ng-container> -->
+
+
+
+
+
+        <!-- <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>Electricity Source</th>
+                                <th>Supplier</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ng-container *ngIf="entitySource.length > 0; else noEntitySource">
+                                <tr *ngFor="let source of entitySource; let i = index">
+                                    <td><mat-checkbox></mat-checkbox></td>
+                                    <td>{{ source.name }}</td>
+                                    <td>
+                                        <ng-container *ngIf="source.keyID == SourceKeyID.GRID">
+                                            <mat-form-field class="matFieldWidth100"
+                                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                <mat-label class="formLabel">Select Grid Supplier</mat-label>
+                                                <mat-select formControlName="gridSupplierID" required>
+                                                    <mat-option>
+                                                        <ngx-mat-select-search
+                                                            [formControl]="gridSupplierSelectSearch.filterFC"
+                                                            placeholderLabel="Search by supplier name"
+                                                            [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                                        </ngx-mat-select-search>
+                                                    </mat-option>
+
+                                                    <mat-option
+                                                        *ngFor="let supplier of gridSupplierSelectSearch.filteredEntities | async"
+                                                        [value]="supplier.supplierID">
+                                                        {{ supplier.supplierName }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error
+                                                    *ngIf="errorHandling(activityConfigFG, 'activityConfigData.gridSupplierID', 'required')">
+                                                    {{ FormErrorEnum.REQUIRED }}
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </ng-container>
+
+                                        <ng-container *ngIf="source.keyID == SourceKeyID.PRIVATE_SUPPLIER">
+                                            <mat-form-field class="matFieldWidth100"
+                                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                <mat-label class="formLabel">Select Private Supplier</mat-label>
+                                                <mat-select formControlName="privateSupplierID" required>
+                                                    <mat-option>
+                                                        <ngx-mat-select-search
+                                                            [formControl]="privateSupplierSelectSearch.filterFC"
+                                                            placeholderLabel="Search by supplier name"
+                                                            [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                                        </ngx-mat-select-search>
+                                                    </mat-option>
+
+                                                    <mat-option
+                                                        *ngFor="let supplier of privateSupplierSelectSearch.filteredEntities | async"
+                                                        [value]="supplier.supplierID">
+                                                        {{ supplier.supplierName }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error
+                                                    *ngIf="errorHandling(activityConfigFG, 'activityConfigData.privateSupplierID', 'required')">
+                                                    {{ FormErrorEnum.REQUIRED }}
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </ng-container>
+
+                                        <ng-container
+                                            *ngIf="source.keyID != SourceKeyID.GRID && source.keyID != SourceKeyID.PRIVATE_SUPPLIER">
+                                            <ng-container *ngTemplateOutlet="noSupplier">
+                                            </ng-container>
+                                        </ng-container>
+                                    </td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </table> -->
+
+
+        <div class="row">
+            <div class="col-sm-8">
+                <lib-message-alert [messageAlertTypeInp]="MessageAlertTypeEnum.INFO"
+                    [messageAlertIconInp]="MessageAlertIconEnum.INFO_ICON" [contentInp]=sourceInfoMsg>
+                </lib-message-alert>
+
+                <table class="table table-bordered mt-3">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>{{ entityTypeLabel }}</th>
+                            <th>Supplier</th>
+                        </tr>
+                    </thead>
+
+                    <tbody formArrayName="entity">
+                        <ng-container *ngIf="entityFA.controls.length > 0; else noEntitySource">
+                            <tr *ngFor="let entity of entityFA.controls; let i = index">
+                                <ng-container [formGroupName]="i">
+                                    <td><mat-checkbox formControlName="isSelected"></mat-checkbox></td>
+                                    <td>{{ entity.get('entityName').value }}</td>
+                                    <td>
+                                        <ng-container
+                                            *ngIf="(entity.get('entityKeyID').value == SourceKeyID.GRID || entity.get('entityKeyID').value == SourceKeyID.PRIVATE_SUPPLIER); else noSupplier">
+                                            <mat-form-field class="matFieldWidth100"
+                                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                <mat-label class="formLabel">Select Supplier</mat-label>
+                                                <mat-select formControlName="sourceID"
+                                                    [required]="entity.get('isSelected').value == true">
+                                                    <mat-option>
+                                                        <ngx-mat-select-search
+                                                            [formControl]="supplierSelectSearch.filterFC"
+                                                            placeholderLabel="Search by supplier name"
+                                                            [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                                        </ngx-mat-select-search>
+                                                    </mat-option>
+
+                                                    <mat-option
+                                                        *ngFor="let supplier of supplierSelectSearch.filteredEntities | async"
+                                                        [value]="supplier.supplierID"
+                                                        (click)="(entity.get('entityKeyID').value == SourceKeyID.GRID || entity.get('entityKeyID').value == SourceKeyID.PRIVATE_SUPPLIER) ? patchSourceTypeID(supplier.sourceTypeID, i) : null">
+                                                        {{ supplier.supplierName }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error
+                                                    *ngIf="errorHandlingForFormArray('sourceID' , i, 'required')">
+                                                    {{ FormErrorEnum.REQUIRED }}
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </ng-container>
+
+                                    </td>
+                                </ng-container>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div formGroupName="activityConfigData">
+            <div class="row">
+                <mat-label class="formLabel">Enter Data Using</mat-label>
+                <mat-radio-group formControlName="dataInputMethodStdID">
+                    <mat-radio-button class="col-sm-3 pt-1" *ngFor="let input of dataInputMethod" [value]="input.id"
+                        (change)="dataInputMethodChange(input.keyID)">
+                        {{ input.name }}
+                    </mat-radio-button>
+                    <mat-error
+                        *ngIf="errorHandlingForRadio(activityConfigFG, 'activityConfigData.dataInputMethodStdID', 'required')">
+                        {{ FormErrorEnum.REQUIRED }}
+                    </mat-error>
+                </mat-radio-group>
+            </div>
+
+            <ng-container *ngIf="isMeterReading">
+                <div class="row pt-3">
+                    <div class="col-sm-4">
+                        <mat-form-field class="matFieldWidth100"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel">Meter Rollover Value</mat-label>
+                            <input class="formPlaceholder" type="number" placeholder="Meter Rollover Value" matInput
+                                formControlName="meterRolloverValue" min="0" required />
+                            <mat-error
+                                *ngIf="errorHandling(activityConfigFG, 'activityConfigData.meterRolloverValue', 'min')">
+                                {{ FormErrorEnum.NEGATIVE }}
+                            </mat-error>
+                            <mat-error
+                                *ngIf="errorHandling(activityConfigFG, 'activityConfigData.meterRolloverValue', 'required')">
+                                {{ FormErrorEnum.REQUIRED }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-4">
+                        <mat-form-field class="matFieldWidth100"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel">Select Meter Unit</mat-label>
+                            <mat-select formControlName="meterRolloverUnitID">
+                                <mat-option>
+                                    <ngx-mat-select-search [formControl]="unitSelectSearch.filterFC"
+                                        placeholderLabel="Search by unit name"
+                                        [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                    </ngx-mat-select-search>
+                                </mat-option>
+
+                                <mat-option *ngFor="let unit of unitSelectSearch.filteredEntities | async"
+                                    [value]="unit.id">
+                                    {{ unit.name }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error
+                                *ngIf="errorHandling(activityConfigFG, 'activityConfigData.meterRolloverUnitID', 'required')">
+                                {{ FormErrorEnum.REQUIRED }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </form>
+</mat-card>
+
+<ng-template #noEntitySource>
+    <tr>
+        <td></td>
+        <td>{{ COMMON_CONSTANT.HYPHEN }}</td>
+        <td>{{ COMMON_CONSTANT.HYPHEN }}</td>
+    </tr>
+</ng-template>
+
+<ng-template #noSupplier>
+    {{ COMMON_CONSTANT.HYPHEN }}
+</ng-template>

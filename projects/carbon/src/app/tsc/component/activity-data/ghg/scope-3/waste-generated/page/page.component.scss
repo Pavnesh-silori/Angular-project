@@ -1,0 +1,71 @@
+table {
+    width: 100%;
+  }
+  .calenderToggle{
+      display: flex; 
+      justify-content: right;
+      padding-right: 10px;
+  }
+  .recordID{
+    width:130px;
+  }
+  
+  .accountingPeriod {
+    width: auto;
+  }
+  .calender{
+    display: inline-flex; 
+    align-items: center;
+     margin-bottom: 0px;
+  }
+  
+  .supplier {
+    min-width: 120px;
+  }
+  
+  .wasteType{
+    min-width: 140px;
+    text-align: start;
+  }
+  
+  .funnelFilter{
+    margin-left: 2px;
+  }
+  
+  .nameTooltip{
+    text-align: left;
+  }
+  
+  .element{
+    display: flex; align-items: center;
+  }
+  
+  .wasteTreatementMethod{
+    min-width: 230px;
+    text-align: start;
+  }
+  
+  .wasteGenerated{
+    min-width: 120px;
+    text-align: right;
+  }
+  
+  .bill{
+    min-width: 100px;
+  }
+  
+  .emission{
+    min-width: 120px;
+    text-align: right;
+  }
+  
+  .img {
+    width: 25px;
+  }
+  .noError{
+    padding-left:28px;
+  }
+  ::ng-deep .mat-sort-header-container:not(.mat-sort-header-sorted) .mat-sort-header-arrow {
+    opacity: 0.54 !important;
+    transform: translateY(0px) !important;
+  }

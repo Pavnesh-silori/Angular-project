@@ -1,0 +1,123 @@
+<div mat-dialog-title>
+    <strong class="dialogHeader">
+        Edit record
+    </strong>
+
+    <button mat-icon-button mat-dialog-close cdkFocusInitial class="float-end matDialogClose" matTooltip="Close"
+        matTooltipPosition="before">
+        <span class="material-symbols-outlined">close</span>
+    </button>
+</div>
+
+<div class="matDialogContent" mat-dialog-content>
+    <form [formGroup]="updateCategoryFG">
+
+        <div class="row">
+            <div class="col-sm-12">
+                <mat-form-field class="matFieldWidth100 cursorPointer"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel"> Record ID </mat-label>
+                    <input matInput type="text" formControlName="recordID" readonly>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <mat-form-field class="matFieldWidth100 cursorPointer"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel"> Date </mat-label>
+                    <input matInput type="text" formControlName="transactionDate">
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <mat-form-field class="matFieldWidth100 cursorPointer"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel"> Account </mat-label>
+                    <input matInput type="text" formControlName="accountName">
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <mat-form-field class="matFieldWidth100 cursorPointer"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel"> Supplier </mat-label>
+                    <input matInput type="text" formControlName="supplierName">
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <mat-form-field class="matFieldWidth100 cursorPointer"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel"> Amount </mat-label>
+                    <input matInput type="text" formControlName="amount">
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <mat-form-field class="matFieldWidth100 cursorPointer"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel"> Select Category </mat-label>
+                    <mat-select formControlName="categoryID">
+                        <mat-option>
+                            <ngx-mat-select-search [formControl]="categorySearchUtil.filterFC"
+                                placeholderLabel="Search by name" noEntriesFoundLabel="No matching name found.">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option *ngFor="let category of categorySearchUtil.filteredEntities | async"
+                            [value]="category['id']">
+                            {{ category['name'] }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error>
+                        Select category
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <mat-form-field class="matFieldWidth100 cursorPointer"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel"> Select Activity </mat-label>
+                    <mat-select formControlName="activityID">
+                        <mat-option>
+                            <ngx-mat-select-search [formControl]="activitySearchUtil.filterFC"
+                                placeholderLabel="Search by name" noEntriesFoundLabel="No matching name found.">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option *ngFor="let activity of activitySearchUtil.filteredEntities | async"
+                            [value]="activity['id']">
+                            {{ activity['name'] }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error>
+                        Select activity
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div mat-dialog-footer align="end">
+    <div class="justify-content-end centerAlignVertical">
+        <!-- <button type="button" class="btn btn-sm btn-secondary text-white me-2" mat-dialog-close>
+            Cancel
+        </button> -->
+        <button type="button" class="btn btn-sm btn-success me-2" [ngClass]="{'disabled': isEqual}"
+            (click)="updateCategorizedRecords()">
+            {{ ButtonLabelEnum.SAVE_BTN_LABEL }}
+        </button>
+    </div>
+</div>

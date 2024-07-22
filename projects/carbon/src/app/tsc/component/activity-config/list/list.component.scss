@@ -1,0 +1,74 @@
+.isChecked {
+    width: 5%;
+    align-items: center;
+}
+
+.columnWidth {
+    width: 7%;
+}
+
+.reportingPeriod {
+    width: 15%;
+}
+
+.filter2 {
+    padding-left: 20px;
+    width: 100px;
+}
+
+.linkedRecords {
+    width: 10%;
+}
+
+.options {
+    width: 5%;
+}
+
+.btn-secondary-overwrite {
+    color: #f2f5f7;
+    background-color: #777777;
+    border-color: #6c757d;
+    cursor: not-allowed;
+
+}
+
+.cursor-not-allowed {
+    cursor: not-allowed;
+}
+
+.activityType {
+    max-width: 140px;
+}
+
+.categoryStyle {
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+.funnelStyle {
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+.headerWidth {
+    width: 100px;
+}
+
+.useActivityConfig {
+    width: 50px;
+}
+
+.editDrop {
+    padding: 0px;
+}
+
+.sticky-header {
+    /* Make the table header sticky */
+    overflow: hidden;
+}
+
+.activityType {
+    max-width: 215vw;
+}

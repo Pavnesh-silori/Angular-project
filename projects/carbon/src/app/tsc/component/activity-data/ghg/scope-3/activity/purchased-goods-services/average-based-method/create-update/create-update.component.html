@@ -1,0 +1,522 @@
+<div class="card cardOverwrite mainDivPff customScrollBar">
+    <div class="pffBody customScrollBar">
+        <div class="cardHeaderBlock">
+            <div class="row centerAlign">
+                <div class="col-sm-12">
+                    <div class="pageTitle">
+                        {{ title }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body h100">
+            <form [formGroup]="activityForm" *ngIf="activityForm">
+                <div formGroupName="activityMetadata">
+                    <mat-card class="cardOverwrite mat-card mat-focus-indicator border">
+                        <div class="cardTitle pb-3"> Details </div>
+                        <!-- <form [formGroup]="activityForm"> -->
+
+                        <!-- product type div -->
+
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Product/Service Name </mat-label>
+                                    <mat-select formControlName="sourceID" (selectionChange)="sourceChanged($event)"
+                                        required>
+                                        <mat-option>
+                                            <ngx-mat-select-search [formControl]="sourceTypeSearchUtil.filterFC"
+                                                placeholderLabel="Search by product/service name"
+                                                [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                            </ngx-mat-select-search>
+                                        </mat-option>
+                                        <mat-option *ngFor="let item of sourceTypeSearchUtil.filteredEntities | async"
+                                            [value]="item.id">
+                                            <span class="d-flex justify-content-between">
+                                                {{ item.name }}
+                                            </span>
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error>
+                                        {{ FormErrorEnum.REQUIRED }}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div *ngIf="!sourceList?.length" class="col-sm-4 centerAlignVertical mb-3">
+                                <span class="material-symbols-outlined">
+                                    info
+                                </span>
+                                <span class="ms-2">
+                                    You have not created any product or service. Please create one
+                                    <a [routerLink]="'/source/product-service/product/page'" target="_blank">here</a>.
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- supplier div -->
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Supplier Name</mat-label>
+                                    <mat-select formControlName="supplierID" (selectionChanged)="supplierChanged()">
+                                        <mat-option>
+                                            <ngx-mat-select-search [formControl]="supplierTypeSearchUtil.filterFC"
+                                                placeholderLabel="Search by supplier name"
+                                                [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                            </ngx-mat-select-search>
+                                        </mat-option>
+                                        <mat-option *ngFor="let item of supplierTypeSearchUtil.filteredEntities | async"
+                                            [value]="item.supplierID">
+                                            <span class="d-flex justify-content-between">
+                                                {{ item.supplierName }}
+                                            </span>
+                                        </mat-option>
+                                    </mat-select>
+                                    <!-- <mat-error *ngIf="errorHandling('supplierID' ,'required')">
+                                        Please choose a supplier
+                                    </mat-error> -->
+                                </mat-form-field>
+                            </div>
+
+                            <div *ngIf="!supplierList?.length" class="col-sm-4 centerAlignVertical mb-3">
+                                <span class="material-symbols-outlined">
+                                    info
+                                </span>
+                                <span class="ms-2">
+                                    You have not created any supplier. Please create one
+                                    <a [routerLink]="'/source/supplier/page'" target="_blank">here</a>.
+                                </span>
+                            </div>
+                        </div>
+                    </mat-card>
+
+                    <mat-card class="cardOverwrite mat-card mat-focus-indicator border mt-3" *ngIf="hasSourceID()">
+
+                        <div class="cardTitle pb-3"> Emission Factor Database </div>
+                        <!-- emission Factor -->
+                        <div class="row pb-2">
+                            <div class="col-sm-6">
+                                <div class="ps-1 radioBtnField">
+                                    <div class="radioBtnGroupLabel"> Do you want to use custom emission factor? </div>
+                                    <mat-radio-group formControlName="isCustomEmf"
+                                        (change)="customEmissionFactorChanged($event.value)">
+                                        <div class="row my-2">
+                                            <div class="col-sm-6">
+                                                <mat-radio-button class="radioBtnLabel" [value]="true">
+                                                    Yes
+                                                </mat-radio-button>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <mat-radio-button class="radioBtnLabel" [value]="false">
+                                                    No
+                                                </mat-radio-button>
+                                            </div>
+                                        </div>
+                                    </mat-radio-group>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <ng-container *ngIf="!hasCustomEmissionFactor">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <mat-form-field class="matFieldWidth100"
+                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <mat-label class="formLabel">Emission Factor Database</mat-label>
+                                        <mat-select formControlName="emissionFactorSourceStdID" (selectionChange)="emissionSourceChanged($event)">
+                                            <mat-option>
+                                                <ngx-mat-select-search [formControl]="emfSearchUtil.filterFC"
+                                                    placeholderLabel="Search by emission factor database name"
+                                                    [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                                </ngx-mat-select-search>
+                                            </mat-option>
+                                            <mat-option *ngFor="let item of emfSearchUtil.filteredEntities | async"
+                                                [value]="item.emissionFactorSourceStdID">
+                                                <span class="d-flex justify-content-between">
+                                                    {{ item.emissionFactorSourceName }}
+                                                </span>
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error>
+                                            {{ FormErrorEnum.REQUIRED }}
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <!-- emission Factor metadata -->
+                            <ng-container *ngIf="isAvgCalMethod()">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <app-uk-defra-metadata
+                                            [emssionFactorSourceKeyID]="EMISSION_SOURCE_KEY_ENUM.UK_GOVERNMENT_GHG_CONVERSION_FACTORS_FOR_COMPANY_REPORTING"
+                                            [emfMetadataForm]="ukDefraMetadataForm">
+                                        </app-uk-defra-metadata>
+                                    </div>
+                                </div>
+                            </ng-container>
+
+                            <ng-container *ngIf="!isAvgCalMethod()">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <app-us-eeio-metadata
+                                            [emssionFactorSourceKeyID]="EMISSION_SOURCE_KEY_ENUM.US_EEIO"
+                                            [emfMetadataForm]="USEEIOMetadataForm">
+                                        </app-us-eeio-metadata>
+                                    </div>
+                                </div>
+                            </ng-container>
+
+                            <ng-container *ngIf="isMetadataChanged()">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="d-flex">
+                                            <mat-checkbox [checked]="isAutoSave" (change)="handleCheckboxChange($event)"
+                                                matRipple [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">
+                                            </mat-checkbox>
+
+                                            <div class="cardTitle ps-2">
+                                                Update emission factor database related fields for this product
+                                            </div>
+
+                                            <div class="iconStyle ps-2">
+                                                <span class="material-symbols-outlined cursorPointer"
+                                                    #myTooltip="matTooltip" matTooltipPosition="above"
+                                                    matTooltipClass="infoTooltip"
+                                                    [matTooltip]="'These fields will be updated for the given product and used for calculations going forward. You can still override these while creating a new record.'"
+                                                    [matTooltipHideDelay]="1000">info
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+
+                        <ng-container *ngIf="hasCustomEmissionFactor">
+                            <div class="col-sm-6">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Custom Emission Factor Database</mat-label>
+                                    <mat-select formControlName="customEmissionFactorVersionID">
+                                        <mat-option>
+                                            <ngx-mat-select-search [formControl]="customEFSearchUtil.filterFC"
+                                                placeholderLabel="Search by custom emission factor database name"
+                                                [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                            </ngx-mat-select-search>
+                                        </mat-option>
+                                        <mat-option *ngFor="let item of customEFSearchUtil.filteredEntities | async"
+                                            [value]="item.customFactorVersionID">
+                                            <span class="d-flex justify-content-between">
+                                                {{ item.newName }}
+                                            </span>
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error>
+                                        {{ FormErrorEnum.REQUIRED }}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </ng-container>
+
+                    </mat-card>
+                </div>
+
+                <mat-card class="cardOverwrite mat-card mat-focus-indicator border mt-3">
+                    <div class="cardTitle pb-3"> Activity Data </div>
+
+                    <div formGroupName="activityData">
+                        <!-- accounting period div -->
+                        <div class="row">
+                            <ng-container *ngIf="isAvgCalMethod()">
+                                <div class="col-sm-6">
+                                    <lib-date-input class="cursorPointer" #customDateInput
+                                        (emitFilter)="dateInpChange()" [materialFieldWidthInp]="true"
+                                        [materialFormFieldAppearanceInp]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE"
+                                        [isMandatoryFieldInp]="true" [dateInputTypeInp]="dateInputTypeEnum.CUSTOM_INPUT"
+                                        [labelInp]="'Accounting Period'">
+                                    </lib-date-input>
+                                </div>
+                            </ng-container>
+
+                            <ng-container *ngIf="!isAvgCalMethod()">
+                                <div class="col-sm-6">
+                                    <!-- <mat-form-field class="matFieldWidth100 cursorPointer"
+                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <mat-label class="formLabel"> Date </mat-label>
+                                        <input matInput type="text" formControlName="transactionDate"
+                                            (change)="inflationRateMetadataChanged()">
+                                    </mat-form-field> -->
+
+                                    <lib-date-input #dailyDateInput (emitFilter)="dailyDateInpChange()"
+                                        [materialFieldWidthInp]="true"
+                                        [materialFormFieldAppearanceInp]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE"
+                                        [isMandatoryFieldInp]="true" [dateInputTypeInp]="dateInputTypeEnum.DAY_INPUT"
+                                        [dateTypeInp]="dateTypeEnum.EXCLUSIVE" [showDefaultDurationInp]="true"
+                                        [labelInp]="'Select date'" [timezoneInp]="timezone">
+                                    </lib-date-input>
+                                </div>
+                            </ng-container>
+                        </div>
+
+                        <!-- <div class="row">
+                            <div class="col-sm-6">
+                                <mat-form-field class="col-sm-9 pe-3"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Quantity of goods purchased</mat-label>
+                                    <input formControlName="quantity" class="formPlaceholder" matInput min="0"
+                                        type="number" matInput placeholder="" type="number" />
+                                </mat-form-field>
+
+                                <mat-form-field [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE"
+                                    class="col-sm-3">
+                                    <mat-label class="formLabel"> Select Unit </mat-label>
+                                    <mat-select formControlName="quantityUnitID">
+                                        <mat-option>
+                                            <ngx-mat-select-search [formControl]="unitSearchUtil.filterFC"
+                                                placeholderLabel="Search by name"
+                                                noEntriesFoundLabel="No matching name found.">
+                                            </ngx-mat-select-search>
+                                        </mat-option>
+                                        <mat-option *ngFor="let input of unitSearchUtil.filteredEntities | async"
+                                            [value]="input.id">
+                                            <div class="miterRoll">
+                                                <span> {{ input.name + ' - ' }}</span>
+                                                <span>{{input.uomCode}}</span>
+                                            </div>
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error>{{ FormErrorEnum.REQUIRED }}</mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div> -->
+
+                        <ng-container *ngIf="isAvgCalMethod()">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <mat-form-field class="col-sm-9 pe-3"
+                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <mat-label class="formLabel">Quantity of goods purchased</mat-label>
+                                        <input formControlName="quantity" class="formPlaceholder" matInput min="0"
+                                            type="number" matInput placeholder="" type="number" required />
+                                        <mat-error>
+                                            {{ FormErrorEnum.REQUIRED }}
+                                        </mat-error>
+                                    </mat-form-field>
+
+                                    <mat-form-field [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE"
+                                        class="col-sm-3">
+                                        <mat-label class="formLabel"> Select Unit </mat-label>
+                                        <mat-select formControlName="quantityUnitID" required>
+                                            <mat-option>
+                                                <ngx-mat-select-search [formControl]="unitSearchUtil.filterFC"
+                                                    placeholderLabel="Search by name"
+                                                    noEntriesFoundLabel="No matching name found.">
+                                                </ngx-mat-select-search>
+                                            </mat-option>
+                                            <mat-option *ngFor="let input of unitSearchUtil.filteredEntities | async"
+                                                [value]="input.id">
+                                                <div class="miterRoll">
+                                                    <span> {{ input.name + ' - ' }}</span>
+                                                    <span>{{input.uomCode}}</span>
+                                                </div>
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error>{{ FormErrorEnum.REQUIRED }}</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                        <ng-container *ngIf="!isAvgCalMethod()">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <mat-form-field class="col-sm-9 pe-3"
+                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <mat-label class="formLabel">Amount </mat-label>
+                                        <input formControlName="amount" class="formPlaceholder" matInput min="0"
+                                            type="number" matInput placeholder="" type="number" required />
+                                        <mat-error>
+                                            {{ FormErrorEnum.REQUIRED }}
+                                        </mat-error>
+                                    </mat-form-field>
+
+                                    <mat-form-field [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE"
+                                        class="col-sm-3">
+                                        <mat-label class="formLabel"> Select Unit </mat-label>
+                                        <mat-select formControlName="amountUnitID"
+                                            (selectionChange)="inflationRateMetadataChanged()" required>
+                                            <mat-option>
+                                                <ngx-mat-select-search [formControl]="currencySearchUtil.filterFC"
+                                                    placeholderLabel="Search by name"
+                                                    noEntriesFoundLabel="No matching name found.">
+                                                </ngx-mat-select-search>
+                                            </mat-option>
+                                            <mat-option
+                                                *ngFor="let currency of currencySearchUtil.filteredEntities| async"
+                                                [value]="currency.currencyID">
+                                                {{ currency.currencyName }} -
+                                                {{currency.currencySymbol}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error>{{ FormErrorEnum.REQUIRED }}</mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                        <ng-container *ngIf="!isAvgCalMethod() && inflationControls.length">
+                            <div class="row" formArrayName="inflation">
+                                <div class="col-sm-12">
+                                    <div class="row justify-content-start centerAlign">
+                                        <span class="">Inflation rates (%) </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <div class="row">
+                                        <div class="col-sm-3"
+                                            *ngFor="let inflation of inflationControls; let i = index">
+                                            <div class="text-center" [formGroupName]="i">
+                                                <div class="" [formGroup]="inflation">
+                                                    <mat-form-field class="matFieldWidth100 cursorPointer mt-2"
+                                                        [ngClass]="actionType == 'update' ? 'noFocus' : 'none'"
+                                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                        <mat-label class="formLabel">For year {{
+                                                            inflation.get('year').value
+                                                            }}</mat-label>
+                                                        <input matInput type="number" placeholder="0.00" min="0"
+                                                            formControlName="rate" />
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 pb-3">
+                                    <a href="https://www.officialdata.org/countries" target="_blank">
+                                        <u> Check inflation rates</u>
+                                    </a>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                        <ng-container *ngIf="!activityForm.get('activityData.docPath').value">
+                            <div class="row">
+                                <div class="col-sm-6 fileInput">
+                                    <input class="form-control" type="file" accept="application/pdf" #fileInput
+                                        (change)="fileUpload($event, activityForm.get('activityData'), 0)">
+                                </div>
+                            </div>
+
+                            <div class="row pt-2">
+                                <div class="col-sm-6">
+                                    <div class="border rounded d-flex" [ngClass]="{'d-none': (docFileList[0] == null)}">
+
+                                        <div class="p-1">
+                                            <ng-container *ngTemplateOutlet="docImg"></ng-container>
+                                        </div>
+
+                                        <div class="p-1">
+                                            <div class="centerAlignVertical p-1">
+                                                {{ activityForm.get('activityData.docName').value }}<br>
+                                                {{ activityForm.get('activityData.docSize').value}}
+                                            </div>
+                                        </div>
+
+                                        <div class="ms-auto p-1">
+                                            <button type="button" class="btn p-1" mat-icon-button
+                                                (click)="removeFile(0)">
+                                                <span class="material-symbols-outlined text-danger">
+                                                    delete
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                        <ng-container *ngIf="activityForm.get('activityData.docPath').value">
+                            <div class="row pt-2">
+                                <div class="col-sm-6">
+                                    <div class="border rounded d-flex">
+
+                                        <ng-container *ngTemplateOutlet="docImg"></ng-container>
+
+                                        <div class="p-1">
+                                            <div class="centerAlignVertical p-3">
+                                                <a href="{{activityForm?.get('activityData.docPath').value}}"
+                                                    target="_blank"
+                                                    [ngClass]="{'d-none': !activityForm?.get('activityData.docPath').value}">
+                                                    {{activityForm.get('activityData.docName').value}}
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                        <div class="ms-auto centerAlignVertical p-2">
+                                            <button type="button" class="btn p-1" mat-icon-button matTooltip="Edit"
+                                                matTooltipClass="nameTooltip" matTooltipPosition="below"
+                                                (click)="fileInput.click()">
+                                                <span
+                                                    class="material-symbols-outlined text-primary updateIconHover fs-5">
+                                                    edit
+                                                </span>
+                                            </button>
+                                            <input class="form-control" type="file" accept="application/pdf" #fileInput
+                                                (change)="fileUpload($event, activityForm?.get('activityData'), 0)"
+                                                style="display: none;">
+
+                                            <button type="button" class="btn p-1" mat-icon-button matTooltip="Delete"
+                                                matTooltipClass="nameTooltip" matTooltipPosition="below"
+                                                (click)="deleteConfirmation(activityForm.get('activityData'), 0)"
+                                                *ngIf="!hideFileDelete">
+                                                <span class="material-symbols-outlined text-danger">
+                                                    delete
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                        <ng-template #docImg>
+                            <div class="p-1 centerAlignVertical">
+                                <div class="docIcon p-1" matSuffix mat-icon-button mat-raised-button
+                                    [matTooltip]="billFileName" matTooltipPosition="below">
+                                    <img height="40px" src="assets/images/default-doc.ico" alt="bill document preview">
+                                </div>
+                            </div>
+                        </ng-template>
+                    </div>
+                </mat-card>
+
+                <div class="row pt-4">
+                    <div mat-dialog-footer align="end">
+                        <button type="button" class="button btn btn-secondary me-2" (click)="closeForm()">
+                            {{ ButtonLabelEnum.CANCEL_BTN_LABEL}}
+                        </button>
+
+                        <button type="submit" class="button btn btn-success"
+                            (click)="canSave()" *ngIf="actionType == 'create'">
+                            {{ actionType == 'create' ? ButtonLabelEnum.CREATE_BTN_LABEL :
+                            ButtonLabelEnum.UPDATE_BTN_LABEL}}
+                        </button>
+
+                        <button type="submit" class="button btn btn-success" [disabled]="isFormEqual()" *ngIf="actionType !== 'create'"
+                            (click)="canSave()">
+                            {{ ButtonLabelEnum.UPDATE_BTN_LABEL}}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

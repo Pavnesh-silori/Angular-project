@@ -1,0 +1,469 @@
+<button type="button" class="d-none" #refreshBtn>refresh</button>
+<form [formGroup]="categorizeDataFG" *ngIf="categorizeDataFG">
+
+    <div class="alert alert-warning roundedBorder">
+        <svg class="bi flex-shrink-0 me-2 extraInfoCardHeaderIcon">
+            <use xlink:href="#exclamation-triangle-fill" />
+        </svg>
+        Review and update all the fields with errors in your uploaded import file. Alternately, you can
+        <a (click)="gotoBackPage()" style="color: #3f6ad8; cursor: pointer;"> go back to Configure</a> and re-upload the
+        import file with fixes.
+    </div>
+
+    <div class="overflowX customScrollBar w-100">
+        <table mat-table class="w-100" [dataSource]="dataSource" #sort matSort matSortActive="recordID"
+            matSortDirection="desc" matSortDisableClear>
+
+            <ng-container formArrayName="categoryValues">
+
+                <ng-container matColumnDef="includeExcludeRecord">
+                    <th class="ps-3" mat-header-cell *matHeaderCellDef> Include/Exclude
+                    </th>
+
+                    <td class="ps-3" mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
+                        <mat-slide-toggle class="slideToggleBtn" formControlName="enableRecord">
+                        </mat-slide-toggle>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="internalCode">
+                    <th class="ps-3 code-col" mat-header-cell *matHeaderCellDef mat-sort-header> Internal
+                        Product Code
+                    </th>
+
+                    <td class="ps-3 code-col" mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
+                        <div class="row">
+                            <mat-form-field class="matFieldWidth100 cursorPointer mt-3"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">
+                                    Internal Product Code
+                                </mat-label>
+                                <input class="formPlaceholder" matInput type="text" placeholder="Internal
+                                            Product Code" formControlName="code" required />
+                            </mat-form-field>
+
+                            <ng-container
+                                *ngIf="hasValidationError(row, 'code', categoryValues.controls[i]); else showRequiredError">
+                                <mat-error>
+                                    {{ row['validator']['code'] }}
+                                </mat-error>
+                            </ng-container>
+
+                            <ng-template #showRequiredError>
+                                <ng-container
+                                    *ngIf="hasValidationError2(categoryValues.controls[i], 'code', 'required');">
+                                    <mat-error>
+                                        {{ FormErrorEnum.REQUIRED }}
+                                    </mat-error>
+                                </ng-container>
+                            </ng-template>
+                        </div>
+                    </td>
+
+                </ng-container>
+
+                <ng-container matColumnDef="name">
+                    <th class="ps-3 name-col" mat-header-cell *matHeaderCellDef> Name </th>
+                    <td class="ps-3 name-col" mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
+                        <mat-form-field class="matFieldWidth100 cursorPointer mt-3"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel">Name</mat-label>
+                            <input class="formPlaceholder" matInput type="text" placeholder="name"
+                                formControlName="name" required />
+                        </mat-form-field>
+
+                        <ng-container
+                            *ngIf="hasValidationError(row, 'name', categoryValues.controls[i]); else showRequiredError">
+                            <mat-error>
+                                {{ row['validator']['name'] }}
+                            </mat-error>
+                        </ng-container>
+
+                        <ng-template #showRequiredError>
+                            <ng-container *ngIf="hasValidationError2(categoryValues.controls[i], 'name', 'required');">
+                                <mat-error>
+                                    {{ FormErrorEnum.REQUIRED }}
+                                </mat-error>
+                            </ng-container>
+                        </ng-template>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="description">
+                    <th class="ps-3 name-col" mat-header-cell *matHeaderCellDef> Description </th>
+                    <td class="ps-3 name-col" mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
+                        <mat-form-field class="matFieldWidth100 cursorPointer mt-3"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel">Description</mat-label>
+                            <textarea class="formPlaceholder" matInput rows="1" [maxlength]="maxLength"
+                                placeholder="description" formControlName="description"
+                                (input)="updateRemainingChars($event)">
+                            </textarea>
+                        </mat-form-field>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="type">
+                    <th class="ps-3" mat-header-cell *matHeaderCellDef> Type
+                    </th>
+
+                    <td class="ps-3" mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
+                        <mat-form-field class="matFieldWidth100 cursorPointer mt-3"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel"> Select Type</mat-label>
+                            <mat-select formControlName="productTypeID"
+                                (selectionChange)="productChanged(categoryValues.controls[i])">
+                                <mat-option>
+                                    <ngx-mat-select-search [formControl]="productTypeSearchUtil?.[i]?.filterFC"
+                                        placeholderLabel="Search by name" noEntriesFoundLabel="No matching name found.">
+                                    </ngx-mat-select-search>
+                                </mat-option>
+                                <mat-option
+                                    *ngFor="let category of productTypeSearchUtil?.[i]?.filteredEntities | async"
+                                    [value]="category['id']"
+                                    [matTooltip]="category['name'].length>30? category['name']: ''"
+                                    matTooltipPosition="above" matTooltipClass="nameTooltip">
+                                    {{ category['name'] }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <ng-container
+                            *ngIf="hasValidationError(row, 'productTypeID', categoryValues.controls[i]); else showRequiredError">
+                            <mat-error>
+                                {{ row['validator']['productTypeID'] }}
+                            </mat-error>
+                        </ng-container>
+
+                        <ng-template #showRequiredError>
+                            <ng-container
+                                *ngIf="hasValidationError2(categoryValues.controls[i], 'productTypeID', 'required');">
+                                <mat-error>
+                                    {{ FormErrorEnum.REQUIRED }}
+                                </mat-error>
+                            </ng-container>
+                        </ng-template>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="category">
+                    <th class="ps-3" mat-header-cell *matHeaderCellDef> Category
+                    </th>
+
+                    <td class="ps-3" mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
+                        <mat-form-field class="matFieldWidth100 cursorPointer mt-3"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel"> Select Category</mat-label>
+                            <mat-select formControlName="category" multiple
+                                (selectionChange)="categoryChanged(categoryValues.controls[i])">
+                                <mat-option>
+                                    <ngx-mat-select-search [formControl]="productCategorySearchUtil?.[i]?.filterFC"
+                                        placeholderLabel="Search by name" noEntriesFoundLabel="No matching name found.">
+                                    </ngx-mat-select-search>
+                                </mat-option>
+                                <mat-option
+                                    *ngFor="let category of productCategorySearchUtil?.[i]?.filteredEntities | async"
+                                    [value]="category['id']"
+                                    [matTooltip]="category['name'].length>30? category['name']: ''"
+                                    matTooltipPosition="above" matTooltipClass="nameTooltip">
+                                    {{ category['name'] }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <ng-container
+                            *ngIf="hasValidationError(row, 'category', categoryValues.controls[i]); else showRequiredError">
+                            <mat-error>
+                                {{ row['validator']['category'] }}
+                            </mat-error>
+                        </ng-container>
+
+                        <ng-template #showRequiredError>
+                            <ng-container
+                                *ngIf="hasValidationError2(categoryValues.controls[i], 'category', 'required');">
+                                <mat-error>
+                                    {{ FormErrorEnum.REQUIRED }}
+                                </mat-error>
+                            </ng-container>
+                        </ng-template>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="isCbamCompliant">
+                    <th class="ps-3" mat-header-cell *matHeaderCellDef> EU CBAM compliant product?
+                    </th>
+
+                    <td class="ps-3" mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
+                        <mat-form-field class="matFieldWidth100 cursorPointer mt-3"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-select formControlName="isCbamCompliant">
+                                <mat-option [value]="true">
+                                    Yes
+                                </mat-option>
+
+                                <mat-option [value]="false">
+                                    No
+                                </mat-option>
+                            </mat-select>
+
+                            <ng-container
+                                *ngIf="hasValidationError(row, 'isCbamCompliant', categoryValues.controls[i]); else showRequiredError">
+                                <mat-error>
+                                    {{ row['validator']['category'] }}
+                                </mat-error>
+                            </ng-container>
+
+                            <ng-template #showRequiredError>
+                                <ng-container
+                                    *ngIf="hasValidationError2(categoryValues.controls[i], 'isCbamCompliant', 'required');">
+                                    <mat-error>
+                                        {{ FormErrorEnum.REQUIRED }}
+                                    </mat-error>
+                                </ng-container>
+                            </ng-template>
+                        </mat-form-field>
+
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="cnCode">
+                    <th class="ps-3" mat-header-cell *matHeaderCellDef> CN Code </th>
+                    <td class="ps-3" mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
+                        <mat-form-field class="matFieldWidth100 cursorPointer mt-3"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel">CN Code</mat-label>
+                            <input class="formPlaceholder" matInput type="text" placeholder="CN Code"
+                                formControlName="cn" />
+                        </mat-form-field>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="hsnCode">
+                    <th class="ps-3" mat-header-cell *matHeaderCellDef> HSN Code </th>
+                    <td class="ps-3" mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
+                        <!-- {{ row.hsn }} -->
+                        <mat-form-field class="matFieldWidth100 cursorPointer mt-3"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel">HSN Code</mat-label>
+                            <input class="formPlaceholder" matInput type="text" placeholder="HSN Code"
+                                formControlName="hsn" />
+                        </mat-form-field>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="eanCode">
+                    <th class="ps-3" mat-header-cell *matHeaderCellDef> EAN Code </th>
+                    <td class="ps-3" mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
+                        <mat-form-field class="matFieldWidth100 cursorPointer mt-3"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel">EAN Code</mat-label>
+                            <input class="formPlaceholder" matInput type="text" placeholder="EAN Code"
+                                formControlName="ean" />
+                        </mat-form-field>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="upcCode">
+                    <th class="ps-3" mat-header-cell *matHeaderCellDef> UPC Code </th>
+                    <td class="ps-3" mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
+                        <mat-form-field class="matFieldWidth100 cursorPointer mt-3"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel">UPC Code</mat-label>
+                            <input class="formPlaceholder" matInput type="text" placeholder="UPC Code"
+                                formControlName="upc" />
+                        </mat-form-field>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="isbnCode">
+                    <th class="ps-3" mat-header-cell *matHeaderCellDef> ISBN Code </th>
+                    <td class="ps-3" mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
+                        <mat-form-field class="matFieldWidth100 cursorPointer mt-3"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel">ISBN Code</mat-label>
+                            <input class="formPlaceholder" matInput type="text" placeholder="ISBN Code"
+                                formControlName="isbn" (change)="isbnCodeChanged()" />
+                        </mat-form-field>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="materialType">
+                    <th class="ps-3" mat-header-cell *matHeaderCellDef>
+                        Material Type
+                    </th>
+
+                    <td class="ps-3" mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
+                        <mat-form-field class="matFieldWidth100"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel">Select material type</mat-label>
+                            <mat-select formControlName="materialTypeID"
+                                (selectionChange)="materialTypeChanged($event, i);materialTypeChangedInForm(categoryValues.controls[i])">
+                                <mat-option>
+                                    <ngx-mat-select-search [formControl]="materialTypeSearchUtil?.[i]?.filterFC"
+                                        placeholderLabel="Search by material type name"
+                                        [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                    </ngx-mat-select-search>
+                                </mat-option>
+                                <mat-option *ngFor="let item of materialTypeSearchUtil?.[i].filteredEntities | async"
+                                    [value]="item.id">
+                                    <span class="d-flex justify-content-between">
+                                        {{ item.name }}
+                                    </span>
+                                </mat-option>
+                            </mat-select>
+
+                            <ng-container
+                                *ngIf="hasValidationError(row, 'materialTypeID', categoryValues.controls[i]); else showRequiredError">
+                                <mat-error>
+                                    {{ row['validator']['category'] }}
+                                </mat-error>
+                            </ng-container>
+
+                            <ng-template #showRequiredError>
+                                <ng-container
+                                    *ngIf="hasValidationError2(categoryValues.controls[i], 'materialTypeID', 'required');">
+                                    <mat-error>
+                                        {{ FormErrorEnum.REQUIRED }}
+                                    </mat-error>
+                                </ng-container>
+                            </ng-template>
+                        </mat-form-field>
+                    </td>
+
+                </ng-container>
+
+                <ng-container matColumnDef="materialOriginType">
+                    <th class="ps-3" mat-header-cell *matHeaderCellDef>
+                        Material Origin Type
+                    </th>
+
+                    <td class="ps-3" mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
+                        <mat-form-field class="matFieldWidth100"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel">Select material origin type</mat-label>
+                            <mat-select formControlName="materialOriginTypeID"
+                                (selectionChange)="materialOriginTypeChangedInForm(categoryValues.controls[i])">
+                                <mat-option>
+                                    <ngx-mat-select-search [formControl]="materialOriginTypeSearchUtil?.[i].filterFC"
+                                        placeholderLabel="Search by material origin type name"
+                                        [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                    </ngx-mat-select-search>
+                                </mat-option>
+                                <mat-option
+                                    *ngFor="let item of materialOriginTypeSearchUtil?.[i].filteredEntities | async"
+                                    [value]="item.id">
+                                    <span class="d-flex justify-content-between">
+                                        {{ item.name }}
+                                    </span>
+                                </mat-option>
+                            </mat-select>
+
+                            <ng-container
+                                *ngIf="hasValidationError(row, 'materialOriginTypeID', categoryValues.controls[i]); else showRequiredError">
+                                <mat-error>
+                                    {{ row['validator']['category'] }}
+                                </mat-error>
+                            </ng-container>
+
+                            <ng-template #showRequiredError>
+                                <ng-container
+                                    *ngIf="hasValidationError2(categoryValues.controls[i], 'materialOriginTypeID', 'required');">
+                                    <mat-error>
+                                        {{ FormErrorEnum.REQUIRED }}
+                                    </mat-error>
+                                </ng-container>
+                            </ng-template>
+
+                        </mat-form-field>
+                    </td>
+
+                </ng-container>
+
+                <ng-container matColumnDef="categoryStd">
+                    <th class="ps-3" mat-header-cell *matHeaderCellDef> Category </th>
+                    <td class="ps-3" mat-cell *matCellDef="let row; let i = index" [formGroupName]="i">
+
+                        <mat-form-field class="matFieldWidth100"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel">Select category</mat-label>
+                            <mat-select formControlName="categoryStdID"
+                                (selectionChange)="categoryTypeChangedInForm(categoryValues.controls[i])">
+                                <mat-option>
+                                    <ngx-mat-select-search [formControl]="categoryTypeSearchUtil?.[i].filterFC"
+                                        placeholderLabel="Search by category type name"
+                                        [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                    </ngx-mat-select-search>
+                                </mat-option>
+
+                                <mat-option *ngFor="let item of categoryTypeSearchUtil?.[i].filteredEntities | async"
+                                    [value]="item.id">
+                                    <span class="d-flex justify-content-between">
+                                        {{ item.categoryName }}
+                                    </span>
+                                </mat-option>
+                            </mat-select>
+                            <ng-container *ngIf="hasValidationError(row, 'categoryStdID', categoryValues.controls[i]);">
+                                <mat-error>
+                                    {{ row['validator']['categoryStdID'] }}
+                                </mat-error>
+                            </ng-container>
+                        </mat-form-field>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="product">
+                    <th class="ps-3 text-center" mat-header-cell *matHeaderCellDef [attr.colspan]="12"> Product
+                    </th>
+                </ng-container>
+
+                <ng-container matColumnDef="ukDefra">
+                    <th class="ps-3 text-center" mat-header-cell *matHeaderCellDef [attr.colspan]="2"> UK Defra
+                    </th>
+                </ng-container>
+
+                <ng-container matColumnDef="usEeio">
+                    <th class="ps-3 text-center" mat-header-cell *matHeaderCellDef> US EEIO </th>
+                </ng-container>
+
+            </ng-container>
+
+            <ng-container *ngIf="showUkDefra() || showUSEEIO()">
+                <tr mat-header-row *matHeaderRowDef="getOtherHeaders()">
+                </tr>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="getDisplayColumnList()">
+            </tr>
+
+            <tr mat-row *matRowDef="let task; columns: getDisplayColumnList();">
+            </tr>
+
+            <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell text-center" [attr.colspan]="getDisplayColumnList().length">
+                    {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+                </td>
+            </tr>
+
+
+        </table>
+    </div>
+    <!-- </form> -->
+
+    <div class="col-sm-12 mb-3 mt-3">
+        <div class="float-end">
+            <button type="button" class="button btn btn-sm btn-secondary me-2" (click)="cancelBtn()">
+                {{ ButtonLabelEnum.CANCEL_BTN_LABEL }}
+            </button>
+            <button type="button" class="btn btn-sm btn-secondary me-2" matStepperPrevious>
+                Back
+            </button>
+            <button class="btn btn-success btn-sm me-2" type="button" [disabled]="isDisabled"
+                (click)="submit(ButtonLabelEnum.SAVE_BTN_LABEL)">
+                {{ ButtonLabelEnum.SAVE_BTN_LABEL }} & Next
+            </button>
+            <!-- <button *ngIf="type != null" class="btn btn-warning btn-sm" type="button" [disabled]="isDisabled"
+            (click)="submit('NEXT')">
+            {{ 'Next' }}
+        </button> -->
+        </div>
+    </div>

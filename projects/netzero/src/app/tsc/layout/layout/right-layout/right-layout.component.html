@@ -1,0 +1,35 @@
+<app-loader-one></app-loader-one>
+
+<div [ngClass]="{
+    'closed-sidebar' : globals.toggleSidebar,
+    'setting-drawer-open' : globals.toggleSettingDrawer,
+    'org-drawer-open' : globals.toggleOrgDrawer
+    }" class="app-container app-theme-white">
+
+    <app-header-one></app-header-one>
+
+    <lib-organization-drawer [toggleOrgDrawer]="globals.toggleOrgDrawer"
+        (toggleOrgDrawerGlobal)="globals.toggleOrgDrawer=$event;" [drawerAccessType]="'SITE'"></lib-organization-drawer>
+
+    <lib-side-nav [sidebarTypeInp]="'LEFT'" [headerLogo]="true"
+        [landingPageRouteInp]="pagePathEnum.NETZERO_APP_HOME_PAGE" [footerLogo]="true"
+        [sidebarArrayInp]="leftSidebarArray" [toggleSidebar]="globals.toggleSidebar"
+        (toggleSidebarGlobal)="globals.toggleSidebar=$event;"></lib-side-nav>
+
+    <div class="app-main__outer">
+        <div class="app-main__inner">
+            <div [@architectUIAnimation]="o.isActivated ? o.activatedRoute : ''">
+                <router-outlet #o="outlet"></router-outlet>
+            </div>
+        </div>
+        <app-footer-two></app-footer-two>
+    </div>
+
+    <lib-side-nav [sidebarTypeInp]="'RIGHT'" [sidebarHeaderLabelInp]="'Settings'" [headerLogo]="false"
+        [footerLogo]="false" [sidebarArrayInp]="rightSidebarArray" [toggleSettingDrawer]="globals.toggleSettingDrawer"
+        (toggleSettingDrawerGlobal)="globals.toggleSettingDrawer=$event;"
+        (menuOutput)="leftSidebarArray=$event;"></lib-side-nav>
+
+</div>
+
+<ngx-loading-bar [color]="'#3f6ad8'"></ngx-loading-bar>

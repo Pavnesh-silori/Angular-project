@@ -1,0 +1,22 @@
+<h6 mat-dialog-title class="dialogTitle mb-0">
+    <div class="d-flex align-items-center">
+        <strong>
+            Are you sure you want to edit?
+        </strong>
+    </div>
+</h6>
+
+<mat-dialog-content class="d-flex align-items-center">
+    <div class="card-body breakLine">
+        {{ message }}
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button class="button btn btn-success me-2" type="button" (click)="confirm(DialogResponseEnum.YES)">
+        {{ ButtonLabelEnum.YES_BTN_LABEL }}
+    </button>
+    <button class="btn btn-outline-danger border-0 me-2" type="button" (click)="confirm(DialogResponseEnum.NO)" mat-dialog-close>
+        {{ ButtonLabelEnum.NO_BTN_LABEL }}
+    </button>
+</mat-dialog-actions>

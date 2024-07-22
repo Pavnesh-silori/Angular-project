@@ -1,0 +1,13 @@
+<div class="card main-card cardOverwrite h100">
+
+    <nav mat-tab-nav-bar>
+        <ng-container *ngFor="let tab of tabs; let i = index;">
+            <a mat-tab-link [routerLink]="tab['routerLink']" (click)="activeLink = tab['routerLink']"
+                [active]="activeLink == tab['routerLink']">
+                    {{ tab['label'] }}
+            </a>
+        </ng-container>
+    </nav>
+
+    <router-outlet></router-outlet>
+</div>

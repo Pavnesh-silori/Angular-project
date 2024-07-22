@@ -1,0 +1,75 @@
+<div class="card main-card cardOverwrite mb-4">
+    <div class="card-body pt-2 pb-0">
+        <!-- <app-filter #filterChild></app-filter> -->
+        <lib-date-filter #filterChild></lib-date-filter>
+        <app-filter-carbon class="float-end" #carbonFilterChild [module]="'dashboard'"></app-filter-carbon>
+
+    </div>
+</div>
+
+<div class="outerDiv mb-4 fs-5">
+    <div class="card main-card cardOverwrite innerDiv me-4">
+        <div class="card-body" [matTooltip]="totalEmission" matTooltipPosition="above">
+            <div class="fs-1"
+                [ngClass]="{'fw-bold text-primary': totalEmission != null, 'fw-light text-secondary': totalEmission == null}">
+                {{ totalEmission == null ? 'No Data' : totalEmission | number: '1.2-2' }}</div>
+            <div class="text-secondary">{{ totalEmission == null ? '&nbsp;' : uomName }}</div>
+            <div class="text-secondary">Total Emissions</div>
+        </div>
+    </div>
+    <div class="card main-card cardOverwrite innerDiv me-4">
+        <div class="card-body" [matTooltip]="scope1Emission" matTooltipPosition="above">
+            <div class="fs-1"
+                [ngClass]="{'fw-bold text-primary': scope1Emission != null, 'fw-light text-secondary': scope1Emission == null}">
+                {{ scope1Emission == null ? 'No Data' : scope1Emission | number: '1.2-2' }}</div>
+            <div class="text-secondary">{{ scope1Emission == null ? '&nbsp;' : uomName }}</div>
+            <div class="text-secondary">Scope 1 Emissions</div>
+        </div>
+    </div>
+    <div class="card main-card cardOverwrite innerDiv me-4">
+        <div class="card-body" [matTooltip]="scope2Emission" matTooltipPosition="above">
+            <div class="fs-1"
+                [ngClass]="{'fw-bold text-primary': scope2Emission != null, 'fw-light text-secondary': scope2Emission == null}">
+                {{ scope2Emission == null ? 'No Data' : scope2Emission | number: '1.2-2' }}</div>
+            <div class="text-secondary">{{ scope2Emission == null ? '&nbsp;' : uomName }}</div>
+            <div class="text-secondary">Scope 2 Emissions</div>
+        </div>
+    </div>
+    <div class="card main-card cardOverwrite innerDiv me-4">
+        <div class="card-body" [matTooltip]="scope3Emission" matTooltipPosition="above">
+            <div class="fs-1"
+                [ngClass]="{'fw-bold text-primary': scope3Emission != null, 'fw-light text-secondary': scope3Emission == null}">
+                {{ scope3Emission == null ? 'No Data' : scope3Emission | number: '1.2-2' }}</div>
+            <div class="text-secondary">{{ scope3Emission == null ? '&nbsp;' : uomName }}</div>
+            <div class="text-secondary">Scope 3 Emissions</div>
+        </div>
+    </div>
+    <div class="card main-card cardOverwrite innerDiv">
+        <div class="card-body" [matTooltip]="totalBiogenicEmission" matTooltipPosition="above">
+            <div class="fs-1"
+                [ngClass]="{'fw-bold text-primary': totalBiogenicEmission != null, 'fw-light text-secondary': totalBiogenicEmission == null}">
+                {{ totalBiogenicEmission == null ? 'No Data' : totalBiogenicEmission | number: '1.2-2' }}</div>
+            <div class="text-secondary">{{ totalBiogenicEmission == null ? '&nbsp;' : uomName }}</div>
+            <div class="text-secondary">Biogenic Emissions</div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-sm-6">
+        <app-doughnut-chart [renderFlag]="scopeWiseEmissionRenderFlag" [chartData]="scopeWiseEmission"
+            [chartMetaData]="scopeWiseEmissionMD"></app-doughnut-chart>
+    </div>
+
+    <div class="col-sm-6">
+        <app-stacked-horizontal-bar-chart [renderFlag]="carbonEmissionTrendRenderFlag" [chartData]="carbonEmissionTrend"
+            [chartMetaData]="carbonEmissionTrendMD"></app-stacked-horizontal-bar-chart>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <app-horizontal-bar-chart [renderFlag]="activityWiseEmissionRenderFlag" [chartData]="activityWiseEmission"
+            [chartMetaData]="activityWiseEmissionMD"></app-horizontal-bar-chart>
+    </div>
+</div>

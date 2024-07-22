@@ -1,0 +1,44 @@
+table{
+    width: 100%;
+}
+.recordID{
+    min-width: 120px;
+}
+.accountingPeriod{
+    min-width: 190px;
+}
+.accountingPeriodText{
+    text-align: left;
+}
+.vehicle{
+    min-width: 130px;
+}
+.vehicleText{
+    text-align: left;
+}
+.fuel{
+    min-width: 120px;
+}
+.fuelConsumed{
+    min-width: 150px;
+}
+.distance{
+    min-width: 120px;
+}
+.emission{
+    min-width: 180px;
+}
+.fuelMethod{
+    min-width: 170px;
+    white-space: nowrap;
+}
+.distanceMethod{
+    min-width: 160px;
+    white-space: nowrap;
+}
+.img{
+    width: 25px;
+} 
+.noError{
+    padding-left:28px;
+}

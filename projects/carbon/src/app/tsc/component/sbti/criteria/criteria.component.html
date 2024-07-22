@@ -1,0 +1,1031 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+    </symbol>
+</svg>
+
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="headerRightContainerInner">
+                <div class="pageTitle">SBTi corporate netzero standard criteria
+                </div>
+            </div>
+            <div class="subTitle">Version 1.1- April 2023
+            </div>
+        </div>
+    </div>
+
+    <div class="viewContainer me-4 mb-3 criteriaCard">
+        <div class="subTitle">
+            <mat-checkbox [checked]="viewOnlyPendingCriteria" (change)="changeViewOnlyPendingCriteria()">
+                View only pending criterias
+            </mat-checkbox>
+        </div>
+    </div>
+
+    <div class="infoCardContainer">
+        <div class="extraInfoCard criteriaCard">
+            <div class="alert justify-content-between roundedBorder" style="background-color: whitesmoke;">
+
+                <div class="row fw-bold dark mt-2">
+                    <div class="col-sm-8">
+                        Criteria
+                    </div>
+                    <div class="col-sm-4">
+                        Required actions/ Remarks
+                    </div>
+                </div>
+
+                <div class="row"
+                    *ngIf="!viewOnlyPendingCriteria || (viewOnlyPendingCriteria && !isBaseYearAndSettingsSaved)">
+                    <div class="mt-3 fw-bold">
+                        Organizational boundary
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-7 d-flex  resizeIcon" [ngClass]="{ 'checked': isBaseYearAndSettingsSaved }">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C1- Parent companies must include the emissions of all subsidiaries in their
+                                target
+                                submission according to the chosen inventory consolidation approach.
+                            </div>
+                        </div>
+
+                        <ng-container *ngTemplateOutlet="isBaseYearAndSettingsSavedCondition"></ng-container>
+                        <div class="col-sm-4" *ngIf="isBaseYearAndSettingsSaved">
+                            Criteria met,
+                            <a href="/target/page"> view included subsidiaries </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" *ngIf="!viewOnlyPendingCriteria">
+                    <div class="mt-4 fw-bold">
+                        Greenhouse gases
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-7 d-flex  resizeIcon">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon checked">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C2- The targets must cover all relevant GHGs as required by the GHG Protocol
+                                Corporate Standard.
+                            </div>
+                        </div>
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-4">
+                            Criteria met, all relevant GHGs are covered
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" *ngIf="showScopeCoverageBlockFlag">
+                    <div class="mt-4 fw-bold">
+                        Scope coverage
+                    </div>
+
+                    <div class="row mt-2"
+                        *ngIf="!viewOnlyPendingCriteria || (viewOnlyPendingCriteria && !isBaseYearAndSettingsSaved)">
+                        <div class="col-sm-7 d-flex resizeIcon" [ngClass]="{ 'checked': isBaseYearAndSettingsSaved }">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C3- Scope 1 and 2: The targets must cover company-wide scope 1 and scope 2
+                                emissions, as defined by the GHG Protocol Corporate Standard
+                            </div>
+                        </div>
+                        <ng-container *ngTemplateOutlet="isBaseYearAndSettingsSavedCondition"></ng-container>
+                        <div class="col-sm-4" *ngIf="isBaseYearAndSettingsSaved">
+                            Scope 1 and 2 inventory is complete and confirmed as base year emissions,
+                            <a href="/carbon-setting/base-year/sbti" target="_blank"> view base year emissions
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3" *ngIf="!viewOnlyPendingCriteria || showC4Flag">
+                        <div class="col-sm-7 d-flex resizeIcon"
+                            [ngClass]="{ 'checked': sbtiCriteriaM['s3EmissionsPct'] < 40 || sbtiCriteriaM['s3NearTermReductionTarget'] }">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C4- Scope 3: If a company's relevant scope 3 emissions are 40% or more of total
+                                scope 1, 2, and 3 emissions, they must be included in near-term science-based
+                                targets.
+                            </div>
+                        </div>
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-4" *ngIf="sbtiCriteriaM['s3EmissionsPct'] < 40; else setTarget">
+                            <ng-container *ngTemplateOutlet="openNearTermTargetDialog"></ng-container>
+                        </div>
+                        <ng-template #setTarget>
+                            <div class="col-sm-4"
+                                *ngIf="!sbtiCriteriaM['s3NearTermReductionTarget']; else criteriaMet ">
+                                <div class="linkColor cursorPointer"
+                                    (click)="setNearTermTarget(ScopeCoverage['SCOPE_3'])"
+                                    *ngIf="isBaseYearAndSettingsSaved"> Set
+                                    Scope 3 near term reduction target
+                                </div>
+                                <div *ngIf="!isBaseYearAndSettingsSaved"> Set
+                                    Scope 3 near term reduction target
+                                </div>
+                            </div>
+                            <ng-template #criteriaMet>
+                                <div class="col-sm-4">
+                                    Scope 3 near term reduction target is set,
+                                    <a href="/target/page" target="_blank"> view targets </a>
+                                </div>
+                            </ng-template>
+                        </ng-template>
+                    </div>
+
+                    <div class="row mt-3" *ngIf="!viewOnlyPendingCriteria || showC5Flag">
+                        <div class="col-sm-7 d-flex  resizeIcon"
+                            [ngClass]="{ 'checked': !sbtiCriteriaM['isUseOfSoldProducts'] || sbtiCriteriaM['s3NearTermReductionTarget'] }">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C5- Scope 3: All companies involved in the sale or distribution of natural gas
+                                and/or other fossil fuels shall set scope 3 targets for the use of sold
+                                products.
+                            </div>
+                        </div>
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-4" *ngIf="!sbtiCriteriaM['isUseOfSoldProducts']; else setTarget">
+                            Not applicable
+                        </div>
+                        <ng-template #setTarget>
+                            <div class="col-sm-4" *ngIf="!sbtiCriteriaM['s3NearTermReductionTarget']; else criteriaMet">
+                                <span class="linkColor cursorPointer"
+                                    (click)="setNearTermTarget(ScopeCoverage['SCOPE_3'])"
+                                    *ngIf="isBaseYearAndSettingsSaved">Scope 3 near term reduction target
+                                </span>
+                                <span *ngIf="!isBaseYearAndSettingsSaved">Scope 3 near term reduction target
+                                </span>
+                            </div>
+                            <ng-template #criteriaMet>
+                                <div class="col-sm-4">
+                                    Scope 3 near term target is set,
+                                    <a href="/target/page">view targets</a>
+                                </div>
+                            </ng-template>
+                        </ng-template>
+                    </div>
+
+                    <div class="row mt-3"
+                        *ngIf="!viewOnlyPendingCriteria || (viewOnlyPendingCriteria && !sbtiCriteriaM['s3LongTermReductionTarget'])">
+                        <div class="col-sm-7 d-flex resizeIcon"
+                            [ngClass]="{ 'checked': sbtiCriteriaM['s3LongTermReductionTarget']}">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C6- Scope 3: All companies shall include emissions from all relevant scope 3
+                                categories in long-term science-based targets.
+                            </div>
+                        </div>
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-4" *ngIf="!sbtiCriteriaM['s3LongTermReductionTarget']; else criteriaMet">
+                            <span class="linkColor cursorPointer" (click)="setLongTermTarget()"
+                                *ngIf="isBaseYearAndSettingsSaved">
+                                Set a Scope 3 long term reduction target
+                            </span>
+                            <span *ngIf="!isBaseYearAndSettingsSaved">Set a Scope 3 long term
+                                reduction target
+                            </span>
+                        </div>
+                        <ng-template #criteriaMet>
+                            <div class="col-sm-4" *ngIf="sbtiCriteriaM['s3LongTermReductionTarget']">
+                                Scope 3 long term target is set, view targets
+                                <a href="target/page"> view targets </a>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+
+                <div class="row" *ngIf="showEmissionCoverageBlockFlag">
+                    <div class="mt-4 fw-bold">
+                        Emissions coverage
+                    </div>
+
+                    <div class="row mt-2"
+                        *ngIf="!viewOnlyPendingCriteria || (viewOnlyPendingCriteria && !sbtiCriteriaM['isAnyNearAndLongTermTarget'])">
+                        <div class="col-sm-7 d-flex resizeIcon"
+                            [ngClass]="{ 'checked': sbtiCriteriaM['isAnyNearAndLongTermTarget'] }">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C7- Scope 1, 2 and 3 allowable exclusions: Companies may exclude up to 5% of
+                                scope 1 and scope 2 emissions combined in the boundary of the inventory and
+                                target. Companies may exclude a maximum of 5% of emissions from their total
+                                scope 3 inventory.
+                            </div>
+                        </div>
+                        <ng-container *ngTemplateOutlet="isAnyNearAndLongTermTargetCondition"></ng-container>
+                    </div>
+
+                    <div class="row mt-3" *ngIf="!viewOnlyPendingCriteria || showC8Flag">
+                        <div class="col-sm-7 d-flex resizeIcon"
+                            [ngClass]="{ 'checked': sbtiCriteriaM['s3NearTermTargetEmissionPct'] < 67 || sbtiCriteriaM['s3NearTermReductionTarget'] }">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C8- Scope 3 emissions coverage for near-term targets: Companies must set one or
+                                more emission reduction near-term targets that collectively cover(s) at least
+                                two-thirds (67%) of total reported and excluded scope 3 emissions.
+                            </div>
+                        </div>
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-4" *ngIf="sbtiCriteriaM['s3NearTermTargetEmissionPct'] < 67; else setTarget">
+                            <ng-container *ngTemplateOutlet="openNearTermTargetDialog"></ng-container>
+                        </div>
+                        <ng-template #setTarget>
+                            <div class="col-sm-4" *ngIf="!sbtiCriteriaM['s3NearTermReductionTarget']; else targetSet ">
+                                <span class="linkColor cursorPointer"
+                                    (click)="setNearTermTarget(ScopeCoverage['SCOPE_3'])"
+                                    *ngIf="isBaseYearAndSettingsSaved">
+                                    Set a Scope 3 near term reduction target
+                                </span>
+                                <span *ngIf="!isBaseYearAndSettingsSaved">
+                                    Set a Scope 3 near term reduction target
+                                </span>
+                            </div>
+                            <ng-template #targetSet>
+                                <div class="col-sm-4">
+                                    Criteria met,
+                                    <a href="/target/page"> view targets </a>
+                                </div>
+                            </ng-template>
+                        </ng-template>
+                    </div>
+
+                    <div class="row mt-3" *ngIf="!viewOnlyPendingCriteria || showC9Flag">
+                        <div class="col-sm-7 d-flex  resizeIcon"
+                            [ngClass]="{ 'checked': sbtiCriteriaM['s3LongTermTargetEmissionPct'] < 90 || sbtiCriteriaM['s3LongTermReductionTarget']  }">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C9- Scope 3 emissions coverage for long-term targets: The boundary of long-term
+                                science-based targets shall cover at least 90% of total scope 3 emissions.
+                            </div>
+                        </div>
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-4" *ngIf="sbtiCriteriaM['s3LongTermTargetEmissionPct'] < 90; else setTarget">
+                            Criteria met, but you can create
+                            <span class="linkColor cursorPointer" (click)="setLongTermTarget()"
+                                *ngIf="isBaseYearAndSettingsSaved">
+                                Scope 3 long term reduction target
+                            </span>
+                            <span *ngIf="!isBaseYearAndSettingsSaved">
+                                Scope 3 long term reduction target
+                            </span>
+                        </div>
+                        <ng-template #setTarget>
+                            <div class="col-sm-4" *ngIf="!sbtiCriteriaM['s3LongTermReductionTarget']; else targetSet ">
+                                <span class="linkColor cursorPointer" (click)="setLongTermTarget()"
+                                    *ngIf="isBaseYearAndSettingsSaved">
+                                    Set a Scope 3 long term reduction target
+                                </span>
+                                <span *ngIf="!isBaseYearAndSettingsSaved">
+                                    Set a Scope 3 long term reduction target
+                                </span>
+                            </div>
+                            <ng-template #targetSet>
+                                <div class="col-sm-4">
+                                    Criteria met,
+                                    <a href="/target/page"> view targets </a>
+                                </div>
+                            </ng-template>
+                        </ng-template>
+                    </div>
+                </div>
+
+                <div class="row"
+                    *ngIf="!viewOnlyPendingCriteria || (viewOnlyPendingCriteria && !sbtiCriteriaM['isAnyTargetCreated'])">
+                    <div class="mt-4 fw-bold">
+                        Method validity for near and long term targets
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-7 d-flex resizeIcon"
+                            [ngClass]="{ 'checked': sbtiCriteriaM['isAnyTargetCreated'] }">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C10- Method validity: Targets must be modeled using the latest version of
+                                methods and tools approved by the initiative.
+                            </div>
+                        </div>
+                        <ng-container *ngTemplateOutlet="isAnyTargetCreatedCondition"></ng-container>
+                    </div>
+                </div>
+
+                <div class="row" *ngIf="showEmissionAccountingRequirementFlag">
+                    <div class="mt-4 fw-bold">
+                        Emissions accounting requirements
+                    </div>
+
+                    <div class="row mt-2"
+                        *ngIf="!viewOnlyPendingCriteria || (viewOnlyPendingCriteria && !sbtiCriteriaM['isSbtiSettings'])">
+                        <div class="col-sm-7 d-flex resizeIcon"
+                            [ngClass]="{ 'checked': sbtiCriteriaM['isSbtiSettings'] }">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C11- Scope 2 accounting approach: Companies shall disclose whether they are
+                                using a location- or market-based accounting approach to calculate base year
+                                emissions and to track performance against a science-based target.
+                            </div>
+                        </div>
+                        <ng-container *ngTemplateOutlet="sbtiSettingsCondition"></ng-container>
+                    </div>
+
+                    <div class="row mt-3"
+                        *ngIf="!viewOnlyPendingCriteria || (viewOnlyPendingCriteria && !isBaseYearAndSettingsSaved)">
+                        <div class="col-sm-7 d-flex resizeIcon" [ngClass]="{ 'checked': isBaseYearAndSettingsSaved }">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C12- Scope 3 inventory: Companies must complete a scope 3 inventory covering
+                                gross scope 3 emissions for all its emissions sources
+                            </div>
+                        </div>
+                        <ng-container *ngTemplateOutlet="isBaseYearAndSettingsSavedCondition"></ng-container>
+                        <div class="col-sm-4" *ngIf="isBaseYearAndSettingsSaved">
+                            Scope 3 inventory is complete and confirmed as base year emissions,
+                            <a href="/carbon-setting/base-year/sbti"> view base year emissions </a>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3"
+                        *ngIf="!viewOnlyPendingCriteria || (viewOnlyPendingCriteria && !sbtiCriteriaM['isSbtiSettings'])">
+                        <div class="col-sm-7 d-flex resizeIcon"
+                            [ngClass]="{ 'checked': sbtiCriteriaM['isSbtiSettings'] }">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C13- Bioenergy accounting: CO2 emissions from the combustion, processing and
+                                distribution phase of bioenergy shall be reported alongside a company's GHG
+                                inventory and included in the target boundary when setting a science-based
+                                target.
+                            </div>
+                        </div>
+                        <ng-container *ngTemplateOutlet="sbtiSettingsCondition"></ng-container>
+                    </div>
+
+                    <div class="row mt-3"
+                        *ngIf="!viewOnlyPendingCriteria || (viewOnlyPendingCriteria && !sbtiCriteriaM['isSbtiSettings'])">
+                        <div class="col-sm-7 d-flex resizeIcon"
+                            [ngClass]="{ 'checked': sbtiCriteriaM['isSbtiSettings'] }">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C14- Carbon credits: The use of carbon credits must not be counted as emission
+                                reductions toward the progress of companies' near-term or long-term
+                                science-based targets.
+                            </div>
+                        </div>
+                        <ng-container *ngTemplateOutlet="sbtiSettingsCondition"></ng-container>
+                    </div>
+
+                    <div class="row mt-3"
+                        *ngIf="!viewOnlyPendingCriteria || (viewOnlyPendingCriteria && !sbtiCriteriaM['isSbtiSettings'])">
+                        <div class="col-sm-7 d-flex resizeIcon"
+                            [ngClass]="{ 'checked': sbtiCriteriaM['isSbtiSettings'] }">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C15- Avoided emissions: Avoided emissions do not count toward near-term or
+                                long-term science-based emission reduction targets.
+                            </div>
+                        </div>
+                        <ng-container *ngTemplateOutlet="sbtiSettingsCondition"></ng-container>
+                    </div>
+                </div>
+
+                <div class="row"
+                    *ngIf="!viewOnlyPendingCriteria || (viewOnlyPendingCriteria && !sbtiCriteriaM['isSbtiSettings'])">
+                    <div class="mt-4 fw-bold">
+                        Netzero definition
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-7 d-flex resizeIcon"
+                            [ngClass]="{ 'checked': sbtiCriteriaM['isSbtiSettings'] }">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C16- State of net-zero emissions: Companies shall set one or more targets to
+                                reach a state of netzero emissions, which involves: (a) reducing scope 1, 2 and
+                                3 emissions to zero in eligible 1.5°C scenarios or sector pathways and (b)
+                                neutralizing any residual emissions at the net-zero target date - and any GHG
+                                emissions released into the atmosphere thereafter.
+                            </div>
+                        </div>
+                        <ng-container *ngTemplateOutlet="sbtiSettingsCondition"></ng-container>
+                    </div>
+                </div>
+
+                <div class="row"
+                    *ngIf="!viewOnlyPendingCriteria || (viewOnlyPendingCriteria && !sbtiCriteriaM['isAnyTargetCreated'])">
+                    <div class="mt-4 fw-bold">
+                        Structure
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-7 d-flex  resizeIcon"
+                            [ngClass]="{ 'checked': sbtiCriteriaM['isAnyTargetCreated'] }">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C17- Net-zero target structure: Companies aiming to reach a state of
+                                net-zero emissions in a timeframe exceeding 10 years shall set both
+                                near-term and long-term science-based emission reduction targets. If a
+                                company's near-term target meets the ambition requirements of a long-term
+                                target, then the latter is not required.
+                            </div>
+                        </div>
+                        <ng-container *ngTemplateOutlet="isAnyTargetCreatedCondition"></ng-container>
+                    </div>
+                </div>
+
+                <div class="row" *ngIf="showTimeFrameBlockFlag">
+                    <div class="mt-4 fw-bold">
+                        Timeframe
+                    </div>
+
+                    <div class="row mt-2"
+                        *ngIf="!viewOnlyPendingCriteria || (viewOnlyPendingCriteria && !sbtiCriteriaM['isSbtiSettings'])">
+                        <div class="col-sm-7 d-flex resizeIcon"
+                            [ngClass]="{ 'checked': sbtiCriteriaM['isSbtiSettings'] }">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C18- Base year: The base year must be no earlier than 2015. The company shall
+                                use the same base year for its long-term science-based targets as its near-term
+                                SBTs.
+                            </div>
+                        </div>
+                        <ng-container *ngTemplateOutlet="sbtiSettingsCondition"></ng-container>
+                    </div>
+
+                    <div class="row mt-3"
+                        *ngIf="!viewOnlyPendingCriteria || (viewOnlyPendingCriteria && !sbtiCriteriaM['isAnyNearAndLongTermTarget'])">
+                        <div class="col-sm-7 d-flex resizeIcon"
+                            [ngClass]="{ 'checked': sbtiCriteriaM['isAnyNearAndLongTermTarget'] }">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C19- Target year(s): Near-term targets must cover a minimum of 5 years and a
+                                maximum of 10 years from the date the target is submitted to the SBTi for
+                                validation. Long-term targets shall have a target year no later than 2050
+                            </div>
+                        </div>
+                        <ng-container *ngTemplateOutlet="isAnyNearAndLongTermTargetCondition"></ng-container>
+                    </div>
+
+                    <div class="row mt-3"
+                        *ngIf="!viewOnlyPendingCriteria || (viewOnlyPendingCriteria && !sbtiCriteriaM['isAnyNearTermReductionTarget'])">
+                        <div class="col-sm-7 d-flex  resizeIcon"
+                            [ngClass]="{ 'checked': sbtiCriteriaM['isAnyNearTermReductionTarget'] }">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C20- Progress to date: The minimum forward-looking ambition of near-term
+                                targets is consistent with reaching net-zero by 2050 at the latest
+                            </div>
+                        </div>
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-4" *ngIf="!sbtiCriteriaM['isAnyNearTermReductionTarget']; else criteriaMet">
+                            <div class="linkColor cursorPointer" (click)="setNearTermTarget(ScopeCoverage['SCOPE_1_2'])"
+                                *ngIf="isBaseYearAndSettingsSaved">Set a
+                                near term reduction target
+                            </div>
+                            <div *ngIf="!isBaseYearAndSettingsSaved">Set a
+                                near term reduction target
+                            </div>
+                        </div>
+                        <ng-template #criteriaMet>
+                            <div class="col-sm-4" *ngIf="sbtiCriteriaM['isAnyNearTermReductionTarget']">
+                                Criteria met,
+                                <a href="/target/page" target="_blank"> view targets </a>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+
+                <div class="row" *ngIf="showAmbitionBlockFlag">
+                    <div class="mt-4 fw-bold">
+                        Ambition
+                    </div>
+
+                    <div class="row mt-2"
+                        *ngIf="!viewOnlyPendingCriteria || (viewOnlyPendingCriteria && !sbtiCriteriaM['isNearAndLongTermTargetForScope1And2'])">
+                        <div class="col-sm-7 d-flex resizeIcon"
+                            [ngClass]="{ 'checked': sbtiCriteriaM['isNearAndLongTermTargetForScope1And2'] }">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C21- Level of ambition for scope 1 and 2 targets: At a minimum, scope 1 and
+                                scope 2 targets must have 1.5C ambition. This applies to both near-term and
+                                long-term targets.
+                            </div>
+                        </div>
+                        <ng-container
+                            *ngTemplateOutlet="isNearAndLongTermTargetForScope1And2Condition; context: { text: 'Set a near and long term target' }"></ng-container>
+                    </div>
+
+                    <div class="row mt-3"
+                        *ngIf="!viewOnlyPendingCriteria || (viewOnlyPendingCriteria && !sbtiCriteriaM['isNearAndLongTermTargetForScope1And2'])">
+                        <div class="col-sm-7 d-flex resizeIcon"
+                            [ngClass]="{ 'checked': sbtiCriteriaM['isNearAndLongTermTargetForScope1And2'] }">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C22- Absolute targets: Absolute reduction targets for scope 1 and scope 2 are
+                                eligible when 1.5C ambition is met or aligned with the relevant 1.5°C
+                                sector-specific absolute pathway (long-term targets only).
+                            </div>
+                        </div>
+                        <ng-container
+                            *ngTemplateOutlet="isNearAndLongTermTargetForScope1And2Condition; context: { text: 'Set a near term and long term absolute reduction target' }"></ng-container>
+                    </div>
+
+                    <div class="row mt-3"
+                        *ngIf="!viewOnlyPendingCriteria || (viewOnlyPendingCriteria && !sbtiCriteriaM['isIntensityTargetForScope1And2'])">
+                        <div class="col-sm-7 d-flex resizeIcon"
+                            [ngClass]="{ 'checked': sbtiCriteriaM['isIntensityTargetForScope1And2'] }">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C23- Intensity targets: Intensity targets for scope 1 and scope 2 emissions are
+                                eligible when they are modeled using an approved 1.5°C sector pathway applicable
+                                to companies business activities.
+                            </div>
+                        </div>
+                        <ng-container
+                            *ngTemplateOutlet="openTargetHomeDialog; context: { text: 'Setting an intensity target is optional,' }"></ng-container>
+                    </div>
+
+                    <div class="row mt-3"
+                        *ngIf="!viewOnlyPendingCriteria || (viewOnlyPendingCriteria && !sbtiCriteriaM['isNearAndLongTermTargetForScope3'])">
+                        <div class="col-sm-7 d-flex resizeIcon"
+                            [ngClass]="{ 'checked': sbtiCriteriaM['isNearAndLongTermTargetForScope3'] }">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C24- Level of ambition for scope 3 emissions reductions targets: At a minimum,
+                                scope 3 targets must have well-below 2C ambition. For long term target, minimum
+                                ambition is 1.5C.
+                            </div>
+                        </div>
+                        <ng-container *ngTemplateOutlet="isNearAndLongTermTargetForScope3Condition"></ng-container>
+                    </div>
+
+                    <div class="row mt-3"
+                        *ngIf="!viewOnlyPendingCriteria || (viewOnlyPendingCriteria && !sbtiCriteriaM['isNearTermEngagementTarget'])">
+                        <div class="col-sm-7 d-flex resizeIcon"
+                            [ngClass]="{ 'checked': sbtiCriteriaM['isNearTermEngagementTarget'] }">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon checked">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C25- Supplier or Customer Engagement Targets: Near-term targets to drive the adoption of
+                                science-based emission reduction targets by their suppliers and/or customers are
+                                acceptable when the following conditions are met:
+                                <ul>
+                                    <li>
+                                        <strong>Boundary:</strong> Companies may set engagement targets around relevant
+                                        and credible upstream or downstream categories.
+                                    </li>
+                                    <li>
+                                        <strong>Formulation:</strong> Companies shall provide information in the target
+                                        language on what percentage of emissions from relevant upstream and/or
+                                        downstream categories is covered by the engagement target or, if that
+                                        information is not available, what percentage of annual procurement spend is
+                                        covered by the target.
+                                    </li>
+                                    <li>
+                                        <strong>Timeframe:</strong> Companies' engagement targets must be fulfilled
+                                        within a maximum of 5 years from the date the company's target is submitted to
+                                        the SBTi for validation.
+                                    </li>
+                                    <li>
+                                        <strong>Ambition Level:</strong> The company's suppliers/customers shall have
+                                        science-based emission reduction targets in line with the latest version of the
+                                        SBTi Criteria for Near-term Targets.
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <ng-container
+                            *ngTemplateOutlet="openTargetHomeDialog; context: { text: 'Setting an engagement target is optional,' }"></ng-container>
+                    </div>
+
+                    <div class="row mt-3"
+                        *ngIf="!viewOnlyPendingCriteria || (viewOnlyPendingCriteria && !sbtiCriteriaM['isNearAndLongTermTargetForScope3'])">
+                        <div class="col-sm-7 d-flex resizeIcon"
+                            [ngClass]="{ 'checked': sbtiCriteriaM['isNearAndLongTermTargetForScope3']  }">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C26- Absolute targets (scope 3): Absolute targets for scope 3 are eligible when
+                                they are consistent with the well below 2°C goal (near-term targets), the 1.5°C
+                                goal (long-term targets), or aligned with the relevant 1.5°C sector-specific
+                                absolute pathway (long-term targets only).
+                            </div>
+                        </div>
+                        <ng-container *ngTemplateOutlet="isNearAndLongTermTargetForScope3Condition"></ng-container>
+                    </div>
+
+                    <div class="row mt-3"
+                        *ngIf="!viewOnlyPendingCriteria || (viewOnlyPendingCriteria && !sbtiCriteriaM['isIntensityTargetForScope3'])">
+                        <div class="col-sm-7 d-flex resizeIcon"
+                            [ngClass]="{ 'checked': sbtiCriteriaM['isIntensityTargetForScope3'] }">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon checked">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C27- Intensity targets (scope 3): Intensity targets for scope 3 are eligible
+                                when they are modeled using an approved sector-specific physical intensity
+                                pathway where applicable to companies business activities or using eligible
+                                physical intensity or economic intensity approaches. This applies to both
+                                near-term and long-term targets. </div>
+                        </div>
+                        <ng-container
+                            *ngTemplateOutlet="openTargetHomeDialog; context: { text: 'Setting an intensity target is optional,' }"></ng-container>
+                    </div>
+                </div>
+
+                <div class="row" *ngIf="!viewOnlyPendingCriteria">
+                    <div class="mt-4 fw-bold">
+                        Combined targets (near and long-term targets)
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-7 d-flex resizeIcon">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon checked">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C28- Combined scope targets: Targets combining scopes (e.g., 1 and 2, or 1, 2
+                                and 3) are permitted if the SBTi can review the ambition of the individual
+                                target components and confirm each meets the relevant ambition criteria.
+                            </div>
+                        </div>
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-4">
+                            Not applicable
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" *ngIf="!viewOnlyPendingCriteria">
+                    <div class="mt-4 fw-bold">
+                        Renewable electricity targets (near and long-term targets)
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-7 d-flex resizeIcon">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon checked">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C29- Renewable electricity (scope 2 only): The SBTi has identified 80%
+                                renewable electricity procurement by 2025 and 100% by 2030 as thresholds for
+                                this approach.
+                            </div>
+                        </div>
+                        <ng-container
+                            *ngTemplateOutlet="openTargetHomeDialog; context: { text: 'Setting a renewable electricity target is optional,' }"></ng-container>
+                    </div>
+                </div>
+
+                <div class="row"
+                    *ngIf="!viewOnlyPendingCriteria || (viewOnlyPendingCriteria && !sbtiCriteriaM['isSbtiSettings'])">
+                    <div class="mt-4 fw-bold">
+                        Neutralization
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-7 d-flex  resizeIcon"
+                            [ngClass]="{ 'checked': sbtiCriteriaM['isSbtiSettings'] }">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C30 - Neutralization of unabated emissions to reach net-zero: Companies shall
+                                remove carbon from the atmosphere and permanently store it to counterbalance the
+                                impact of any unabated emissions that remain once companies have achieved their
+                                long-term science-based target, and for subsequent years thereafter. The
+                                neutralization of unabated emissions applies to both the emissions reduction
+                                target(s) boundary and to any unabated emissions that have been excluded from
+                                the GHG inventory.
+                            </div>
+                        </div>
+                        <ng-container *ngTemplateOutlet="sbtiSettingsCondition"></ng-container>
+                    </div>
+                </div>
+
+                <div class="row"
+                    *ngIf="!viewOnlyPendingCriteria || (viewOnlyPendingCriteria && !sbtiCriteriaM['isAnyNearAndLongTermTarget'])">
+                    <div class="mt-4 fw-bold">
+                        Target formulation
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-7 d-flex resizeIcon"
+                            [ngClass]="{ 'checked': sbtiCriteriaM['isAnyNearAndLongTermTarget'] }">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C31 - Target formulation: Companies shall publicly set a net-zero target that
+                                clearly and transparently communicates each of the target's relevant components
+                                including (a) net-zero target year, (b) magnitude of emissions reductions that
+                                will be achieved for near-term and long-term SBTs, and (c) a base year.
+                            </div>
+                        </div>
+                        <ng-container *ngTemplateOutlet="isAnyNearAndLongTermTargetCondition"></ng-container>
+                    </div>
+                </div>
+
+                <div class="row"
+                    *ngIf="!viewOnlyPendingCriteria || (viewOnlyPendingCriteria && !sbtiCriteriaM['isSbtiSettings'])">
+                    <div class="mt-4 fw-bold">
+                        Reporting
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-sm-7 d-flex resizeIcon"
+                            [ngClass]="{ 'checked': sbtiCriteriaM['isSbtiSettings'] }">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C32 - Frequency: The company shall publicly report its company-wide GHG
+                                emissions inventory and progress against published targets on an annual basis.
+                            </div>
+                        </div>
+                        <ng-container *ngTemplateOutlet="sbtiSettingsCondition"></ng-container>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-sm-7 d-flex resizeIcon"
+                            [ngClass]="{ 'checked': sbtiCriteriaM['isSbtiSettings'] }">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C33 - Reporting completeness: Companies shall publicly report information
+                                pertaining to progress against validated targets, including separately reporting
+                                emissions and removals in the annual GHG inventory. </div>
+                        </div>
+                        <ng-container *ngTemplateOutlet="sbtiSettingsCondition"></ng-container>
+                    </div>
+                </div>
+
+                <div class="row" *ngIf="showEmissionAccountingRequirementFlag">
+                    <div class="mt-4 fw-bold">
+                        Recalculation and target validity
+                    </div>
+
+                    <div class="row mt-2"
+                        *ngIf="!viewOnlyPendingCriteria || (viewOnlyPendingCriteria && !sbtiCriteriaM['isSbtiSettings'])">
+                        <div class="col-sm-7 d-flex resizeIcon"
+                            [ngClass]="{ 'checked': sbtiCriteriaM['isSbtiSettings'] }">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C34 -Mandatory target recalculation: Targets must be reviewed, and if necessary,
+                                recalculated and revalidated, at a minimum every 5 years. A company's base year
+                                emissions recalculation policy must include a significance threshold of 5% or
+                                less that is applied to emission recalculations or in the absence of a base year
+                                emissions recalculation policy, a company must agree to apply a 5% significance
+                                threshold for emission recalculations.
+                            </div>
+                        </div>
+                        <ng-container *ngTemplateOutlet="sbtiSettingsCondition"></ng-container>
+                    </div>
+
+                    <div class="row mt-3"
+                        *ngIf="!viewOnlyPendingCriteria || (viewOnlyPendingCriteria && !isBaseYearAndSettingsSaved)">
+                        <div class="col-sm-7 d-flex  resizeIcon" [ngClass]="{ 'checked': isBaseYearAndSettingsSaved }">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C35 - Triggered target recalculation: The following changes shall trigger a
+                                target recalculation:
+                                <ul>
+                                    <li>
+                                        Scope 3 emissions become 40% or more of aggregated scope 1, 2 and 3 emissions
+                                        (applies only to near-term SBTs).
+                                    </li>
+                                    <li>Emissions of exclusions in the inventory or target boundary change
+                                        significantly.
+                                    </li>
+                                    <li> Significant changes in company structure and activities (e.g., acquisition,
+                                        divestiture, merger, insourcing or outsourcing, shifts in goods or service
+                                        offerings).
+                                    </li>
+                                    <li>Significant adjustments to the base year inventory, data sources or
+                                        calculation methodologies, or changes in data to set targets such as growth
+                                        projections (e.g., discovery of significant errors or a number of cumulative
+                                        errors that are collectively significant).
+                                    </li>
+                                    <li> Other significant changes to projections/assumptions used in setting the
+                                        science-based targets.
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <ng-container *ngTemplateOutlet="isBaseYearAndSettingsSavedCondition"></ng-container>
+                        <div class="col-sm-4" *ngIf="isBaseYearAndSettingsSaved">
+                            Criteria met,
+                            <a href="/carbon-setting/base-year/sbti"> view base year and recalculation policy
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3"
+                        *ngIf="!viewOnlyPendingCriteria || (viewOnlyPendingCriteria && !sbtiCriteriaM['isSbtiSettings'])">
+                        <div class="col-sm-7 d-flex resizeIcon"
+                            [ngClass]="{ 'checked': sbtiCriteriaM['isSbtiSettings'] }">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C36- Target validity: Companies with approved targets must announce their
+                                target publicly on the SBTi website within 6 months of the approval date.
+                            </div>
+                        </div>
+                        <ng-container *ngTemplateOutlet="sbtiSettingsCondition"></ng-container>
+                    </div>
+                </div>
+
+                <div class="row" *ngIf="!viewOnlyPendingCriteria">
+                    <div class="mt-4 fw-bold">
+                        Sector-specific guidance
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-7 d-flex resizeIcon">
+                            <svg class="flex-shrink-0 me-3 extraInfoCardHeaderIcon checked">
+                                <use xlink:href="#check-circle-fill" />
+                            </svg>
+                            <div class="dark">
+                                C37 - Requirements from sector-specific guidance: Companies must follow
+                                requirements for target setting and minimum ambition levels as indicated in
+                                relevant sector-specific methods and guidance
+                            </div>
+                        </div>
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-4">
+                            Not applicable
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #isBaseYearAndSettingsSavedCondition>
+    <div class="col-sm-1"></div>
+    <div class="col-sm-4" *ngIf="!isBaseYearAndSettingsSaved">
+        <span *ngIf="sbtiCriteriaM['isSbtiBaseYear']">SBTi base year saved </span>
+        <span *ngIf="!sbtiCriteriaM['isSbtiBaseYear']">
+            <a href="/carbon-setting/base-year/sbti/create"> Set SBTi base year </a>
+        </span>
+
+        <strong> and &nbsp;</strong>
+
+        <span *ngIf="sbtiCriteriaM['isSbtiSettings']">SBTi science based target is saved </span>
+        <span *ngIf="!sbtiCriteriaM['isSbtiSettings']">
+            <a href="/target-setting/sbti">Save science based target
+                settings</a>
+        </span>
+    </div>
+</ng-template>
+
+<ng-template #sbtiSettingsCondition>
+    <div class="col-sm-1"></div>
+    <div class="col-sm-4" *ngIf="!sbtiCriteriaM['isSbtiSettings']; else criteriaMet">
+        <a href="/target-setting/sbti">Save science based target settings</a>
+    </div>
+    <ng-template #criteriaMet>
+        <div class="col-sm-4" *ngIf="sbtiCriteriaM['isSbtiSettings']">
+            Acknowledged and agreed,
+            <a href="/target-setting/sbti"> view science based target settings </a>
+        </div>
+    </ng-template>
+</ng-template>
+
+<ng-template #isNearAndLongTermTargetForScope3Condition>
+    <div class="col-sm-1"></div>
+    <div class="col-sm-4" *ngIf="!sbtiCriteriaM['isNearAndLongTermTargetForScope3']; else criteriaMet">
+        <div class="linkColor cursorPointer" (click)="openTargetHome()" *ngIf="isBaseYearAndSettingsSaved">
+            Set a near and long term target for Scope 3
+        </div>
+        <div *ngIf="!isBaseYearAndSettingsSaved">Set a near and long term target for Scope 3
+        </div>
+    </div>
+    <ng-template #criteriaMet>
+        <div class="col-sm-4" *ngIf="sbtiCriteriaM['isNearAndLongTermTargetForScope3']">
+            Criteria met,
+            <a href="/target/page"> view targets </a>
+        </div>
+    </ng-template>
+</ng-template>
+
+<ng-template #isNearAndLongTermTargetForScope1And2Condition let-context="text">
+    <div class="col-sm-1"></div>
+    <div class="col-sm-4" *ngIf="!sbtiCriteriaM['isNearAndLongTermTargetForScope1And2']; else criteriaMet">
+        <div class="linkColor cursorPointer" (click)="openTargetHome()" *ngIf="isBaseYearAndSettingsSaved">{{ context }}
+        </div>
+        <div *ngIf="!isBaseYearAndSettingsSaved">{{ context }}
+        </div>
+    </div>
+    <ng-template #criteriaMet>
+        <div class="col-sm-4" *ngIf="sbtiCriteriaM['isNearAndLongTermTargetForScope1And2']">
+            Criteria met,
+            <a href="/target/page"> view targets </a>
+        </div>
+    </ng-template>
+</ng-template>
+
+<ng-template #isAnyNearAndLongTermTargetCondition>
+    <div class="col-sm-1"></div>
+    <div class="col-sm-4" *ngIf="!sbtiCriteriaM['isAnyNearAndLongTermTarget'];else criteriaMet">
+        <div class="linkColor cursorPointer" (click)="openTargetHome()" *ngIf="isBaseYearAndSettingsSaved">
+            Set a near and long term target
+        </div>
+        <div *ngIf="!isBaseYearAndSettingsSaved">
+            Set a near and long term target
+        </div>
+    </div>
+    <ng-template #criteriaMet>
+        <div class="col-sm-4" *ngIf="sbtiCriteriaM['isAnyNearAndLongTermTarget']">
+            Criteria met,
+            <a href="/target/page" target="_blank"> view targets </a>
+        </div>
+    </ng-template>
+</ng-template>
+
+<ng-template #isAnyTargetCreatedCondition>
+    <div class="col-sm-1"></div>
+    <div class="col-sm-4" *ngIf="!sbtiCriteriaM['isAnyTargetCreated']; else criteriaMet">
+        <div class="linkColor cursorPointer" (click)="openTargetHome()" *ngIf="isBaseYearAndSettingsSaved"> Set a target
+        </div>
+        <div *ngIf="!isBaseYearAndSettingsSaved"> Set a target </div>
+    </div>
+    <ng-template #criteriaMet>
+        <div class="col-sm-4" *ngIf="sbtiCriteriaM['isAnyTargetCreated']">
+            Criteria met,
+            <a href="/target/page" target="_blank"> view targets </a>
+        </div>
+    </ng-template>
+</ng-template>
+
+<ng-template #openNearTermTargetDialog>
+    Criteria met, but you can create
+    <span class="linkColor cursorPointer" (click)="setNearTermTarget(ScopeCoverage['SCOPE_3'])"
+        *ngIf="isBaseYearAndSettingsSaved">Scope 3 near term reduction
+        target
+    </span>
+    <span *ngIf="!isBaseYearAndSettingsSaved">Scope 3 near term reduction
+        target
+    </span>
+</ng-template>
+
+<ng-template #openTargetHomeDialog let-text="text">
+    <div class="col-sm-1"></div>
+    <div class="col-sm-4">
+        {{ text }}
+        <span class="linkColor cursorPointer" (click)="openTargetHome()" *ngIf="isBaseYearAndSettingsSaved">click here
+        </span>
+        <span *ngIf="!isBaseYearAndSettingsSaved">click here
+        </span> to still create one
+    </div>
+</ng-template>

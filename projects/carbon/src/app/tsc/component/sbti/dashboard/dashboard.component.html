@@ -1,0 +1,289 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+    </symbol>
+</svg>
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="headerRightContainerInner">
+                <div class="pageTitle">{{ dashboardRes.targetName }}
+                </div>
+                <div class="ms-4 badge rounded-pill bg-success">{{ dashboardRes.targetStatus }}</div>
+            </div>
+            <div class="subTitle">{{ dashboardRes.targetOption }}</div>
+        </div>
+        <div *ngIf="dashboardRes['dashboard']" class="headerRightContainer">
+            <a class="text-secondary cursorPointer" (click)="updateTarget()" matTooltip="Update"
+                matTooltipPosition="above">
+                <span class="material-symbols-outlined fs-3">
+                    edit_square
+                </span>
+            </a>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="row" *ngIf="closeInfo">
+                    <div class="infoCardContainer">
+                        <div class="extraInfoCard">
+                            <div class="alert alert-primary centerAlignVertical roundedBorder">
+                                <svg class="bi flex-shrink-0 me-3 extraInfoCardIcon">
+                                    <use xlink:href="#info-fill" />
+                                </svg>
+                                <div class="extraInfoCardText">
+                                    Emissions shown till the current year include emissions from your own organization,
+                                    its facilities,
+                                    subsidiaries, and joint ventures.
+                                </div>
+                                <button type="button" class="btn" (click)="closeInfoBox()">
+                                    <span class="material-symbols-outlined fw-bold">
+                                        close
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="dashboardRes['dashboard']" class="row mb-4 fs-5">
+                    <div class="col-sm-4">
+                        <div class="card main-card cardOverwrite cardHeight cardBackgroundColor">
+                            <div class="card-body">
+                                <div class="fs-1 fw-bold text-primary">{{
+                                    dashboardRes['dashboard']['baseYearEmissions']?.['emissionValue'] | number: '1.2-2' }}</div>
+                                <div class="text-secondary">{{ dashboardRes['unitKeyID'] }}</div>
+                                <div class="text-secondary">Base year emissions ({{
+                                    dashboardRes['dashboard']['baseYearEmissions']?.['year'] }})</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="card main-card cardOverwrite backgroundColor"k>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="row">
+                                            <div class="col-sm-12 fs-1 fw-bold text-primary">
+                                                {{ dashboardRes['dashboard']['currentYearEmissions']?.['emissionValue'] | number: '1.2-2' }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <span class="text-secondary">
+                                                    {{ dashboardRes['unitKeyID'] }}
+                                                </span>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="d-flex align-items-center">
+                                                    <span *ngIf="dashboardRes['dashboard']['currentYearEmissions']?.['reducedPct'] < 0"
+                                                        class="material-symbols-outlined fw-bold fs-3 me-1 text-danger">
+                                                        trending_up
+                                                    </span>
+                                                    <span *ngIf="dashboardRes['dashboard']['currentYearEmissions']?.['reducedPct'] > 0"
+                                                        class="material-symbols-outlined fw-bold fs-3 me-1 text-success">
+                                                        trending_down
+                                                    </span>
+                                                    <span class="fw-bold"
+                                                        [ngClass]="{'text-danger': dashboardRes['dashboard']['currentYearEmissions']?.['reducedPct'] < 0, 'text-success': dashboardRes['dashboard']['currentYearEmissions']?.['reducedPct'] > 0}">
+                                                        {{ currentYearEmissions | number:'1.0-0' }}%
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12 text-secondary">
+                                                Current year emissions ({{
+                                                dashboardRes['currentYearEmissions']?.['year'] }})
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="card main-card cardOverwrite cardBackgroundColor">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="row">
+                                            <div class="col-sm-12 fs-1 fw-bold text-primary">
+                                                {{ dashboardRes['dashboard']['targetYearEmissions']?.['emissionValue'] | number: '1.2-2' }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <span class="text-secondary">
+                                                    {{ dashboardRes['unitKeyID'] }}
+                                                </span>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="d-flex align-items-center">
+                                                    <span class="material-symbols-outlined fw-bold fs-3 me-1 text-warning">
+                                                        bubble
+                                                    </span>
+                                                    <span class="fw-bold text-warning">
+                                                        {{ dashboardRes['dashboard']['targetYearEmissions']?.['targetPct'] | number:'1.0-0' }}%
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-12 text-secondary">
+                                                Target year emissions ({{
+                                                dashboardRes['dashboard']['targetYearEmissions']?.['year'] }})
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div *ngIf="dashboardRes['dashboard']" class="row pt-4 mb-4">
+                    <div class="col-sm-12">
+                        <mat-card class="card main-card cardOverwrite cardBackgroundColor">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div echarts [options]="chartDataOption"></div>
+                                </div>
+                            </div>
+                        </mat-card>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <mat-card class="border cardOverwrite">
+                    <div class="row">
+                        <div class="card-title">
+                            <div class="cardTitle">
+                                Target details
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row pt-2">
+                        <div class="row pt-1">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        Target name
+                                    </div>
+                                    <div class="col-sm-6 fw-bold">
+                                        {{ dashboardRes.targetName }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        Target type
+                                    </div>
+                                    <div class="col-sm-6 fw-bold">
+                                        {{ dashboardRes.targetType }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row pt-2">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        Target option
+                                    </div>
+                                    <div class="col-sm-6 fw-bold">
+                                        {{ dashboardRes.targetOption }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        SBTi base year
+                                    </div>
+                                    <div class="col-sm-6 fw-bold">
+                                        {{ dashboardRes.sbtiBaseYear }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row pt-2">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        Target year
+                                    </div>
+                                    <div class="col-sm-6 fw-bold">
+                                        {{ dashboardRes.targetYear }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        Scope coverage
+                                    </div>
+                                    <div class="col-sm-6 fw-bold">
+                                        {{ dashboardRes.scopeCoverage ? dashboardRes.scopeCoverage :
+                                        COMMON_CONSTANT.HYPHEN }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row pt-2">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        Total reduction (%)
+                                    </div>
+                                    <div class="col-sm-6 fw-bold">
+                                        {{ dashboardRes.totalReduction | number:'1.2-2' }} %
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        Annual reduction (%)
+                                    </div>
+                                    <div class="col-sm-6 fw-bold">
+                                        {{ dashboardRes.annualReduction | number:'1.2-2' }} %
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row pt-2">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        Excluded Scope 1 and Scope 2 emissions (%)
+                                    </div>
+                                    <div class="col-sm-6 fw-bold">
+                                        {{ dashboardRes.excludedScope1Scope2Emissions | number:'1.2-2' }} %
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6" *ngIf="dashboardRes.targetKeyID == LongTerm['LONG_TERM_NETZERO']">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        Excluded Scope 3 emissions (%)
+                                    </div>
+                                    <div class="col-sm-6 fw-bold">
+                                        {{ dashboardRes.excludedScope3Emissions | number:'1.2-2' }} %
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>

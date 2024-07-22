@@ -1,0 +1,36 @@
+// filter mat-select changes
+.filterHeader {
+    .mat-select-value {
+        color: #0D1B3EB3;
+        padding-left: 10px;
+    }
+
+    .mat-form-field-infix {
+        padding-bottom: 8px;
+        padding-right: 5px;
+        padding-top: 0px;
+        background-color: #eeeeee;
+        border-radius: 5px;
+    }
+
+    .mat-form-field.mat-focused.mat-primary .mat-select-arrow {
+        color: rgba(0, 0, 0, 0.54);
+    }
+
+    .mat-form-field-infix:hover {
+        background-color: #f1f1f1;
+    }
+}
+
+// filter row 
+.filterFontSize {
+    font-size: 12px;
+}
+
+.bottomBorderNone {
+    border-bottom: none;
+}
+
+.selectValue {
+    text-transform: none;
+}

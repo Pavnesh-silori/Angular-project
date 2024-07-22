@@ -1,0 +1,23 @@
+.radio-button {
+	margin: 10px;
+	margin-left: 30px;
+}
+
+::ng-deep .matCheckboxLayout {
+	.mat-checkbox-layout {
+		white-space: normal !important;
+		font-family: var(--bs-font-sans-serif);
+	}
+}
+
+::ng-deep .matRadioButtonLayout {
+	.mat-radio-label {
+		white-space: normal !important;
+	}
+}
+
+.info {
+	margin: 25px;
+	margin-left: 60px;
+	min-height: 45px;
+}

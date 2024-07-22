@@ -1,0 +1,23 @@
+<h6 mat-dialog-title class="dialogTitle mb-0">
+    <div class="d-flex align-items-center">
+        <strong> {{ 'Update organization size from SME to Enterprise?' }} </strong>
+    </div>
+</h6>
+
+<mat-dialog-content class="mat-typography py-0">
+    <div class="card-body breakLine">
+        {{ 'This action will mark all existing targets as inactive. New targets will have to be created again in 
+        alignment with SBTi NetZero standard criteria. All progress against existing targets will be lost permanently. ' }}
+        <br /> <br />
+        {{ 'Are you sure you want to continue?' }}
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button class="btn btn-outline-danger border-0 me-2" type="button" [mat-dialog-close]="DialogResponseEnum.YES">
+        {{ DialogResponseEnum.YES }}
+    </button>
+    <button class="btn btn-secondary me-2" type="button" [mat-dialog-close]="DialogResponseEnum.CANCEL">
+        {{ DialogEnum.CANCEL_DR }}
+    </button>
+</mat-dialog-actions>

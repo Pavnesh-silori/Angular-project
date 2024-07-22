@@ -1,0 +1,124 @@
+<!-- <ng-container *ngIf="activityConfig"> -->
+    <!-- <mat-card class="border cardOverwrite"> -->
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'Product Code',
+            value: 'product code',
+            class: ''
+        }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'Name',
+            value: 'product name',
+            class: 'pt-3'
+        }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'Description',
+            value: 'product desc',
+            class: 'pt-3'
+        }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'Type',
+            value: 'product type',
+            class: 'pt-3'
+        }">
+        </ng-container>
+
+        <!-- <ng-container *ngTemplateOutlet="listView; context: {
+            label: 'Categories',
+            value: productAndServiceM.categoryName,
+            class: 'pt-3'
+        }">
+        </ng-container> -->
+
+        <!-- <div *ngIf="tabType == ProductServiceTabTypeEnum.PRODUCT" class="row pt-3">
+            <div class="col-sm-4">
+                Is CBAM compliant product
+            </div>
+            <div class="col-sm-8 fw-bold">
+                {{ productAndServiceM.isCbamCompliant == true ? 'Yes' : 'No' }}
+            </div>
+        </div> -->
+
+        <!-- <span *ngIf="tabType == ProductServiceTabTypeEnum.PRODUCT">
+            <ng-container *ngTemplateOutlet="labelValue; context: {
+                label: 'CN',
+                value: productAndServiceM.cn,
+                class: 'pt-3'
+            }">
+            </ng-container>
+        </span> -->
+
+        <!-- <span *ngIf="tabType == ProductServiceTabTypeEnum.PRODUCT">
+            <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'HSN',
+            value: productAndServiceM.hsn,
+            class: 'pt-3'
+        }">
+            </ng-container>
+        </span> -->
+
+        <!-- <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'EAN',
+            value: productAndServiceM.ean,
+            class: 'pt-3'
+        }">
+        </ng-container> -->
+
+        <!-- <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'UPC',
+            value: productAndServiceM.upc,
+            class: 'pt-3'
+        }">
+        </ng-container> -->
+
+        <!-- <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'ISBN',
+            value: productAndServiceM.isbn,
+            class: 'pt-3'
+        }">
+        </ng-container> -->
+
+        <!-- <span *ngIf="tabType == ProductServiceTabTypeEnum.SERVICE">
+            <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'SAC',
+            value: productAndServiceM.sac,
+            class: 'pt-3'
+        }">
+            </ng-container>
+        </span> -->
+
+        <!-- <div *ngIf="tabType == ProductServiceTabTypeEnum.PRODUCT" class="row pt-3">
+            <div class="col-sm-4">
+                Status
+            </div>
+            <div class="col-sm-8 fw-bold">
+                <span [ngClass]="productAndServiceM.status ? 'text-success' : 'text-danger'">
+                    {{ productAndServiceM.status ? 'Active' : 'Inactive' }}
+                </span>
+            </div>
+        </div> -->
+
+        <!-- <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'API Key ID',
+            value: productAndServiceM.keyID,
+            class: 'pt-3'
+        }">
+        </ng-container> -->
+    <!-- </mat-card> -->
+<!-- </ng-container> -->
+
+<ng-template #labelValue let-label="label" let-value="value" let-class="class" let-valueClass="valueClass">
+    <div class="row" [class]="class">
+        <div class="col-sm-4">
+            {{ label }}
+        </div>
+        <div class="col-sm-8 fw-bold" [class]="valueClass">
+            {{ value ? value : COMMON_CONSTANT.HYPHEN }}
+        </div>
+    </div>
+</ng-template>

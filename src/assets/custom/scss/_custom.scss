@@ -1,0 +1,74 @@
+.cardHeaderBlock {
+    padding: 15px 20px;
+}
+
+.orgViewLogo {
+    height: 85px;
+}
+
+// svg-icons
+.alertIcon {
+    aspect-ratio: 1/1;
+    width: 20px !important;
+}
+
+.extraInfoCardHeaderIcon {
+    width: 30px;
+    height: 30px;
+}
+
+.errorIconColor {
+    color: #821630 !important;
+}
+
+.extraInfoCardIcon {
+    width: 20px;
+    height: 20px;
+}
+
+.extraInfoCardText {
+    font-size: 13px;
+}
+
+.profileImageHeaderView {
+    height: 25px;
+    width: 25px;
+}
+
+/* ACTIVE_FOLDER_PILL */
+.folder {
+    font: var(--dt-headline-small-font, 400 1.5rem/2rem "Google Sans"), "Google Sans", Roboto, Arial, sans-serif;
+    font-weight: 450;
+    will-change: auto;
+    transition: 450ms;
+
+    &:hover {
+        background-color: rgb(216, 214, 214) !important;
+    }
+}
+
+.chevron-right {
+    font-size: 20px;
+    font-weight: 400 !important;
+}
+
+.current {
+    @extend .folder; 
+    pointer-events: none;
+    font-weight: 600;
+    &:hover {
+        background-color: transparent !important;
+    }
+    // background-color: rgb(216, 214, 214) !important;
+}
+
+/* /ACTIVE_FOLDER_PILL/ */
+
+// misc
+.subscriptionExpirePageImg {
+    max-height: 350px;
+}
+
+.matDialogContent {
+    min-height: calc(100% - 90px);
+}

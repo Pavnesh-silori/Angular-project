@@ -1,0 +1,37 @@
+<form [formGroup]="form" *ngIf="form">
+    <ng-container *ngFor="let item of preference">
+
+        <ng-container *ngIf="isUkDefra(item.emissionFactorSourceKeyID)">
+            <div class="row mb-1">
+                <div class="col-sm-12">
+                    {{ item.emissionFactorSourceName }}
+                </div>
+
+                <app-uk-defra-metadata [emssionFactorSourceKeyID]="item.emissionFactorSourceKeyID"
+                    [emfMetadataForm]="ukDefraMetadata">
+                </app-uk-defra-metadata>
+            </div>
+        </ng-container>
+
+        <ng-container *ngIf="isUsEeio(item.emissionFactorSourceKeyID)">
+            <div class="row mb-1">
+                <div class="col-sm-12">
+                    {{ item.emissionFactorSourceName }}
+                </div>
+
+                <app-us-eeio-metadata [emssionFactorSourceKeyID]="item.emissionFactorSourceKeyID"
+                    [emfMetadataForm]="usEeioMetadata">
+                </app-us-eeio-metadata>
+            </div>
+        </ng-container>
+
+    </ng-container>
+</form>
+
+<div class="row pt-2" *ngIf="showSave">
+    <div mat-dialog-footer align="end">
+        <button class="button btn btn-primary" [disabled]="!isFormChanged()" (click)="canSave()">
+            {{ ButtonLabelEnum.SAVE_BTN_LABEL }}
+        </button>
+    </div>
+</div>

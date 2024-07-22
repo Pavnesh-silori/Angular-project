@@ -1,0 +1,78 @@
+<div class="headerContainer p-0" #header>
+    <div class="headerLeftContainer">
+        <div *ngIf="action == FormAction.CREATE" class="pageTitle">{{ numberOfMetric }} ESG metric will be added to</div>
+        <div *ngIf="action == FormAction.UPDATE" class="pageTitle">Remove framework from ESG metric.</div>
+    </div>
+
+    <div class="headerRightContainer">
+        <div class="headerRightContainerInner">
+            <button class="btn btn-sm centerAlign py-1 iconBtn" matRipple
+                [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                [matTooltip]="ButtonTooltipEnum.CLOSE" mat-dialog-close>
+                <span class="material-symbols-outlined">
+                    close
+                </span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<form *ngIf="action == FormAction.CREATE" [formGroup]="formDataFG" class="pt-2">
+    <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+        <mat-label class="formLabel">Select custom framework</mat-label>
+        <mat-select formControlName="framework" multiple>
+            <mat-option>
+                <ngx-mat-select-search [formControl]="customFrameworkSearchUtil.filterFC"
+                    placeholderLabel="Search by custom framework name" noEntriesFoundLabel="No matching found.">
+                </ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let framework of customFrameworkSearchUtil.filteredEntities | async"
+                [value]="framework.id">
+                <span class="d-flex justify-content-between">
+                    {{ framework.name }}
+                </span>
+            </mat-option>
+        </mat-select>
+        <mat-error *ngIf="createErrorHandling('framework', 'required')">
+            Custom framework is required field.
+        </mat-error>
+    </mat-form-field>
+
+    <!-- <button class="d-none" type="submit" #formSubmitBtn></button> -->
+</form>
+
+<form *ngIf="action == FormAction.UPDATE" [formGroup]="removeFormDataFG" class="pt-2">
+    <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+        <mat-label class="formLabel">Select framework</mat-label>
+        <mat-select formControlName="framework" multiple>
+            <mat-option>
+                <ngx-mat-select-search [formControl]="customFrameworkSearchUtil.filterFC"
+                    placeholderLabel="Search by custom framework name" noEntriesFoundLabel="No matching found.">
+                </ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let framework of customFrameworkSearchUtil.filteredEntities | async"
+                [value]="framework.id" [disabled]="framework.isRecordLinkFlag">
+                <span class="d-flex justify-content-between" [matTooltip]="framework.isRecordLinkFlag ? 'Your organization has activity data for this framework cant remove from ESG metric': ''"
+                    matTooltipClass="infoTooltip" matTooltipPosition="above">
+                    {{ framework.name }} 
+                </span>
+            </mat-option>
+        </mat-select>
+        <mat-error *ngIf="updateErrorHandling('framework', 'required')">
+            Framework is required field.
+        </mat-error>
+    </mat-form-field>
+</form>
+
+<button class="d-none" type="submit" #formSubmitBtn></button>
+
+<div class="tscDialogFooter">
+    <button class="btn btn-sm btn-success" (click)="submit()" matRipple>
+        {{ ButtonLabelEnum.YES_BTN_LABEL }}
+    </button>
+
+    <button class="btn btn-sm btn-secondary me-2" mat-dialog-close matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">
+        {{ ButtonLabelEnum.NO_BTN_LABEL }}
+    </button>
+</div>

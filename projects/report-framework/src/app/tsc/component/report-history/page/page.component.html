@@ -1,0 +1,140 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Report History</div>
+            <div class="pageSubtitle">Functionalities for selected reports tracking, report history management, and
+                dashboard prsentation.
+            </div>
+        </div>
+        <div class="headerRightContainer me-2">
+            <div class="headerRightContainerInner">
+                <lib-search-bar-one #searchBar [searchBy]="'name'" (emitSearch)="searchFn($event)"></lib-search-bar-one>
+            </div>
+        </div>
+    </div>
+
+    <button type="button" class="d-none" #refreshBtn>refresh</button>
+
+    <div class="ms-3 mb-4">
+        <button matRipple [matRippleCentered]="true" class="btn btn-link float-end" (click)="refreshFilter();resetFlag=!resetFlag"
+            [disabled]="frameworkFlag == false">
+            <span class="material-symbols-outlined fs-6">
+                filter_list_off
+            </span>
+            Reset Filters
+        </button>
+    </div>
+
+    <table mat-table [dataSource]="dataSource" #sort matSort matSortActive="reportName" matSortDirection="asc"
+        matSortDisableClear>
+
+        <ng-container matColumnDef="reportName">
+            <th mat-header-cell *matHeaderCellDef disableClear class="reportingName">
+                 <span class="d-inline-flex" mat-sort-header>
+                    Report name
+                </span>
+                </th>
+            <td mat-cell *matCellDef="let row">
+                {{ row.reportName ? row.reportName : COMMON_CONSTANT.HYPHEN}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="reportingFrameWork">
+            <th class="px-3" mat-header-cell *matHeaderCellDef class="reportingFrameWork">
+                <funnel-filter #frameworkSelect header="Reporting framework" type="multi"
+                    [entityList]="reportingFrameworkList" value="keyID" view="name" [selectFC]="frameworkFC"
+                    [active]="frameworkFlag" selectAllLabel="All Reporting framework"
+                    [resetFlag]="resetFlag" (multi)="frameworkFlag = true">
+                </funnel-filter>
+            </th>
+            <td class="ps-1" mat-cell *matCellDef="let row">
+                {{row.reportingFrameworkName ? row.reportingFrameworkName : COMMON_CONSTANT.HYPHEN}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="reportingYear">
+            <th mat-header-cell *matHeaderCellDef>
+                <span class="d-inline-flex" mat-sort-header>
+                    Reporting year 
+                </span>
+                </th>
+            <td mat-cell class="reportingYearValue" *matCellDef="let row">
+                {{ row.reportingYear ? row.reportingYear : COMMON_CONSTANT.HYPHEN}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="reportingInterval">
+            <th mat-header-cell *matHeaderCellDef class="reportingInterval">
+                <span  class="d-inline-flex" mat-sort-header>
+                    Reporting frequency 
+                </span>
+               </th>
+            <td mat-cell *matCellDef="let row">
+                {{ row.reportingInterval ? row.reportingInterval : COMMON_CONSTANT.HYPHEN}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="option">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td class="text-center" mat-cell *matCellDef="let row">
+                <div class="mt-2 btn-group" ngbDropdown placement="left">
+                    <button type="button" ngbDropdownToggle class="dropdown-after dropdownAfter btn">
+                        <fa-icon [icon]="faEllipsisV" class="me-2"></fa-icon>
+                    </button>
+                    <div ngbDropdownMenu>
+                        <button class="btn btn-outline rounded-0 dropdown-item"
+                            (click)="pdfReportGenerate(row.reportingFrameworkKeyID,row.reportingIntervalID)">
+                            <span class="material-symbols-outlined primary me-3">
+                                wysiwyg
+                            </span> View
+                        </button>
+                        <button class="btn btn-outline rounded-0 dropdown-item"
+                            (click)="unlockReport(row.reportingIntervalID, row.reportHistoryID)">
+                            <span class="material-symbols-outlined me-3 mb-0">
+                                lock_open
+                            </span> Unlock report
+                        </button>
+
+                        <div class="btn-group" ngbDropdown placement="left">
+                            <button type="button" ngbDropdownToggle
+                                class="dropdown-after dropdownAfter btn justify-content-center centerAlign exportColor">
+                                <span class="material-symbols-outlined me-3 ms-1">
+                                    ios_share
+                                </span> Export report
+                            </button>
+
+                            <div ngbDropdownMenu>
+                                <button class="btn btn-outline rounded-0 dropdown-item"
+                                    (click)="pdfReportGenerate(row.reportingFrameworkKeyID,row.reportingIntervalID)">
+                                    PDF
+                                </button>
+                                <!-- <button *ngIf="row.reportingFrameworkKeyID != ReportingFrameworkKeyIDEnum.BRSR" class="btn btn-outline rounded-0 dropdown-item"
+                                    (click)="xbrlReportGenerate(row.reportingFrameworkKeyID,row.reportingIntervalID)">
+                                    XBRL
+                                </button> -->
+                                <button *ngIf="row.reportingFrameworkKeyID != ReportingFrameworkKeyIDEnum.BRSR"
+                                    class="btn btn-outline rounded-0 dropdown-item"
+                                    (click)="msExcelReportGenerate(row.reportingFrameworkKeyID,row.reportingIntervalID)">
+                                    MS Excel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+            </td>
+        </tr>
+    </table>
+
+    <mat-paginator class="roundedBorder" #paginator [length]="resultLength"
+        [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION" [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE"
+        showFirstLastButtons>
+    </mat-paginator>
+</div>

@@ -1,0 +1,178 @@
+<mat-card class="cardOverwrite border">
+    <div class="cardTitle pb-2">
+        Details
+    </div>
+
+    <form [formGroup]="activityConfigFG">
+        <div class="row">
+            <div class="col-sm-6">
+                <div formGroupName="activityConfig" *ngIf="origin == 'pff'">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label>Activity Form Name</mat-label>
+                        <input matInput placeholder="Activity Form Name" formControlName="configName">
+                        <mat-error *ngIf="errorHandling('activityConfig.configName', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-8">
+                <span class="sectionSubHeader">
+                    Select a vehicles type for this configuration
+                </span>
+                <div formGroupName="activityConfigData">
+                    <mat-radio-group formControlName="vehicleTypeID">
+                        <div class="row my-1">
+                            <div class="col-sm-4 columnRadioBtn" *ngFor="let type of vehicleType">
+                                <div class="flex">
+                                    <mat-radio-button class="radioBtnLabel" [value]="type.id"
+                                        (change)="chooseVehicleType(type.keyID)">
+                                        {{ type.name }}
+                                    </mat-radio-button>
+                                </div>
+                            </div>
+                        </div>
+                        <mat-error class="pt-1"
+                            *ngIf="errorHandling('activityConfigData.vehicleTypeID','required')&& activityConfigFG.get('activityConfigData.vehicleTypeID').touched ">
+                            {{ FormErrorEnum.REQUIRED }} </mat-error>
+                    </mat-radio-group>
+                </div>
+            </div>
+        </div>
+
+        <div class="row pt-2">
+            <div class="col-sm-6">
+                <div formGroupName="activityConfigSource">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel"> Select Vehicle</mat-label>
+                        <mat-select formControlName="sourceID" multiple>
+                            <mat-option>
+                                <ngx-mat-select-search [formControl]="sourceSearchUtil.filterFC"
+                                    placeholderLabel="Search by vehicle name"
+                                    noEntriesFoundLabel="No matching name found.">
+                                </ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option *ngFor="let vehicle of sourceSearchUtil.filteredEntities | async"
+                                [value]="vehicle.id" (click)="setSourceTypeID(vehicle)">
+                                {{ vehicle.vehicleName}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="!activityConfigFG.get('activityConfigData.vehicleTypeID').value">
+                            Select a vehicle type to select vehicle
+                        </mat-error>
+                        <mat-error
+                            *ngIf="activityConfigFG.get('activityConfigData.vehicleTypeID').value && errorHandling('activityConfigSource.sourceID', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                        <mat-hint *ngIf="!activityConfigFG.get('activityConfigData.vehicleTypeID').value">Select a
+                            vehicle type to select vehicle</mat-hint>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="col-sm-3 pt-3">
+                <span class="btn-link cursorPointer" *ngIf="action == 'create'"
+                    (click)="createVehicle(FormAction.CREATE)">
+                    <ng-container *ngIf="vechileTypeFlag">
+                        No vehicle found of selected type.
+                    </ng-container>
+                    Click here to create
+                    <ng-container *ngIf="!vechileTypeFlag">
+                        new
+                    </ng-container>
+                    vehicle
+                </span>
+            </div>
+        </div>
+
+        <div formGroupName="activityConfigData">
+            <div class="row pt-3">
+                <div class="col-sm-8">
+                    <span class="sectionSubHeader">
+                        Enter Fuel Using
+                    </span>
+                    <mat-radio-group formControlName="fuelDataInputMethodID">
+
+                        <div class="row my-1">
+                            <div class="col-sm-4 columnRadioBtn" *ngFor="let input of fuelInputList">
+                                <div class="flex">
+                                    <mat-radio-button class="radioBtnLabel" [value]="input.id">
+                                        {{ input.name }}
+                                    </mat-radio-button>
+                                </div>
+                            </div>
+                        </div>
+                       
+                    </mat-radio-group>
+                    <mat-error class="pt-1"
+                        *ngIf="errorHandling('activityConfigData.fuelDataInputMethodID','required') && activityConfigFG.get('activityConfigData.fuelDataInputMethodID').touched ">
+                        {{ FormErrorEnum.REQUIRED }} </mat-error>
+                </div>
+            </div>
+
+            <div class="row pt-3">
+                <div class="col-sm-8">
+                    <span class="sectionSubHeader">
+                        Enter Distance Using
+                    </span>
+                    <mat-radio-group formControlName="distanceDataInputMethodID">
+                        <div class="row my-1">
+                            <div class="col-sm-4 columnRadioBtn" *ngFor="let input of distanceInputList">
+                                <div class="flex">
+                                    <mat-radio-button class="radioBtnLabel" [value]="input.id"
+                                        (change)="getDistance(input.keyID)">
+                                        {{ input.name }}
+                                    </mat-radio-button>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-radio-group>
+                    <mat-error class="pt-1"
+                        *ngIf="errorHandling('activityConfigData.distanceDataInputMethodID','required') && activityConfigFG.get('activityConfigData.distanceDataInputMethodID').touched ">
+                        {{ FormErrorEnum.REQUIRED }} </mat-error>
+                </div>
+            </div>
+
+            <div *ngIf="distanceID == DataInputMethodKeyIDEnum.ODOMETER_READING" class="form-fields-container">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <mat-form-field class="matFieldWidth100 col-sm-3"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <input class="formPlaceholder" matInput min="0" type="number" matInput
+                                        placeholder="Meter rollover value" type="number"
+                                        formControlName="meterRollOver" />
+                                    <mat-error
+                                        *ngIf="activityConfigFG.get('activityConfigData.meterRollOver').hasError('min')">
+                                        odometer reading can't be negative.
+                                    </mat-error>
+                                    <mat-error *ngIf="errorHandling('activityConfigData.meterRollOver' , 'required')">
+                                        {{ FormErrorEnum.REQUIRED }} </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <mat-form-field class="matFieldWidth100 col-sm-2"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Select Unit</mat-label>
+                                    <mat-select formControlName="meterUnitID">
+                                        <mat-option *ngFor="let unit of distanceUnit" [value]="unit.id">
+                                            {{ unit.name }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="errorHandling('activityConfigData.meterUnitID', required)">
+                                        {{ FormErrorEnum.REQUIRED }} </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</mat-card>

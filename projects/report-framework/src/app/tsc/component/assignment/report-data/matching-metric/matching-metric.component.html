@@ -1,0 +1,130 @@
+<div class="content">
+    <div mat-dialog-header>
+        <div class="row">
+            <div class="col-sm-11">
+                <div class="pageTitle dialogHeader ms-3"> Matching Metric</div>
+                <div class="pageSubTitle dialogHeader ms-3"> 
+                    This question matches with one of the entries you provided in the reporting framework stated below.
+                </div>
+            </div>
+            <div class="col-sm-1">
+                <button mat-icon-button mat-dialog-close cdkFocusInitial class="float-end matDialogClose"
+                    matTooltip="Close" matTooltipPosition="before">
+                    <span class="material-symbols-outlined">
+                        close
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="mb-4 me-2" *ngFor="let metric of filterMetricData ; let i = index">
+        <div class="headerContainer">
+            <div class="headerLeftContainer">
+                <div class="col-form-label ms-2">
+                    <span class="fw-bold fs-3">
+                        {{ metric.reportingFrameworkName }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="headerRightContainer me-4">
+                <div class="headerRightContainerInner">
+                    <div class="row mt-4">
+                        <div class="col-sm-6">
+                            <mat-form-field [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Select reporting period</mat-label>
+                                <mat-select #yearBtn [formControl]="metric['reportingPeriodFC']"
+                                    (selectionChange)="getData(i,$event.value)">
+                                    <mat-option>
+                                        <ngx-mat-select-search [formControl]="reportingPeriodList[i]['filterFC']"
+                                            placeholderLabel="Search by reporting period name"
+                                            noEntriesFoundLabel="No matching found.">
+                                        </ngx-mat-select-search>
+                                    </mat-option>
+                                    <mat-option *ngFor="let year of reportingPeriodList[i]['filteredEntities'] | async"
+                                        [value]="year.id">
+                                        <span class="d-flex justify-content-between">
+                                            {{ year.reportingPeriod }}
+                                        </span>
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <mat-form-field [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Select reporting interval</mat-label>
+                                <mat-select [formControl]="metric['intervalIDFC']"
+                                    (selectionChange)="filterDataByInterVal($event.value, i)">
+                                    <mat-option>
+                                        <ngx-mat-select-search [formControl]="intervalList[i]['filterFC']"
+                                            placeholderLabel="Search by reporting interval name"
+                                            noEntriesFoundLabel="No matching found.">
+                                        </ngx-mat-select-search>
+                                    </mat-option>
+                                    <mat-option *ngFor="let interval of intervalList[i]['filteredEntities'] | async"
+                                        [value]="interval.id">
+                                        <span class="d-flex justify-content-between">
+                                            {{ interval.name }} {{ '(' }} {{ interval.reportingPeriod}} {{ ')' }}
+                                        </span>
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <mat-card class="border cardOverwrite ms-2 me-2">
+
+                <div class="row ms-3">
+                    <ng-container *ngTemplateOutlet="value; 
+                                context: {
+                                    label: 'Reporting frequency:',
+                                    value: metric.intervalData.name + ' (' + metric.intervalData.reportingPeriod + ')'
+                                }">
+                    </ng-container>
+                </div>
+                <div *ngFor="let data of metric.intervalData.data">
+                    <div class="row ms-3">
+                        <ng-container *ngTemplateOutlet="value; 
+                                    context: {
+                                        label: 'Entered by:',
+                                        value: data.enteredBy + getDateTime(data.enteredDate)
+        
+                                    }">
+                        </ng-container>
+                    </div>
+                    <div class="row mb-3 ms-3">
+                        <ng-container *ngTemplateOutlet="value; 
+                                    context: {
+                                        label: 'Approved by:',
+                                        value: data.approvedBy + getDateTime(data.approvedDate)
+        
+                                    }">
+                        </ng-container>
+                    </div>
+    
+                    <div class="row px-0">
+                        <app-data-create-update [data]="data.group" isReadOnly="true"
+                            pageType="matching-metric"></app-data-create-update>
+                    </div>
+    
+                </div>
+        </mat-card>
+    </div>
+</div>
+
+<ng-template #value let-label="label" let-value="value">
+    <div class="row">
+        <div class="col-sm-3">
+            {{ label }}
+        </div>
+        <div class="col-sm-6 fw-bold">
+            {{ value }}
+        </div>
+    </div>
+</ng-template>

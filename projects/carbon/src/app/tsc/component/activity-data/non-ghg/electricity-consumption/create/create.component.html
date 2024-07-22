@@ -1,0 +1,9 @@
+<app-electricity-consumption-total-amount *ngIf="dataInputMethoutKeyID == DataInputMethodKeyIDEnum.TOTAL_AMOUNT"
+    [activityConfig]="activityConfig" [activityDataFG]="activityDataFG" [docFileList]="docFileList"
+    [defaultDataCollectionMethodID]="defaultDataCollectionMethodID">
+</app-electricity-consumption-total-amount>
+
+<electricity-consumption-meter-reading *ngIf="dataInputMethoutKeyID == DataInputMethodKeyIDEnum.METER_READING"
+    [activityConfig]="activityConfig" [activityDataFG]="activityDataFG" [docFileList]="docFileList"
+    [defaultDataCollectionMethodID]="defaultDataCollectionMethodID">
+</electricity-consumption-meter-reading>

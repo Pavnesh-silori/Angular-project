@@ -1,0 +1,39 @@
+<mat-card class="cardOverwrite border">
+    <!-- <mat-slide-toggle [formControl]="enableApiFC"
+          (change)="valueUpdated($event.checked)" [checked]="enableApiFC.value">
+          <div class="cardTitle pb-3"> 
+            Automate data sharing via api 
+        </div>
+      </mat-slide-toggle> -->
+
+    <!-- <mat-checkbox [formControl]="enableApiFC"> -->
+    <div class="cardTitle pb-3">
+        Automate Data Sharing via API
+    </div>
+    <!-- </mat-checkbox> -->
+
+    <div class="row">
+        <div class="col-sm-7">
+            <form [formGroup]="apiFG">
+                <mat-form-field class="matFieldWidth100"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label> Api key id </mat-label>
+                    <input class="formPlaceholder" matInput [type]="hideApiKey? 'password': 'text'"
+                        placeholder="Api key id" formControlName="apiKey" />
+                    <button class="text-secondary eyeIcon" type="button" mat-icon-button matSuffix
+                        (click)="hideApiKey = !hideApiKey">
+                        <mat-icon matIcon>
+                            {{hideApiKey ? 'visibility_off' : 'visibility'}}
+                        </mat-icon>
+                    </button>
+                    <button class="ms-1 text-secondary eyeIcon" type="button" mat-icon-button matSuffix
+                        [cdkCopyToClipboard]="apiKeyAC.value">
+                        <mat-icon matIcon matTooltipPosition="above" matTooltip="copy to clipboard">
+                            content_copy
+                        </mat-icon>
+                    </button>
+                </mat-form-field>
+            </form>
+        </div>
+    </div>
+</mat-card>

@@ -1,0 +1,83 @@
+<div mat-dialog-title>
+    <strong class="dialogTitle">
+        {{ activityName }} Record {{ isUpdate ? 'Updated' : 'Created' }}
+    </strong>
+    <button mat-icon-button mat-dialog-close cdkFocusInitial class="float-end matDialogClose" matTooltip="Close"
+        matTooltipPosition="before">
+        <span class="material-symbols-outlined">close</span>
+    </button>
+</div>
+<div class="matDialogContent" mat-dialog-content>
+    <ng-container *ngIf="isUpdate; else create;">
+        <div class="row">
+            <div class="col-sm-6 cardOverwrite pe-1">
+                <record-view [gwpResponse]="gwpResponse" [recordType]="'previousData'" [isUpdate]="isUpdate" [cedID]="cedID" [view]="false" [sentData]="activityData"
+                    [up_diff]="up_diff" [down_diff]="down_diff" [activityKeyID]="activityKeyID" [diff]="diff">
+                </record-view>
+            </div>
+            <div class="col-sm-6 cardOverwrite">
+                <record-view [gwpResponse]="gwpResponse" [recordType]="'currentData'" [isUpdate]="isUpdate" [cedID]="cedID" [view]="showRedirectToView"
+                    [sentData]="currentData" [up_diff]="up_diff" [down_diff]="down_diff"
+                    [activityKeyID]="activityKeyID" [diff]="diff"></record-view>
+            </div>
+        </div>
+
+        <div class="row mt-2 mx-0">
+            <div class="cardOverwrite bg-light p-3">
+                <div class="cardTitle ps-1">
+                    Emissions
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <ng-container *ngTemplateOutlet="valueAndUnit; 
+                            context: {
+                                title: 'Previous emissions',
+                                value: emission?.['first']?.['co2e'],
+                                unit: emission?.['first']?.['co2eUomCode']
+                            }">
+                        </ng-container>
+                    </div>
+                    <div class="col-sm-6">
+                        <ng-container *ngTemplateOutlet="valueAndUnit; 
+                            context: {
+                                title: 'Current emissions',
+                                value: emission?.['second']?.['co2e'],
+                                unit: emission?.['second']?.['co2eUomCode']
+                            }">
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+    <ng-template #create>
+        <div class="row">
+            <div class="col-sm-12 cardOverwrite">
+                <record-view [gwpResponse]="gwpResponse" recordType="newData" [isUpdate]="isUpdate" [cedID]="cedID" [view]="showRedirectToView"
+                    [sentData]="recordData" [activityKeyID]="activityKeyID">
+                </record-view>
+            </div>
+        </div>
+    </ng-template>
+</div>
+
+<ng-template #valueAndUnit let-title="title" let-value="value" let-unit="unit">
+    <div class="row">
+        <div class="d-flex justify-content-between">
+            <div class="col-form-label ms-1">
+                {{ title }}
+            </div>
+            <div class="col-form-value fw-bold centerAlign">
+                <ng-container *ngIf="haveValue(value); else hyphen">
+                    <span [matTooltip]="value + ' ' + unit" matTooltipPosition="above" matTooltipClass="infoTooltip">
+                        {{ (value | number: '1.2-2') + " " + unit}}
+                    </span>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #hyphen>
+    <span class="ms-5 fw-bold"> {{ COMMON_CONSTANT.HYPHEN }} </span>
+</ng-template>

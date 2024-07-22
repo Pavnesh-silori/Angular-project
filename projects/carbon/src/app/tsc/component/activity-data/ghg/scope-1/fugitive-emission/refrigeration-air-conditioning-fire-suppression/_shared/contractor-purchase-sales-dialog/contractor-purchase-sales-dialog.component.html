@@ -1,0 +1,160 @@
+<div mat-dialog-title>
+    <strong class="dialogTitle">
+        {{ title }} {{ titleName }} 
+    </strong>
+
+    <button mat-icon-button mat-dialog-close cdkFocusInitial class="float-end matDialogClose" matTooltip="Close"
+        matTooltipPosition="before">
+        <span class="material-symbols-outlined">close</span>
+    </button>
+</div>
+
+<div class="matDialogContent" mat-dialog-content>
+    <form [formGroup]="purchaseAcquisitionFG">
+        <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel">Select gas</mat-label>
+            <mat-select formControlName="gasID" [disabled]="isReadOnly" required>
+                <mat-option>
+                    <ngx-mat-select-search [formControl]="gasSearchUtil.filterFC" placeholderLabel="Search by gas name"
+                        noEntriesFoundLabel="No matching found.">
+                    </ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let gas of gasSearchUtil.filteredEntities | async" [value]="gas.id">
+                    <span class="d-flex justify-content-between">
+                        {{ gas.name }}
+                    </span>
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="errorHandling('gasID', 'required')">
+                Gas is required
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field (click)="openDatepicker(date)" (keydown.enter)="openDatepicker(date)"
+            (keydown.arrowdown)="openDatepicker(date)" class="matFieldWidth100 cursorPointer"
+            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE" appDateMonthYearFormat>
+            <mat-label class="formLabel">{{ recordDateHeader }}</mat-label>
+            <input matInput class="noFocus" (dateInput)="formatDate('recordDate')" [matDatepicker]="date"
+                formControlName="recordDate" [readonly]="true" required />
+            <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+            <mat-datepicker #date disabled="false"></mat-datepicker>
+
+            <mat-error *ngIf="errorHandling('recordDate', 'required')">
+                Date is required
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE" matTooltip={{gasQuantityHeader}}>
+            <mat-label class="formLabel"> {{ gasQuantityHeader }}</mat-label>
+            <input class="formPlaceholder" matInput type="number" min="0" placeholder="0" formControlName="gasQuantity"
+                required />
+
+            <mat-error *ngIf="errorHandling('gasQuantity', 'required')">
+                Gas quantity is required
+            </mat-error>
+
+            <mat-error *ngIf="errorHandling('gasQuantity', 'min')">
+                Gas quantity can not be negative
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="ms-2" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel">Unit</mat-label>
+            <mat-select formControlName="gasQuantityUnitID" required>
+                <mat-option disabled>Select unit</mat-option>
+                <mat-option *ngFor="let unit of unitList" [value]="unit.id">
+                    <span class="d-flex justify-content-between">
+                        {{ unit.name }} --
+                        <span>{{ unit.uomCode }}</span>
+                    </span>
+                </mat-option>
+            </mat-select>
+
+            <mat-error *ngIf="errorHandling('gasQuantityUnitID', 'required')">
+                Unit ID is required
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE" matTooltip={{totalEquipmentCapacityHeader}}>
+            <mat-label class="formLabel"> {{ totalEquipmentCapacityHeader }} </mat-label>
+            <input class="formPlaceholder" matInput type="number" min="0" placeholder="0"
+                formControlName="totalEquipmentCapacity" required />
+
+            <mat-error *ngIf="errorHandling('totalEquipmentCapacity', 'required')">
+                {{ totalEquipmentCapacityHeader }} is required
+            </mat-error>
+
+            <mat-error *ngIf="errorHandling('totalEquipmentCapacity', 'min')">
+                {{ totalEquipmentCapacityHeader }} can not be negative
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="ms-2" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel">Unit</mat-label>
+            <mat-select formControlName="totalEquipmentCapacityUnitID" required>
+                <mat-option disabled>Select unit</mat-option>
+                <mat-option *ngFor="let unit of unitList" [value]="unit.id">
+                    <span class="d-flex justify-content-between">
+                        {{ unit.name }}
+                        <span>{{ unit.uomCode }}</span>
+                    </span>
+                </mat-option>
+            </mat-select>
+
+            <mat-error *ngIf="errorHandling('totalEquipmentCapacityUnitID', 'required')">
+                Unit ID is required
+            </mat-error>
+        </mat-form-field>
+
+        <div *ngIf="!isReadOnly">
+            <div class="row my-3" [ngClass]="{'d-none': !noFileSelected}">
+                <div class="col-sm-8">
+                    <div class="d-flex justify-content-between">
+                        <span class="my-auto fw-bold ms-1 uploadDocumentFont">
+                            Attach bill</span>
+                        <button class="button btn btn-primary" type="button" (click)="uploadFile()">Upload file</button>
+                        <input #fileInput type="file" accept="application/pdf" class="d-none"
+                            (change)="fileUpload($event)">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row border border-2 rounded m-1 p-2" [ngClass]="{'d-none': noFileSelected}">
+                <div class="col-sm-3 docIcon">
+                    <img height="80px" src="assets/images/default-doc.ico" alt="noc document preview">
+                </div>
+                <div class="col-sm-7 centerAlignVertical uploadDocumentFont">
+                    {{ uploadedFileName }}
+                </div>
+                <div class="col-sm-2 centerAlign">
+                    <button type="button" class="btn" mat-icon-button (click)="removeFile()">
+                        <span class="material-symbols-outlined text-danger">
+                            delete
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <mat-form-field [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE" class="matFieldWidth100 mt-2">
+            <mat-label class="formLabel"> Add a note </mat-label>
+            <input class="formPlaceholder" matInput formControlName="note" [maxlength]="maxLength" #myInput />
+            <mat-hint>Total number of character remaining: {{myInput.value.length}} /{{maxLength}}</mat-hint>
+        </mat-form-field>
+
+    </form>
+</div>
+
+<div mat-dialog-footer align="end">
+    <div [ngSwitch]="action" class="d-inline">
+        <button *ngSwitchCase="FormAction.CREATE" type="submit" class="button btn btn-success"
+            (click)="createPurchaseOrSalesRecord()">
+            {{ ButtonLabelEnum.CREATE_BTN_LABEL }}
+        </button>
+        <button *ngSwitchCase="FormAction.UPDATE" type="submit" class="button btn btn-success"
+            (click)="getConfirmation()" [ngClass]="{'disabled': isEqual}">
+            {{ ButtonLabelEnum.SAVE_BTN_LABEL }}
+        </button>
+        <button *ngSwitchDefault class="d-none"></button>
+    </div>
+</div>

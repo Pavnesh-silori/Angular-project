@@ -1,0 +1,24 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Product manufacture records
+            </div>
+            <div class="pageSubtitle"> Records of gas transactions used during manufacture of refrigeration/ air conditioning
+                equipments (inventory,purchase and sale).
+            </div>
+        </div>
+    </div>
+
+    <nav mat-tab-nav-bar>
+        <ng-container *ngFor="let tab of tabs; let i = index;">
+            <a mat-tab-link [routerLink]="tab['routerLink']" (click)="activeLink = tab['routerLink']"
+                [active]="activeLink == tab['routerLink']">
+                <div class="fs-6 ms-2">
+                    {{ tab['label'] }}
+                </div>
+            </a>
+        </ng-container>
+    </nav>
+    <router-outlet></router-outlet>
+
+</div>

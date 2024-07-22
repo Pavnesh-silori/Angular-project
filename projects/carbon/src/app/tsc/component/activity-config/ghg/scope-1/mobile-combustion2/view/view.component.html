@@ -1,0 +1,84 @@
+<mat-card class="cardOverwrite border mt-2">
+    <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'Vehicle Type',
+            value: (activityConfigData?.vehicleTypeName) ?(activityConfigData?.vehicleTypeName) :vehicleType ,
+            class: 'pt-1'
+        }">
+    </ng-container>
+    <div *ngIf="vechileName.length >0">
+        <ng-container *ngTemplateOutlet="listView; context: {
+            label: 'Vehicle Name',
+            value: vechileName,
+            class: 'pt-1 pb-1'
+        }">
+        </ng-container>
+    </div>
+    <div *ngIf="activityConfigSource?.sourceName">
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+        label: 'Vehicle Name',
+        value: (activityConfigSource?.sourceName),
+        class: 'pt-1'
+    }">
+        </ng-container>
+    </div>
+
+
+    <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'Fuel Input Method',
+            value: (activityConfigData?.fuelDataInputMethodName)?(activityConfigData?.fuelDataInputMethodName):(fuelInputMethod),
+            class: 'pt-1'
+         }">
+    </ng-container>
+    <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'Distance Input Method',
+            value: (activityConfigData?.distanceDataInputMethodName)?(activityConfigData?.distanceDataInputMethodName):distanceInputMethod?.name,
+            class: 'pt-1'
+        }">
+    </ng-container>
+
+    <ng-container
+        *ngIf="distanceInputMethod?.keyID == DataInputMethodKeyIDEnum.ODOMETER_READING ||activityConfigData?.distanceDataInputMethodKeyID == DataInputMethodKeyIDEnum.ODOMETER_READING">
+        <div class="cardTitle mt-3">
+            Meter
+        </div>
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+                label: 'Rollover Value',
+                value: activityConfigData?.meterRollOver,
+                class: 'pt-1'
+            }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+                label: 'Unit',
+                value: (activityConfigData?.meterUomCode)? (activityConfigData?.meterUomCode):meterUomCode,
+                class: 'pt-1'
+            }">
+        </ng-container>
+    </ng-container>
+</mat-card>
+
+<ng-template #labelValue let-label="label" let-value="value" let-class="class" let-valueClass="valueClass">
+    <div class="row" [class]="class">
+        <div class="col-sm-4">
+            {{ label }}
+        </div>
+        <div class="col-sm-8 fw-bold" [class]="valueClass">
+            {{ value ? value : COMMON_CONSTANT.HYPHEN }}
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #listView let-label="label" let-values="value">
+    <div class="row" [class]="class">
+        <div class="col-sm-4">
+            {{ label }}
+        </div>
+        <div class="col-sm-8 fw-bold">
+            <div *ngFor="let value of values">
+                <li>
+                    {{ value ? value : COMMON_CONSTANT.HYPHEN }}
+                </li>
+            </div>
+        </div>
+    </div>
+</ng-template>

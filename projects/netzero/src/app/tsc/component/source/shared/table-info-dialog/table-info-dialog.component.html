@@ -1,0 +1,38 @@
+<h6 mat-dialog-title class="dialogTitle mb-0">
+    <div class="d-flex align-items-center">
+        <strong> {{ title }} </strong>
+    </div>
+</h6>
+
+<mat-dialog-content class="mat-typography">
+    <table class="w-100" mat-table [dataSource]="records">
+
+        <!-- Source Name Column -->
+        <ng-container matColumnDef="sourceName">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let element"> {{element.sourceName}} </td>
+        </ng-container>
+
+        <!-- GHG Emission Column -->
+        <ng-container matColumnDef="ghgEmission">
+            <th mat-header-cell *matHeaderCellDef> GHG Emission </th>
+            <td mat-cell *matCellDef="let element"> {{ element.ghgEmission?.count ?? COMMON_CONSTANT.HYPHEN }} </td>
+        </ng-container>
+
+        <!-- CBAM Emission Column -->
+        <ng-container matColumnDef="cbamEmission">
+            <th mat-header-cell *matHeaderCellDef> CBAM Emission </th>
+            <td mat-cell *matCellDef="let element"> {{element.cbamEmission?.count ??  COMMON_CONSTANT.HYPHEN }} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columns"></tr>
+        <tr mat-row *matRowDef="let row; columns: columns;"></tr>
+    </table>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button class="button btn btn-secondary px-4" type="button" mat-dialog-close matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">
+        Close
+    </button>
+</mat-dialog-actions>

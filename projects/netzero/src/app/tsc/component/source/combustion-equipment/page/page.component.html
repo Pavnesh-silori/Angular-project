@@ -1,0 +1,236 @@
+<div class="card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Combustion Equipments</div>
+            <div class="pageSubtitle">
+                Create combustion equipments like boilers, furnaces etc. that are used for fuel combustion in your
+                organization.
+            </div>
+        </div>
+
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <lib-search-bar-one class="me-3" #searchBar searchBy="name"
+                    (emitSearch)="searchFn($event)"></lib-search-bar-one>
+
+                <button class="btn btn-sm btn-light refreshBtn centerAlign me-3 py-1" #refreshBtn matRipple
+                    [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                    [matTooltip]="ButtonTooltipEnum.REFRESH">
+                    <span class="material-symbols-outlined text-secondary">
+                        refresh
+                    </span>
+                </button>
+
+                <button type="button" class="btn btn-sm btn-success btnRightRadiusZero"
+                    (click)="createUpdateAsset('create', '')" matRipple
+                    [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                    [matTooltip]="ButtonTooltipEnum.CREATE">
+                    <fa-icon [icon]="faPlus" class="me-1"></fa-icon>Combustion Equipment
+                </button>
+
+                <div class="btn-group" ngbDropdown placement="bottom-right" matTooltipPosition="below"
+                    [matTooltip]="ButtonTooltipEnum.MORE">
+                    <button type="button" ngbDropdownToggle class="btn btn-sm btn-success btnLeftRadiusZero">
+                    </button>
+                    <div ngbDropdownMenu>
+                        <button class="dropdown-item" matRipple
+                            [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" (click)="bulkUpload()">
+                            Import
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div [ngStyle]="{'display': isFirstTemplate ? '' : 'none'}">
+        <div class="pe-3 me-1 btn-group float-end" ngbDropdown placement="bottom-right"
+            [class]="bulkBtnFlag ? 'custom-cursor' : 'disableCursor'">
+            <button type="button" ngbDropdownToggle class="btn btn-sm btn-secondary" [disabled]="!bulkBtnFlag">
+                Bulk actions
+            </button>
+
+            <div ngbDropdownMenu *ngIf="bulkBtnFlag">
+                <button class="dropdown-item" (click)="bulkUpdate('active')">
+                    <span class="ms-2">Mark all as active</span>
+                </button>
+                <button class="dropdown-item" (click)="bulkUpdate('inactive')">
+                    <span class="ms-2">Mark all as inactive</span>
+                </button>
+                <button class="dropdown-item" (click)="bulkUpdate('delete')">
+                    <span class="ms-2 text-danger">
+                        {{ ButtonLabelEnum.DELETE_BTN_LABEL }} all
+                    </span>
+                </button>
+            </div>
+        </div>
+
+        <div class="me-2 mb-2">
+            <button matRipple [matRippleCentered]="true" class="btn btn-link float-end" (click)="resetFilter()"
+                [disabled]="!isAnyFlagTrue()">
+                <span class="material-symbols-outlined fs-6">
+                    filter_list_off
+                </span>
+                Reset Filters
+            </button>
+        </div>
+    </div> -->
+
+    <table mat-table [dataSource]="dataSource" #sort matSort matSortActive="assetName" matSortDirection="desc"
+        matSortDisableClear [ngStyle]="{'display': isFirstTemplate ? '' : 'none'}">
+        <ng-container matColumnDef="assetID">
+            <th mat-header-cell *matHeaderCellDef>
+                <!-- <mat-checkbox [(ngModel)]="allComplete" (change)="selectAll($event.checked)">
+                </mat-checkbox> -->
+                <span class="ms-2"> Equipment Code </span>
+            </th>
+            <td mat-cell *matCellDef="let row">
+                <!-- <mat-checkbox [(ngModel)]="row['completed']" (change)="rowSelected()"></mat-checkbox> -->
+                <span class="ms-2"> {{ row.assetAssetID ? row.assetAssetID : COMMON_CONSTANT.HYPHEN }} </span>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="assetName">
+            <th mat-header-cell *matHeaderCellDef>
+                <span mat-sort-header disableClear>
+                    Name
+                </span>
+            </th>
+            <td mat-cell *matCellDef="let row">
+                <!-- <span (click)="navigateToViewPage(row.assetID)" class="text-primary cursorPointer"> -->
+                    {{ row.assetName ? row.assetName :COMMON_CONSTANT.HYPHEN }}
+                <!-- </span> -->
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+            <th class="px-3 desc" mat-header-cell *matHeaderCellDef> Description </th>
+            <td class="px-3 desc" mat-cell *matCellDef="let row">
+                <span class="lineClamp1" [matTooltip]="row.description?.length >= 15? row.description: ''"
+                    matTooltipPosition="above">
+                    {{ row.description? row.description : COMMON_CONSTANT.HYPHEN }}
+                </span>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>
+                Status
+                <!-- <funnel-filter #statusFilter header="Status" type="mono" [entityList]="statusList" [selectFC]="statusFC"
+                    [active]="statusFlag" (mono)="statusFlag = true;" [resetFlag]="resetFlag">
+                </funnel-filter> -->
+            </th>
+            <td mat-cell *matCellDef="let row" [ngClass]="row.assetStatus ? 'text-success' : 'text-danger'">
+                {{ row.assetStatus ? statusService.getStatusValue(row.assetStatus) : COMMON_CONSTANT.HYPHEN }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="assetKeyID">
+            <th mat-header-cell *matHeaderCellDef> API Key ID </th>
+            <td mat-cell *matCellDef="let row;">
+                <button class="mx-auto" mat-icon-button type="button" #tooltip="matTooltip" matTooltipPosition="above"
+                    matTooltipHideDelay="0" [matTooltip]="COMMON_CONSTANT.VIEW_API_KEY_ID" [popover]="myPopover"
+                    popoverPlacement="top" [popoverOnHover]="false" [popoverAnimation]="true">
+                    <span type="button" class="material-symbols-outlined fs-5">
+                        visibility
+                    </span>
+                </button>
+
+                <popover-content #myPopover [animation]="true" [closeOnClickOutside]="true">
+                    <span>{{ row.assetKeyID }}</span>
+                    <button class="float-end" [cdkCopyToClipboard]="row.assetKeyID" mat-icon-button type="button">
+                        <span class="material-symbols-outlined fs-5" #tooltip="matTooltip" matTooltipPosition="above"
+                            matTooltipHideDelay="0" matTooltipClass="nameTooltip" matTooltip="Copy">
+                            content_copy
+                        </span>
+                    </button>
+                </popover-content>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="option">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let row">
+                <div class="btn-group" ngbDropdown placement="left-top">
+                    <button type="button" ngbDropdownToggle class="dropdown-after dropdownAfter btn">
+                        <fa-icon [icon]="faEllipsisV"></fa-icon>
+                    </button>
+                    <div ngbDropdownMenu>
+                        <button class="dropdown-item" (click)="createUpdateAsset('update',row)">
+                            {{ ButtonLabelEnum.UPDATE_BTN_LABEL }}
+                        </button>
+
+                        <!-- <button class="dropdown-item" (click)="changeItemStatus(row)">
+                            <ng-container *ngIf="row.status == 'INACTIVE'; else activeContainer">
+                                Mark as active
+                            </ng-container>
+                            <ng-template #activeContainer>
+                                Mark as inactive
+                            </ng-template>
+                        </button> -->
+                    </div>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="dataRow"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+            </td>
+        </tr>
+
+    </table>
+
+    <mat-paginator class="roundedBorder" #paginator [length]="resultLength"
+        [ngStyle]="{'display': isFirstTemplate ? '' : 'none'}" [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION"
+        [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE" showFirstLastButtons>
+    </mat-paginator>
+
+    <div class="card-body" [ngStyle]="{'display': isFirstTemplate ? 'none' : ''}">
+        <div class="row d-flex">
+            <ng-container *ngIf="dataSource?.length !== 0">
+                <div class="col-sm-4 pe-4">
+                    <div class="row customScrollBar hMax100 OverflowY">
+                        <div class="col-sm-12 mb-3" *ngFor="let row of dataSource; let i=index"
+                            [ngClass]="{'cursorPointer': selectedAssetID != row.assetID}">
+                            <mat-card class="card cardOverwrite p-3"
+                                [ngClass]="{'current-org': selectedAssetID == row.assetID, 'border': selectedAssetID != row.assetID}">
+                                <div class="row">
+                                    <div class="col-sm-12 d-flex flex-column justify-content-center"
+                                        (click)="navigateToViewPage(row.assetID)">
+
+                                        <div class="fw-bold pb-1">
+                                            {{ row.assetName ? row.assetName : COMMON_CONSTANT.HYPHEN }}
+                                        </div>
+
+                                        <div class="row text-secondary">
+                                            <div class="col-sm-6">Equipment Code:
+                                            </div>
+                                            <div class="col-sm-6 fw-bold">{{ row.assetAssetID }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-card>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-8 card cardOverwrite border mb-2 customScrollBar hMax100 OverflowY">
+                    <router-outlet></router-outlet>
+                </div>
+            </ng-container>
+
+            <ng-container *ngIf="dataSource?.length == 0">
+                <div class="col-sm-6">
+                    <lib-message-alert [messageAlertTypeInp]="messageAlertTypeEnum.INFO"
+                        [messageAlertIconInp]="messageAlertIconEnum.INFO_ICON"
+                        contentInp="No data has been found. Please make a different search/filter selection.">
+                    </lib-message-alert>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,294 @@
+<div class="card main-card cardOverwrite">
+    <ng-container>
+        <div class="card main-card cardOverwrite" [ngStyle]="{'display': preferenceFlag ? '' : 'none'}">
+            <div class="headerContainer">
+                <div class="headerLeftContainer">
+                    <div class="pageTitle">ESG Metrics</div>
+                    <div class="pageSubtitle">Comprehensive list of metrics to track at desired intervals throughtout
+                        the year.</div>
+                    <div>
+                        <lib-message-alert [messageAlertTypeInp]="messageAlertTypeEnum.INFO"
+                            [messageAlertIconInp]="messageAlertIconEnum.INFO_ICON"
+                            contentInp="Only update and delete custom ESG metrics that do not have linked activity data.">
+                        </lib-message-alert>
+                    </div>
+                </div>
+
+                <div class="headerRightContainer">
+                    <div class="headerRightContainerInner">
+                        <lib-search-bar-one class="me-3" #searchBar searchBy="metric name"
+                            (emitSearch)="searchFn($event)"></lib-search-bar-one>
+
+                        <button class="btn btn-sm btn-light refreshBtn centerAlign me-3 py-1" #refreshBtn matRipple
+                            [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                            [matTooltip]="ButtonTooltipEnum.REFRESH">
+                            <span class="material-symbols-outlined text-secondary">
+                                refresh
+                            </span>
+                        </button>
+
+                        <button type="button" class="btn btn-sm btn-success btnRightRadiusZero" matRipple
+                            [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                            [matTooltip]="ButtonTooltipEnum.CREATE"
+                            (click)="createUpdateCustomMetric(FormAction.CREATE,null)">
+                            <fa-icon [icon]="faPlus" class="me-1"></fa-icon>Custom metric
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="ms-3 mb-4 me-3">
+                <button matRipple [matRippleCentered]="true" class="btn btn-link float-end"
+                    (click)="refreshFilter();resetFlag=!resetFlag"
+                    [disabled]="!metricTypeFlag && !activityTypeFlag && !reportingFrameworkFlag && !typeFlag">
+                    <span class="material-symbols-outlined fs-6">
+                        filter_list_off
+                    </span>
+                    Reset Filters
+                </button>
+            </div>
+
+            <mat-dialog-content class="mat-typography customScrollBar pt-2">
+                <table class="w-100" mat-table matSort #sort matSort matSortActive="id" matSortDirection="desc"
+                    matSortDisableClear [dataSource]="dataSource">
+
+                    <ng-container matColumnDef="select">
+                        <th mat-header-cell *matHeaderCellDef class="bulkActionSelect">
+                            <mat-checkbox [formControl]="selectAllMetricFC" (change)="selectUnselectAll($event)">
+                            </mat-checkbox>
+                        </th>
+                        <td mat-cell *matCellDef="let row">
+                            <mat-checkbox class="me-2" [checked]="isMetricChecked(row)"
+                                (change)="selectUnselectMetric($event,row)">
+                            </mat-checkbox>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="id">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>S.No.</th>
+                        <td mat-cell *matCellDef="let row">{{ row.id ? row.id :
+                            COMMON_CONSTANT.HYPHEN }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="metricName">
+                        <th mat-header-cell *matHeaderCellDef> Metric name </th>
+                        <td mat-cell *matCellDef="let row"
+                            [matTooltip]="row.metricName?.length >= 20? row.metricName: ''"
+                            matTooltipClass="infoTooltip" matTooltipPosition="above">
+                            {{ row.metricName ? (row.metricName | dotdotdot: 20) : COMMON_CONSTANT.HYPHEN }}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="metricType">
+                        <th mat-header-cell *matHeaderCellDef>
+                            <funnel-filter #metricTypeSelect header="Metric type" type="multi"
+                                [entityList]="metricTypeList" value="id" view="name" [selectFC]="metricTypeFC"
+                                [active]="metricTypeFlag" selectAllLabel="Select all metric type"
+                                (multi)="metricTypeFlag = true;" [resetFlag]="resetFlag">
+                            </funnel-filter>
+                        </th>
+                        <td mat-cell *matCellDef="let row">
+                            <span class="badge rounded-pill" [ngClass]="{ 'greenBadge': row.esgTypeKeyID == EsgTypeKeyIDEnum.ENVIRONMENTAL,
+                             'blueBadge': row.esgTypeKeyID == EsgTypeKeyIDEnum.GOVERNANCE,
+                              'yellowBadge': row.esgTypeKeyID == EsgTypeKeyIDEnum.SOCIAL }">
+                                {{ row.esgTypeName }}
+                            </span>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="activityName">
+                        <th mat-header-cell *matHeaderCellDef>
+                            <funnel-filter #activityTypeSelect header="Activity type" type="multi"
+                                [entityList]="activityTypeList" value="id" view="name" [selectFC]="activityTypeFC"
+                                [active]="activityTypeFlag" selectAllLabel="Select all activity type"
+                                (multi)="activityTypeFlag = true;" [resetFlag]="resetFlag">
+                            </funnel-filter>
+                        </th>
+                        <td mat-cell *matCellDef="let row"
+                        [matTooltip]="row.activityName?.length >= 20? row.activityName: ''"
+                        matTooltipClass="infoTooltip" matTooltipPosition="above">
+                        {{ row.activityName ? (row.activityName | dotdotdot: 20) : COMMON_CONSTANT.HYPHEN }}
+                    </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="framework">
+                        <th mat-header-cell *matHeaderCellDef>
+                            <funnel-filter #reportingFrameworkSelect header="Reporting framework" type="multi"
+                                [entityList]="allFrameworkList" value="uID" view="name"
+                                [selectFC]="reportingFrameworkFC" [active]="reportingFrameworkFlag"
+                                selectAllLabel="Select all Reporting framework"
+                                (multi)="reportingFrameworkFlag = true; getFrameworkID();" [resetFlag]="resetFlag">
+                            </funnel-filter>
+                        </th>
+
+                        <td mat-cell *matCellDef="let row" class="ps-2">
+                            <ng-container *ngFor="let framework of row.framework.slice(0,3); let index = index">
+                                <img class="multipleProfileImg profileImg rounded-circle border" [src]="framework.logo != null ? framework.logo : './assets/images/corporate_fare.png'"
+                                    alt="profile-image" #tooltip="matTooltip" matTooltipPosition="above"
+                                    [matTooltip]="framework.name" matTooltipClass="nameTooltip"
+                                    [ngStyle]="{'z-index': 80 - index*20}" />
+
+                                <span *ngIf="row.framework.length == 1">
+                                    {{ row.framework[0].name}}
+                                </span>
+                            </ng-container>
+
+                            <button *ngIf="frameworkDisplayCount(row.framework) >= 1"
+                                class="btn btn-sm rounded-circle cursorPointer text-primary" [matMenuTriggerFor]="menu">
+                                {{frameworkDisplayCount(row.framework)}}
+
+                                <mat-menu #menu="matMenu" class="menuWidth">
+                                    <ng-container *ngFor="let framework of row.framework; let i = index">
+                                        <button *ngIf="i >= 3" mat-menu-item>
+                                            <img class="logoImg profileImg rounded-circle border me-1" [src]="framework.logo != null ? framework.logo : './assets/images/corporate_fare.png'">
+                                            {{ framework.name }}
+                                        </button>
+                                    </ng-container>
+                                </mat-menu>
+                            </button>
+
+                            <span *ngIf="row.framework.length == 0">
+                                {{ COMMON_CONSTANT.HYPHEN }}
+                            </span>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="data">
+                        <th mat-header-cell *matHeaderCellDef>
+                            <funnel-filter #typeSelect header="Standard/Custom" type="mono" [entityList]="typeList"
+                                value="name" view="name" [selectFC]="typeFC" [active]="typeFlag"
+                                (mono)="typeFlag = true;" [resetFlag]="resetFlag">
+                            </funnel-filter>
+                        </th>
+                        <td mat-cell *matCellDef="let row">
+                            <ng-container [ngSwitch]="row['type']">
+                                <span *ngSwitchCase="TypeEnum.STANDARD" class="text-success">
+                                    {{ row.type | titlecase }}
+                                </span>
+                                <span *ngSwitchCase="TypeEnum.CUSTOM" class="text-primary">
+                                    {{ row.type | titlecase }}
+                                </span>
+                                <span *ngSwitchDefault>
+                                    {{ COMMON_CONSTANT.HYPHEN }}
+                                </span>
+                            </ng-container>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="control">
+                        <th mat-header-cell *matHeaderCellDef disableClear> Quantitative / Qualitative </th>
+
+                        <td mat-cell *matCellDef="let row">
+                            <ng-container [ngSwitch]="row['control']">
+                                <span *ngSwitchCase="EsgMetricCosolidationLogicEnum.NUMBER"
+                                    class="violetBadge badge rounded-pill">
+                                    Quantitative
+                                </span>
+                                <span *ngSwitchCase="EsgMetricCosolidationLogicEnum.TEXT"
+                                    class="liteBlueBadge badge rounded-pill">
+                                    Qualitative
+                                </span>
+                                <span *ngSwitchDefault>
+                                    {{ COMMON_CONSTANT.HYPHEN }}
+                                </span>
+                            </ng-container>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="option">
+                        <th mat-header-cell *matHeaderCellDef></th>
+                        <td mat-cell *matCellDef="let row">
+                            <div class="mt-2 btn-group" ngbDropdown placement="left">
+                                <button type="button" ngbDropdownToggle class="dropdown-after dropdownAfter btn">
+                                    <fa-icon [icon]="faEllipsisV"></fa-icon>
+                                </button>
+                                <div ngbDropdownMenu [ngStyle]="{'z-index': 9999}">
+                                    <button *ngIf="row.type == TypeEnum.CUSTOM && !row.isRecordLinkFlag"
+                                        class="dropdown-item"
+                                        (click)="createUpdateCustomMetric(FormAction.UPDATE, row.id)">
+                                        {{ ButtonLabelEnum.UPDATE_BTN_LABEL }}
+                                    </button>
+                                    <button *ngIf="row.type == TypeEnum.CUSTOM && !row.isRecordLinkFlag"
+                                        class="btn btn-outline-danger rounded-0 dropdown-item"
+                                        (click)="deleteConfirmation(row.id)">
+                                        {{ ButtonLabelEnum.DELETE_BTN_LABEL }}
+                                    </button>
+                                    <button class="dropdown-item"
+                                        (click)="addEsgMetricToCustomFramework(FormAction.UPDATE, row.id, row.type, row.framework)">
+                                        Remove custom framework from ESG metric
+                                    </button>
+                                </div>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="dataRow"></tr>
+
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                            {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="col-sm-12 sticky p-0 m-0">
+                    <button *ngIf="showAddBtn" class="float-end me-3 btn btn-sm btn-success mt-3"
+                        (click)="addEsgMetricToCustomFramework(FormAction.CREATE, null, null, null)" [disabled]="!addBtnFlag"
+                        [ngClass]="{'btn-success': addBtnFlag, 'btn-secondary': !addBtnFlag}">
+                        Add to my Reporting Framework
+                    </button>
+
+                    <mat-paginator class="roundedBorder" showFirstLastButtons #paginator [length]="dataSourceLength"
+                        [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE"
+                        [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION"
+                        [ngStyle]="{'display': preferenceFlag ? '' : 'none'}">
+                    </mat-paginator>
+                </div>
+            </mat-dialog-content>
+
+            <!-- <div class="tscDialogFooter row">
+                <div class="col-sm-12">
+                    <button class="float-end me-3 btn btn-sm btn-success"
+                        (click)="addEsgMetricToCustomFramework()" [disabled]="!addBtnFlag"
+                        [ngClass]="{'btn-success': addBtnFlag, 'btn-secondary': !addBtnFlag}">
+                        Add to my Reporting Framework
+                    </button>
+                </div>
+
+            </div> -->
+
+        </div>
+    </ng-container>
+
+    <div [ngStyle]="{'display': !preferenceFlag ? '' : 'none'}">
+        <div class="centerAlign">
+            <img class="noBaseYear imgWidth" src="/assets/images/reporting-preference-not-found.jpg" alt="">
+        </div>
+        <div class="col-sm-12 px-5 py-2">
+            <div class="card-body">
+                <div class="fs-4 fw-bold centerAlign">
+                    Reporting preference not found.
+                </div>
+                <br />
+                <p class="d-flex align-items-center centerAlign">
+                    The reporting preference is not set for your organization. <a href="reporting/tab/preference"> Click
+                        here to set
+                        preference</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #icon let-icon="icon" let-tooltip="tooltip" let-iconClass="iconClass" let-function="function"
+    let-functionParameter="functionParameter" let-isRecordLinkFlag="isRecordLinkFlag">
+    <button *ngIf="!isRecordLinkFlag" class="iconBtn centerAlign" [class]="iconClass" matTooltipPosition="below"
+        [matTooltip]="tooltip" matRipple [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER"
+        (click)="handleClick(function, functionParameter)">
+        <span class="material-symbols-outlined icon">
+            {{ icon }}
+        </span>
+    </button>
+</ng-template>

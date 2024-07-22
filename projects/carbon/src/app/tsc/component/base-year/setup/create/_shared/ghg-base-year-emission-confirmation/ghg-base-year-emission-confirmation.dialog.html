@@ -1,0 +1,107 @@
+<div mat-dialog-title>
+    <strong class="dialogTitle">
+        GHG base year emission confirmation- {{ confirmationYear }}
+    </strong>
+    <button mat-icon-button mat-dialog-close cdkFocusInitial class="float-end matDialogClose" matTooltip="Close"
+        matTooltipPosition="before">
+        <span class="material-symbols-outlined">
+            close
+        </span>
+    </button>
+</div>
+
+<div class="matDialogContent tablePadding" mat-dialog-content>
+    <form [formGroup]="emissionConfirmationFG">
+        <div class="row mt-4">
+            <div class="col-sm-2">
+                {{ emissionData['scope']['name'] }}
+            </div>
+            <div class="col-sm-9">
+                <div class="progress cardOverwrite">
+                    <div class="progress-bar cardOverwrite" role="progressbar"
+                        [style.width.%]="calculateProgressWidth()"></div>
+                </div>
+                <div class="mt-3 text-secondary">
+                    {{ emissionData.confirmedActivities }} / {{ emissionData.totalActivities }}
+                    activity types marked as confirmed
+                </div>
+            </div>
+        </div>
+
+        <ng-container formArrayName="emissions">
+            <table mat-table [dataSource]="activityData">
+                <ng-container matColumnDef="activityType">
+                    <th class="px-2" [class]="'col-sm-' + columnWidth()" mat-header-cell *matHeaderCellDef> Activity
+                        Type
+                    </th>
+                    <td class="px-2 me-4" [class]="'col-sm-' + columnWidth()" mat-cell *matCellDef="let row">
+                        {{ row['name'] }}
+                    </td>
+                </ng-container>
+
+                <ng-container *ngFor="let approach of consolidationApproach">
+                    <ng-container [matColumnDef]="approach['keyID']">
+                        <th class="columnWidth2 px-2" mat-header-cell *matHeaderCellDef>
+                            <div class="row fw-bold mt-3 me-4">
+                                {{ approach['name'] }} ({{ CARBON_CONSTANT.DEFAULT_EMISSION_UNIT.name }})
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col-sm-6">
+                                    Emission
+                                </div>
+                                <div class="col-sm-6">
+                                    Biogenic
+                                </div>
+                            </div>
+                        </th>
+
+                        <td class="columnWidth2 px-2" mat-cell *matCellDef="let row; let i = index">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    {{ (row[getDataKey(approach['keyID'])]['emission']?.emission != null ?
+                                    (row[getDataKey(approach['keyID'])]['emission']?.emission | number: '1.2-2' ) :
+                                    COMMON_CONSTANT.HYPHEN)
+                                    }}
+                                </div>
+                                <div class="col-sm-6">
+                                    {{ (row[getDataKey(approach['keyID'])]['biogenicEmission']?.emission != null ?
+                                    (row[getDataKey(approach['keyID'])]['biogenicEmission']?.emission | number: '1.2-2'
+                                    ) :
+                                    COMMON_CONSTANT.HYPHEN)
+                                    }}
+                                </div>
+                            </div>
+                        </td>
+                    </ng-container>
+                </ng-container>
+
+                <ng-container matColumnDef="confirmation">
+                    <th class="columnWidth3 text-center" mat-header-cell *matHeaderCellDef>
+                        <div class="row fw-bold mt-3 me-4"></div>
+                        <div class="row mt-1">
+                            <div class="col-sm-6">
+                                Mark confirmed
+                            </div>
+                        </div>
+                    </th>
+                    <td class="columnWidth3 text-center" mat-cell *matCellDef="let row; let i = index"
+                        [formGroupName]="i">
+                        <mat-checkbox formControlName="isConfirmed"></mat-checkbox>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </ng-container>
+    </form>
+</div>
+
+<ng-container *ngIf="!isUpdate" class="mt-2">
+    <div mat-dialog-footer align="end">
+        <button type="button" class="btn btn-success" [mat-dialog-close]="DialogEnum.SUCCESS_DR"
+            [disabled]="!isConfirmedValid">
+            {{ DialogEnum.CONFIRM_BTN_LABEL }}
+        </button>
+    </div>
+</ng-container>

@@ -1,0 +1,280 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
+
+<mat-card class="border cardOverwrite">
+    <div class="cardTitle pb-3">
+        3. Configure data collection
+    </div>
+
+    <mat-accordion multi="true">
+        <mat-expansion-panel class="cardOverwrite matAccordion mb-2"
+            *ngFor="let process of process; let p_index = index" expanded="false">
+            <mat-expansion-panel-header>
+                <strong>Process Name - {{ process.name }}</strong>
+            </mat-expansion-panel-header>
+
+            <div class="cardOverwrite border card-body bg-light">
+                <div class="text-secondary fs-5 pb-3"><strong>Input</strong></div>
+                <mat-accordion multi="true">
+                    <ng-container *ngFor="let input of process.input">
+                        <mat-expansion-panel class="cardOverwrite mb-2" [disabled]="!canAddRecord('INPUT', input.keyID)"
+                            expanded="false">
+                            <mat-expansion-panel-header *ngIf="input.name"
+                                [class]="{'cursorDefault': !canAddRecord('INPUT', input.keyID)}">
+                                {{input.name}}
+                            </mat-expansion-panel-header>
+                            <ng-container *ngFor="let source of input.source">
+                                <div class="text-secondary bg-light p-2 rounded" *ngIf="source.name">
+                                    <strong *ngIf="source.name">{{ source.name }}</strong>
+                                </div>
+                                <ng-container *ngFor="let activity of source.activity">
+                                    <ng-container *ngIf="activity.isVisible">
+                                        <!-- Render true activities -->
+                                        <div class="activityContainer">
+                                            <div class="activityContainerLeft">
+                                                <div class="activityTitle">{{ activity.name ? activity.name : 'No need
+                                                    to required a map a form' }}&nbsp;
+                                                    <!-- <span class="badge rounded-pill"
+                                                        [ngClass]="{'cbamBadge':  activity.type[0].name === 'CBAM form', 'ghgBadge':  activity.type[0].name !== 'CBAM form'}">{{
+                                                        activity.type[0].name }}
+                                                    </span> -->
+                                                    <span class="badge rounded-pill"
+                                                        [ngClass]="{ 'cbamBadge':  activity.type[0].keyID == ACTIVITY_FORM_TYPE_KEYID_ENUM.CBAM_FORM, 'ghgBadge': activity.type[0].keyID == ACTIVITY_FORM_TYPE_KEYID_ENUM.GHG_FORM }">
+                                                        {{ activity.type[0].name }}
+                                                    </span>
+                                                </div>
+                                                <div class="activitySubtitle">{{ activity.description }}</div>
+                                            </div>
+                                            <div class="activityContainerRight">
+                                                <div class="activityContainerRightInner">
+                                                    <button class="btn btn-sm btn-link"
+                                                        *ngIf="activity.mappedFormCount <= 0"
+                                                        (click)="selectActivityForms(activity, source.processInputOutputID, process.id, 'INPUT',0 )">
+                                                        Select activity form
+                                                    </button>
+                                                    <span *ngIf="activity.mappedFormCount > 0"
+                                                        (click)="selectActivityForms(activity, source.processInputOutputID, process.id, 'INPUT', activity.mappedActivityFormID)">
+                                                        <button class="btn btn-link">
+                                                            {{ activity.mappedFormCount }} forms selected
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </ng-container>
+
+                                <div *ngIf="source.activity.length === 0" class="mt-2 mb-2">
+                                    <p class="pt-2 ps-1">No form required</p>
+                                </div>
+                                <!-- Render allocation part -->
+                                <ng-container>
+                                    <div class="ps-3 pt-3" *ngIf="source.allocations.length > 0">
+                                        <div class="activityTitle">{{input.name}} consumption</div>
+                                        <span class="text-muted pt-1">Select a method to track {{input.name}} consumed
+                                            in
+                                            this process</span>
+                                        <div class="pt-3">
+                                            <mat-radio-group>
+                                                <div *ngFor="let allocation of source.allocations;  let j = index">
+                                                    <mat-radio-button class="pt-2 pb-3" [value]="allocation.name"
+                                                        (change)="checkSubMeter(allocation, source)"
+                                                        [checked]="allocation.isSelected">
+                                                        {{allocation.name}}
+                                                    </mat-radio-button>
+                                                    <div class="row">
+                                                        <div class="col-sm-10 pb-3">
+                                                            <lib-message-alert
+                                                                [messageAlertTypeInp]="messageAlertTypeEnum.INFO"
+                                                                [messageAlertIconInp]="messageAlertIconEnum.INFO_ICON"
+                                                                contentInp="{{allocation.description}}">
+                                                            </lib-message-alert>
+                                                        </div>
+                                                    </div>
+
+                                                    <div *ngIf="allocation.subtype && allocation.showSubtype == true">
+                                                        <div class="ps-3">
+                                                            <mat-radio-group class="pt-1">
+                                                                <div class="ps-3 text-muted">
+                                                                    <div class="fs-6"
+                                                                        *ngFor="let subtype of allocation.subtype">
+                                                                        <mat-radio-button class="subType" type="radio"
+                                                                            name="subtype.name" [value]="subtype.name"
+                                                                            (change)="checkSubtype(subtype, source)"
+                                                                            [checked]="subtype.isSelected">
+                                                                            {{ subtype.name }}
+                                                                        </mat-radio-button>
+                                                                    </div>
+                                                                </div>
+                                                            </mat-radio-group>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </mat-radio-group>
+                                        </div>
+                                    </div>
+                                </ng-container>
+
+                                <!-- Render false activities -->
+                                <ng-container *ngFor="let activity of source.activity;">
+                                    <ng-container *ngIf="activity.afterShow">
+                                        <div class="activityContainer">
+                                            <div class="activityContainerLeft">
+                                                <div class="activityTitle">{{ activity.name }}&nbsp;
+                                                    <span class="badge rounded-pill"
+                                                        [ngClass]="{'cbamBadge':  activity.type[0].name === 'CBAM form', 'ghgBadge':  activity.type[0].name !== 'CBAM form'}">{{
+                                                        activity.type[0].name }}
+                                                    </span>
+                                                </div>
+                                                <div class="activitySubtitle">{{ activity.description }}</div>
+                                            </div>
+                                            <div class="activityContainerRight">
+                                                <div class="activityContainerRightInner">
+
+                                                    <button class="btn btn-sm btn-link"
+                                                        *ngIf="activity.mappedFormCount == 0"
+                                                        (click)="selectActivityForms(activity, source.processInputOutputID, process.id, 'INPUT', 0)">
+                                                        Select activity form
+                                                    </button>
+                                                    <span *ngIf="activity.mappedFormCount > 0"
+                                                        (click)="selectActivityForms(activity, source.processInputOutputID, process.id, 'INPUT', activity.mappedActivityFormID)">
+                                                        <button class="btn btn-link">
+                                                            {{ activity.mappedFormCount}} forms selected
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </ng-container>
+
+                            </ng-container>
+                        </mat-expansion-panel>
+                    </ng-container>
+                </mat-accordion>
+
+                <div class="text-secondary fs-5 pb-3 pt-3"><strong>Output</strong></div>
+                <mat-accordion multi="true">
+                    <mat-expansion-panel class="cardOverwrite mb-2" *ngFor="let output of process.output"
+                        expanded="false">
+                        <mat-expansion-panel-header expanded="false">{{ output.name }}</mat-expansion-panel-header>
+                        <ng-container *ngFor="let source of output.source">
+                            <div class="text-secondary bg-light p-2 rounded" *ngIf="source.name">
+                                <strong>{{ source.name }}
+                                </strong>
+                            </div>
+                            <ng-container *ngIf="source.activity && source.activity.length > 0">
+                                <ng-container *ngFor="let activity of source.activity">
+                                    <ng-container *ngIf="activity.isVisible">
+                                        <!-- Render true activities -->
+                                        <div class="activityContainer">
+                                            <div class="activityContainerLeft">
+                                                <div class="activityTitle">{{ activity.name }}&nbsp;
+                                                    <span class="badge rounded-pill"
+                                                        [ngClass]="{'cbamBadge':  activity.type[0].name === 'CBAM form', 'ghgBadge':  activity.type[0].name !== 'CBAM form'}">{{
+                                                        activity.type[0].name }}
+                                                    </span>
+                                                </div>
+                                                <div class="activitySubtitle">{{ activity.description }}</div>
+                                            </div>
+                                            <div class="activityContainerRight">
+                                                <div class="activityContainerRightInner">
+                                                    <button class="btn btn-sm btn-link"
+                                                        *ngIf="activity.mappedFormCount <= 0 && activity.mappedActivityFormID"
+                                                        (click)="selectActivityForms(activity, source.processInputOutputID, process.id, 'OUTPUT', 0)">
+                                                        Select activity form
+                                                    </button>
+                                                    <span *ngIf="activity.mappedFormCount > 0"
+                                                        (click)="selectActivityForms(activity, source.processInputOutputID, process.id, 'OUTPUT', activity.mappedActivityFormID)">
+                                                        <button class="btn btn-link">
+                                                            {{ activity.mappedFormCount }} forms selected
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </ng-container>
+                            </ng-container>
+
+                            <div *ngIf="source.activity.length === 0" class="mt-2 mb-2">
+                                <p class="pt-2 ps-1">No form required</p>
+                            </div>
+
+                            <!-- Render allocation part -->
+                            <ng-container>
+                                <div class="ps-3 pt-3" *ngIf="source.allocations.length > 0">
+                                    <div class="activityTitle">{{input.name}} consumption</div>
+                                    <span class="text-muted pt-1">Select a method to track {{input.name}} consumed
+                                        in
+                                        this process</span>
+                                    <div class="pt-3">
+                                        <mat-radio-group>
+                                            <div *ngFor="let allocation of source.allocations;  let j = index">
+                                                <mat-radio-button class="pt-2 pb-3" [value]="allocation.name"
+                                                    (change)="checkSubMeter(allocation, source)"
+                                                    [checked]="allocation.isSelected">
+                                                    {{allocation.name}}
+                                                </mat-radio-button>
+
+                                                <div *ngIf="allocation.subtype && allocation.showSubtype == true">
+                                                    <div class="ps-3">
+                                                        <mat-radio-group class="pt-1">
+                                                            <div class="ps-3 text-muted">
+                                                                <div class="fs-6"
+                                                                    *ngFor="let subtype of allocation.subtype">
+                                                                    <mat-radio-button class="subType" type="radio"
+                                                                        name="subtype.name" [value]="subtype.name"
+                                                                        (change)="checkSubtype(subtype, source)"
+                                                                        [checked]="subtype.isSelected">
+                                                                        {{ subtype.name }}
+                                                                    </mat-radio-button>
+                                                                </div>
+                                                            </div>
+                                                        </mat-radio-group>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </mat-radio-group>
+                                    </div>
+                                </div>
+                            </ng-container>
+
+                            <!-- Render false activities -->
+                            <ng-container *ngFor="let activity of source.activity;">
+                                <ng-container *ngIf="activity.afterShow">
+                                    <div class="activityContainer">
+                                        <div class="activityContainerLeft">
+                                            <div class="activityTitle">{{ activity.name }}&nbsp;
+                                                <span class="badge rounded-pill"
+                                                    [ngClass]="{'cbamBadge':  activity.type[0].name === 'CBAM form', 'ghgBadge':  activity.type[0].name !== 'CBAM form'}">{{
+                                                    activity.type[0].name }}
+                                                </span>
+                                            </div>
+                                            <div class="activitySubtitle">{{ activity.description }}</div>
+                                        </div>
+                                        <div class="activityContainerRight">
+                                            <div class="activityContainerRightInner">
+                                                <button class="btn btn-sm btn-link"
+                                                    *ngIf="activity.mappedFormCount == 0"
+                                                    (click)="selectActivityForms(activity, source.processInputOutputID, process.id, 'INPUT', 0 )">
+                                                    Select activity form
+                                                </button>
+                                                <span *ngIf="activity.mappedFormCount > 0"
+                                                    (click)="selectActivityForms(activity, source.processInputOutputID, process.id, 'INPUT', activity.mappedActivityFormID)">
+                                                    <button class="btn btn-link">
+                                                        {{ activity.mappedFormCount}} forms selected
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </ng-container>
+
+                        </ng-container>
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</mat-card>

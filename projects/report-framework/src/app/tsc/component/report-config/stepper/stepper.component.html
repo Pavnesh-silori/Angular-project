@@ -1,0 +1,42 @@
+<div class="card main-card cardOverwrite h100">
+
+    <div *ngIf="prefEnableReportingFrameworkList.length == 0" class="m-3">
+        <lib-message-alert [messageAlertTypeInp]="messageAlertTypeEnum.WARNING"
+            [messageAlertIconInp]="messageAlertIconEnum.INFO_ICON"
+            contentInp="Your reporting preference framework is disabled. First you enable preference framework.">
+        </lib-message-alert>
+
+        <div class="col-sm-12 p-5 centerAlign">
+            <img class="img" src="../assets/images/reporting-preference-not-found.jpg" alt="Reporting preference enable framework not found" />
+        </div>
+    </div>
+
+    <div *ngIf="prefEnableReportingFrameworkList.length > 0">
+
+        <div class="cardHeaderBlock d-flex align-items-center">
+            <div class="col-sm-6 pageTitle">
+                {{ stepperTitle(stepper.selectedIndex) }}
+            </div>
+        </div>
+        <div class="card-body cardOverwrite pt-0">
+            <mat-stepper linear #stepper>
+                <mat-step>
+                    <ng-template matStepLabel> Details</ng-template>
+                    <mat-card class="cardOverwrite">
+                        <app-report-config #reportConfigComponent type="stepper"
+                            (nextEmit)="nextStepper($event)"></app-report-config>
+                    </mat-card>
+                </mat-step>
+
+                <mat-step>
+                    <ng-template matStepLabel>Assign Template (Optional)</ng-template>
+                    <mat-card *ngIf="assignmentFlag" class="cardOverwrite">
+                        <app-assignment type="stepper" [reportingFrameworkID]="reportingFrameworkID"
+                            [configID]="configID"></app-assignment>
+                    </mat-card>
+                </mat-step>
+            </mat-stepper>
+        </div>
+
+    </div>
+</div>

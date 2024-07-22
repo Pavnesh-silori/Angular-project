@@ -1,0 +1,22 @@
+.radioButtonGroup {
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
+    align-items: flex-start;
+}
+
+.radioButton {
+    margin: 5px;
+}
+
+.sefHeader {
+    height: 50px;
+}
+
+.addBtnBorder {
+    border: 1px solid #3ac47d!important;
+}
+
+.removeBtnBorder {
+    border: 1px solid #d92550!important;
+}

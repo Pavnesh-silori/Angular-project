@@ -1,0 +1,39 @@
+<ng-container *ngIf="activityConfigScheduler">
+    <mat-card class="border cardOverwrite">
+        <div class="cardTitle pb-2">
+            Reminder
+        </div>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'Enter Data for Every',
+            value: activityConfigScheduler.frequencyOffset + ' ' + this.frequencyService.getFrequencyLabelByKeyID(activityConfigScheduler.frequency.keyID),
+            class: 'pt-1'
+        }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'Start Date',
+            value: this.dateService.formatDate(activityConfigScheduler.startDate, DateFormatEnum.DD_MMM_YYYY),
+            class: 'pt-3'
+        }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'End Date',
+            value: activityConfigScheduler.endDate ? this.dateService.formatDate(activityConfigScheduler.endDate, DateFormatEnum.DD_MMM_YYYY) : 'Never',
+            class: 'pt-3'
+        }">
+        </ng-container>
+    </mat-card>
+</ng-container>
+
+<ng-template #labelValue let-label="label" let-value="value" let-class="class" let-valueClass="valueClass">
+    <div class="row" [class]="class">
+        <div class="col-sm-4">
+            {{ label }}
+        </div>
+        <div class="col-sm-8 fw-bold" [class]="valueClass">
+            {{ value ? value : COMMON_CONSTANT.HYPHEN }}
+        </div>
+    </div>
+</ng-template>

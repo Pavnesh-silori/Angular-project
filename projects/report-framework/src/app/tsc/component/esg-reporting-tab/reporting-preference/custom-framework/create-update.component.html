@@ -1,0 +1,55 @@
+<div class="headerContainer p-0" #header>
+    <div class="headerLeftContainer">
+        <div class="pageTitle">{{action == FormAction.CREATE ? 'Create' : 'Update'}} Custom Framework</div>
+    </div>
+
+    <div class="headerRightContainer">
+        <div class="headerRightContainerInner">
+            <button class="btn btn-sm centerAlign py-1 iconBtn" matRipple
+                [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                [matTooltip]="ButtonTooltipEnum.CLOSE" mat-dialog-close>
+                <span class="material-symbols-outlined">
+                    close
+                </span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<form [formGroup]="formDataFG" (ngSubmit)="submit()" class="pt-2">
+    <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+        <mat-label class="formLabel">Custom framework name</mat-label>
+        <input class="formPlaceholder" matInput type="text" placeholder="Custom framework name"
+            formControlName="name" />
+        <mat-error>
+           Name is required field
+        </mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+        <mat-label class="formLabel">Select interval</mat-label>
+        <mat-select formControlName="reportingIntervalKeyID">
+            <mat-option *ngFor="let interval of intervalList" [value]="interval.keyID">
+                <span class="d-flex justify-content-between">
+                    {{ interval.name }}
+                </span>
+            </mat-option>
+        </mat-select>
+        <mat-error>
+            Reporting interval is required field
+        </mat-error>
+    </mat-form-field>
+
+    <button class="d-none" type="submit" #formSubmitBtn></button>
+</form>
+
+<div class="tscDialogFooter">
+    <button class="btn btn-sm btn-success" (click)="formSubmitBtn.click()" matRipple>
+        {{ tSCCommonService.getButtonLabel(action) }}
+    </button>
+
+    <button class="btn btn-sm btn-secondary me-2" mat-dialog-close matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">
+        Cancel
+    </button>
+</div>

@@ -1,0 +1,32 @@
+<div class="card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">
+                CBAM tool
+            </div>
+            <!-- TODO  -->
+           <!--  <div class="pageSubtitle">
+                Subtitle to be decided
+            </div> -->
+        </div>
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <button type="button" class="btn btn-sm btn-success" (click)="openDialog()" matRipple
+                    [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                    [matTooltip]="ButtonTooltipEnum.CREATE">
+                    <fa-icon [icon]="faPlus" class="me-1"></fa-icon>CBAM Run
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <nav mat-tab-nav-bar>
+        <ng-container *ngFor="let tabs of tab; let i = index;">
+            <a mat-tab-link [routerLink]="tabs['routerLink']" (click)="activeLink = tabs['routerLink']"
+                [active]="activeLink == tabs['routerLink']">
+                {{ tabs['label'] }}
+            </a>
+        </ng-container>
+    </nav>
+    <router-outlet></router-outlet>
+</div>

@@ -1,0 +1,163 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+    </symbol>
+</svg>
+
+<mat-card class="border cardOverwrite" [ngClass]="{'border-danger': inValidFrom}">
+    <div class="cardTitle pb-2"> Reference data </div>
+    <form [formGroup]="referenceDataFG">
+        <ng-container *ngIf="isFactor; else elseBlock;">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="alert alert-primary centerAlignVertical cardOverwrite" role="alert">
+                        <svg class="bi flex-shrink-0 me-2 dialogHeaderIcon" role="img" aria-label="Info:">
+                            <use xlink:href="#info-fill" />
+                        </svg>
+                        <div class="extraInfoCardText ps-3 fs-6">
+                            Choose a vehicle or vehicle category along with your preferred fuel type. Feel free to
+                            provide additional details if desired.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <ng-container *ngFor="let field of viewFields">
+                    <ng-container [ngSwitch]="field['input']">
+                        <div class="row">
+                            <div *ngSwitchCase="'input'" [class]="field['width'] + ' row'"
+                                [ngClass]="{'d-none': !field['view']}">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">{{ field['label'] }}</mat-label>
+                                    <input class="formPlaceholder" matInput [type]="field['type']"
+                                        [formControlName]="field['control']" [placeholder]="field['placeholder']">
+                                    <mat-error *ngFor="let validators of field['validators']">
+                                        <ng-container *ngIf="errorHandling(field['control'], validators['validator'])">
+                                            {{ validators['error'] }}
+                                        </ng-container>
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div *ngSwitchCase="'select'" [class]="field['width'] + ' row'"
+                                [ngClass]="{'d-none': !field['view']}">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">{{ field['label'] }}</mat-label>
+                                    <mat-select [formControlName]="field['control']" [mulitple]="field['multiple']"
+                                        (selectionChange)="selectionChange(field['control'])">
+                                        <mat-option *ngIf="field['search']">
+                                            <ngx-mat-select-search
+                                                [formControl]="getSearchUtil(field['searchUtil']['name'])['filterFC']"
+                                                [placeholderLabel]="field['searchUtil']['placeholderLabel']"
+                                                [noEntriesFoundLabel]="field['searchUtil']['noEntriesFoundLabel']">
+                                            </ngx-mat-select-search>
+                                        </mat-option>
+                                        <mat-option
+                                            *ngFor="let entity of 
+                                                                        (field['search']? (getSearchUtil(field['searchUtil']['name'])['filteredEntities'] | async) : field['entityList'])"
+                                            (click)="selectionChange(field['key'], entity)" [value]="entity['id']">
+                                            {{ entity['name'] }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngFor="let validators of field['validators']">
+                                        <ng-container *ngIf="errorHandling(field['control'], validators['validator'])">
+                                            {{ validators['error'] }}
+                                        </ng-container>
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <ng-container *ngIf="field['key'] == 'vehicleID' && !haveVehicles">
+                                <div class="col-sm-4">
+                                    <ng-container *ngTemplateOutlet="noVehicle">
+                                    </ng-container>
+                                </div>
+                            </ng-container>
+                            <ng-container *ngIf="field['key'] == 'facility' && !haveFacilities">
+                                <div class="col-sm-4">
+                                    <ng-container *ngTemplateOutlet="noFacilities">
+                                    </ng-container>
+                                </div>
+                            </ng-container>
+                        </div>
+                        <div *ngSwitchDefault [class]="field['width']" [ngClass]="{'d-none': !field['view']}">
+                            <div class="row pb-3 w-100">
+                                <div class="col-sm-5 centerAlignVertical">
+                                    <div class="col-form-label ms-1 fs-5 fw-bold">
+                                        {{ field['title'] }}
+                                    </div>
+                                </div>
+                                <div class="col-sm-7 centerAlignVertical">
+                                    <div class="form-control-plaintext fw-bold">
+                                        <span matTooltipPosition="above"
+                                            [matTooltip]="(field['value']?.length) > wordLength ? field['value'] : ''"
+                                            matTooltipClass="nameTooltip">
+                                            {{field['value'].length}}
+                                            <!-- {{ field['value'] != null && field['value'].length != 0 ? field['value'] : globalConstant['HYPHEN'] }} -->
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </div>
+        </ng-container>
+        <ng-template #elseBlock>
+            <ng-container>
+                <div class="row pb-3">
+                    <ng-container *ngFor="let viewField of viewFields">
+                        <div [ngClass]="viewField['width']">
+                            <div class="row">
+                                <div class="col-sm-5 centerAlignVertical">
+                                    <div class="col-form-label ms-1">
+                                        {{ viewField['title'] }}
+                                    </div>
+                                </div>
+                                <div class="col-sm-7 centerAlignVertical">
+                                    <div class="form-control-plaintext fw-bold">
+                                        <span matTooltipPosition="above"
+                                            [matTooltip]="(viewField['value']?.length && viewField['value'].length > 20) ? viewField['value'] : ''"
+                                            matTooltipClass="nameTooltip">
+                                            {{ (viewField?.['value'] && (viewField['value'] != null ||
+                                            viewField['value']?.length)) ? viewField['value'] : globalConstant['HYPHEN']
+                                            }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </ng-container>
+        </ng-template>
+    </form>
+</mat-card>
+
+<ng-template #noVehicle>
+    <div class="alert alert-primary centerAlignVertical roundedBorder">
+        <svg class="extraInfoCardIcon">
+            <use xlink:href="#info-fill" />
+        </svg>
+        <div class="extraInfoCardText ps-3 fs-6">
+            You have not created any vehicle. Please create one
+            <a routerLink="/source/vehicle/page" target="_blank">here</a>.
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #noFacilities>
+    <div class="alert alert-primary centerAlignVertical roundedBorder">
+        <svg class="extraInfoCardIcon">
+            <use xlink:href="#info-fill" />
+        </svg>
+        <div class="extraInfoCardText ps-3 fs-6">
+            You have not created any facility. Please create one
+            <a [href]="environment.ADMIN_URL + 'facility/create'" target="_blank">here</a>.
+            <!-- <a target="_blank">here</a>. -->
+        </div>
+    </div>
+</ng-template>

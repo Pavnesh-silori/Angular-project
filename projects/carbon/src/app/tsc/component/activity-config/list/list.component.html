@@ -1,0 +1,199 @@
+<div class="card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Activity Forms</div>
+            <div class="pageSubtitle" [hidden]="!(origin == ActivityConfigEnum.PFF)">Activity forms are
+                templates with specific details and settings that are used to
+                collect data within your organization for any activity type.</div>
+        </div>
+
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <lib-search-bar-one class="me-3" #searchBar searchBy="form name" (emitSearch)="searchFn($event)">
+                </lib-search-bar-one>
+
+                <button class="btn btn-sm btn-light refreshBtn centerAlign me-3 py-1" #refreshBtn matRipple
+                    [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                    [matTooltip]="ButtonTooltipEnum.REFRESH">
+                    <span class="material-symbols-outlined text-secondary">
+                        refresh
+                    </span>
+                </button>
+
+                <div [hidden]="!(origin == ActivityConfigEnum.PFF)">
+                    <button type="button" class="btn btn-sm btn-success" (click)="selectActivityForm()" matRipple
+                        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                        [matTooltip]="ButtonTooltipEnum.CREATE">
+                        <fa-icon [icon]="faPlus" class="me-1"></fa-icon>Activity Form
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ms-3 mb-4 me-3">
+        <button matRipple [matRippleCentered]="true" class="btn btn-link float-end"
+            (click)="refreshFilter();resetFlag=!resetFlag"
+            [disabled]="(activityFlag == false && formTypeFlag == false && statusFlag == false)"
+            [hidden]="!(origin == ActivityConfigEnum.PFF)">
+            <span class="material-symbols-outlined fs-6">
+                filter_list_off
+            </span>
+            Reset Filters
+        </button>
+    </div>
+
+    <table mat-table [dataSource]="dataSource" matSort matSortActive="id" matSortDisableClear matSortDirection="desc"
+        class="sticky-header">
+        <!-- <ng-container matColumnDef="isChecked">
+            <th mat-header-cell *matHeaderCellDef class="isChecked"
+                [hidden]="!(origin == ActivityConfigEnum.PFF)">
+                <mat-checkbox [formControl]="checkAll" (change)="$event ? selectAll() : null"
+                    [checked]="selection.hasValue() && isAllSelected()">
+                </mat-checkbox>
+            </th>
+            <td class="px-3" mat-cell *matCellDef="let row; let i = index;" class="text-start"
+                [hidden]="!(origin == ActivityConfigEnum.PFF)">
+                <mat-checkbox (change)="$event ? manualSelect(row.id , row.runStatus,  $event.checked,dataSource):null"
+                    [checked]="selection.isSelected(row['id'])"></mat-checkbox>
+            </td>
+        </ng-container> -->
+
+        <ng-container matColumnDef="id">
+            <th class="columnWidth" mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Form ID </th>
+            <td mat-cell *matCellDef="let row">{{row.id}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+            <th class="columnWidth" mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Form Name </th>
+            <td mat-cell *matCellDef="let row" (click)="viewActivityConfig(row)"
+                [ngClass]="{'cursorPointer': showCursorPointer(row)}">
+                <a [ngClass]="{'text-dark': !showCursorPointer(row)}"
+                    [matTooltip]="row.name.length > 15 ? row.name : ''">{{row.name ? (row.name.length > 15 ?
+                    row.name.substring(0, 15) + '...' : row.name) : COMMON_CONSTANT.HYPHEN}}</a>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="activityType">
+            <th class="col-sm-1 activityType" mat-header-cell *matHeaderCellDef>
+                <funnel-filter #activitySelect header="Activity type" type="multi" [entityList]="allActivity"
+                    value="keyID" view="name" [selectFC]="activityFC" [active]="activityFlag"
+                    selectAllLabel="Select all activity" (multi)="activityFlag = true;" [resetFlag]="resetFlag">
+                </funnel-filter>
+            </th>
+            <td mat-cell *matCellDef="let row" [matTooltip]="row.activity.name.length > 25 ? row.activity.name : ''">
+                {{ row.activity.name.length > 25 ? row.activity.name.slice(0, 25) + '...' : row.activity.name }}
+            </td>
+        </ng-container>
+
+        <ng-container>
+            <ng-container matColumnDef="formType">
+                <th class="col-sm-1 ps-3" mat-header-cell *matHeaderCellDef>
+                    <funnel-filter #formSelect header="Form type" type="multi" [entityList]="allFormType" value="keyID"
+                        view="name" [selectFC]="formTypeFC" [active]="formTypeFlag" selectAllLabel="All form type"
+                        (multi)="formTypeFlag = true;" [resetFlag]="resetFlag">
+                    </funnel-filter>
+                </th>
+                <td class="ps-3" mat-cell *matCellDef="let row">
+                    <span class="badge rounded-pill"
+                        [ngClass]="{ 'cbamBadge': row.activityType.keyID == ACTIVITY_FORM_TYPE_KEYID_ENUM.CBAM_FORM, 'ghgBadge': row.activityType.keyID == ACTIVITY_FORM_TYPE_KEYID_ENUM.GHG_FORM,
+                                     'blueBadge': row.activityType.keyID == ACTIVITY_FORM_TYPE_KEYID_ENUM.ESG_FORM}">
+                        {{ row.activityType.name }}
+                    </span>
+                </td>
+            </ng-container>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+            <th mat-header-cell class="col-sm-1 ps-5" *matHeaderCellDef disableClear
+                [hidden]="!(origin == ActivityConfigEnum.PFF)">
+                <span class="filter3">
+                    <funnel-filter #statusSelect header="Status" type="mono" [entityList]="statusList"
+                        [selectFC]="statusFC" [active]="statusFlag" (mono)="statusFlag = true;" [resetFlag]="resetFlag">
+                    </funnel-filter>
+                </span>
+            </th>
+
+            <td mat-cell *matCellDef="let row" class="ps-5" [hidden]="!(origin == ActivityConfigEnum.PFF)"
+                [ngClass]="StatusService.getStatusClass(row.status)">
+                {{ row.status ? StatusService.getStatusValue(row.status) : COMMON_CONSTANT.HYPHEN }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="linkedRecords">
+            <th mat-header-cell class="ps-5 linkedRecords" *matHeaderCellDef
+                [hidden]="!(origin == ActivityConfigEnum.PFF)"> Linked
+                records
+            </th>
+            <td mat-cell class="text-start ps-5" *matCellDef="let row" [hidden]="!(origin == ActivityConfigEnum.PFF)"
+                [ngClass]="{'cursorPointer': (row.linkedRecordsCount > 0)}" (click)="routeActivityDataPage(row)">
+                <a [ngClass]="{'text-dark': row.linkedRecordsCount == 0}" [matTooltip]="row.linkedRecordsCount">{{
+                    row.linkedRecordsCount }}</a>
+        </ng-container>
+
+        <ng-container matColumnDef="options">
+            <th mat-header-cell class="options" *matHeaderCellDef [hidden]="!(origin == ActivityConfigEnum.PFF)">
+            </th>
+            <td mat-cell class="options" *matCellDef="let row" [hidden]="!(origin == ActivityConfigEnum.PFF)">
+                <div class="centerAlignVertical">
+                    <ng-container *ngTemplateOutlet="icon; 
+                    context: {
+                        icon: 'edit',
+                        tooltip: ButtonTooltipEnum.UPDATE,
+                        iconClass: 'text-primary updateIconHover',
+                        function: updateActivityConfig,
+                        functionParameter: [row]
+                    }">
+                    </ng-container>
+
+                    <div class="btn-group" ngbDropdown placement="left-top">
+                        <button type="button" ngbDropdownToggle
+                            class="dropdown-after dropdownAfter btn iconBtn text-secondary" matTooltipPosition="below"
+                            [matTooltip]="ButtonTooltipEnum.MORE" matRipple
+                            [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">
+                            <fa-icon [icon]="faEllipsisV"></fa-icon>
+                        </button>
+                        <div ngbDropdownMenu>
+                            <button class="dropdown-item" (click)="routeToPFF(row)">
+                                Add record
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="useActivityConfig">
+            <th mat-header-cell *matHeaderCellDef class="isChecked" [hidden]="(origin == ActivityConfigEnum.PFF)">
+            </th>
+            <td class="px-3 text-end" mat-cell *matCellDef="let row; let i = index;"
+                [hidden]="(origin == ActivityConfigEnum.PFF)">
+                <a class="btn btn-sm btn-success" (click)="closeDialog(row)"><fa-icon [icon]="faPlus" class="me-1"></fa-icon>Record</a>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="dataRow"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+            </td>
+        </tr>
+    </table>
+
+    <mat-paginator class="roundedBorder" #paginator [length]="resultLength"
+        [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION" [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE"
+        showFirstLastButtons>
+    </mat-paginator>
+</div>
+
+<ng-template #icon let-icon="icon" let-tooltip="tooltip" let-iconClass="iconClass" let-function="function"
+    let-functionParameter="functionParameter">
+    <button class="iconBtn centerAlign" [class]="iconClass" matTooltipPosition="below" [matTooltip]="tooltip" matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" (click)="handleClick(function, functionParameter)">
+        <span class="material-symbols-outlined icon">
+            {{ icon }}
+        </span>
+    </button>
+</ng-template>

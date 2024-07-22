@@ -1,0 +1,15 @@
+.main-container {
+    @extend .customScrollBar;
+    
+    height: calc(100vh - #{$header-height + $footer-height}) !important;
+    overflow-y: auto;
+    justify-content: space-between;
+
+    .fixed-footer {
+        height: $footer-height;
+        position: sticky;
+        background: white;
+        bottom: 0px !important;
+        padding: 1rem !important;
+    }
+}

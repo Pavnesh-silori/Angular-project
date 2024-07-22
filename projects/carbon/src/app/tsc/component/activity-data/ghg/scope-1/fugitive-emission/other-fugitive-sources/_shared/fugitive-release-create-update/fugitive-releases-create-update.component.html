@@ -1,0 +1,105 @@
+<div mat-dialog-title>
+    <strong class="dialogHeader">
+        {{ title }} fugitive release record
+    </strong>
+</div>
+
+<div mat-dialog-content class="cardOverWrite h100">
+    <form [formGroup]="otherFugitiveSourceFG">
+        <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel">Select fugitive source</mat-label>
+            <mat-select formControlName="fugitiveSourceID" [disabled]="isReadOnly" required>
+                <mat-option>
+                    <ngx-mat-select-search [formControl]="sourceSearchUtil.filterFC"
+                        placeholderLabel="Search by source name" noEntriesFoundLabel="No matching found.">
+                    </ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let source of sourceSearchUtil.filteredEntities | async" [value]="source.id">
+                    <span class="d-flex justify-content-between" (click)="getGasesByOtherFugitiveSourceID(source.id)">
+                        {{ source.name }}
+                    </span>
+                </mat-option>
+            </mat-select>
+            <mat-error>
+                Source ID is required field
+            </mat-error>
+        </mat-form-field>
+
+        <p *ngIf="showGasField" class="text-secondary ms-2">Quantity of gases released</p>
+
+        <div formArrayName="gas">
+            <div *ngFor="let formDataArr of formDataArray['controls']; let i = index;" [formGroupName]="i">
+
+                <div class="row">
+                    <div class="col-sm-3 mt-3 ms-2 text-secondary">
+                        <input class="formPlaceholder" matInput formControlName="gasName" readonly />
+                    </div>
+
+                    <mat-form-field class="col-sm-4" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <input class="formPlaceholder" matInput type="number" min="0" placeholder="0"
+                            formControlName="gasQuantity" required />
+
+                        <mat-error *ngIf="errorHandlingArray(i, 'gasQuantity', 'required')">
+                            Gas quantity is required.
+                        </mat-error>
+
+                        <mat-error *ngIf="errorHandlingArray(i, 'gasQuantity', 'min')">
+                            Gas quantity can't be negative.
+                        </mat-error>
+
+                    </mat-form-field>
+
+                    <mat-form-field class="col-sm-4 ms-3"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Unit</mat-label>
+                        <mat-select formControlName="gasQuantityUnitID" required>
+                            <mat-option disabled>Select unit</mat-option>
+                            <mat-option *ngFor="let unit of unitList" [value]="unit.id">
+                                <span class="d-flex justify-content-between">
+                                    {{ unit.name }} --
+                                    <span>{{ unit.uomCode }}</span>
+                                </span>
+                            </mat-option>
+                        </mat-select>
+                        <mat-error>
+                            unit ID is required field
+                        </mat-error>
+                    </mat-form-field>
+
+                </div>
+            </div>
+        </div>
+
+        <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE"
+            [id]="'daterangeFF'" style="cursor: pointer;">
+            <mat-label class="formLabel"> Release date</mat-label>
+            <input matInput ngxDaterangepickerMd id="date"
+                [locale]="{direction: 'ltr', applyLabel: 'Apply', format: 'DD-MMM-YYYY'}" [drops]="'down'"
+                [opens]="'right'" [alwaysShowCalendars]="true" [keepCalendarOpeningWithRange]="true"
+                [showDropdowns]="true" [showCancel]="true" autocomplete="off" name="dateRange"
+                formControlName="dateRange" required (ngModelChange)="formatDate()"
+                placeholder="dd-mmm-yyyy - dd-mmm-yyyy" />
+            <mat-datepicker-toggle matSuffix [for]="pickerDirective"
+                class="ngx-daterangepicker-action"></mat-datepicker-toggle>
+            <mat-error>
+                Release date is required field
+            </mat-error>
+        </mat-form-field>
+    </form>
+</div>
+<div align="end" class="py-5">
+    <button type="button" class="button btn btn-secondary me-2" mat-dialog-close>
+        Cancel
+    </button>
+    <div [ngSwitch]="action" class="d-inline">
+        <button *ngSwitchCase="FormAction.CREATE" type="submit" class="button btn btn-success"
+            (click)="createFugitiveRelease()">
+            {{ ButtonLabelEnum.CREATE_BTN_LABEL }}
+        </button>
+        <button *ngSwitchCase="FormAction.UPDATE" type="submit" class="button btn btn-success"
+            (click)="getConfirmation()" [ngClass]="{'disabled': isEqual}">
+            {{ ButtonLabelEnum.SAVE_BTN_LABEL }}
+        </button>
+        <button *ngSwitchDefault class="d-none"></button>
+    </div>
+</div>

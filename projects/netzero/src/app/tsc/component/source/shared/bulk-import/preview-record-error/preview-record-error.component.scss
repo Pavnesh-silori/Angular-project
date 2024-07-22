@@ -1,0 +1,32 @@
+$min-width-ex-small: 90px;
+$min-width-small: 120px;
+$min-width-medium: 150;
+$min-width-large: 200px;
+
+$max-width-large: 200px;
+$max-width-ex-small: 90px;
+
+
+
+@mixin min-width($width) {
+  min-width: $width;
+}
+
+@mixin max-width($width) {
+  max-width: $width;
+}
+
+.include-exclude-col {
+  @include min-width($max-width-ex-small);
+  @include max-width($min-width-small);
+}
+
+// .description-col{
+//   @include min-width($max-width-large);
+//   // @include max-width($max-width-large);
+// }
+
+.code-col, .name-col, .description-col, .type-col, .category-col, .cbam-compliant-col {
+  @include min-width($min-width-medium);
+  @include max-width($max-width-large);
+}

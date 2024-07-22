@@ -1,0 +1,82 @@
+.dataFormLabel {
+    font-size: 14px;
+    color: rgb(91, 167, 221);
+}
+
+.childLabel {
+    min-width: 320px;
+    font-size: 14px;
+}
+
+table {
+    border: 1px solid #CCC;
+    border-collapse: collapse;
+    border: none;
+    border-color: lightgray;
+}
+
+table th {
+    border: none;
+    /* Remove borders from header and data cells */
+    border-color: lightgray;
+}
+
+td {
+    border: none;
+}
+
+.width {
+    width: 700px;
+}
+
+.singleLevel {
+    color: #6c757D;
+}
+
+.twoMetricLabelWidth {
+    width: 250px;
+}
+
+.table>thead>tr>th {
+    // background-color: rgb(209, 203, 203);     
+    background-color: rgb(217, 233, 243);
+}
+
+// table tr td:nth-child(1) {
+//     width: 400px;
+//     }
+
+.my-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 5px;
+    /* Adjust the value as needed */
+    overflow: hidden;
+}
+
+.overFlowAuto {
+    overflow: auto;
+    padding-bottom: 5px !important;
+}
+
+th {
+    background-color: #032046;
+    font-weight: 400;
+}
+
+.pageSubtitle {
+    color: #808080;
+}
+
+// .button {
+//     position: fixed;
+//     bottom: 20px;
+//     right: 20px;
+//     color: #fff;
+//     // border: none;
+//     // padding: 5px 5px;
+//     cursor: pointer;
+//     border-radius: 5px;
+//     z-index: 9999 !important;
+
+// }

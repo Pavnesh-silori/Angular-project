@@ -1,0 +1,19 @@
+<div class="sidebar h100" [ngClass]="{'closed-sidebar': themeOptions.toggleCbamToolsSidebar}">
+    <div class="toggle-button-container">
+        <button class="toggle-button centerAlign"
+            (click)="themeOptions.toggleCbamToolsSidebar = !themeOptions.toggleCbamToolsSidebar">
+            <span class="material-symbols-outlined icon">
+                {{ themeOptions.toggleCbamToolsSidebar ? 'navigate_next' : 'navigate_before' }}
+            </span>
+        </button>
+    </div>
+    <div class="sidebar-container customScrollBar">
+        <ng-container *ngFor="let nav of navigations">
+            <div class="sidebar-content">
+                <a class="nav" [routerLink]="nav.route" routerLinkActive="active" routerLinkActiveOptions>
+                    <span class="nav-view">{{nav?.name}}</span>
+                </a>
+            </div>
+        </ng-container>
+    </div>
+</div>

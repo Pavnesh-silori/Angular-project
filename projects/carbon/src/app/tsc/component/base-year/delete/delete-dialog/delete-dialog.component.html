@@ -1,0 +1,54 @@
+<h6 mat-dialog-title class="dialogTitle mb-0">
+    <div class="d-flex align-items-center text-danger">
+        <span class="material-symbols-outlined me-1">
+            dangerous
+        </span>
+        <strong> {{ title }} </strong>
+    </div>
+</h6>
+
+<mat-dialog-content class="mat-typography py-0">
+    <div class="card-body breakLine">
+        <ul style="padding: 1rem; margin-bottom: 0;">
+            <li class="pb-1">
+                <strong>Drastic Impact: </strong> Deleting the {{isBaseYearSameAsGHG == CARBON_CONSTANT.YES ? 'GHG and SBTi' : 'GHG'}} base year will result in a significant and
+                irreversible impact on your
+                recalculation data.
+            </li>
+
+            <ng-container>
+
+            </ng-container>
+            
+            <ng-container *ngIf="isBaseYearSameAsGHG == CARBON_CONSTANT.YES">
+                <li class="pb-1">
+                    <strong>Deactivation of SBTI Targets: </strong> Deleting the common base year will render your SBTI
+                    targets inactive, as the base year is crucial for tracking and measuring progress in
+                    SBTi.
+                </li>
+                <li class="pb-1">
+                    <strong>Update SBTI settings: </strong> SBTi preference for setting the base year to match GHG will be updated to "No".
+                </li>
+            </ng-container>
+            <li>
+                <strong>Complete Data Loss: </strong> Be aware that this process will result in the complete loss of all
+                associated data linked to
+                the base year.
+            </li>
+        </ul>
+
+        Please consider these implications carefully before proceeding.
+        <br />
+
+        {{ confirmationMsg }}
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button class="btn btn-outline-danger border-0 me-2" type="button" [mat-dialog-close]="DialogEnum.DELETE_DR">
+        {{ btnLabel }}
+    </button>
+    <button class="btn btn-secondary me-2" type="button" mat-dialog-close>
+        Cancel
+    </button>
+</mat-dialog-actions>

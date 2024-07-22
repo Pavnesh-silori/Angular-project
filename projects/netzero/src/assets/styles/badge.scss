@@ -1,0 +1,32 @@
+.badge {
+    background-color: rgba($cbamColor, 0.2);
+    text-transform: none !important;
+    text-align: center;
+    min-width: 80px;
+    font-size: 12px;
+}
+
+.greenBadge {
+    background-color: rgba(#60ab8f, 0.2);
+    color: #60ab8f;
+}
+
+.blueBadge {
+    background-color: rgba(#7ba4c1, 0.2);
+    color: #7ba4c1;
+}
+
+.yellowBadge {
+    background-color: rgba(#dcab66, 0.2);
+    color: #dcab66;
+}
+
+.violetBadge {
+    background-color: rgba(#a68ac2, 0.2);
+    color: #a68ac2;
+}
+
+.liteBlueBadge {
+    background-color: rgba(#72bde2, 0.2);
+    color: #72bde2;
+}

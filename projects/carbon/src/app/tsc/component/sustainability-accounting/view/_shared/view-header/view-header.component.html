@@ -1,0 +1,104 @@
+<div class="cardHeaderBlock">
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="pageTitle">
+                {{ activityData?.activityName? activityData['activityName'] : 'Activity' }} record
+                <button #refreshBtn type="button" class="d-none"></button>
+            </div>
+        </div>
+        <ng-container>
+            <div class="col-sm-4"
+                [ngClass]="{'d-none': showEdit}">
+                <div class="float-end">
+                    <button class="iconBtn centerAlign text-primary updateIconHover" matTooltipPosition="below"
+                        [matTooltip]="ButtonTooltipEnum.UPDATE" matRipple
+                        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" (click)="routeToADUpdate()">
+                        <span class="material-symbols-outlined icon">
+                            edit
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="row">
+                <div class="col-sm-12 centerAlignVertical">
+                    <div class="col-form-label ms-1">
+                        {{ isEmployeeCommutingAverageMethod ? 'Survey ID:' : ( isEmployeeCommutingDistanceFuelMethod ?
+                        'Employee ID:' : 'Record ID:') }}
+                        <span class="fw-bold">
+                            {{recordID}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-5">
+            <div class="row">
+                <div class="col-sm-12 centerAlignVertical">
+                    <div class="col-form-label ms-1">Accounting period:
+                        <span class="fw-bold">
+                            {{ activityData?.accountingPeriod? activityData.accountingPeriod
+                            : COMMON_CONSTANT.HYPHEN }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="row">
+                <div class="col-sm-12 centerAlignVertical">
+                    <div class="col-form-label ms-1" *ngIf="isWasteTreatmentActivity">
+                        {{ activityData?.sourceTypeName? activityData.sourceTypeName : 'Source type' }}:
+                        <span class="fw-bold" [matTooltip]="(activityData?.sourceName && activityData.sourceName.length > 26)? 
+                            activityData.sourceName : ''" matTooltipPosition="above" matTooltipClass="nameTooltip">
+                            {{ activityData?.sourceName? (activityData.sourceName | dotdotdot: 26) :
+                            COMMON_CONSTANT.HYPHEN }}
+                        </span>
+                    </div>
+                    <div class="col-form-label ms-1" *ngIf="isEmployeeCommutingDistanceFuelMethod">Employee name
+                        <span class="fw-bold" [matTooltip]="(activityData?.surveyName && activityData.surveyName.length > 26)? 
+                            activityData.surveyName : ''" matTooltipPosition="above" matTooltipClass="nameTooltip">
+                            {{ activityData?.employeeName? (activityData.employeeName | dotdotdot: 26) :
+                            COMMON_CONSTANT.HYPHEN }}
+                        </span>
+                    </div>
+
+                    <div class="col-form-label ms-1" *ngIf="isEmployeeCommutingAverageMethod">Survey name
+                        <span class="fw-bold" [matTooltip]="(activityData?.surveyName && activityData.surveyName.length > 26)? 
+                            activityData.surveyName : ''" matTooltipPosition="above" matTooltipClass="nameTooltip">
+                            {{ activityData?.surveyName? (activityData.surveyName | dotdotdot: 26) :
+                            COMMON_CONSTANT.HYPHEN }}
+                        </span>
+                    </div>
+
+                    <div class="col-form-label ms-1"
+                        *ngIf="!isWasteTreatmentActivity && ! isEmployeeCommutingAverageMethod && !isEmployeeCommutingDistanceFuelMethod">
+                        {{ activityConfigSource?.sourceTypeName? activityConfigSource.sourceTypeName : 'Source type' }}:
+                        <span class="fw-bold" [matTooltip]="(activityConfigSource?.sourceName && activityConfigSource.sourceName.length > 26)? 
+                            activityConfigSource.sourceName : ''" matTooltipPosition="above"
+                            matTooltipClass="nameTooltip">
+                            {{ activityConfigSource?.sourceName? (activityConfigSource.sourceName | dotdotdot: 26) :
+                            COMMON_CONSTANT.HYPHEN }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-5">
+            <div class="row">
+                <div class="col-sm-12 centerAlignVertical">
+                    <div class="col-form-label ms-1">Data source:
+                        <span class="fw-bold">
+                            {{ activityData?.recordType? activityData?.recordType : COMMON_CONSTANT.HYPHEN }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

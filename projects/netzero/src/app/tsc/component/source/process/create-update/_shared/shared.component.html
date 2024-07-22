@@ -1,0 +1,689 @@
+<div class="border cardOverwrite m-3" [ngClass]="{'border-danger': !isValidCBAMProcess()}">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="headerRightContainerInner">
+                <div class="cardTitle fs-5">
+                    Process details
+                </div>
+            </div>
+        </div>
+        <div class="headerRightContainer">
+            <ng-container *ngIf="delete">
+                <button mat-icon-button class="float-end text-danger" matTooltip="Remove" matTooltipPosition="above"
+                    (click)="removeProcess()">
+                    <span class="material-symbols-outlined">
+                        delete
+                    </span>
+                </button>
+            </ng-container>
+        </div>
+    </div>
+
+    <div class="row p-3">
+        <form [formGroup]="processFG">
+            <div class="row">
+                <div class="col-sm-8">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Process name</mat-label>
+                        <input matInput placeholder="Process Name" type="text" formControlName="name" />
+                        <mat-error *ngIf="errorHandling('name', 'required')">
+                            Process name is required
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Description</mat-label>
+                        <textarea matInput matTextareaAutosize matAutosizeMinRows="2" matAutosizeMaxRows="10"
+                            [maxlength]="maxLength" formControlName="description"></textarea>
+                        <mat-hint>Total number of character remaining: <span
+                                [class]="(charactersRemainingFn(processFG) < 20)? 'text-danger': '' ">{{
+                                charactersRemainingFn(processFG) }}</span>
+                            /{{maxLength}}
+                        </mat-hint>
+                        <mat-error *ngIf="errorHandling('description', 'required')">
+                            Description is required
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!-- TODO -->
+                    <!-- <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Input field</mat-label>
+                        <input matInput placeholder="Input field" type="text" formControlName="dataInputField" />
+                        <mat-error *ngIf="errorHandling('dataInputField', 'required')">
+                            Data input field is required
+                        </mat-error>
+                    </mat-form-field> -->
+
+                    <div class="row">
+                        <div class="col-sm-10">
+                            <span class="ps-1">
+                                Is this a CBAM(Carbon Border Adjustment Mechanism) process?
+                            </span>
+                        </div>
+                        <div class="col-sm-2">
+                            <mat-slide-toggle class="radioBtnLabel float-end"
+                                formControlName="isCBAMProcess"></mat-slide-toggle>
+                        </div>
+                    </div>
+                </div>
+                <ng-container *ngIf="isCBAMProcessAC.value">
+                    <div class="row my-3">
+                        <div class="col-sm-10">
+                            <lib-message-alert [messageAlertTypeInp]="MessageAlertTypeEnum.INFO"
+                                [messageAlertIconInp]="MessageAlertIconEnum.INFO_ICON"
+                                contentInp="The CBAM process requires at least one input and one output to function properly.">
+                            </lib-message-alert>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="container">
+                            <mat-card class="cardOverwrite border p-3 mt-3">
+                                <div class="cardTitle mb-3"> Process Inputs </div>
+                                <mat-chip-list>
+                                    <mat-chip *ngFor="let inputMethod of input"
+                                        [class]="ioAlreadyAdded('INPUT', inputMethod.keyID) ? 'btn-secondary disableBtn' : 'cursorPointer'"
+                                        (click)="ioAlreadyAdded('INPUT', inputMethod.keyID) ? null : addInput(inputMethod)"
+                                        [matTooltip]="ioAlreadyAdded('INPUT', inputMethod.keyID) ? getTooltipInfo('INPUT', inputMethod.keyID) : null"
+                                        matTooltipPosition="above" matTooltipClass="infoTooltip">
+                                        <mat-icon> add </mat-icon>
+                                        <span class="fw-normal fs-6">
+                                            {{ inputMethod.name }}
+                                        </span>
+                                    </mat-chip>
+                                </mat-chip-list>
+                                <hr>
+
+                                <div formArrayName="input">
+                                    <div class="row">
+                                        <ng-container *ngFor="let input of inputFA.controls; let i = index;">
+                                            <div class="col-sm-12" [formGroupName]="i">
+                                                <div class="row">
+                                                    <div class="col-sm-3 centerAlignVertical">
+                                                        <div class="row">
+                                                            <div class="col-form-label fw-bold ms-1 mb-3">
+                                                                {{ input.get('typeName').value }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-sm-5">
+                                                        <ng-container
+                                                            *ngIf="
+                                                            getTypeKeyID('INPUT', i) == PROCESS_INPUT_ENUM.HEAT || 
+                                                            getTypeKeyID('INPUT', i) == PROCESS_INPUT_ENUM.ELECTRICITY">
+                                                            <mat-form-field class="matFieldWidth100"
+                                                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                                <mat-label class="formLabel"
+                                                                    *ngIf="getTypeKeyID('INPUT', i) == PROCESS_INPUT_ENUM.ELECTRICITY">
+                                                                    Select electricity source
+                                                                </mat-label>
+                                                                <mat-label class="formLabel"
+                                                                    *ngIf="getTypeKeyID('INPUT', i) == PROCESS_INPUT_ENUM.HEAT">
+                                                                    Select heat source
+                                                                </mat-label>
+                                                                <mat-select formControlName="entitySourceIDs" multiple>
+                                                                    <mat-option *ngFor="let type of getSubTypeList(i)"
+                                                                        [value]="type.id"
+                                                                        [matTooltip]="type.description"
+                                                                        matTooltipPosition="above"
+                                                                        matTooltipClass="infoTooltip">
+                                                                        {{ type.name }} {{ '(' + type.description + ')'
+                                                                        }}
+                                                                    </mat-option>
+                                                                </mat-select>
+                                                                <mat-error
+                                                                    *ngIf="errorHandlingInputFA(i, 'entitySourceIDs', 'required')">
+                                                                    {{ FormErrorEnum.REQUIRED }}
+                                                                </mat-error>
+                                                            </mat-form-field>
+                                                        </ng-container>
+
+                                                        <ng-container
+                                                            *ngIf="
+                                                            getTypeKeyID('INPUT', i) == PROCESS_INPUT_ENUM.RAW_MATERIAL || 
+                                                            getTypeKeyID('INPUT', i) == PROCESS_INPUT_ENUM.INTERMEDIATE_PRODUCT">
+                                                            <mat-form-field class="matFieldWidth100"
+                                                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                                <mat-label
+                                                                    *ngIf="getTypeKeyID('INPUT', i) == PROCESS_INPUT_ENUM.RAW_MATERIAL"
+                                                                    class="formLabel">Select raw material
+                                                                    used</mat-label>
+                                                                <mat-label
+                                                                    *ngIf="getTypeKeyID('INPUT', i) == PROCESS_INPUT_ENUM.INTERMEDIATE_PRODUCT"
+                                                                    class="formLabel"> Select intermediate product used
+                                                                </mat-label>
+                                                                <mat-select formControlName="entityIDs" multiple>
+                                                                    <mat-option>
+                                                                        <ngx-mat-select-search
+                                                                            [formControl]="getSearchUtil(i, 'INPUT').filterFC"
+                                                                            placeholderLabel="Search by product name"
+                                                                            noEntriesFoundLabel="No matching product found.">
+                                                                        </ngx-mat-select-search>
+                                                                    </mat-option>
+                                                                    <mat-option
+                                                                        *ngFor="let type of getSearchUtil(i, 'INPUT').filteredEntities | async"
+                                                                        [value]="type.id"
+                                                                        [matTooltip]="type?.description"
+                                                                        matTooltipPosition="above"
+                                                                        matTooltipClass="infoTooltip">
+                                                                        {{ type.name }}
+                                                                    </mat-option>
+                                                                </mat-select>
+                                                                <mat-error
+                                                                    *ngIf="errorHandlingInputFA(i, 'entityIDs', 'required')">
+                                                                    {{ FormErrorEnum.REQUIRED }}
+                                                                </mat-error>
+                                                            </mat-form-field>
+                                                        </ng-container>
+
+                                                        <ng-container
+                                                            *ngIf="getTypeKeyID('INPUT', i) == PROCESS_INPUT_ENUM.PRECURSOR_PRODUCT">
+                                                            <div class="row">
+                                                                <div class="col-sm-6">
+                                                                    <mat-form-field class="matFieldWidth100"
+                                                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                                        <mat-label class="formLabel">
+                                                                            Select precursor used
+                                                                        </mat-label>
+                                                                        <mat-select formControlName="entityIDs">
+                                                                            <mat-option>
+                                                                                <ngx-mat-select-search
+                                                                                    [formControl]="getSearchUtil(i, 'INPUT').filterFC"
+                                                                                    placeholderLabel="Search by product name"
+                                                                                    noEntriesFoundLabel="No matching precursor found.">
+                                                                                </ngx-mat-select-search>
+                                                                            </mat-option>
+                                                                            <mat-option
+                                                                                *ngFor="let type of getSearchUtil(i, 'INPUT').filteredEntities | async"
+                                                                                [value]="type.id"
+                                                                                [matTooltip]="type?.description"
+                                                                                matTooltipPosition="above"
+                                                                                matTooltipClass="infoTooltip">
+                                                                                {{ type.name }}
+                                                                            </mat-option>
+                                                                        </mat-select>
+                                                                        <mat-error
+                                                                            *ngIf="errorHandlingInputFA(i, 'entityIDs', 'required')">
+                                                                            {{ FormErrorEnum.REQUIRED }}
+                                                                        </mat-error>
+                                                                    </mat-form-field>
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <mat-form-field class="matFieldWidth100"
+                                                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                                        <mat-label class="formLabel">Select source of
+                                                                            precursor</mat-label>
+                                                                        <mat-select formControlName="entitySourceIDs"
+                                                                            multiple>
+                                                                            <mat-option
+                                                                                *ngFor="let type of getOptionList(i, 'INPUT')"
+                                                                                [value]="type.id">
+                                                                                {{ type.name }}
+                                                                            </mat-option>
+                                                                        </mat-select>
+                                                                        <mat-error
+                                                                            *ngIf="errorHandlingInputFA(i, 'entitySourceIDs', 'required')">
+                                                                            {{ FormErrorEnum.REQUIRED }}
+                                                                        </mat-error>
+                                                                    </mat-form-field>
+                                                                </div>
+                                                            </div>
+                                                        </ng-container>
+
+                                                        <ng-container
+                                                            *ngIf="getTypeKeyID('INPUT', i) == PROCESS_INPUT_ENUM.FUEL">
+                                                            <div class="fuelFieldWrapper mb-3">
+                                                                <button
+                                                                    class="btn btn-light w-100 text-start text-secondary fs-6 fuelSelectFormField fuelSelect"
+                                                                    [class]="{'fuelSelectErrorFormField': fuelRequiredError}"
+                                                                    type="button" (click)="customFuelFC.markAsTouched()"
+                                                                    [matMenuTriggerFor]="fuels">
+                                                                    <ng-container *ngIf="fuelNames; else required;">
+                                                                        <span class="fuelSelectLabel">
+                                                                            {{ fuelNames }} {{ selectedFuelNames.length
+                                                                            > 3?
+                                                                            '+' + (selectedFuelNames.length -3) : '' }}
+                                                                        </span>
+                                                                    </ng-container>
+                                                                    <ng-template #required>
+                                                                        <span
+                                                                            [class]="{'text-danger': fuelRequiredError}">
+                                                                            Select fuel used
+                                                                        </span>
+                                                                    </ng-template>
+                                                                </button>
+                                                                <mat-error class="fuelSelectError"
+                                                                    *ngIf="fuelRequiredError">
+                                                                    {{ FormErrorEnum.REQUIRED }}
+                                                                </mat-error>
+                                                                <mat-menu #fuels="matMenu">
+                                                                    <button mat-menu-item (click)="customFuel.open();"
+                                                                        [matMenuTriggerFor]="triggerMenu">
+                                                                        Custom fuels
+                                                                    </button>
+                                                                    <button mat-menu-item
+                                                                        [matMenuTriggerFor]="triggerMenu"
+                                                                        (click)="standardFuel.open()">
+                                                                        Standard fuels
+                                                                    </button>
+                                                                </mat-menu>
+                                                                <mat-menu #triggerMenu="matMenu"></mat-menu>
+
+                                                                <div class="funnelFilterDD">
+                                                                    <mat-form-field class="fuel"
+                                                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                                        <mat-label class="formLabel">
+                                                                            Select type of custom fuel consumed
+                                                                        </mat-label>
+                                                                        <mat-select #customFuel
+                                                                            [formControl]="customFuelFC" multiple>
+                                                                            <mat-option>
+                                                                                <ngx-mat-select-search
+                                                                                    [formControl]="fuelSearchUtil.customFuelSearch.filterFC"
+                                                                                    placeholderLabel="Search by custom fuel name"
+                                                                                    noEntriesFoundLabel="No matching fuel found.">
+                                                                                </ngx-mat-select-search>
+                                                                            </mat-option>
+                                                                            <mat-option
+                                                                                *ngFor="let type of fuelSearchUtil.customFuelSearch.filteredEntities | async"
+                                                                                [value]="type.id"
+                                                                                [matTooltip]="type?.description"
+                                                                                matTooltipPosition="above"
+                                                                                matTooltipClass="infoTooltip">
+                                                                                {{ type.name }}
+                                                                            </mat-option>
+                                                                        </mat-select>
+                                                                    </mat-form-field>
+                                                                </div>
+
+                                                                <div class="funnelFilterDD">
+                                                                    <mat-form-field class="fuel"
+                                                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                                        <mat-label class="formLabel">
+                                                                            Select type of standard fuel consumed
+                                                                        </mat-label>
+                                                                        <mat-select #standardFuel
+                                                                            [formControl]="standardFuelFC" multiple>
+                                                                            <mat-option>
+                                                                                <ngx-mat-select-search
+                                                                                    [formControl]="fuelSearchUtil.standardFuelSearch.filterFC"
+                                                                                    placeholderLabel="Search by standard fuel name"
+                                                                                    noEntriesFoundLabel="No matching fuel found.">
+                                                                                </ngx-mat-select-search>
+                                                                            </mat-option>
+                                                                            <mat-option
+                                                                                *ngFor="let type of fuelSearchUtil.standardFuelSearch.filteredEntities | async"
+                                                                                [value]="type.id"
+                                                                                [matTooltip]="type?.description"
+                                                                                matTooltipPosition="above"
+                                                                                matTooltipClass="infoTooltip">
+                                                                                {{ type.name }}
+                                                                            </mat-option>
+                                                                        </mat-select>
+                                                                    </mat-form-field>
+                                                                </div>
+                                                            </div>
+                                                        </ng-container>
+                                                    </div>
+
+
+                                                    <div class="col-sm-3">
+                                                        <ng-container
+                                                            *ngIf="
+                                                                getTypeKeyID('INPUT', i) == PROCESS_INPUT_ENUM.RAW_MATERIAL || 
+                                                                getTypeKeyID('INPUT', i) == PROCESS_INPUT_ENUM.INTERMEDIATE_PRODUCT || 
+                                                                getTypeKeyID('INPUT', i) == PROCESS_INPUT_ENUM.PRECURSOR_PRODUCT">
+
+                                                            <ng-container *ngTemplateOutlet="addProduct; 
+                                                                context: {
+                                                                    noProductAvailable: getSubTypeList(i).length == 0
+                                                                }">
+                                                            </ng-container>
+                                                        </ng-container>
+                                                    </div>
+
+                                                    <!-- <ng-container *ngIf="inputFA.length > 1"> -->
+
+                                                    <div class="col-sm-1 centerAlignVertical">
+                                                        <button mat-icon-button class="float-end text-danger mb-3"
+                                                            matTooltip="Remove input" matTooltipPosition="above"
+                                                            (click)="removeInput(i)">
+                                                            <span class="material-symbols-outlined">
+                                                                delete
+                                                            </span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                            </mat-card>
+
+                            <mat-card class="cardOverwrite border p-3 mt-3">
+                                <div class="cardTitle mb-3"> Process Outputs </div>
+                                <mat-chip-list>
+                                    <mat-chip *ngFor="let outputMethod of output"
+                                        class="cursorPointer centerAlignVertical px-2"
+                                        [class]="ioAlreadyAdded('OUTPUT', outputMethod.keyID) ? 'btn-secondary disableBtn' : 'cursorPointer'"
+                                        (click)="ioAlreadyAdded('OUTPUT', outputMethod.keyID) ? null : addOutput(outputMethod)"
+                                        [matTooltip]="ioAlreadyAdded('OUTPUT', outputMethod.keyID) ? getTooltipInfo('OUTPUT', outputMethod.keyID) : null"
+                                        matTooltipPosition="above" matTooltipClass="infoTooltip">
+                                        <mat-icon> add </mat-icon>
+                                        <span class="fw-normal fs-6">
+                                            {{ outputMethod.name }}
+                                        </span>
+                                    </mat-chip>
+                                </mat-chip-list>
+                                <hr />
+
+                                <div formArrayName="output">
+                                    <div class="row my-3">
+                                        <div class="col-sm-10">
+                                            <lib-message-alert [messageAlertTypeInp]="MessageAlertTypeEnum.INFO"
+                                                [messageAlertIconInp]="MessageAlertIconEnum.INFO_ICON"
+                                                contentInp="Output can only include either the finished product or a co-product, but not both.">
+                                            </lib-message-alert>
+                                        </div>
+                                    </div>
+                                    <ng-container *ngFor="let output of outputFA.controls; let i = index;">
+                                        <div [formGroupName]="i">
+                                            <div class="row">
+                                                <div class="col-sm-3 centerAlignVertical">
+                                                    <div class="row">
+                                                        <div class="col-form-label fw-bold ms-1 mb-3">
+                                                            {{ output.get('typeName').value }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-5">
+                                                    <ng-container
+                                                        *ngIf="getTypeKeyID('OUTPUT', i) == PROCESS_OUTPUT_ENUM.ELECTRICITY">
+                                                        <ng-container *ngTemplateOutlet="labelValue;
+                                                                context: {
+                                                                    value: getOutputSubTypeList(i)[0].name
+                                                                }">
+                                                        </ng-container>
+                                                        <mat-form-field class="matFieldWidth100 d-none"
+                                                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                            <mat-label class="formLabel">Select what happens to
+                                                                electricity generated</mat-label>
+                                                            <mat-select formControlName="entitySourceIDs" disabled>
+                                                                <mat-option *ngFor="let type of getOutputSubTypeList(i)"
+                                                                    [value]="type.id" [matTooltip]="type?.description"
+                                                                    matTooltipPosition="above"
+                                                                    matTooltipClass="infoTooltip">
+                                                                    {{ type.name }} &nbsp; {{ '(' + type?.description +
+                                                                    ')'
+                                                                    }}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                            <mat-error
+                                                                *ngIf="errorHandlingOutputFA(i, 'entitySourceIDs', 'required')">
+                                                                {{ FormErrorEnum.REQUIRED }}
+                                                            </mat-error>
+                                                        </mat-form-field>
+                                                    </ng-container>
+
+                                                    <ng-container
+                                                        *ngIf="getTypeKeyID('OUTPUT', i) == PROCESS_OUTPUT_ENUM.HEAT">
+                                                        <mat-form-field class="matFieldWidth100"
+                                                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                            <mat-label class="formLabel">Select what happens to
+                                                                heat generated</mat-label>
+                                                            <mat-select formControlName="entitySourceIDs" multiple>
+                                                                <mat-option *ngFor="let type of getOutputSubTypeList(i)"
+                                                                    [value]="type.id" [matTooltip]="type?.description"
+                                                                    matTooltipPosition="above"
+                                                                    matTooltipClass="infoTooltip">
+                                                                    {{ type.name }} &nbsp; {{ '(' + type?.description +
+                                                                    ')'
+                                                                    }}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                            <mat-error
+                                                                *ngIf="errorHandlingOutputFA(i, 'entitySourceIDs', 'required')">
+                                                                {{ FormErrorEnum.REQUIRED }}
+                                                            </mat-error>
+                                                        </mat-form-field>
+                                                    </ng-container>
+
+                                                    <ng-container
+                                                        *ngIf="getTypeKeyID('OUTPUT', i) == PROCESS_OUTPUT_ENUM.PROCESS_EMISSIONS">
+                                                        <mat-form-field class="matFieldWidth100"
+                                                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                            <mat-label class="formLabel">Select process</mat-label>
+                                                            <mat-select formControlName="entityIDs" multiple>
+                                                                <mat-option>
+                                                                    <ngx-mat-select-search
+                                                                        [formControl]="getSearchUtil(i, 'OUTPUT').filterFC"
+                                                                        placeholderLabel="Search by process name"
+                                                                        noEntriesFoundLabel="No matching process found.">
+                                                                    </ngx-mat-select-search>
+                                                                </mat-option>
+                                                                <mat-option
+                                                                    *ngFor="let type of getSearchUtil(i, 'OUTPUT').filteredEntities | async"
+                                                                    [value]="type.id" [matTooltip]="type?.description"
+                                                                    matTooltipPosition="above"
+                                                                    matTooltipClass="infoTooltip">
+                                                                    {{ type.name }} &nbsp; {{ '(' + type?.description +
+                                                                    ')'
+                                                                    }}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                            <mat-error
+                                                                *ngIf="errorHandlingOutputFA(i, 'entityIDs', 'required')">
+                                                                {{ FormErrorEnum.REQUIRED }}
+                                                            </mat-error>
+                                                        </mat-form-field>
+                                                    </ng-container>
+
+                                                    <ng-container
+                                                        *ngIf="
+                                                        getTypeKeyID('OUTPUT', i) == PROCESS_OUTPUT_ENUM.CO_PRODUCT || 
+                                                        getTypeKeyID('OUTPUT', i) == PROCESS_OUTPUT_ENUM.BY_PRODUCT_AND_WASTE">
+                                                        <mat-form-field class="matFieldWidth100"
+                                                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                            <mat-label class="formLabel">Select product</mat-label>
+                                                            <mat-select formControlName="entityIDs" multiple>
+                                                                <mat-option>
+                                                                    <ngx-mat-select-search
+                                                                        [formControl]="getSearchUtil(i, 'OUTPUT').filterFC"
+                                                                        placeholderLabel="Search by product name"
+                                                                        noEntriesFoundLabel="No matching product found.">
+                                                                    </ngx-mat-select-search>
+                                                                </mat-option>
+                                                                <mat-option
+                                                                    *ngFor="let type of getSearchUtil(i, 'OUTPUT').filteredEntities | async"
+                                                                    [value]="type.id" [matTooltip]="type?.description"
+                                                                    matTooltipPosition="above"
+                                                                    matTooltipClass="infoTooltip">
+                                                                    {{ type.name }}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                            <mat-error
+                                                                *ngIf="errorHandlingOutputFA(i, 'entityIDs', 'required')">
+                                                                {{ FormErrorEnum.REQUIRED }}
+                                                            </mat-error>
+                                                        </mat-form-field>
+                                                    </ng-container>
+
+                                                    <ng-container
+                                                        *ngIf="
+                                                        getTypeKeyID('OUTPUT', i) == PROCESS_OUTPUT_ENUM.INTERMEDIATE_PRODUCT || 
+                                                        getTypeKeyID('OUTPUT', i) == PROCESS_OUTPUT_ENUM.PRECURSOR_PRODUCT">
+                                                        <div class="row">
+                                                            <div class="col-sm-6">
+                                                                <mat-form-field class="matFieldWidth100"
+                                                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                                    <mat-label
+                                                                        *ngIf="getTypeKeyID('OUTPUT', i) == PROCESS_OUTPUT_ENUM.PRECURSOR_PRODUCT"
+                                                                        class="formLabel">
+                                                                        Select precursor product produced
+                                                                    </mat-label>
+                                                                    <mat-label
+                                                                        *ngIf="getTypeKeyID('OUTPUT', i) == PROCESS_OUTPUT_ENUM.INTERMEDIATE_PRODUCT"
+                                                                        class="formLabel">
+                                                                        Select intermediate product produced
+                                                                    </mat-label>
+                                                                    <mat-select formControlName="entityIDs">
+                                                                        <mat-option>
+                                                                            <ngx-mat-select-search
+                                                                                [formControl]="getSearchUtil(i, 'OUTPUT').filterFC"
+                                                                                placeholderLabel="Search by product name"
+                                                                                noEntriesFoundLabel="No matching product found.">
+                                                                            </ngx-mat-select-search>
+                                                                        </mat-option>
+                                                                        <mat-option
+                                                                            *ngFor="let type of getSearchUtil(i, 'OUTPUT').filteredEntities | async"
+                                                                            [value]="type.id"
+                                                                            [matTooltip]="type?.description"
+                                                                            matTooltipPosition="above"
+                                                                            matTooltipClass="infoTooltip">
+                                                                            {{ type.name }}
+                                                                        </mat-option>
+                                                                    </mat-select>
+                                                                    <mat-error
+                                                                        *ngIf="errorHandlingOutputFA(i, 'entityIDs', 'required')">
+                                                                        {{ FormErrorEnum.REQUIRED }}
+                                                                    </mat-error>
+                                                                </mat-form-field>
+                                                            </div>
+                                                            <div class="col-sm-6">
+                                                                <mat-form-field class="matFieldWidth100"
+                                                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                                    <mat-label class="formLabel">Select what happens to
+                                                                        {{ getTypeKeyID('OUTPUT', i) ==
+                                                                        PROCESS_OUTPUT_ENUM.PRECURSOR_PRODUCT ?
+                                                                        'precursor' : 'intermediate'}} product
+                                                                    </mat-label>
+                                                                    <mat-select formControlName="entitySourceIDs"
+                                                                        multiple>
+                                                                        <mat-option
+                                                                            *ngFor="let type of getOptionList(i, 'OUTPUT')"
+                                                                            [value]="type.id">
+                                                                            {{ type.name }}
+                                                                        </mat-option>
+                                                                    </mat-select>
+                                                                    <mat-error
+                                                                        *ngIf="errorHandlingOutputFA(i, 'entitySourceIDs', 'required')">
+                                                                        {{ FormErrorEnum.REQUIRED }}
+                                                                    </mat-error>
+                                                                </mat-form-field>
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+
+                                                    <ng-container
+                                                        *ngIf="getTypeKeyID('OUTPUT', i) == PROCESS_OUTPUT_ENUM.FINISHED_PRODUCT">
+                                                        <mat-form-field class="matFieldWidth100"
+                                                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                            <mat-label class="formLabel">Finished product</mat-label>
+                                                            <mat-select formControlName="entityIDs">
+                                                                <mat-option>
+                                                                    <ngx-mat-select-search
+                                                                        [formControl]="getSearchUtil(i, 'OUTPUT').filterFC"
+                                                                        placeholderLabel="Search by product name"
+                                                                        noEntriesFoundLabel="No matching product found.">
+                                                                    </ngx-mat-select-search>
+                                                                </mat-option>
+                                                                <mat-option
+                                                                    *ngFor="let type of getSearchUtil(i, 'OUTPUT').filteredEntities | async"
+                                                                    [value]="type.id">
+                                                                    {{ type.name }}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                            <mat-error
+                                                                *ngIf="errorHandlingOutputFA(i, 'entityIDs', 'required')">
+                                                                {{ FormErrorEnum.REQUIRED }}
+                                                            </mat-error>
+                                                        </mat-form-field>
+                                                    </ng-container>
+
+                                                    <ng-container
+                                                        *ngIf="getTypeKeyID('OUTPUT', i) == PROCESS_OUTPUT_ENUM.WASTE_GAS_STREAM">
+                                                        <mat-form-field class="matFieldWidth100"
+                                                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                            <mat-label class="formLabel">
+                                                                Select what happens to waste gas stream
+                                                            </mat-label>
+                                                            <mat-select formControlName="entitySourceIDs" multiple>
+                                                                <mat-option *ngFor="let type of getOutputSubTypeList(i)"
+                                                                    [value]="type.id" [matTooltip]="type.description"
+                                                                    matTooltipPosition="above"
+                                                                    matTooltipClass="infoTooltip">
+                                                                    {{ type.name }} &nbsp; {{ '(' + type?.description +
+                                                                    ')'
+                                                                    }}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                            <mat-error
+                                                                *ngIf="errorHandlingOutputFA(i, 'entitySourceIDs', 'required')">
+                                                                {{ FormErrorEnum.REQUIRED }}
+                                                            </mat-error>
+                                                        </mat-form-field>
+                                                    </ng-container>
+                                                </div>
+
+                                                <div class="col-sm-3">
+                                                    <ng-container
+                                                        *ngIf="
+                                                        getTypeKeyID('OUTPUT', i) == PROCESS_OUTPUT_ENUM.CO_PRODUCT || 
+                                                        getTypeKeyID('OUTPUT', i) == PROCESS_OUTPUT_ENUM.BY_PRODUCT_AND_WASTE || 
+                                                        getTypeKeyID('OUTPUT', i) == PROCESS_OUTPUT_ENUM.PRECURSOR_PRODUCT || 
+                                                        getTypeKeyID('OUTPUT', i) == PROCESS_OUTPUT_ENUM.INTERMEDIATE_PRODUCT || 
+                                                        getTypeKeyID('OUTPUT', i) == PROCESS_OUTPUT_ENUM.FINISHED_PRODUCT">
+                                                        <ng-container *ngTemplateOutlet="addProduct; 
+                                                            context: {
+                                                                noProductAvailable: getOutputSubTypeList(i).length == 0
+                                                            }">
+                                                        </ng-container>
+                                                    </ng-container>
+                                                </div>
+
+                                                <!-- <ng-container *ngIf="outputFA.length > 1"> -->
+                                                <div class="col-sm-1 centerAlignVertical">
+                                                    <button mat-icon-button class="float-end text-danger mb-3"
+                                                        matTooltip="Remove output" matTooltipPosition="above"
+                                                        (click)="removeOutput(i)">
+                                                        <span class="material-symbols-outlined">
+                                                            delete
+                                                        </span>
+                                                    </button>
+                                                </div>
+                                                <!-- </ng-container> -->
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </mat-card>
+
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </form>
+    </div>
+</div>
+
+<ng-template #labelValue let-label="label" let-value="value">
+    <div class="row">
+        <div class="col-sm-12">
+            <span class="fw-bold"> {{ value }} </span>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #addProduct let-noProductAvailable="noProductAvailable">
+    <ng-container *ngIf="noProductAvailable; else newProduct;">
+        <span> There are no product available <a type="button" class="btn btn-link" (click)="createProduct()">Click to
+                create new product</a> </span>
+    </ng-container>
+    <ng-template #newProduct>
+        <a type="button" class="btn btn-link mt-3" (click)="createProduct()">Click to add new product</a>
+    </ng-template>
+</ng-template>

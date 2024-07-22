@@ -1,0 +1,6 @@
+.img {
+	max-height: 350px;
+}
+::ng-deep .mat-horizontal-stepper-header {
+    pointer-events: none !important;
+}

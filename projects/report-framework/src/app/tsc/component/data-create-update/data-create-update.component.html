@@ -1,0 +1,149 @@
+<div class="card main-card cardOverwrite">
+    <div class="card-body ms-3 py-0">
+        <form [formGroup]="reportDataForm">
+            <div class="overFlowAuto" *ngFor="let df of dynamicForm">
+                <div [formGroupName]="df.controlNameKey">
+                    <div *ngIf="df.layoutKey == 'div'">
+                        <span class="fw-bold dataFormLabel singleLevel">{{ df.label }}</span><br>
+
+                        <mat-form-field class="width" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <input *ngIf="df.inputTypeKey !='textArea' && df.inputTypeKey != 'number'" matInput
+                                [type]="df.inputTypeKey" formControlName="value" 
+                                (change)="oneLevelValidation(df.controlNameKey)"
+                                [email]="reportDataForm['controls'][df.controlNameKey]['controls']['value'].errors?.email" />
+
+                            <input *ngIf="df.inputTypeKey =='number'" matInput min="0" [type]="df.inputTypeKey"
+                                formControlName="value" 
+                                (change)="oneLevelValidation(df.controlNameKey)"
+                                oninput="this.value >= 0 ? null : this.value=0" />
+
+                            <textarea *ngIf="df.inputTypeKey =='textArea'" rows="4" matInput formControlName="value">
+                            </textarea>
+
+                            <mat-error
+                                *ngIf="reportDataForm['controls'][df.controlNameKey]['controls']['value'].hasError('email')">
+                                Enter a valid email ID.
+                            </mat-error>
+                            
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <table *ngIf="df.layoutKey == 'table' && df.controlTypeKey == 'array' && df.type == 2"
+                    class="table table-responsive table-bordered caption-top">
+                    <caption class="fw-bold dataFormLabel singleLevel">{{ df.label }}</caption>
+                    <thead class="tableHeader border-bottom">
+                        <tr>
+                            <th *ngFor="let th of df.children">{{ th.label }}</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody [formArrayName]="df.controlNameKey">
+                        <tr *ngFor="let group of getFormArray(df.controlNameKey).controls; let i = index;"
+                            [formGroupName]="i">
+                            <td *ngFor="let child of df.children">
+                                <div [formGroupName]="child.controlNameKey">
+                                    <mat-form-field class="twoMetricLabelWidth"
+                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <input *ngIf="child.inputTypeKey !='textArea' && child.inputTypeKey !='number'"
+                                            matInput [type]="child.inputTypeKey" formControlName="value" />
+
+                                        <input *ngIf="child.inputTypeKey =='number'" matInput min="0"
+                                            [type]="child.inputTypeKey" formControlName="value"
+                                            oninput="this.value >= 0 ? null : this.value=0" />
+
+                                        <textarea *ngIf="child.inputTypeKey =='textArea'" rows="1" matInput
+                                            formControlName="value">
+                                        </textarea>
+
+                                    </mat-form-field>
+                                </div>
+                            </td>
+                            <td *ngIf="(reportingFrameworkKeyID !== ReportingFrameworkKeyIDEnum.GRI && isReadOnly === false)">
+                                <button class="btn btn-sm pt-2 text-danger" type="button"
+                                    (click)="removeFormArray(df.controlNameKey, i)" [disabled]="isReadOnly">
+                                    <span class="material-symbols-outlined">delete</span>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <button *ngIf="(reportingFrameworkKeyID !== ReportingFrameworkKeyIDEnum.GRI && isReadOnly === false)" class="btn btn-sm btn-primary mt-2" type="button"
+                        (click)="addFormArray(df.controlNameKey, df.children)" [disabled]="isReadOnly">
+                        <span class="material-symbols-outlined fs-5 pt-1">add</span>
+                    </button>
+                </table>
+
+
+                <table *ngIf="df.layoutKey == 'table' && df.controlTypeKey == 'array' && df.type == 3"
+                    class="table table-responsive table-bordered caption-top my-table">
+
+                    <caption class="fw-bold dataFormLabel singleLevel">{{ df.label }}</caption>
+                    <thead class="border-bottom">
+                        <tr>
+                            <th></th>
+                            <th *ngFor="let th of df.children[0].columns; let i = index">
+                                {{ th.label}}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody [formArrayName]="df.controlNameKey"
+                        *ngFor="let formArr of getFormArray(df.controlNameKey)['controls']; let i = index;">
+                        <tr [formGroupName]="i" *ngFor="let child of df.children">
+                            <td class="childLabel">{{ child.label }}</td>
+                            <td [formArrayName]="child['controlNameKey']"
+                                *ngFor="let children of getChildFormArrayChild(df.controlNameKey, i, child['controlNameKey'])['controls']; let j = index">
+                                <div [formGroupName]="j">
+                                    <mat-form-field [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <input
+                                            *ngIf="children.controls.inputTypeKey.value != 'textArea' && children.controls.inputTypeKey.value != 'number'"
+                                            matInput [type]="children.controls.inputTypeKey.value"
+                                            formControlName="value" />
+
+                                        <input *ngIf="children.controls.inputTypeKey.value == 'number'" matInput min="0"
+                                            [type]="children.controls.inputTypeKey.value" formControlName="value"
+                                            oninput="this.value >= 0 ? null : this.value=0" />
+
+                                        <textarea *ngIf="children.controls.inputTypeKey.value =='textArea'" rows="1"
+                                            matInput formControlName="value">
+                                        </textarea>
+
+                                    </mat-form-field>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br>
+            </div>
+        </form>
+    </div>
+    <div class="mb-1 me-5" *ngIf="pageType == 'report-fill'">
+        <button *ngIf="!isUpdate && showSaveBtn" class="btn btn-sm btn-success float-end" type="button" (click)="submitForm()">
+            Save
+        </button>
+
+        <button *ngIf="!isUpdate && showApproverBtn" class="btn btn-sm btn-success float-end" type="button" (click)="submitForm()">
+            Approved
+        </button>
+
+        <button *ngIf="isUpdate && showSaveBtn" class="btn btn-sm btn-success float-end" type="button" (click)="updateData()">
+            Update
+        </button>
+
+        <button *ngIf="isUpdate && showApproverBtn" class="btn btn-sm btn-success float-end" type="button" (click)="updateData()">
+            Approved
+        </button>
+
+        <button *ngIf="(!showSaveBtn && !showApproverBtn)" class="btn btn-sm float-end disableBtn"
+         type="button" #tooltip="matTooltip"
+         matTooltipPosition="above" matTooltip="You are not assignee and approver for this question. So you can't save this question.">
+            Save
+        </button>
+        
+
+        <!-- <button class="btn btn-secondary float-end me-2" type="button" (click)="cancelBtn()">
+            Cancel
+        </button> -->
+    </div>
+</div>

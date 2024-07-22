@@ -1,0 +1,199 @@
+<mat-card class="border cardOverwrite mb-3">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="fw-bold pb-2"> Details </div>
+
+            <form [formGroup]="detailFG">
+                <div class="row">
+                    <ng-container *ngFor="let field of viewFormFields">
+                        <ng-container *ngIf="field['title'] !== 'activityInfo'">
+                            <ng-container [ngSwitch]="field['input']">
+                                <div [class]="field['width']" *ngSwitchCase="'input'">
+                                    <mat-form-field class="matFieldWidth100"
+                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <mat-label class="formLabel">{{ field['label'] }}</mat-label>
+                                        <input class="formPlaceholder" matInput [type]="field['type']"
+                                            [formControlName]="field['control']" [placeholder]="field['placeholder']">
+                                        <mat-error *ngFor="let validators of field['validators']">
+                                            <ng-container
+                                                *ngIf="errorHandling(field['control'], validators['validator'])">
+                                                {{ validators['error'] }}
+                                            </ng-container>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div *ngSwitchCase="'select'" [class]="field['width']">
+                                    <ng-container *ngIf="field['key'] !=='calculationApproachID'">
+                                        <mat-form-field class="matFieldWidth100"
+                                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                            <mat-label class="formLabel">{{ field['label'] }}</mat-label>
+                                            <mat-select [formControlName]="field['control']"
+                                                [mulitple]="field['multiple']"
+                                                (selectionChange)="selectionChange(field['key'], $event.value)">
+                                                <mat-option *ngIf="field['search']">
+                                                    <ngx-mat-select-search
+                                                        [formControl]="getSearchUtil(field['searchUtil']['name'])['filterFC']"
+                                                        [placeholderLabel]="field['searchUtil']['placeholderLabel']"
+                                                        [noEntriesFoundLabel]="field['searchUtil']['noEntriesFoundLabel']">
+                                                    </ngx-mat-select-search>
+                                                </mat-option>
+                                                <mat-option
+                                                    *ngFor="let entity of 
+                                        (field['search']? (getSearchUtil(field['searchUtil']['name'])['filteredEntities'] | async) : field['entityList'])"
+                                                    [value]="entity['id']">
+                                                    {{ entity['name'] }}
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error *ngFor="let validators of field['validators']">
+                                                <ng-container
+                                                    *ngIf="errorHandling(field['control'], validators['validator'])">
+                                                    {{ validators['error'] }}
+                                                </ng-container>
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </ng-container>
+
+                                    <ng-container *ngIf="field['key']=='calculationApproachID' && isScope3Activity">
+                                        <mat-form-field class="matFieldWidth100"
+                                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                            <mat-label class="formLabel">{{ field['label'] }}</mat-label>
+                                            <mat-select [formControlName]="field['control']"
+                                                [mulitple]="field['multiple']"
+                                                (selectionChange)="selectionChange(field['key'], $event.value)">
+                                                <mat-option *ngIf="field['search']">
+                                                    <ngx-mat-select-search
+                                                        [formControl]="getSearchUtil(field['searchUtil']['name'])['filterFC']"
+                                                        [placeholderLabel]="field['searchUtil']['placeholderLabel']"
+                                                        [noEntriesFoundLabel]="field['searchUtil']['noEntriesFoundLabel']">
+                                                    </ngx-mat-select-search>
+                                                </mat-option>
+                                                <mat-option
+                                                    *ngFor="let entity of 
+                                        (field['search']? (getSearchUtil(field['searchUtil']['name'])['filteredEntities'] | async) : field['entityList'])"
+                                                    [value]="entity['id']">
+                                                    {{ entity['name'] }}
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error *ngFor="let validators of field['validators']">
+                                                <ng-container
+                                                    *ngIf="errorHandling(field['control'], validators['validator'])">
+                                                    {{ validators['error'] }}
+                                                </ng-container>
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </ng-container>
+                                </div>
+                                
+                                <div *ngSwitchCase="'date'" [class]="field['width']">
+                                    <mat-form-field [id]="field['id']" (click)="dateService.openDatepickerOnClick(date)"
+                                        (keydown.enter)="dateService.openDatepickerOnClick(date)"
+                                        (keydown.arrowdown)="dateService.openDatepickerOnClick(date)"
+                                        class="matFieldWidth100 cursorPointer"
+                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <mat-label class="formLabel"> {{ field['label'] }}</mat-label>
+                                        <input matInput (dateInput)="formatDate($event.value, field['control'])"
+                                            class="noFocus" [matDatepicker]="date" [formControlName]="field['control']"
+                                            readonly [min]="field['min']" [max]="field['max']" [disabled]="disabled" />
+                                        <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+                                        <mat-datepicker #date [disabled]="disabled"
+                                            (closed)="dateService.takeFocusAway(field['id'])"></mat-datepicker>
+                                        <mat-error *ngFor="let validators of field['validators']">
+                                            <ng-container
+                                                *ngIf="errorHandling(field['control'], validators['validator'])">
+                                                {{ validators['error'] }}
+                                            </ng-container>
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div *ngSwitchDefault [class]="field['width']">
+                                    <ng-container *ngIf="field['title'] === 'Scope'">
+                                        <div class="centerAlignVertical">
+                                            <div class="form-control-plaintext fw-bold">
+                                                <!-- <span matTooltipPosition="above"
+                                                    [matTooltip]="(field['value']?.length) > wordLength ? field['value'] : ''"
+                                                    matTooltipClass="nameTooltip">
+                                                    {{ field['value'] | dotdotdot: wordLength }}
+                                                </span> -->
+                                                <span class="badge rounded-pill cbamBadge"
+                                                    *ngIf="field['value'] !=='--'">
+                                                    {{ field['value'] }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+
+                                    <ng-container *ngIf="field['title'] !== 'Scope'">
+                                        <div class="row pb-3 w-100">
+                                            <div class="col-sm-6 centerAlignVertical">
+                                                <ng-container *ngIf="field['title'] === 'Database'">
+                                                    <div class="col-form-label ms-1">
+                                                        {{ field['titleKey'] }}
+                                                    </div>
+                                                </ng-container>
+                                                <ng-container *ngIf="field['title'] !== 'Database'">
+                                                    <div class="col-form-label ms-1">
+                                                        {{ field['title'] }}
+                                                    </div>
+                                                </ng-container>
+                                            </div>
+                                            <div class="col-sm-6 centerAlignVertical">
+                                                <div class="form-control-plaintext fw-bold">
+                                                    <span matTooltipPosition="above"
+                                                        [matTooltip]="(field['value']?.length) > wordLength ? field['value'] : ''"
+                                                        matTooltipClass="nameTooltip">
+                                                        {{ field['value'] | dotdotdot: wordLength }}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+
+                                </div>
+                            </ng-container>
+                        </ng-container>
+
+
+                        <ng-container *ngIf="field['title'] === 'activityInfo'">
+                            <div class="col-sm-12">
+                                <div class="alert alert-primary roundedBorder">
+                                    <div class="info-container d-flex align-items-start">
+                                        <span>
+                                            <svg class="extraInfoCardIcon mt-1">
+                                                <use xlink:href="#info-fill" />
+                                            </svg>
+                                        </span>
+                                        <span class="extraInfoCardText ps-3 lh-lg">
+                                            This activity requires cradle-to-gate emission factors for purchased
+                                            goods or services. These emission factors can either be
+                                            supplier-specific emission factors provided by the supplier, or
+                                            industry-average emission factors sourced from a secondary database.
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12">
+                                <span class="fw-bold">
+                                    Version Details
+                                </span>
+                            </div>
+                        </ng-container>
+
+                    </ng-container>
+                </div>
+            </form>
+
+            <factor-source #source></factor-source>
+        </div>
+    </div>
+
+</mat-card>
+
+<svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+    </symbol>
+</svg>

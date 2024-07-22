@@ -1,0 +1,437 @@
+<div class="ms-1 me-3">
+    <div class="sectionHeader">
+        <span class="header"> Details </span>
+    </div>
+
+    <ng-container *ngIf="isScope2">
+        <ng-container
+            *ngTemplateOutlet="scope2; context: { data: activityData, config: activityConfigData }"></ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="isScope3SpendBased">
+        <ng-container
+            *ngTemplateOutlet="spendBased; context: { data: activityData, config: activityConfigData }"></ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="isStationaryCombustion">
+        <ng-container
+            *ngTemplateOutlet="stationaryCombustion; context: { activityData: activityData, config: activityConfigData }"></ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="isMobileCombustion">
+        <ng-container
+            *ngTemplateOutlet="mobileCombustion; context: { activityData: activityData, config: activityConfigData }"></ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="isWasteTreatmentActivity">
+        <ng-container *ngTemplateOutlet="wasteTreatment; context: { activityData: activityData }"></ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="isEmployeeCommutingDistanceFuelMethod">
+        <ng-container *ngTemplateOutlet="employeeCommuting; context: { activityData: activityData}">
+        </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="isEmployeeCommutingAverageMethod">
+        <ng-container *ngTemplateOutlet="surveyDetails; context: { activityData: activityData}">
+        </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="isOtherFugutiveActivity">
+        <ng-container *ngTemplateOutlet="otherFugutiveActivity">
+        </ng-container>
+    </ng-container>
+</div>
+
+<ng-template #otherFugutiveActivity>
+    <div class="ms-2 row mt-2">
+        <ng-container *ngTemplateOutlet="value; 
+            context: { 
+                title: 'Calculation method', 
+                value: activityData?.calculationMethod 
+            }">
+        </ng-container>
+        <ng-container *ngTemplateOutlet="user; 
+            context: {
+                title: 'Created by', 
+                name: activityData?.createdBy, 
+                image: activityData?.createdByImgUrl
+            }">
+        </ng-container>
+        <ng-container *ngTemplateOutlet="user; 
+            context: {
+                title: 'Updated by', 
+                name: activityData?.lastUpdatedBy, 
+                image: activityData?.lastUpdatedByImgUrl
+            }">
+        </ng-container>
+    </div>
+</ng-template>
+
+<ng-template #surveyDetails let-activityData="activityData">
+    <div class="ms-2 row mt-2">
+        <ng-container *ngTemplateOutlet="value; 
+            context: { 
+                title: 'Total employee', 
+                value: activityData?.totalEmployee
+            }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="value;
+         context: { 
+            title: 'Sample set', 
+            value: activityData?.sampleSetPct }">
+            {{ activityData?.sampleSet | percentage}}
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="value; 
+            context: { 
+                title: 'Expected responses', 
+                value: activityData?.expectedResponses 
+            }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="value; 
+            context: { 
+                title: 'Recieved responses', 
+                value: activityData?.recivedResponses 
+            }">
+        </ng-container>
+
+
+        <ng-container *ngTemplateOutlet="value; 
+            context: { 
+                title: 'Calculation Method', 
+                value: activityData?.calculationMethod 
+            }">
+        </ng-container>
+        <ng-container *ngTemplateOutlet="user; 
+            context: {
+                title: 'Created by', 
+                name: activityData?.createdBy, 
+                image: activityData?.createdByImgUrl
+            }">
+        </ng-container>
+        <ng-container *ngTemplateOutlet="user; 
+            context: {
+                title: 'Updated by', 
+                name: activityData?.lastUpdatedBy, 
+                image: activityData?.lastUpdatedByImgUrl
+            }">
+        </ng-container>
+    </div>
+</ng-template>
+
+<ng-template #employeeCommuting let-activityData="activityData">
+    <div class="ms-2 row mt-2">
+        <ng-container *ngTemplateOutlet="value; 
+            context: { 
+                title: 'Email ID', 
+                value: activityData?.email 
+            }">
+        </ng-container>
+        <ng-container *ngTemplateOutlet="value; 
+            context: { 
+                title: 'Employee code', 
+                value: activityData?.employeeCode 
+            }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="value; 
+            context: { 
+                title: 'Calculation Method', 
+                value: activityData?.calculationMethod 
+            }">
+        </ng-container>
+        <ng-container *ngTemplateOutlet="user; 
+            context: {
+                title: 'Created by', 
+                name: activityData?.createdBy, 
+                image: activityData?.createdByImgUrl
+            }">
+        </ng-container>
+        <ng-container *ngTemplateOutlet="user; 
+            context: {
+                title: 'Updated by', 
+                name: activityData?.lastUpdatedBy, 
+                image: activityData?.lastUpdatedByImgUrl
+            }">
+        </ng-container>
+    </div>
+</ng-template>
+
+<ng-template #wasteTreatment let-activityData="activityData">
+    <div class="ms-2 row mt-2">
+        <ng-container *ngTemplateOutlet="value; 
+            context: { 
+                title: 'Calculation method', 
+                value: activityData?.calculationMethod 
+            }">
+        </ng-container>
+        <ng-container *ngTemplateOutlet="user; 
+            context: {
+                title: 'Created by', 
+                name: activityData?.createdBy, 
+                image: activityData?.createdByImgUrl
+            }">
+        </ng-container>
+        <ng-container *ngTemplateOutlet="user; 
+            context: {
+                title: 'Updated by', 
+                name: activityData?.lastUpdatedBy, 
+                image: activityData?.lastUpdatedByImgUrl
+            }">
+        </ng-container>
+    </div>
+</ng-template>
+
+<ng-template #mobileCombustion let-activityData="activityData" let-config="config">
+    <div class="ms-2 row mt-2">
+        <ng-container *ngTemplateOutlet="value; 
+            context: { 
+                title: 'Vehicle type', 
+                value: config?.vehicleTypeName 
+            }">
+        </ng-container>
+        <ng-container *ngTemplateOutlet="value; 
+            context: { 
+                title: 'Activity data input method', 
+                value: config?.distanceDataInputMethodName 
+            }">
+        </ng-container>
+        <ng-container *ngTemplateOutlet="value; 
+            context: { 
+                title: 'Fuel data input method', 
+                value: config?.fuelDataInputMethodName 
+            }">
+        </ng-container>
+        <ng-container *ngIf="config?.distanceDataInputMethodKeyID == DataInputMethodKeyIDEnum.ODOMETER_READING">
+            <ng-container *ngTemplateOutlet="valueAndUnit; 
+                context: {  
+                    title: 'Odometer rollover value', 
+                    value: config?.meterRollOver,
+                    unit: config?.meterUomCode
+                }">
+            </ng-container>
+        </ng-container>
+        <ng-container *ngTemplateOutlet="user; 
+            context: {
+                title: 'Created by', 
+                name: activityData?.createdBy, 
+                image: activityData?.createdByImgUrl
+            }">
+        </ng-container>
+        <ng-container *ngTemplateOutlet="user; 
+            context: {
+                title: 'Updated by', 
+                name: activityData?.lastUpdatedBy, 
+                image: activityData?.lastUpdatedByImgUrl
+            }">
+        </ng-container>
+    </div>
+</ng-template>
+
+<ng-template #stationaryCombustion let-activityData="activityData" let-config="config">
+    <div class="ms-2 row mt-2">
+        <ng-container *ngTemplateOutlet="value; 
+            context: { 
+                title: 'Fuel entered using', 
+                value: config?.fuelMonitorDataInputMethodName 
+            }">
+        </ng-container>
+        <ng-container *ngTemplateOutlet="value; 
+            context: { 
+                title: 'Fuel input method', 
+                value: config?.dataInputMethodName 
+            }">
+        </ng-container>
+        <ng-container *ngIf="config?.dataInputMethodKeyID == DataInputMethodKeyIDEnum.METER_READING">
+            <ng-container *ngTemplateOutlet="valueAndUnit; 
+                context: {  title: 'Meter rollover value', 
+                    value: config?.meterRollOver,
+                    unit: config?.meterUomCode
+                }">
+            </ng-container>
+        </ng-container>
+        <ng-container *ngTemplateOutlet="user; 
+            context: {
+                title: 'Created by', 
+                name: activityData?.createdBy, 
+                image: activityData?.createdByImgUrl
+            }">
+        </ng-container>
+        <ng-container *ngTemplateOutlet="user; 
+            context: {
+                title: 'Last updated by', 
+                name: activityData?.lastUpdatedBy, 
+                image: activityData?.lastUpdatedByImgUrl
+            }">
+        </ng-container>
+    </div>
+</ng-template>
+
+<ng-template #scope2 let-data="activityData" let-config="config">
+    <div class="ms-2 row mt-2">
+        <div class="row">
+            <div class="d-flex justify-content-between">
+                <div class="col-form-label ms-1"> Contractual instrument </div>
+                <div class="col-form-value fw-bold"> {{ config?.contractualInstrumentName?
+                    config.contractualInstrumentName : COMMON_CONSTANT.HYPHEN}} </div>
+            </div>
+        </div>
+        <ng-container *ngIf="config?.haveContractualInstrument == 'YES'">
+            <div class="row">
+                <div class="d-flex justify-content-between">
+                    <div class="col-form-label ms-1"> % Renewable </div>
+                    <div class="col-form-value fw-bold"> {{ config?.energy?
+                        config?.['energy']['percentage'] + " %" : COMMON_CONSTANT.HYPHEN }} </div>
+                </div>
+            </div>
+        </ng-container>
+        <div class="row">
+            <div class="d-flex justify-content-between">
+                <div class="col-form-label ms-1"> Activity data input method </div>
+                <div class="col-form-value fw-bold">
+                    {{ config?.dataInputMethodName? config.dataInputMethodName :
+                    COMMON_CONSTANT.HYPHEN }}
+                </div>
+            </div>
+        </div>
+        <ng-container *ngIf="config?.dataInputMethodKeyID == DataInputMethodKeyIDEnum.METER_READING">
+            <div class="row">
+                <div class="d-flex justify-content-between">
+                    <div class="col-form-label ms-1"> Meter rollover value </div>
+                    <div class="col-form-value fw-bold">
+                        {{ config?.meterRolloverValue? config.meterRolloverValue + " " +
+                        config.meterRolloverUomCode:
+                        COMMON_CONSTANT.HYPHEN }}
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="config?.haveContractualInstrument == 'NO'">
+            <ng-container *ngIf="config?.dataInputMethodKeyID == DataInputMethodKeyIDEnum.AREA_BASED_METHOD">
+                <div class="row">
+                    <div class="d-flex justify-content-between">
+                        <div class="col-form-label ms-1"> Total area </div>
+                        <div class="col-form-value fw-bold">
+                            {{ config?.facilityArea? config.facilityArea + " " +
+                            config.facilityAreaUomCode:
+                            COMMON_CONSTANT.HYPHEN }}
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </ng-container>
+        <div class="row">
+            <div class="d-flex justify-content-between">
+                <div class="col-form-label ms-1"> Who entered this data </div>
+                <div class="col-form-value fw-bold">
+                    <ng-container *ngIf="activityData?.createdBy; else hyphen">
+                        <img class="rounded-circle border profileImageBodyView"
+                            [src]="activityData.createdByImgUrl || userService.defaultImage(activityData['createdBy'], ProfileImg.PROFILE_IMAGE_DROPDOWN_NAME_VIEW)"
+                            alt="profile image">
+                        <span> {{ activityData['createdBy'] }}
+                        </span>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="d-flex justify-content-between">
+                <div class="col-form-label ms-1"> Last updated by </div>
+                <div class="col-form-value fw-bold">
+                    <ng-container *ngIf="activityData?.lastUpdatedBy; else hyphen">
+                        <img class="rounded-circle border profileImageBodyView"
+                            [src]="activityData.lastUpdatedByImgUrl || userService.defaultImage(activityData['lastUpdatedBy'], ProfileImg.PROFILE_IMAGE_DROPDOWN_NAME_VIEW)"
+                            alt="profile image">
+                        <span> {{ activityData['lastUpdatedBy'] }}
+                        </span>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #spendBased let-data="data" let-config="config">
+    <div class="ms-2 row mt-2">
+        <div class="row">
+            <div class="d-flex justify-content-between">
+                <div class="col-form-label ms-1"> Account name </div>
+                <div class="col-form-value fw-bold"> {{ data?.accountName?
+                    data.accountName : COMMON_CONSTANT.HYPHEN}} </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="d-flex justify-content-between">
+                <div class="col-form-label ms-1"> Configured by </div>
+                <div class="col-form-value fw-bold">
+                    <ng-container *ngIf="config?.configAssigneeName; else hyphen">
+                        <img class="rounded-circle border profileImageBodyView"
+                            [src]="config.configAssigneeImgUrl || userService.defaultImage(config['configAssigneeName'], ProfileImg.PROFILE_IMAGE_DROPDOWN_NAME_VIEW)"
+                            alt="profile image">
+                        <span> {{ config['configAssigneeName'] }}
+                        </span>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="d-flex justify-content-between">
+                <div class="col-form-label ms-1"> Categorised by </div>
+                <div class="col-form-value fw-bold">
+                    <ng-container *ngIf="config?.categoriseAssigneeName; else hyphen">
+                        <img class="rounded-circle border profileImageBodyView"
+                            [src]="config.categoriseAssigneeImgUrl || userService.defaultImage(config['categoriseAssigneeName'], ProfileImg.PROFILE_IMAGE_DROPDOWN_NAME_VIEW)"
+                            alt="profile image">
+                        <span> {{ config['categoriseAssigneeName'] }}
+                        </span>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #value let-title="title" let-value="value">
+    <div class="row">
+        <div class="d-flex justify-content-between">
+            <div class="col-form-label ms-1"> {{ title }} </div>
+            <div class="col-form-value fw-bold" *ngIf="value; else hyphen;">
+                {{ value }}
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #valueAndUnit let-title="title" let-value="value" let-unit="unit">
+    <div class="row">
+        <div class="d-flex justify-content-between">
+            <div class="col-form-label ms-1"> {{ title }} </div>
+            <div class="col-form-value fw-bold" *ngIf="value; else hyphen;">
+                {{ value + " " + unit}}
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #user let-title="title" let-name="name" let-image="image">
+    <div class="row">
+        <div class="d-flex justify-content-between">
+            <div class="col-form-label ms-1"> {{ title }} </div>
+            <div class="col-form-value fw-bold">
+                <ng-container *ngIf="name; else hyphen">
+                    <img class="rounded-circle border profileImageBodyView"
+                        [src]="image || userService.defaultImage(name, ProfileImg.PROFILE_IMAGE_DROPDOWN_NAME_VIEW)"
+                        alt="profile image">
+                    <span> {{ name }} </span>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #hyphen>
+    <span class="fw-bold"> {{ COMMON_CONSTANT.HYPHEN }} </span>
+</ng-template>

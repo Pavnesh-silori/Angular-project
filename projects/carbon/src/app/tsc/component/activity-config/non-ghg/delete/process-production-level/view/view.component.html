@@ -1,0 +1,35 @@
+<ng-container *ngIf="activityConfig">
+    <mat-card class="border cardOverwrite">
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Process',
+                        value: activityConfig.activityConfigData.processName,
+                        class: 'pt-1'
+                    }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Product',
+                        value: getProductList(activityConfig.activityConfigSource[0].source),
+                        class: 'pt-3'
+                    }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Entered data using',
+                        value: activityConfig.activityConfigData.dataInputMethodStdKeyID,
+                        class: 'pt-3'
+                    }">
+        </ng-container>
+    </mat-card>
+</ng-container>
+
+<ng-template #labelValue let-label="label" let-value="value" let-class="class" let-valueClass="valueClass">
+    <div class="row" [class]="class">
+        <div class="col-sm-4">
+            {{ label }}
+        </div>
+        <div class="col-sm-8 fw-bold" [class]="valueClass">
+            {{ value ? value : COMMON_CONSTANT.HYPHEN }}
+        </div>
+    </div>
+</ng-template>

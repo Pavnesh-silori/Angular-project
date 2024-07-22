@@ -1,0 +1,180 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+    </symbol>
+</svg>
+<div class="card main-card cardOverwrite">
+    <div class="headerContainer p-0">
+        <div class="col-sm-11">
+            <div class="col-sm-11">
+                <div class="pageTitle">
+                    {{ isUpdate ? 'Update' : 'New' }} near term maintenance target
+                </div>
+                <div>Set a target to keep your scope 1 and scope 2 emissions near zero.</div>
+            </div>
+        </div>
+        <div class="col-sm-1 mb-auto">
+            <button mat-icon-button mat-dialog-close cdkFocusInitial class="float-end matDialogClose" matTooltip="Close"
+                matTooltipPosition="before">
+                <span class="material-symbols-outlined">
+                    close
+                </span>
+            </button>
+        </div>
+    </div>
+
+    <div class="container mt-4">
+        <mat-card class="cardOverwrite p-0">
+            <form [formGroup]="targetFG" (ngSubmit)="isValidForm()">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="col-sm-10">
+                            <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Target name</mat-label>
+                                <input matInput type="text" formControlName="name" />
+                                <mat-error *ngIf="errorHandling('name', 'required')">
+                                    Field is mandatory.
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <ng-container *ngTemplateOutlet="value; 
+                            context: {
+                                title: 'Target type',
+                                value: 'Science based target'
+                            }">
+                        </ng-container>
+
+                        <ng-container *ngTemplateOutlet="value; 
+                            context: {
+                                title: 'Target option',
+                                value: 'Near term maintenance target'
+                            }">
+                        </ng-container>
+
+                        <ng-container *ngTemplateOutlet="value; 
+                            context: {
+                                title: 'Scope coverage',
+                                value: 'Scope 1 & 2'
+                            }">
+                        </ng-container>
+
+                        <div class="col-sm-10 pt-3">
+                            <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel"> SBTi base year </mat-label>
+                                <mat-select formControlName="baseYear">
+                                    <mat-option *ngFor="let zeroEmissionYears of zeroEmissionYear"
+                                        [value]="zeroEmissionYears['year']">
+                                        {{ zeroEmissionYears['year'] }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <ng-container *ngTemplateOutlet="value; 
+                            context: {
+                                title: 'Target year',
+                                value: NearTerm['MAX_TARGET_YEAR']
+                            }">
+                        </ng-container>
+
+                        <div class="col-sm-10 pt-3">
+                            <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Total {{ manitenanceLabel }} reduction (%)</mat-label>
+                                <input matInput type="number" [min]="NearTerm.MIN_TOTAL_REDUCTION_PERCENTAGE"
+                                    formControlName="totalReductionPct" />
+                                <mat-error *ngIf="errorHandling('totalReductionPct', 'required')">
+                                    Field is mandatory.
+                                </mat-error>
+                                <mat-error *ngIf="errorHandling('totalReductionPct', 'min')">
+                                    <ng-container *ngIf="netzero; else maintenance;">
+                                        Total reduction can not be negative
+                                    </ng-container>
+                                    <ng-template #maintenance>
+                                        Total reduction can not be less than 42%
+                                    </ng-template>
+                                </mat-error>
+                                <mat-error *ngIf="errorHandling('totalReductionPct', 'max')">
+                                    Total reduction can not exceed 100%
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <ng-container *ngTemplateOutlet="value; 
+                            context: {
+                                title: 'Annual ' + manitenanceLabel + 'reduction (%)',
+                                value: annualReduction + '%'
+                            }">
+                        </ng-container>
+
+                        <!-- <div class="row">
+                            <div class="col-sm-9 pt-3">
+                                <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Exclude emissions (%)</mat-label>
+                                    <input matInput type="number" [min]="NearTerm['MIN_TOTAL_REDUCTION_PCT']"
+                                        formControlName="excludedEmissionS1S2Pct" />
+                                    <mat-error *ngIf="errorHandling('excludedEmissionS1S2Pct', 'required')">
+                                        Field is mandatory.
+                                    </mat-error>
+                                    <mat-error *ngIf="errorHandling('excludedEmissionS1S2Pct', 'min')">
+                                        Excluded emissions can not be negative
+                                    </mat-error>
+                                    <mat-error *ngIf="errorHandling('excludedEmissionS1S2Pct', 'max')">
+                                        Excluded emissions can not be greater than 5%
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-1 centerAlign">
+                                <span class="material-symbols-outlined cursorPointer" #tooltip="matTooltip"
+                                    matTooltipPosition="above" matTooltipClass="nameTooltip"
+                                    matTooltip="You can choose to exclude upto 5% of combined Scope 1 and Scope 2 emissions to be aligned with SBTi near term targets.">
+                                    info
+                                </span>
+                            </div>
+                        </div> -->
+                        <ng-container *ngTemplateOutlet="value; 
+                        context: {
+                            title: 'Exclude emissions(%)',
+                            value: SBTiTarget['DEFAULT_EXCLUDED_EMISSION_PCT'] + '%'
+                        }">
+                        </ng-container>
+
+                        <div class="row">
+                            <div class="col-sm-10">
+                                <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Status</mat-label>
+                                    <mat-select formControlName="status">
+                                        <mat-option *ngFor="let status of statusList" [value]="status.value">
+                                            {{ status.view }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div align="end">
+                    <button class="btn btn-success ms-2">
+                        {{ isUpdate ? ButtonLabelEnum.UPDATE_BTN_LABEL : ButtonLabelEnum.SAVE_BTN_LABEL }}
+                    </button>
+                </div>
+            </form>
+        </mat-card>
+    </div>
+</div>
+
+<ng-template #value let-title="title" let-value="value">
+    <div class="row pb-3">
+        <div class="col-sm-6 ps-3"> {{ title }} </div>
+        <div class="col-sm-6 fw-bold">
+            <span *ngIf="value; else hyphen;">
+                {{ value }}
+            </span>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #hyphen>
+    <span class="fw-bold"> {{ COMMON_CONSTANT.HYPHEN }} </span>
+</ng-template>

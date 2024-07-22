@@ -1,0 +1,31 @@
+<h6 mat-dialog-title class="dialogTitle mb-2">
+    <div class="d-flex justify-content-between">
+        <div class="d-flex align-items-center text-warning">
+            <span class="material-symbols-outlined me-1">
+                warning
+            </span>
+            <strong> {{ title }} </strong>
+        </div>
+        <button mat-icon-button [mat-dialog-close]="DialogEnum.CLOSE_DR" cdkFocusInitial
+            class="float-end matDialogClose" matTooltip="Close" matTooltipPosition="before">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+    </div>
+</h6>
+
+<mat-dialog-content class="mat-typography">
+    <div [innerHTML]="body"></div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button class="button btn btn-warning px-4" type="button" matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER"
+        [mat-dialog-close]="DialogEnum.CONFIRM_DR">
+        {{ btnLabel }}
+    </button>
+    <button class="button btn btn-secondary ms-2" type="button" matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER"
+        [mat-dialog-close]="DialogEnum.CLOSE_DR">
+        {{ ButtonLabelEnum.CANCEL_BTN_LABEL}}
+    </button>
+</mat-dialog-actions>

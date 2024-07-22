@@ -1,0 +1,193 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="headerRightContainerInner">
+                <div class="pageTitle">
+                    Process View
+                </div>
+            </div>
+            <div class="subTitle">
+                Take a look at all the details of your process
+            </div>
+        </div>
+        <div class="headerRightContainer">
+            <ng-container *ngIf="isPageView; else dialogClose;">
+                <div class="headerRightContainerInner">
+                    <button class="btn btn-sm btn-light centerAlign me-3 py-1 refreshBtn"
+                        (click)="getProcessByID(processID)" matRipple
+                        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                        [matTooltip]="ButtonTooltipEnum.REFRESH">
+                        <span class="material-symbols-outlined">
+                            refresh
+                        </span>
+                    </button>
+                    <button class="btn btn-sm btn-light centerAlign me-3 py-1 updateBtn"
+                        [routerLink]="['/source/process', processID, 'update']" matRipple
+                        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                        [matTooltip]="ButtonTooltipEnum.UPDATE">
+                        <span class="material-symbols-outlined">
+                            edit
+                        </span>
+                    </button>
+                </div>
+            </ng-container>
+            <ng-template #dialogClose>
+                <button mat-icon-button mat-dialog-close cdkFocusInitial class="float-end matDialogClose"
+                    matTooltip="Close" matTooltipPosition="before">
+                    <span class="material-symbols-outlined" [mat-dialog-close]="DialogEnum['CLOSE_DR']">
+                        close
+                    </span>
+                </button>
+            </ng-template>
+        </div>
+    </div>
+
+    <div class="mt-3 px-3">
+        <mat-card class="border cardOverwrite my-2">
+            <div class="ps-1">
+                <div class="cardTitle">Details</div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-10" [ngClass]="{'col-sm-12': !isPageView}">
+                    <ng-container *ngTemplateOutlet="labelAndValue;
+                        context: {
+                            title: 'Name',
+                            value: process.name
+                        }">
+                    </ng-container>
+                </div>
+                <div class="col-sm-10" [ngClass]="{'col-sm-12': !isPageView}">
+                    <ng-container *ngTemplateOutlet="labelAndValue;
+                            context: {
+                                title: 'Description',
+                                value: process.description
+                            }">
+                    </ng-container>
+                </div>
+                <!-- TODO -->
+                <!-- <div class="col-sm-10" [ngClass]="{'col-sm-12': !isPageView}">
+                    <ng-container *ngTemplateOutlet="labelAndValue;
+                            context: {
+                                title: 'Data input field',
+                                value: process.dataInputField
+                            }">
+                    </ng-container>
+                </div> -->
+
+                <div class="col-sm-10" [ngClass]="{'col-sm-12': !isPageView}">
+                    <ng-container *ngTemplateOutlet="labelAndValue;
+                            context: {
+                                title: 'Process type',
+                                value: process.isCBAMProcess? 'CBAM' : 'Non-CBAM'
+                            }">
+                    </ng-container>
+                </div>
+            </div>
+        </mat-card>
+
+        <ng-container *ngIf="process.isCBAMProcess">
+            <mat-card class="border cardOverwrite my-2">
+                <div class="row">
+                    <div class="col-sm-10" [ngClass]="{'col-sm-12': !isPageView}">
+                        <div class="ps-1">
+                            <div class="cardTitle">Process Inputs</div>
+                        </div>
+
+                        <ng-container *ngFor="let input of process.input">
+                            <ng-container *ngTemplateOutlet="labelAndList;
+                                context: {
+                                    entity: input,
+                                    label: input.type.name,
+                                    list: getValue(input, 'INPUT'),
+                                    source: getSource(input, 'INPUT'),
+                                    type: 'INPUT'
+                                }">
+                            </ng-container>
+                        </ng-container>
+                    </div>
+                </div>
+            </mat-card>
+
+            <mat-card class="border cardOverwrite mt-2 mb-4">
+                <div class="row">
+                    <div class="col-sm-10" [ngClass]="{'col-sm-12': !isPageView}">
+                        <div class="ps-1">
+                            <div class="cardTitle">Process Outputs</div>
+                        </div>
+
+                        <ng-container *ngFor="let output of process.output">
+                            <ng-container *ngTemplateOutlet="labelAndList;
+                                context: {
+                                    label: output.type.name,
+                                    entity: output,
+                                    list: getValue(output, 'OUTPUT'),
+                                    source: getSource(output, 'OUTPUT'),
+                                    type: 'OUTPUT'
+                                }">
+                            </ng-container>
+                        </ng-container>
+                    </div>
+                </div>
+            </mat-card>
+        </ng-container>
+    </div>
+</div>
+
+<ng-template #labelAndValue let-title="title" let-value="value" let-unit="unit">
+    <div class="row">
+        <div class="col-sm-5 centerAlignVertical">
+            <div class="col-form-label ms-1">
+                {{ title }}
+            </div>
+        </div>
+        <div class="col-sm-7">
+            <div class="col-form-value fw-bold my-auto" [matTooltip]="value?.length > value_length? value : ''"
+                matTooltipPosition="above" matTooltipClass="infoTooltip">
+                <ng-container *ngIf="value?? value; else hyphen;">
+                    {{ value | dotdotdot: value_length}}
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #labelAndList let-entity="entity" let-label="label" let-list="list" let-source="source" let-type="type">
+    <div class="row">
+        <div class="col-sm-5">
+            <div class="col-form-label ms-1">
+                {{ label }}
+            </div>
+        </div>
+        <div class="col-sm-7 centerAlignVertical">
+            <div class="col-form-value fw-bold my-auto">
+                <ng-container *ngIf="list?? list; else hyphen;">
+                    <ul>
+                        <ng-container *ngFor="let obj of list">
+                            <li [matTooltip]="obj.name?.length > value_length? obj.name : ''" matTooltipPosition="above"
+                                matTooltipClass="infoTooltip">{{obj.name | dotdotdot: value_length }} &nbsp;
+
+                                {{ showSource(getSource(entity, type, obj.id))? '(' : '' }}
+                                {{ showSource(getSource(entity, type, obj.id))? getSource(entity, type, obj.id)[0].name
+                                : null }}
+                                <button *ngIf="entityCount(getSource(entity, type, obj.id))"
+                                    class="btn btn-sm rounded-circle circleBtn"
+                                    [matTooltip]="formatTooltip(getSource(entity, type, obj.id))"
+                                    matTooltipClass="infoTooltip" matTooltipPosition="above">
+                                    {{ entityCount(getSource(entity, type, obj.id)) }}
+                                </button>
+                                {{ showSource(getSource(entity, type, obj.id))? ')' : '' }}
+                            </li>
+                        </ng-container>
+                    </ul>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #hyphen>
+    <span class="fw-bold">
+        {{ COMMON_CONSTANT.HYPHEN }}
+    </span>
+</ng-template>

@@ -1,0 +1,30 @@
+<h6 mat-dialog-title class="dialogTitle mb-0">
+    <div class="d-flex align-items-center text-danger">
+        <span class="material-symbols-outlined me-1">
+            dangerous
+        </span>
+        <strong> {{ title }} </strong>
+    </div>
+</h6>
+
+<mat-dialog-content class="mat-typography py-0">
+    <div class="card-body breakLine">
+        {{ message }}
+        <ng-container *ngIf="page == 'SBTI'">
+            <a *ngIf="!isBaseYearSameAsGHG" target="_blank" [routerLink]="['/carbon-setting/base-year']">
+                base year settings
+            </a>.
+        </ng-container>
+        <br /> <br />
+        {{ confirmationMsg }}
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button class="btn btn-outline-danger border-0 me-2" type="button" [mat-dialog-close]="DialogEnum.DELETE_DR">
+        {{ btnLabel }}
+    </button>
+    <button class="btn btn-secondary me-2" type="button" mat-dialog-close>
+        {{  DialogEnum.CANCEL_DR }}
+    </button>
+</mat-dialog-actions>

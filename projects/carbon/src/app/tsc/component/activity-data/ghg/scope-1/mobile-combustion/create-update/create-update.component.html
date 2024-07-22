@@ -1,0 +1,36 @@
+<div class="alert alert-warning alert-dismissible centerAlignVertical roundedBorder m-5"
+    *ngIf="emissionFactorDatabaseID == null">
+    <svg class="bi flex-shrink-0 me-3 extraInfoCardIcon">
+        <use xlink:href="#info-fill" />
+    </svg>
+    <div class="extraInfoCardText pe-4">
+        Preference is not set.
+        <a href="carbon-setting/preference/calculation">
+            Click here to set
+            preference</a>
+    </div>
+</div>
+
+<fuel-distance-travelled
+    *ngIf="(emissionFactorDatabaseID != null && dIMKeyID == DataInputMethodKeyIDEnum.DISTANCE_TRAVELLED && fuelMonitorDIMKeyID == DataInputMethodKeyIDEnum.FUEL_AMOUNT)"
+    (formGroupChange)="onChildFormGroupChange($event)"
+    [activityConfig]="activityConfig" [allVechile]="allVechile" 
+    [activityID]="activityID" [docFileList]="docFileList" [emissionFactorDatabaseID]="emissionFactorDatabaseID" [emissionFactorDatabaseKeyID]="emissionFactorDatabaseKeyID"></fuel-distance-travelled>
+
+<price-distance-travelled
+    *ngIf="(emissionFactorDatabaseID != null &&  dIMKeyID == DataInputMethodKeyIDEnum.DISTANCE_TRAVELLED && fuelMonitorDIMKeyID == DataInputMethodKeyIDEnum.PRICE_BASED_METHOD)"
+    (formGroupChange)="onChildFormGroupChange($event)"
+    [activityConfig]="activityConfig" [allVechile]="allVechile" 
+    [activityID]="activityID" [docFileList]="docFileList" [emissionFactorDatabaseID]="emissionFactorDatabaseID" [emissionFactorDatabaseKeyID]="emissionFactorDatabaseKeyID"></price-distance-travelled>
+
+<fuel-odometer-reading
+    *ngIf="(emissionFactorDatabaseID != null && dIMKeyID == DataInputMethodKeyIDEnum.ODOMETER_READING && fuelMonitorDIMKeyID == DataInputMethodKeyIDEnum.FUEL_AMOUNT)"
+    (formGroupChange)="onChildFormGroupChange($event)"
+    [activityConfig]="activityConfig" [allVechile]="allVechile" 
+    [activityID]="activityID" [docFileList]="docFileList" [emissionFactorDatabaseID]="emissionFactorDatabaseID" [emissionFactorDatabaseKeyID]="emissionFactorDatabaseKeyID"></fuel-odometer-reading>
+
+<price-odometer-reading
+    *ngIf="(emissionFactorDatabaseID != null && dIMKeyID == DataInputMethodKeyIDEnum.ODOMETER_READING && fuelMonitorDIMKeyID == DataInputMethodKeyIDEnum.PRICE_BASED_METHOD)"
+    (formGroupChange)="onChildFormGroupChange($event)"
+    [activityConfig]="activityConfig" [allVechile]="allVechile" 
+    [activityID]="activityID" [docFileList]="docFileList" [emissionFactorDatabaseID]="emissionFactorDatabaseID" [emissionFactorDatabaseKeyID]="emissionFactorDatabaseKeyID"></price-odometer-reading>

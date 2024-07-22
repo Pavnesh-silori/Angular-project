@@ -1,0 +1,341 @@
+<!-- <div class="card main-card cardOverwrite h100 pt-3 ms-2">
+	<div class="overflowX h100">
+		<form [formGroup]="activityDataFG">
+			<table>
+				<thead class="theadStickyOverwrite">
+					<tr>
+						<th class="fw-normal ps-3 setWidth">Waste type </th>
+						<th class="fw-normal ps-3">Accounting period </th>
+						<th class="fw-normal ps-3">Waste treatment method </th>
+						<th class="fw-normal ps-3">Quantity of waste treated </th>
+						<th class="fw-normal ps-3">Waste treated unit </th>
+						<th class="fw-normal ps-5">Bill </th>
+						<th class="fw-normal ps-3" *ngIf="action === 'create'">Delete</th>
+					</tr>
+				</thead>
+
+				<tbody formArrayName="wasteTreatedDetails">
+					<tr *ngFor="let emission of wasteTreatedDetailsFA.controls; let i = index">
+						<ng-container [formGroupName]="i">
+							<td class="ps-3 pt-2">
+								<ng-container>
+									<mat-form-field class="mat-field-width-100"
+										[appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+										<mat-label class="formLabel">Select Waste Type
+										</mat-label>
+										<mat-select formControlName="wasteTypeID"
+											(selectionChange)="getTreatmentMethods($event, i)">
+											<mat-option *ngFor="let wasteType of wasteTypeAndTreatmentMethod"
+												[value]="wasteType.id">
+												<span>{{ wasteType.name }}
+												</span>
+											</mat-option>
+										</mat-select>
+									</mat-form-field>
+								</ng-container>
+							</td>
+
+							<td class="ps-3 pt-2">
+								<mat-form-field class="mat-field-width-100 cursorPointer" id="daterangeFF"
+									[appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+									<mat-label class="formLabel">Accounting Period
+									</mat-label>
+									<input type="text" matInput ngxDaterangepickerMd
+										[locale]="{direction: 'ltr', applyLabel: 'Apply', format: 'DD-MMM-YYYY'}"
+										[drops]="'down'" [opens]="'right'" [alwaysShowCalendars]="true"
+										[keepCalendarOpeningWithRange]="true" [showDropdowns]="true" [showCancel]="true"
+										autocomplete="off" name="dateRange" formControlName="accountingPeriod"
+										(ngModelChange)="formatDate()" readonly />
+								</mat-form-field>
+							</td>
+
+							<td class="ps-3 pt-2">
+								<mat-form-field class="mat-field-width-100 cursorPointer"
+									[appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+									<mat-label class="formLabel">Select Waste Treatment Method
+									</mat-label>
+									<mat-select formControlName="wasteTreatmentMethodID">
+										<mat-option
+											*ngFor="let method of this.activityDataFG.get('wasteTreatedDetails').at(i).controls['rows'].value"
+											[value]="method.id">
+											{{ method.name }}
+										</mat-option>
+									</mat-select>
+								</mat-form-field>
+							</td>
+
+							<td class="ps-3 pt-2">
+								<mat-form-field class="mat-field-width-100 cursorPointer"
+									[appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE"
+									matTooltip="Waste Treated">
+									<mat-label class="formLabel">Waste Treated</mat-label>
+									<input class="formPlaceholder" matInput type="number" min="0" placeholder="0"
+										formControlName="wasteTreated" />
+									<mat-error *ngIf="emission.get('wasteTreated').hasError('min')">
+										Minimum value is 0.
+									</mat-error>
+								</mat-form-field>
+							</td>
+
+							<td class="ps-3 pt-2">
+								<mat-form-field class="mat-field-width-100"
+									[appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+									<mat-label class="formLabel">Select unit
+									</mat-label>
+									<mat-select formControlName="wasteTreatedUnitID">
+										<mat-option *ngFor="let units of massUnit" [value]="units.id">
+											<span class="d-flex justify-content-between">
+												{{ units.name }} -
+											</span>
+										</mat-option>
+									</mat-select>
+								</mat-form-field>
+							</td>
+
+							<div class="col-sm-3 ps-3 pt-3">
+								<div class="row setWidth"
+									*ngIf="this.activityDataFG.get('wasteTreatedDetails').at(i).controls['docName'].value == null">
+									<div class="d-flex justify-content-between field-width">
+										<button class="button btn btn-primary uploadBtn" type="button"
+											(click)="uploadDoc(i)">
+											Attach doc
+										</button>
+										<input #fileInput type="file" accept="application/pdf" class="d-none"
+											(click)="fileInput.value = null" (input)="fileUpload($event)"
+											[disabled]="isReadOnly" />
+
+									</div>
+								</div>
+								<div class="row ms-1 setWidth"
+									*ngIf="this.activityDataFG.get('wasteTreatedDetails').at(i).controls['docName'].value != null">
+									<div class="col-sm-3 docIcon" matSuffix mat-icon-button mat-raised-button
+										[matTooltip]="this.activityDataFG.get('wasteTreatedDetails').at(i).controls['docName'].value"
+										matTooltipPosition="below">
+										<img height="30px" src="assets/images/default-doc.ico"
+											alt="noc document preview">
+									</div>
+									<div *ngIf="action === 'create'" class="col-sm-2 ms-2">
+										<button type="button" class="btn" mat-icon-button (click)="removeFile(i)">
+											<span class="material-symbols-outlined text-danger">
+												delete
+											</span>
+										</button>
+									</div>
+								</div>
+							</div>
+
+
+							<td *ngIf="action === 'create'">
+								<button type="button" class="btn" mat-icon-button (click)="onDeleteRow(i)">
+									<span class="material-symbols-outlined text-danger"> delete </span>
+								</button>
+							</td>
+
+						</ng-container>
+					</tr>
+					<div class="ps-3">
+						<button *ngIf="action === 'create'" class="btn btn-success" (click)="add()">
+							<fa-icon [icon]="faPlus"></fa-icon> &nbsp;
+							Waste Type
+						</button>
+					</div>
+
+				</tbody>
+			</table>
+		</form>
+	</div>
+</div> -->
+
+<mat-card class="cardOverwrite border">
+    <div class="cardTitle">Activity Data</div>
+    <form [formGroup]="activityDataFG">
+        <ng-container formArrayName="wasteTreatedDetails">
+            <ng-container *ngFor="let emission of wasteTreatedDetailsFA.controls; let i = index" [formGroupName]="i">
+                <mat-card class="border cardOverwrite mt-3">
+                <div class="row">
+                    <div class="col-sm-4">
+                        <mat-form-field class="matFieldWidth100"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel">Select Waste Type
+                            </mat-label>
+                            <mat-select formControlName="wasteTypeID"
+                                (selectionChange)="getTreatmentMethods($event, i)">
+                                <mat-option *ngFor="let wasteType of wasteTypeAndTreatmentMethod"
+                                    [value]="wasteType.id">
+                                    <span>{{ wasteType.name }}
+                                    </span>
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-4 float-end">
+                        <td *ngIf="action === 'create'">
+                            <button type="button" class="btn" mat-icon-button (click)="onDeleteRow(i)">
+                                <span class="material-symbols-outlined text-danger"> delete </span>
+                            </button>
+                        </td>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-8">
+                        <mat-form-field class="matFieldWidth100 cursorPointer" id="daterangeFF"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel">Accounting Period
+                            </mat-label>
+                            <input type="text" matInput ngxDaterangepickerMd
+                                [locale]="{direction: 'ltr', applyLabel: 'Apply', format: 'DD-MMM-YYYY'}"
+                                [drops]="'down'" [opens]="'right'" [alwaysShowCalendars]="true"
+                                [keepCalendarOpeningWithRange]="true" [showDropdowns]="true" [showCancel]="true"
+                                autocomplete="off" name="dateRange" formControlName="accountingPeriod"
+                                (ngModelChange)="formatDate()" readonly />
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-8">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <mat-form-field class="matFieldWidth100 cursorPointer"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Select Waste Treatment Method 
+                                    </mat-label>
+                                    <mat-select formControlName="wasteTreatmentMethodID">
+                                        <mat-option
+                                            *ngFor="let method of this.activityDataFG.get('wasteTreatedDetails').at(i).controls['rows'].value"
+                                            [value]="method.id">
+                                            {{ method.name }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+    
+                            <div class="col-sm-4">
+                                <mat-form-field class="matFieldWidth100 cursorPointer"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE"
+                                    matTooltip="Waste Treated">
+                                    <mat-label class="formLabel">Waste Treated</mat-label>
+                                    <input class="formPlaceholder" matInput type="number" min="0" placeholder="0"
+                                        formControlName="wasteTreated" />
+                                    <mat-error *ngIf="emission.get('wasteTreated').hasError('min')">
+                                        Minimum value is 0.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+    
+                            <div class="col-sm-4">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Select unit
+                                    </mat-label>
+                                    <mat-select formControlName="wasteTreatedUnitID">
+                                        <mat-option *ngFor="let units of massUnit" [value]="units.id">
+                                            <span class="d-flex justify-content-between">
+                                                {{ units.name }} -
+                                            </span>
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <ng-container *ngIf="emission.get('docPath').value == null">
+                    <div class="row">
+                        <div class="col-sm-8 fileInput">
+                            <input class="form-control" type="file" accept="application/pdf" #fileInput
+                                (change)="fileUpload($event, emission, i)">
+                        </div>
+                    </div>
+                    <div class="row pt-2">
+                        <div class="col-sm-8">
+                            <div class="border rounded d-flex" [ngClass]="{'d-none': (docFileList[i] == null)}">
+
+                                <div class="p-1">
+                                    <ng-container *ngTemplateOutlet="docImg"></ng-container>
+                                </div>
+
+                                <div class="p-1">
+                                    <div class="centerAlignVertical p-1">
+                                        {{ emission.get('docName').value }} <br>
+                                        {{ emission.get('docSize').value }}
+                                    </div>
+                                </div>
+
+                                <div class="ms-auto p-1">
+                                    <button type="button" class="btn p-1" mat-icon-button
+                                        (click)="removeFile(emission, i)">
+                                        <span class="material-symbols-outlined text-danger">
+                                            delete
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="emission.get('docPath').value != null">
+                    <div class="row pt-2">
+                        <div class="col-sm-8">
+                            <div class="border rounded d-flex">
+
+                                <ng-container *ngTemplateOutlet="docImg"></ng-container>
+
+                                <div class="p-1">
+                                    <div class="centerAlignVertical p-3">
+                                        <a href="{{emission.get('docPath').value}}" target="_blank"
+                                            [ngClass]="{'d-none': !emission.get('docPath').value}">
+                                            {{emission.get('docName').value}}
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="ms-auto p-1 mt-2">
+                                    <button type="button" class="btn p-1" mat-icon-button matTooltip="Edit"
+                                        matTooltipClass="nameTooltip" matTooltipPosition="below"
+                                        (click)="fileInput.click()">
+                                        <span class="material-symbols-outlined text-primary updateIconHover fs-5">
+                                            edit
+                                        </span>
+                                    </button>
+                                    <input class="form-control" type="file" accept="application/pdf" #fileInput
+                                        (change)="fileUpload($event, emission, i)" style="display: none;">
+
+                                    <button type="button" class="btn p-1" mat-icon-button matTooltip="Delete"
+                                        matTooltipClass="nameTooltip" matTooltipPosition="below"
+                                        (click)="deleteConfirmation(emission, i)">
+                                        <span class="material-symbols-outlined text-danger">
+                                            delete
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+                </mat-card>
+            </ng-container>
+
+            <div class="ps-3">
+                <button *ngIf="action === 'create'" class="btn btn-success" (click)="add()">
+                    <fa-icon [icon]="faPlus"></fa-icon> &nbsp;
+                    Waste Type
+                </button>
+            </div>
+        </ng-container>
+    </form>
+</mat-card>
+
+<ng-template #docImg>
+    <div class="p-1">
+        <div class="docIcon p-1" matSuffix mat-icon-button mat-raised-button [matTooltip]="billFileName"
+            matTooltipPosition="below">
+            <img height="40px" src="assets/images/default-doc.ico" alt="bill document preview">
+        </div>
+    </div>
+</ng-template>

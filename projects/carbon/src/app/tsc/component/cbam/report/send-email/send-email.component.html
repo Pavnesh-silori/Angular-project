@@ -1,0 +1,48 @@
+<div class="headerContainer p-0">
+    <div class="headerLeftContainer">
+        <div class="pageTitle">Send Email</div>
+    </div>
+
+    <div class="headerRightContainer">
+        <div class="headerRightContainerInner">
+            <button class="btn btn-sm centerAlign py-1 iconBtn" matRipple
+                [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                [matTooltip]="ButtonTooltipEnum.CLOSE" mat-dialog-close>
+                <span class="material-symbols-outlined">
+                    close
+                </span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<mat-dialog-content class="mat-typography pt-2">
+    <form [formGroup]="sendEmailFG">
+        <div class="row">
+            <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                <mat-label class="formLabel">Customer Email's</mat-label>
+                <mat-chip-list #chipList formControlName="customerEmail">
+                    <mat-chip *ngFor="let email of customerEmails.value" [removable]="removable"
+                        (removed)="removeEmail(email)">
+                        {{ email }}
+                        <button matChipRemove *ngIf="removable">
+                            <mat-icon>cancel</mat-icon>
+                        </button>
+                    </mat-chip>
+                    <input [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                        [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event)" (input)="onInput()">
+                </mat-chip-list>
+                <mat-error *ngIf="errorHandling('customerEmail', 'required')">
+                    {{ formErrorEnum.REQUIRED }}
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+
+<div class="tscDialogFooter">
+    <button class="btn btn-sm btn-success" type="button" (click)="onSubmit()" matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">Send Email</button>
+    <button class="btn btn-sm btn-secondary me-2" mat-dialog-close matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">Cancel</button>
+</div>

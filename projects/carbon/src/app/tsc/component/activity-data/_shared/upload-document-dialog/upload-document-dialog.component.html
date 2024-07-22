@@ -1,0 +1,39 @@
+<h6 mat-dialog-title>
+    <strong class="dialogTitle">
+        Document Upload
+    </strong>
+</h6>
+<hr />
+
+<div class="row">
+    <div class="text-center" [ngClass]="{'d-none': !noFileSelected}">
+        <input #docUpload id="docUpload" class="d-none" type="file" accept=".pdf" (change)="fileUpload($event)" />
+        <button class="btn btn-primary mt-4" type="button" (click)="documentUploadBtn()">
+            Upload file
+        </button>
+    </div>
+
+    <div class="row border nocUpload" [ngClass]="{'d-none': noFileSelected}">
+        <div class="col-sm-3 docIcon">
+            <img height="80px" src="assets/images/default-doc.ico" alt="noc document preview">
+        </div>
+        <div class="col-sm-7 centerAlignVertical fileFont">
+            {{ uploadedFileName }}
+        </div>
+        <div class="col-sm-2 centerAlign">
+            <button type="button" class="btn" mat-icon-button (click)="removeFile()">
+                <span class="material-symbols-outlined text-danger">
+                    delete
+                </span>
+            </button>
+        </div>
+    </div>
+
+    <div align="end" class="pt-2">
+        <button type="button" class="button btn btn-secondary me-2" mat-dialog-close> {{
+            ButtonLabelEnum.CANCEL_BTN_LABEL }}</button>
+        <button type="submit" class="button btn btn-success ms-2" (click)="documentUpload()">
+            {{ ButtonLabelEnum.SUBMIT_BTN_LABEL }}
+        </button>
+    </div>
+</div>

@@ -1,0 +1,89 @@
+<div class="infoCardContainer ms-3 me-3">
+    <div class="extraInfoCard criteriaCard">
+        <div class="alert justify-content-between roundedBorder" style="background-color: whitesmoke;">
+            <div class="row mt-2 mb-2">
+                <div class="col-sm-3 pt-4">
+                    <mat-card-title>
+                        <div class="ms-4 fw-bold">
+                            SBTi readiness
+                        </div>
+                    </mat-card-title>
+                </div>
+                <div class="col-sm-6">
+                    <div class="progress-bar w-100">
+                        <div class="progress roundedBorder" [style.background]="value" [style.width.%]="stopperValue">
+                        </div>
+                    </div>
+                    <div class="labels pe-2" [style.left.%]="stopperValue">{{ stopperValue }}%</div>
+                </div>
+                <div class="col-sm-3 pt-3">
+                    <div class="float-end">
+                        <button type="button" class="button btn btn-primary me-4" [routerLink]="['/target/criteria']">
+                            SBTi Criteria checklist
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="infoCardContainer" *ngIf="showNearTermInfo">
+    <div class="extraInfoCard pt-4 px-3">
+        <div class="alert alert-warning m-0 centerAlignVertical justify-content-between roundedBorder" role="alert">
+            <div class="d-flex align-items-center">
+                <svg class="bi flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                    <use xlink:href="#exclamation-triangle-fill" />
+                </svg>
+                <div class="endAlignVertical">
+                    <div>
+                        <strong>
+                            Near term scope 3 targets do not meet SBTi criteria
+                        </strong>
+                    </div>
+                    <div class="mt-1">
+                        Scope 3 targets collectively should cover at least 67% of total scope 3 emissions while setting
+                        near term science based targets. Create another scope 3 target with a different target
+                        calculation method or edit existing target and add all Scope 3 activity types to stay aligned
+                        with SBTi.
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn" (click)="showNearTermInfo = false;">
+                <span class="material-symbols-outlined fw-bold">
+                    close
+                </span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="infoCardContainer" *ngIf="showLongTermInfo">
+    <div class="extraInfoCard pt-4 px-3">
+        <div class="alert alert-warning m-0 centerAlignVertical justify-content-between roundedBorder" role="alert">
+            <div class="d-flex align-items-center">
+                <svg class="bi flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                    <use xlink:href="#exclamation-triangle-fill" />
+                </svg>
+                <div class="endAlignVertical">
+                    <div>
+                        <strong>
+                            Long term scope 3 targets do not meet SBTi criteria
+                        </strong>
+                    </div>
+                    <div class="mt-1">
+                        Scope 3 targets collectively should cover at least 100% of total scope 3 emissions while setting
+                        near term science based targets. Create another scope 3 target with a different target
+                        calculation method or edit existing target and add all Scope 3 activity types to stay aligned
+                        with SBTi.
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn" (click)="showLongTermInfo = false;">
+                <span class="material-symbols-outlined fw-bold">
+                    close
+                </span>
+            </button>
+        </div>
+    </div>
+</div>

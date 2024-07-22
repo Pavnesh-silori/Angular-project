@@ -1,0 +1,132 @@
+<div class="card main-card cardOverwrite h100 ">
+
+    <div class="pt-2 me-2">
+        <form [formGroup]="fuelFG">
+            <div class="row">
+                <mat-form-field class="col-sm-6 matFieldWidth100"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Fuel Code</mat-label>
+                    <input class="formPlaceholder" matInput placeholder="" formControlName="code" />
+                    <mat-error *ngIf="errorHandling('code', 'required')">
+                        Fuel code is required
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="col-sm-6 matFieldWidth100"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Fuel Name</mat-label>
+                    <input class="formPlaceholder" matInput type="text" min="0" placeholder="Diesel, Petrol, etc. "
+                        formControlName="name" />
+                    <mat-error *ngIf="errorHandling('name', 'required')">
+                        Fuel name is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="row">
+                <mat-form-field class="col-sm-12 matFieldWidth100"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel"> Write a description </mat-label>
+                    <textarea matInput matTextareaAutosize matAutosizeMinRows="2" matAutosizeMaxRows="10"
+                        [maxlength]="maxLength" formControlName="description"></textarea>
+                    <mat-hint>Total number of character remaining: <span
+                            [class]="(charactersRemainingFn(fuelFG) < 20)? 'text-danger': '' ">{{
+                            charactersRemainingFn(fuelFG) }}</span>
+                        /{{maxLength}}
+                    </mat-hint>
+                    <mat-error *ngIf="errorHandling('description', 'required')">
+                        Description is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="row">
+                <mat-form-field class="col-sm-6 matFieldWidth100"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Biomass Used</mat-label>
+                    <input class="formPlaceholder" matInput min="0" max="100" type="number" placeholder=""
+                        formControlName="biomassPct" />
+                    <span matSuffix class="matSuffix ms-2 pb-5">%</span>
+                    <mat-error *ngIf="errorHandling('biomassPct', 'required')">
+                        Biomass is required
+                    </mat-error>
+                    <mat-error *ngIf="errorHandling('biomassPct', 'min')">
+                        Biomass can't be negative
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="col-sm-6 matFieldWidth100"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Oxidation factor </mat-label>
+                    <input class="formPlaceholder" matInput min="0" max="1" type="number" placeholder="0.02"
+                        formControlName="oxidationFactor" />
+                    <mat-error *ngIf="errorHandling('oxidationFactor', 'required')">
+                        Fuel oxidation factor is required
+                    </mat-error>
+                    <mat-error *ngIf="errorHandling('oxidationFactor', 'min')">
+                        Fuel oxidation factor can't be negative
+                    </mat-error>
+                    <mat-error *ngIf="errorHandling('oxidationFactor', 'max')">
+                        Fuel oxidation factor can't be greater than 1
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="row">
+                <mat-form-field class="col-sm-4 matFieldWidth100"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Net calorific value(NCV)</mat-label>
+                    <input class="formPlaceholder" matInput min="0" type="number" matInput placeholder="" type="number"
+                        formControlName="netCalorificValue" />
+                    <mat-error *ngIf="errorHandling('netCalorificValue', 'required')">
+                        Net calorific value is required
+                    </mat-error>
+                    <mat-error *ngIf="errorHandling('netCalorificValue', 'min')">
+                        Net calorific value can't be negative
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="col-sm-4 matFieldWidth100"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Select NCV Numerator</mat-label>
+                    <mat-select formControlName="ncvNumeratorUnitID">
+                        <mat-option *ngFor="let unit of ncvNumeratorUnit" [value]="unit.id">
+                            {{ unit.name }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="errorHandling('ncvNumeratorUnitID', 'required')">
+                        NCV numerator is required
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="col-sm-4 matFieldWidth100"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Select NCV Denominator</mat-label>
+                    <mat-select formControlName="ncvDenominatorUnitID">
+                        <mat-option *ngFor="let unit of ncvDenomenatorUnit" [value]="unit.id">
+                            {{ unit.name }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="errorHandling('ncvDenominatorUnitID', 'required')">
+                        NCV denominator is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <mat-checkbox class="col-sm-12 mt-1" formControlName="isWasteGasStream">
+                Mark this fuel as waste gas stream
+            </mat-checkbox>
+
+        </form>
+    </div>
+    <button class="d-none" type="submit" #formSubmitBtn></button>
+</div>
+
+<div class="tscDialogFooter" #footer>
+    <button class="btn btn-sm btn-success" [ngClass]="{'disabled': isEqual && action == FormAction.UPDATE}"
+        (click)="createUpdateFuel()" matRipple [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER"
+        matTooltipPosition="below"> {{
+        tSCCommonService.getButtonLabel(action) }}</button>
+    <button class="btn btn-sm btn-secondary me-2" mat-dialog-close matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">Cancel</button>
+</div>

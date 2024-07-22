@@ -1,0 +1,269 @@
+<mat-card class="cardOverwrite border">
+    <div class="cardTitle pb-2">
+        Details
+    </div>
+
+    <form [formGroup]="activityConfigFG">
+        <div class="row">
+            <div class="col-sm-8">
+                <div formGroupName="activityConfig">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Activity Form Name</mat-label>
+                        <input class="formPlaceholder" type="text" placeholder="Activity Form Name"
+                            formControlName="configName" matInput required>
+                        <mat-error *ngIf="errorHandling(activityConfigFG, 'activityConfig.configName', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <div formGroupName="activityConfigData">
+            <div class="row">
+                <div class="col-sm-8">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Select Process</mat-label>
+                        <mat-select formControlName="processRecordID" required
+                            (selectionChange)="processChange(currentOrgID, $event.value, true)">
+                            <mat-option>
+                                <ngx-mat-select-search [formControl]="processSelectSearch.filterFC"
+                                    placeholderLabel="Search by process name"
+                                    [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                </ngx-mat-select-search>
+                            </mat-option>
+
+                            <mat-option *ngFor="let process of processSelectSearch.filteredEntities | async"
+                                [value]="process.recordID">
+                                {{ process.name }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="errorHandling(activityConfigFG, 'activityConfigData.processID', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <div class="">
+            <lib-message-alert [messageAlertTypeInp]="MessageAlertTypeEnum.INFO"
+                [messageAlertIconInp]="MessageAlertIconEnum.INFO_ICON" [contentInp]=sourceInfoMsg
+                showCloseBtnInp="true">
+            </lib-message-alert>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-sm-8">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Precursor</th>
+                            <th>Source</th>
+                            <th>Supplier</th>
+                        </tr>
+                    </thead>
+                    <tbody formArrayName="entity">
+                        <ng-container *ngIf="entityFA.controls.length > 0; else noEntitySource">
+                            <ng-container *ngFor="let entity of entityFA.controls; let i = index">
+                                <ng-container [formGroupName]="i">
+                                    <ng-container formArrayName="source">
+                                        <ng-container *ngFor="let source of entity.get('source').controls; let j=index">
+                                            <ng-container [formGroupName]="j">
+                                                <tr *ngIf="j == 0; else noRowSpan">
+                                                    <td [attr.rowspan]="entity.get('source').controls.length">{{
+                                                        entity.get('entityName').value }}</td>
+                                                    <td>{{ source.get('name').value }}</td>
+                                                    <td>
+                                                        <ng-container
+                                                            *ngIf="source.get('keyID').value == SourceKeyID.PURCHASED_FROM_A_SUPPLIER; else noSupplier">
+                                                            <mat-form-field class="matFieldWidth100"
+                                                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                                <mat-label class="formLabel">Select
+                                                                    Supplier</mat-label>
+                                                                <mat-select formControlName="sourceID"
+                                                                    [required]="source.get('keyID').value == SourceKeyID.PURCHASED_FROM_A_SUPPLIER">
+                                                                    <mat-option>
+                                                                        <ngx-mat-select-search
+                                                                            [formControl]="supplierSelectSearch.filterFC"
+                                                                            placeholderLabel="Search by supplier name"
+                                                                            [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                                                        </ngx-mat-select-search>
+                                                                    </mat-option>
+
+                                                                    <mat-option
+                                                                        *ngFor="let supplier of supplierSelectSearch.filteredEntities | async"
+                                                                        [value]="supplier.supplierID"
+                                                                        (click)="patchSourceTypeID(supplier.sourceTypeID, i, j)">
+                                                                        {{ supplier.supplierName }}
+                                                                    </mat-option>
+                                                                </mat-select>
+                                                                <!-- <mat-error
+                                                                    *ngIf="errorHandlingForFormArray('sourceID' , i, 'required')">
+                                                                    {{ FormErrorEnum.REQUIRED }}
+                                                                </mat-error> -->
+                                                            </mat-form-field>
+                                                        </ng-container>
+                                                    </td>
+                                                </tr>
+                                                <ng-template #noRowSpan>
+                                                    <tr>
+                                                        <td>{{ source.get('name').value }}</td>
+                                                        <td>
+                                                            <ng-container
+                                                                *ngIf="source.get('keyID').value == SourceKeyID.PURCHASED_FROM_A_SUPPLIER; else noSupplier">
+                                                                <mat-form-field class="matFieldWidth100"
+                                                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                                    <mat-label class="formLabel">Select
+                                                                        Supplier</mat-label>
+                                                                    <mat-select formControlName="sourceID"
+                                                                        [required]="source.get('keyID').value == SourceKeyID.PURCHASED_FROM_A_SUPPLIER">
+                                                                        <mat-option>
+                                                                            <ngx-mat-select-search
+                                                                                [formControl]="supplierSelectSearch.filterFC"
+                                                                                placeholderLabel="Search by supplier name"
+                                                                                [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                                                            </ngx-mat-select-search>
+                                                                        </mat-option>
+
+                                                                        <mat-option
+                                                                            *ngFor="let supplier of supplierSelectSearch.filteredEntities | async"
+                                                                            [value]="supplier.supplierID"
+                                                                            (click)="patchSourceTypeID(supplier.sourceTypeID, i, j)">
+                                                                            {{ supplier.supplierName }}
+                                                                        </mat-option>
+                                                                    </mat-select>
+                                                                    <!-- <mat-error
+                                                                        *ngIf="errorHandlingForFormArray('sourceID' , i, 'required')">
+                                                                        {{ FormErrorEnum.REQUIRED }}
+                                                                    </mat-error> -->
+                                                                </mat-form-field>
+                                                            </ng-container>
+                                                        </td>
+                                                    </tr>
+                                                </ng-template>
+                                            </ng-container>
+                                        </ng-container>
+                                    </ng-container>
+                                </ng-container>
+                            </ng-container>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Precursor</th>
+                    <th>Source</th>
+                    <th>Supplier</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td rowspan="3">PP-1</td>
+                    <td>Self produced within this production route</td>
+                    <td>--</td>
+                </tr>
+                <tr>
+                    <td>Self produced using separate production route</td>
+                    <td>--</td>
+                </tr>
+                <tr>
+                    <td>Purchased from a supplier</td>
+                    <td>Supplier 1</td>
+                </tr>
+                <tr>
+                    <td>PP-3</td>
+                    <td>Self produced within this production route</td>
+                    <td>--</td>
+                </tr>
+                <tr>
+                    <td rowspan="2">PP-2</td>
+                    <td>Self produced within this production route</td>
+                    <td>--</td>
+                </tr>
+                <tr>
+                    <td>Purchased from a supplier</td>
+                    <td>Supplier 1</td>
+                </tr>
+            </tbody>
+        </table> -->
+
+        <div formGroupName="activityConfigData">
+            <div class="row">
+                <mat-label class="formLabel">Enter Data Using</mat-label>
+                <mat-radio-group formControlName="dataInputMethodStdID">
+                    <mat-radio-button class="col-sm-3 pt-1" *ngFor="let input of dataInputMethod" [value]="input.id"
+                        (change)="dataInputMethodChange(input.keyID)">
+                        {{ input.name }}
+                    </mat-radio-button>
+                    <mat-error
+                        *ngIf="errorHandlingForRadio(activityConfigFG, 'activityConfigData.dataInputMethodStdID', 'required')">
+                        {{ FormErrorEnum.REQUIRED }}
+                    </mat-error>
+                </mat-radio-group>
+            </div>
+
+            <ng-container *ngIf="isMeterReading">
+                <div class="row pt-3">
+                    <div class="col-sm-4">
+                        <mat-form-field class="matFieldWidth100"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel">Meter Rollover Value</mat-label>
+                            <input class="formPlaceholder" type="number" placeholder="Meter Rollover Value" matInput
+                                formControlName="meterRolloverValue" min="0" required />
+                            <mat-error
+                                *ngIf="errorHandling(activityConfigFG, 'activityConfigData.meterRolloverValue', 'min')">
+                                {{ FormErrorEnum.NEGATIVE }}
+                            </mat-error>
+                            <mat-error
+                                *ngIf="errorHandling(activityConfigFG, 'activityConfigData.meterRolloverValue', 'required')">
+                                {{ FormErrorEnum.REQUIRED }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-4">
+                        <mat-form-field class="matFieldWidth100"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel">Select Meter Unit</mat-label>
+                            <mat-select formControlName="meterRolloverUnitID">
+                                <mat-option>
+                                    <ngx-mat-select-search [formControl]="unitSelectSearch.filterFC"
+                                        placeholderLabel="Search by unit name"
+                                        [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                    </ngx-mat-select-search>
+                                </mat-option>
+
+                                <mat-option *ngFor="let unit of unitSelectSearch.filteredEntities | async"
+                                    [value]="unit.id">
+                                    {{ unit.name }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error
+                                *ngIf="errorHandling(activityConfigFG, 'activityConfigData.meterRolloverUnitID', 'required')">
+                                {{ FormErrorEnum.REQUIRED }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </form>
+</mat-card>
+
+<ng-template #noEntitySource>
+    <tr>
+        <td>{{ COMMON_CONSTANT.HYPHEN }}</td>
+        <td>{{ COMMON_CONSTANT.HYPHEN }}</td>
+        <td>{{ COMMON_CONSTANT.HYPHEN }}</td>
+    </tr>
+</ng-template>
+
+<ng-template #noSupplier>
+    {{ COMMON_CONSTANT.HYPHEN }}
+</ng-template>

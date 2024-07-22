@@ -1,0 +1,56 @@
+.anchor-link {
+    cursor: pointer;
+    color: #3f6ad8;
+    text-decoration: none;
+}
+
+// .totalGasReleased{
+//     text-align:left;
+// }
+.calenderToggle {
+    display: flex;
+    justify-content: right;
+    padding-right: 10px;
+}
+
+.calender {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.date {
+    padding-right: 20px;
+}
+
+.emission {
+    text-align: right;
+    width: 150px;
+    padding-right: 55px;
+}
+
+.totalgasReleased {
+    text-align: right;
+}
+
+.sourceName {
+    text-align: center;
+}
+
+.fixed-header-cell {
+    width: 270px;
+    /* Set the desired width for the header cell */
+}
+
+.header-cell {
+    padding: 0;
+    margin: 0;
+}
+
+.img {
+    width: 25px;
+}
+
+.noError {
+    padding-left: 28px;
+}

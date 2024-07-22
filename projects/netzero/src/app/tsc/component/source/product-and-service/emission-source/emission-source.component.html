@@ -1,0 +1,20 @@
+<div class="card cardOverwrite">
+    <div class="headerContainer">
+        <div class="mb-2">
+            <lib-message-alert [messageAlertTypeInp]="messageAlertTypeEnum.INFO"
+                [messageAlertIconInp]="messageAlertIconEnum.INFO_ICON"
+                [contentInp]="messagesConstant.EMISSION_SOURCE_PAGE_INFO">
+            </lib-message-alert>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-12">
+                <mat-card class="cardOverwrite">
+                    <app-emission-source-form [sourceID]="sourceID" [source]="source" [showSave]="true" (updateFormData)="updateFormData($event, 'emissionSource')"> </app-emission-source-form>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>

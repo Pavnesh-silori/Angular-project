@@ -1,0 +1,155 @@
+<mat-card class="cardOverwrite border">
+    <div class="ps-2">
+        <div class="cardTitle">Details</div>
+    </div>
+
+    <form [formGroup]="activityConfigFG">
+        <ng-container *ngIf="origin == ActivityConfigEnum.PFF">
+            <div formGroupName="activityConfig" class="row">
+                <div class="col-sm-7">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Activity form name</mat-label>
+                        <input placeholder="Activity form name" matInput formControlName="configName" type="text"
+                            required>
+                        <mat-error *ngIf="errorHandling(activityConfigAC, 'configName', 'required')">
+                            {{ formErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </ng-container>
+
+        <div formGroupName="activityConfigData">
+            <div class="row">
+                <div class="col-sm-7">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Select Process</mat-label>
+                        <mat-select formControlName="processRecordID" required
+                            (selectionChange)="setProcessIDAndGetProcess($event.value)">
+                            <mat-option>
+                                <ngx-mat-select-search [formControl]="processSearch.filterFC"
+                                    placeholderLabel="Search by name" noEntriesFoundLabel="No matching name found.">
+                                </ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option *ngFor="let process of processSearch.filteredEntities | async"
+                                [value]="process.recordID">
+                                {{ process.name }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="errorHandling(activityConfigDataAC, 'processID', 'required')">
+                            {{ formErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row my-1">
+                <mat-label class="col-sm-4 formLabel ms-2 pb-2"> {{sourceName}} source</mat-label>
+                <ng-container *ngIf="outputSources.length > 0; else noSource;">
+                    <strong class="col-sm-3">
+                        <ul>
+                            <ng-container *ngFor="let outputSource of outputSources">
+                                <li matTooltipClass="infoTooltip" matTooltipPosition="above"
+                                    [matTooltip]="outputSource.length >= 30 ? outputSource : ''">
+                                    {{ outputSource | dotdotdot:30}}
+                                </li>
+                            </ng-container>
+                        </ul>
+                    </strong>
+                </ng-container>
+                <ng-template #noSource>
+                    {{ COMMON_CONSTANT.HYPHEN }}
+                </ng-template>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-sm-7">
+                    <mat-label class="formLabel ms-2 pb-2"> Enter {{ sourceName }} data using</mat-label>
+                    <mat-radio-group formControlName="dataInputMethodStdID">
+                        <div class="row">
+                            <ng-container *ngFor="let input of dataInputMethodList">
+                                <div class="col-sm-6 ps-3 mt-2">
+                                    <mat-radio-button [value]="input.id" (change)="inputMethodChange(input.keyID)">
+                                        {{ input.name }}
+                                    </mat-radio-button>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </mat-radio-group>
+                    <mat-error *ngIf="radioError('activityConfigData.dataInputMethodStdID', 'required')">
+                        {{ formErrorEnum.REQUIRED }}
+                    </mat-error>
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <lib-message-alert class="col-sm-7" [messageAlertTypeInp]="MessageAlertTypeEnum.INFO"
+                    [messageAlertIconInp]="MessageAlertIconEnum.INFO_ICON" [contentInp]="infoMsg">
+                </lib-message-alert>
+            </div>
+
+            <ng-container *ngIf="inputMethod == DataInputMethodKeyIDEnum.METER_READING">
+                <div class="row">
+                    <div class="col-sm-5">
+                        <mat-form-field class="matFieldWidth100"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel">Meter rollover value</mat-label>
+                            <input matInput min="0" type="number" matInput type="number"
+                                formControlName="meterRolloverValue" />
+                            <mat-error *ngIf="errorHandling(activityConfigDataAC, 'meterRolloverValue', 'min')">
+                                Meter reading can't be negative.
+                            </mat-error>
+                            <mat-error *ngIf="errorHandling(activityConfigDataAC, 'meterRolloverValue', 'required')">
+                                {{ formErrorEnum.REQUIRED }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-2">
+                        <mat-form-field class="matFieldWidth100"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel">Select Unit</mat-label>
+                            <mat-select formControlName="meterRolloverUnitID">
+                                <mat-option *ngFor="let unit of distanceUnit" [value]="unit.id">
+                                    {{ unit.name }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="errorHandling(activityConfigDataAC, 'meterRolloverUnitID', 'required')">
+                                {{ formErrorEnum.REQUIRED }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+
+        <div formArrayName="activityConfigSource" class="row">
+            <ng-container *ngFor="let group of activityConfigSourceFA.controls; let i = index">
+                <div class="col-sm-7">
+                    <div [formGroupName]="i">
+                        <mat-form-field class="matFieldWidth100"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel">Select Combustion Equipment</mat-label>
+                            <mat-select formControlName="sourceID">
+                                <mat-option>
+                                    <ngx-mat-select-search [formControl]="combustionEquipmentSearch.filterFC"
+                                        placeholderLabel="Search by name"
+                                        noEntriesFoundLabel="No matching equipment found.">
+                                    </ngx-mat-select-search>
+                                </mat-option>
+                                <mat-option [value]="null"> Select none </mat-option>
+                                <mat-option
+                                    *ngFor="let combustionEquipment of combustionEquipmentSearch.filteredEntities | async"
+                                    [value]="combustionEquipment.assetID"
+                                    (click)="setSourceTypeID(combustionEquipment)">
+                                    {{ combustionEquipment.assetName }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </form>
+</mat-card>

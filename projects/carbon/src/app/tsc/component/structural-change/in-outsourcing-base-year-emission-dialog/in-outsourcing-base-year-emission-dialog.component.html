@@ -1,0 +1,168 @@
+<div mat-dialog-title>
+    <strong class="dialogTitle">
+        GHG base year emission confirmation - {{ year }}
+    </strong>
+    <button mat-icon-button cdkFocusInitial class="float-end" matTooltip="Close" matTooltipPosition="before">
+        <span class="material-symbols-outlined" mat-dialog-close>
+            close
+        </span>
+    </button>
+</div>
+
+<div class="matDialogContent" mat-dialog-content>
+    <div class="row mt-2">
+        <form [formGroup]="scopeActivityEmissionDataFG">
+            <table class="table reportTable">
+                <thead class="tableRowBgColor">
+                    <tr>
+                        <td class="fw-bold columnWidth1">Scope</td>
+                        <td class="fw-bold columnWidth3">Activity type</td>
+                        <td class="fw-bold" *ngIf="operationalControlApproachDisplay"> Operational control approach
+                            <span class="ps-1">(tCO<sub>2</sub>e)</span>
+                        </td>
+                        <td class="fw-bold" *ngIf="financialControlApproachDisplay"> Financial control approach <span
+                                class="ps-1">(tCO<sub>2</sub>e)</span>
+                        </td>
+                        <td class="fw-bold" *ngIf="equityShareApproachDisplay"> Equity control approach <span
+                                class="ps-1">(tCO<sub>2</sub>e)</span> </td>
+                    </tr>
+                </thead>
+                <tbody formArrayName="emissionRecords">
+                    <tr
+                        *ngFor="let emissionGroup of getEmissionRecord('scopeActivityEmissionDataFG').controls; let i = index">
+                        <ng-container [formGroupName]="i">
+                            <td class="columnWidth1">{{ emissionGroup.get('scope').value }}</td>
+                            <td class="columnWidth3">{{ emissionGroup.get('activityName').value }}</td>
+                            <ng-container *ngIf="operationalControlApproachDisplay">
+                                <ng-container formGroupName="operationalControlApproach">
+                                    <td class="columnWidth3">
+                                        <div class="d-flex align-items-center">
+                                            <div class="col-sm-4">
+                                                <mat-form-field class="matFieldWidth100"
+                                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                    <mat-label class="formLabel"> Enter emission</mat-label>
+                                                    <input matInput type="number" [min]="0"
+                                                        [formControl]="emissionGroup.get('operationalControlApproach').get('emission')"
+                                                        #input>
+                                                    <mat-error
+                                                        *ngIf="emissionGroup.get('operationalControlApproach').get('emission').hasError('min')">This
+                                                        field cannot
+                                                        be negative</mat-error>
+                                                    <mat-error
+                                                        *ngIf="emissionGroup.get('operationalControlApproach').get('emission').hasError('required')">Enter
+                                                        emission</mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="ms-2 col-sm-4">
+                                                <mat-form-field class="matFieldWidth100"
+                                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                    <mat-label class="formLabel"> Enter biogenic emission
+                                                        <span>(tCO<sub>2</sub>e)</span></mat-label>
+                                                    <input matInput type="number" [min]="0"
+                                                        [formControl]="emissionGroup.get('operationalControlApproach').get('biogenicEmission')"
+                                                        #input>
+                                                    <mat-error
+                                                        *ngIf="emissionGroup.get('operationalControlApproach').get('biogenicEmission').hasError('min')">This
+                                                        field
+                                                        cannot
+                                                        be negative</mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </ng-container>
+                            </ng-container>
+
+                            <ng-container *ngIf="financialControlApproachDisplay">
+                                <ng-container formGroupName="financialControlApproach">
+                                    <td class="columnWidth3">
+                                        <div class="d-flex align-items-center">
+                                            <div class="col-sm-4">
+                                                <mat-form-field class="matFieldWidth100"
+                                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                    <mat-label class="formLabel"> Enter emission</mat-label>
+                                                    <input matInput type="number" [min]="0"
+                                                        [formControl]="emissionGroup.get('financialControlApproach').get('emission')"
+                                                        #input>
+                                                    <mat-error
+                                                        *ngIf="emissionGroup.get('financialControlApproach').get('emission').hasError('min')">This
+                                                        field cannot
+                                                        be negative</mat-error>
+                                                    <mat-error
+                                                        *ngIf="emissionGroup.get('financialControlApproach').get('emission').hasError('required')">Enter
+                                                        emission</mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="ms-2 col-sm-4">
+                                                <mat-form-field class="matFieldWidth100"
+                                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                    <mat-label class="formLabel"> Enter biogenic emission
+                                                        <span>(tCO<sub>2</sub>e)</span></mat-label>
+                                                    <input matInput type="number" [min]="0"
+                                                        [formControl]="emissionGroup.get('financialControlApproach').get('biogenicEmission')"
+                                                        #input>
+                                                    <mat-error
+                                                        *ngIf="emissionGroup.get('financialControlApproach').get('biogenicEmission').hasError('min')">This
+                                                        field
+                                                        cannot
+                                                        be negative</mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </ng-container>
+                            </ng-container>
+
+                            <ng-container *ngIf="equityShareApproachDisplay">
+                                <ng-container formGroupName="equityShareApproach">
+                                    <td class="columnWidth3">
+                                        <div class="d-flex align-items-center">
+                                            <div class="col-sm-4">
+                                                <mat-form-field class="matFieldWidth100"
+                                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                    <mat-label class="formLabel"> Enter emission</mat-label>
+                                                    <input matInput type="number" [min]="0"
+                                                        [formControl]="emissionGroup.get('equityShareApproach').get('emission')"
+                                                        #input>
+                                                    <mat-error
+                                                        *ngIf="emissionGroup.get('equityShareApproach').get('emission').hasError('min')">This
+                                                        field cannot
+                                                        be negative</mat-error>
+                                                    <mat-error
+                                                        *ngIf="emissionGroup.get('equityShareApproach').get('emission').hasError('required')">Enter
+                                                        emission</mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                            <div class="ms-2 col-sm-4">
+                                                <mat-form-field class="matFieldWidth100"
+                                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                    <mat-label class="formLabel"> Enter biogenic emission
+                                                        <span>(tCO<sub>2</sub>e)</span></mat-label>
+                                                    <input matInput type="number" [min]="0"
+                                                        [formControl]="emissionGroup.get('equityShareApproach').get('biogenicEmission')"
+                                                        #input>
+                                                    <mat-error
+                                                        *ngIf="emissionGroup.get('equityShareApproach').get('biogenicEmission').hasError('min')">This
+                                                        field
+                                                        cannot
+                                                        be negative</mat-error>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </ng-container>
+                            </ng-container>
+
+                        </ng-container>
+                    </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+</div>
+
+<div mat-dialog-footer align="end">
+    <button type="button" class="btn btn-sm btn-success mt-2" (click)="saveEmission()">
+        {{ ButtonLabelEnum.SAVE_BTN_LABEL }}
+    </button>
+</div>

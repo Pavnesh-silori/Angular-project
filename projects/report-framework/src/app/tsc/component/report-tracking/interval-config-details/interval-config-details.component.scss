@@ -1,0 +1,47 @@
+.spinnerContainer {
+    display: flex;
+    align-items: end;
+    justify-content: end;
+    padding-top: 3px;
+}
+
+.spinnerLabel {
+    margin-left: 8px;
+}
+
+.progressStyle {
+    flex: 0 0 50px;
+    align-items: center;
+    display: flex;
+    stroke: #d03fd8 !important;
+}
+
+.custom-cursor {
+    cursor: pointer;
+    /* or any other cursor style */
+}
+
+.custom-not-allowed {
+    cursor: not-allowed;
+    background-color: rgb(181, 178, 178);
+    border-color: rgb(181, 178, 178);
+    color: white;
+}
+
+.mat-progress-spinner circle,
+.mat-spinner circle {
+    stroke: none;
+}
+
+.valueLess66 {
+	color: #0E60FF;
+}
+
+.valueLess33 {
+	color: #467000;
+}
+
+.valueGreated66 {
+    color: #FF3636;
+}
+

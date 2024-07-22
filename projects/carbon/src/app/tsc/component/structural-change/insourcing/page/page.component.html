@@ -1,0 +1,97 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">{{ tabType }}</div>
+            <div class="subTitle"></div>
+        </div>
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <lib-search-bar-one #searchBar searchBy="name" (emitSearch)="searchFn($event)"></lib-search-bar-one>
+                <a class="btn btn-sm btn-success btnBase ms-3" matRipple
+                    [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" [routerLink]="['./create']">
+                    <fa-icon [icon]="faPlus"></fa-icon> {{ tabType }}
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- REFRESH_BTN -->
+    <button type="button" class="d-none" #refreshBtn></button>
+        <table class="w-100" mat-table [dataSource]="dataSource" #sort="matSort" matSort matSortActive="eventDate"
+            matSortDirection="asc" matSortDisableClear>
+
+            <ng-container matColumnDef="entityName">
+                <th class="columnWidth2" mat-header-cell *matHeaderCellDef>
+                    Business entity name
+                </th>
+                <td class="columnWidth2" mat-cell *matCellDef="let row">
+                    <ng-container>
+                        <a [routerLink]="['./', row['id'], 'view']">
+                            {{ row['entityName'] }}
+                        </a>
+                    </ng-container>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="entityStartYear">
+                <th class="columnWidth5" mat-header-cell *matHeaderCellDef>
+                    Business entity start year
+                </th>
+                <td class="columnWidth5" mat-cell *matCellDef="let row">
+                    {{ row?.['entityStartYear']}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="description">
+                <th class="columnWidth4" mat-header-cell *matHeaderCellDef>
+                    Description
+                </th>
+                <td class="columnWidth4" mat-cell *matCellDef="let row"
+                [matTooltip]="(row['description'] != null && row['description'].length > 20) ? row['description'] : ''" matTooltipPosition="above"
+                    matTooltipClass="nameTooltip">
+                    {{ (row['description'] ? row['description']: COMMON_CONSTANT.HYPHEN) | dotdotdot:15}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="eventDate">
+                <th class="columnWidth2" mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+                    Event date
+                </th>
+                <td class="px-2 columnWidth2" mat-cell *matCellDef="let row">
+                    {{ row?.['eventDate'] | date: 'dd-MMM-yyyy'}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="option">
+                <th class="columnWidth4" mat-header-cell *matHeaderCellDef></th>
+                <td class="columnWidth4 text-center" mat-cell *matCellDef="let row">
+                    <div class="btn-group" ngbDropdown placement="left">
+                        <button type="button" ngbDropdownToggle class="dropdown-after dropdownAfter btn">
+                            <fa-icon [icon]="faEllipsisV"></fa-icon>
+                        </button>
+                        <div ngbDropdownMenu>
+                            <button class="dropdown-item" [routerLink]="['./', row['id'], 'update']">
+                                {{ ButtonLabelEnum.UPDATE_BTN_LABEL }}
+                            </button>
+                            <button class="btn btn-outline-danger rounded-0 dropdown-item" (click)="confirmDelete(row)">
+                                {{ ButtonLabelEnum.DELETE_BTN_LABEL }}
+                            </button>
+                        </div>
+                    </div>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumn"></tr>
+            <tr mat-row *matRowDef="let task; columns: displayedColumn;"></tr>
+
+            <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell text-center" [attr.colspan]="displayedColumn.length">
+                    {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+                </td>
+            </tr>
+        </table>
+
+    <mat-paginator #paginator class="roundedBorder" showFirstLastButtons [length]="resultLength"
+    [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION" [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE">
+    </mat-paginator>
+</div>

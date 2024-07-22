@@ -1,0 +1,19 @@
+<app-scope2-energy-consumed *ngIf="dataInputMethodKeyID == DataEntryMethod.ENERGY_CONSUMED"
+    (formGroupChange)="onChildFormGroupChange($event)" [docFileList]="docFileList"
+    [activityConfigValue]="activityConfig">
+</app-scope2-energy-consumed>
+
+<app-scope2-meter-reading *ngIf="dataInputMethodKeyID == DataEntryMethod.METER_READING"
+    (formGroupChange)="onChildFormGroupChange($event)" [docFileList]="docFileList"
+    [activityConfig]="activityConfig">
+</app-scope2-meter-reading>
+
+<app-scope2-price-based *ngIf="dataInputMethodKeyID == DataEstimationMethod.PRICE_BASED"
+    (formGroupChange)="onChildFormGroupChange($event)" [docFileList]="docFileList"
+    [activityConfig]="activityConfig">
+</app-scope2-price-based>
+
+<app-scope2-area-based *ngIf="dataInputMethodKeyID == DataEstimationMethod.AREA_BASED"
+    (formGroupChange)="onChildFormGroupChange($event)" [docFileList]="docFileList"
+    [activityConfig]="activityConfig">
+</app-scope2-area-based>

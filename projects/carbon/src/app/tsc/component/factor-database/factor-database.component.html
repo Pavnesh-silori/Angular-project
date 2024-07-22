@@ -1,0 +1,19 @@
+<div class="card main-card cardOverwrite">
+    <nav mat-tab-nav-bar>
+        <ng-container *ngFor="let tab of database; let i = index;">
+            <a mat-tab-link [routerLink]="tab['routerLink']" (click)="activeLink = tab['routerLink']"
+                [active]="activeLink == tab['routerLink']">
+                {{ tab['label'] }}
+            </a>
+        </ng-container>
+    </nav>
+    <ng-container *ngFor="let tab of database; let i = index;">
+        <ng-container *ngIf="factorDatabaseType == tab['databaseType']">
+            <app-active-page-pill [type]="pill(i)['type']" [initFolderName]="pill(i)['initFolderName']"
+                [initFolderRoute]="pill(i)['initFolderRoute']">
+            </app-active-page-pill>
+        </ng-container>
+    </ng-container>
+
+    <router-outlet></router-outlet>
+</div>

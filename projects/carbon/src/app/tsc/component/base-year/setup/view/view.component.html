@@ -1,0 +1,328 @@
+<ng-container *ngIf="isBaseYearExist; else createBaseYear;">
+    <div class="card main-card cardOverwrite">
+        <div class="headerContainer">
+            <div class="headerLeftContainer">
+                <div class="pageTitle">{{ baseYearType }} Base year</div>
+            </div>
+        </div>
+
+        <div class="card-body pt-0">
+            <mat-card class="cardOverwrite">
+                <div class="row pb-3">
+                    <div class="cardTitle">Details</div>
+                </div>
+                <div class="row updatebutton">
+                    <a class="text-secondary float-end cursorPointer" (click)="openDialog()" matTooltip="Edit"
+                        matTooltipPosition="below">
+                        <span class="material-symbols-outlined updateIconHover fs-5">
+                            edit
+                        </span>
+                    </a>
+                </div>
+
+                <!-- <ng-container *ngTemplateOutlet="labelValue; context: {
+                    label: baseYearType + ' Base Year',
+                    value: baseYearData?.baseYear,
+                    class: 'pt-1'
+                }">
+                </ng-container> -->
+
+                <div class="row">
+                    <div class="col-sm-12 ps-4">
+                        <ng-container *ngTemplateOutlet="labelValue; context: {
+                            label: baseYearType + ' Base Year',
+                            value: baseYearData?.baseYear,
+                            class: 'pt-1'
+                        }">
+                        </ng-container>
+
+                        <ng-container *ngTemplateOutlet="labelValue; context: {
+                            label: 'Recalculation Policy',
+                            value: baseYearData?.recalculationPolicy,
+                            class: 'pt-3'
+                        }">
+                        </ng-container>
+
+                        <!-- <div class="row pt-3">
+                            <div class="col-sm-4">
+                                Recalculation Policy
+                            </div>
+                            <div class="col-sm-8 fw-bold">
+                                <ng-container *ngIf="baseYearData?.recalculationPolicy">
+                                    <ng-container
+                                        *ngIf="baseYearData.recalculationPolicy.length > 200; else fullRecalculationPolicy;">
+                                        <ng-container *ngIf="showMore; else shortRecalculationPolicy;">
+                                            {{ baseYearData.recalculationPolicy }}
+                                            <button class="btn btn-link" (click)="showMore = false;">show less</button>
+                                        </ng-container>
+                                        <ng-template #shortRecalculationPolicy>
+                                            {{ baseYearData.recalculationPolicy | dotdotdot: 200 }}
+                                            <button class="btn btn-link" (click)="showMore = true;">show more</button>
+                                        </ng-template>
+                                    </ng-container>
+                                </ng-container>
+                            </div>
+                        </div> -->
+
+                        <ng-container *ngIf="baseYearData?.calculationApproachKeyID">
+                            <ng-container *ngTemplateOutlet="labelValue; context: {
+                                label: 'Calculation approach',
+                                value: baseYearData?.calculationApproachKeyID == ScopeTwoMethod.LOCATION_BASED ? 'Location based approach' : 'Market based approach',
+                                class: 'pt-3'
+                            }">
+                            </ng-container>
+                        </ng-container>
+
+                        <ng-container *ngTemplateOutlet="labelValue; context: {
+                            label: 'Significance Threshold',
+                            value: baseYearData?.significanceThreshold? baseYearData?.significanceThreshold + '%' : null,
+                            class: 'pt-3'
+                        }">
+                        </ng-container>
+                    </div>
+                </div>
+            </mat-card>
+
+            <ng-container *ngIf="!editEmission">
+                <ng-container *ngIf="emissionData">
+                    <div class="row">
+                        <div class="col-sm-9">
+                            <!-- <div class="cardTitle">Base year emissions</div> -->
+                        </div>
+                        <ng-container *ngIf="isSbtiBaseYear && !useTSCEmission">
+                            <div class="col-sm-3">
+                                <a class="float-end text-secondary cursorPointer" matTooltip="Edit emissions">
+                                    <span class="material-symbols-outlined fs-5" (click)="editEmissions()">
+                                        edit_square
+                                    </span>
+                                </a>
+                            </div>
+                        </ng-container>
+                    </div>
+                    <div class="customScrollBar overflowAuto">
+                        <mat-card class="cardOverwrite mt-3" [ngStyle]="{'width': width}">
+                            <div class="row pt-4">
+                                <div class="col-sm-4">
+                                    <div class="cardTitle">Base year emissions</div>
+                                </div>
+                                <div class="col-sm-8">
+                                    <div class="row activity-container" *ngIf="isSbtiBaseYear; else ghgBaseYearHeader;">
+                                        <ng-container *ngTemplateOutlet="emissionHeader">
+                                        </ng-container>
+                                    </div>
+                                    <ng-template #ghgBaseYearHeader>
+                                        <div class="row">
+                                            <ng-container *ngFor="let consolidationApproachs of consolidationApproach">
+                                                <div [class]="['col-sm-' + 12/consolidationApproach.length]"
+                                                    class="text-center">
+                                                    Consolidated using {{ consolidationApproachs.name }}
+                                                    ({{ CARBON_CONSTANT.DEFAULT_EMISSION_UNIT.name }})
+
+                                                    <div class="row">
+                                                        <div class="col-sm-6 cardSubTitle text-end">
+                                                            Non Biogenic emissions
+                                                        </div>
+                                                        <div class="col-sm-6 cardSubTitle text-end">
+                                                            Biogenic emissions
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </ng-container>
+                                        </div>
+                                    </ng-template>
+                                </div>
+                            </div>
+
+                            <div class="row pt-2 ps-4" *ngFor="let emission of emissionData; let i = index;">
+                                <div class="row">
+                                    <div class="col-sm-2 fs-4 cardSubTitle">
+                                        {{ emission.scope.name }}
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12">
+                                    <div class="row pt-3 activity-container"
+                                        *ngFor="let activity of emission.scope.activity">
+                                        <div class="col-sm-4 ps-4">
+                                            {{ activity.name }}
+                                        </div>
+
+                                        <ng-container *ngIf="isSbtiBaseYear; else ghgBaseYear">
+                                            <div class="col-sm-4 fw-bold text-end pe-4">
+                                                {{ haveValue(activity?.emission?.emission) ?
+                                                (activity?.emission?.emission |
+                                                number :'1.2-2') :
+                                                COMMON_CONSTANT.HYPHEN }}
+                                            </div>
+                                            <div class="col-sm-4 fw-bold text-end pe-4">
+                                                {{ haveValue(activity?.biogenicEmission?.emission) ?
+                                                (activity?.biogenicEmission?.emission | number :'1.2-2') :
+                                                COMMON_CONSTANT.HYPHEN }}
+                                            </div>
+                                        </ng-container>
+
+                                        <ng-template #ghgBaseYear>
+                                            <div class="col-sm-8">
+                                                <div class="row">
+                                                    <ng-container
+                                                        *ngFor="let consolidationApproachs of consolidationApproach">
+                                                        <div [class]="['col-sm-' + 12/consolidationApproach.length]"
+                                                            class="text-center">
+
+                                                            <div class="row">
+                                                                <div class="col-sm-6 cardSubTitle text-center">
+                                                                    <div class="fw-bold text-end pe-4">
+                                                                        {{
+                                                                        haveValue(activity?.[getDataKey(consolidationApproachs['keyID'])].emission?.emission)
+                                                                        ?
+                                                                        (activity?.[getDataKey(consolidationApproachs['keyID'])].emission?.emission
+                                                                        | number
+                                                                        :'1.2-2') :
+                                                                        COMMON_CONSTANT.HYPHEN }}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-6 cardSubTitle text-center">
+                                                                    <div class="fw-bold text-end pe-4">
+                                                                        {{
+                                                                        haveValue(activity?.[getDataKey(consolidationApproachs['keyID'])].biogenicEmission?.emission)
+                                                                        ?
+                                                                        (activity?.[getDataKey(consolidationApproachs['keyID'])].biogenicEmission?.emission
+                                                                        | number :'1.2-2') :
+                                                                        COMMON_CONSTANT.HYPHEN }}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                </div>
+                                            </div>
+                                        </ng-template>
+                                    </div>
+                                </div>
+
+                                <ng-container *ngTemplateOutlet="totalEmissionAlert; 
+                                context: {
+                                    title: 'Total ' + emission.scope.name + ' emissions',
+                                    value: scopeSum[i]
+                                }">
+                                </ng-container>
+                            </div>
+
+                            <ng-container *ngTemplateOutlet="totalEmissionAlert; 
+                                context: {
+                                    title: 'Total emissions',
+                                    value: totalEmission
+                                }">
+                            </ng-container>
+                        </mat-card>
+                    </div>
+                </ng-container>
+            </ng-container>
+
+            <ng-container *ngIf="editEmission">
+                <mat-card class="border cardOverwrite mt-3" style="background-color: whitesmoke;">
+                    <div class="row">
+                        <div class="card-title cardTitle">
+                            Base year emission confirmation- {{ baseYearData?.baseYear }}
+                        </div>
+                    </div>
+
+                    <div class="row mt-4" *ngFor="let data of editableEmissionData">
+                        <div class="col-sm-2">
+                            <strong> {{ data.scope.name }} </strong>
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="progress cardOverwrite" style="background-color: white;">
+                                <div class="progress-bar cardOverwrite" role="progressbar"
+                                    [style.width.%]="calculateProgress(data)"></div>
+                            </div>
+                            <div class="mt-3 text-secondary">
+                                {{ data.confirmedActivities }}/{{ data.totalActivities }}
+                                activity types marked as confirmed
+                            </div>
+                        </div>
+                        <div class="col-sm-2 d-flex justify-content-center align-items-start ">
+                            <ng-container *ngIf="data.confirmedActivities != data.totalActivities;">
+                                <button class="btn btn-primary btn-sm" type="button"
+                                    (click)="openEmissionConfirmationDialog(data, 'CONFIRM')">
+                                    {{ ButtonLabelEnum.CONFIRM_BTN_LABEL }}
+                                </button>
+                            </ng-container>
+                            <ng-container *ngIf="data.confirmedActivities == data.totalActivities">
+                                <svg fill="currentColor"
+                                    class="check-circle-fill flex-shrink-0 dialogHeaderIcon verifiedIcon me-2"
+                                    viewBox="0 0 16 16">
+                                    <path
+                                        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 
+                                                7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                                </svg>
+                                <a class="text-secondary cursorPointer" matTooltip="Update" matTooltipPosition="above"
+                                    (click)="openEmissionConfirmationDialog(data, 'UPDATE')">
+                                    <span class="material-symbols-outlined fs-3">
+                                        edit_square
+                                    </span>
+                                </a>
+                            </ng-container>
+                        </div>
+                    </div>
+
+                    <mat-card-actions align="end" class="me-5">
+                        <button class="btn btn-secondary"
+                            (click)="cancelEdit()">{{ ButtonLabelEnum.CANCEL_BTN_LABEL }}</button>
+                        <button class="btn btn-success ms-2" (click)="saveEmission()"
+                            [disabled]="!allEmissionsAreConfirmed()">
+                            {{ ButtonLabelEnum.SAVE_BTN_LABEL }}
+                        </button>
+                    </mat-card-actions>
+                </mat-card>
+            </ng-container>
+        </div>
+    </div>
+
+    <ng-template #labelValue let-label="label" let-value="value" let-class="class">
+        <div class="row" [class]="class">
+            <div class="col-sm-4">
+                {{ label }}
+            </div>
+            <div class="col-sm-8 fw-bold">
+                {{ value ? value : COMMON_CONSTANT.HYPHEN }}
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #emissionHeader>
+        <div class="row centerAlign">
+            Consolidated using {{ sbtiSettings.consolidationApproachName }} ({{
+            CARBON_CONSTANT.DEFAULT_EMISSION_UNIT.name }})
+        </div>
+
+        <div class="col-sm-6 cardSubTitle text-end">
+            Emissions ({{ CARBON_CONSTANT.DEFAULT_EMISSION_UNIT.name }})
+        </div>
+        <div class="col-sm-6 cardSubTitle text-end">
+            Biogenic emissions ({{ CARBON_CONSTANT.DEFAULT_EMISSION_UNIT.name }})
+        </div>
+    </ng-template>
+</ng-container>
+
+<ng-template #totalEmissionAlert let-title="title" let-value="value">
+    <div class="extraInfoCard mt-2">
+        <div class="alert alert-info roundedBorder m-0 p-1">
+            <div class="row text-dark">
+                <div class="col-sm-8">
+                    <span class="ps-2 fs-6">
+                        {{ title }}
+                    </span>
+                </div>
+                <div class="col-sm-4 d-flex justify-content-end fw-bold pe-4">
+                    {{ value | number: '1.2-2' }}
+                    {{ CARBON_CONSTANT.DEFAULT_EMISSION_UNIT.name }}
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #createBaseYear>
+    <app-create (success)="baseYearAndEmission()"></app-create>
+</ng-template>

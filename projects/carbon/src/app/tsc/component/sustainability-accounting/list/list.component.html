@@ -1,0 +1,325 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">{{ title }}</div>
+            <div class="pageSubtitle">Data lake for your carbon footprint. View, edit or add new records.</div>
+        </div>
+        <div class="headerRightContainer me-2">
+
+        </div>
+
+        <div class="headerRightContainerInner">
+            <lib-search-bar-one class="me-3" #searchBar (emitSearch)="searchFn($event)">
+            </lib-search-bar-one>
+
+            <button class="btn btn-sm btn-light centerAlign me-3 py-1 refreshBtn" #refreshBtn matRipple
+                [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                [matTooltip]="ButtonTooltipEnum.REFRESH">
+                <span class="material-symbols-outlined">
+                    refresh
+                </span>
+            </button>
+
+            <!-- <button type="button" class="btn btn-sm btn-success btnRightRadiusZero" (click)="selectActivityForm()"
+                matRipple [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                [matTooltip]="ButtonTooltipEnum.CREATE">
+                <fa-icon [icon]="faPlus"></fa-icon>&nbsp;&nbsp;Record
+            </button> -->
+
+            <div class="btn-group" ngbDropdown placement="bottom-right" matTooltipPosition="below"
+                [matTooltip]="ButtonTooltipEnum.MORE">
+                <button type="button" ngbDropdownToggle class="hideDropdownIcon btn btn-sm btn-success"><fa-icon
+                        [icon]="faPlus"></fa-icon>&nbsp;&nbsp;Record
+                        <fa-icon [icon]="faCaretDown" class="ms-2"></fa-icon>
+                </button>
+                <div ngbDropdownMenu>
+                    <button class="dropdown-item" matRipple [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER"
+                        (click)="selectActivityForm()">
+                        Add New Record
+                    </button>
+                    <button class="dropdown-item" matRipple [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" (click)="showActivityConfigSelection()">
+                        Use Activity Form
+                    </button>
+                    <button class="dropdown-item" matRipple [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER"
+                        [routerLink]="['/activity-data/spend-based-method/import-create']">
+                        Import Records
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="ms-3 me-3">
+        <lib-date-filter #filterChild></lib-date-filter>
+        <app-filter-carbon class="float-end" #carbonFilterChild [module]="'sustainabilityAccounting'"
+            [have_default_consolidation_approach]="have_retained_consolidation_approach"></app-filter-carbon>
+    </div>
+
+    <div class="row mx-2 h-auto" [ngClass]="{'d-none': chips?.length == 0}">
+        <div class="col-sm-10 py-1 chipListContainer">
+            <mat-chip-list #chipList>
+                <mat-chip *ngFor="let chip of chips" (removed)="removeChip(chip)">
+                    <span class="fw-normal">{{ chip['filter'] }}</span>
+                    <button matChipRemove>
+                        <mat-icon>cancel</mat-icon>
+                    </button>
+                </mat-chip>
+            </mat-chip-list>
+        </div>
+        <div class="col-sm-2 centerAlignVertical justify-content-end">
+            <button matRipple [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" class="btn btn-link float-end"
+                (click)="clearAllChips()">
+                <span class="material-symbols-outlined fs-5">
+                    filter_list_off
+                </span>
+                Reset Filters
+            </button>
+        </div>
+    </div>
+
+    <table class="w-100" mat-table [dataSource]="dataSource" #sort matSort matSortActive="recordID"
+        matSortDirection="desc" matSortDisableClear>
+
+        <ng-container matColumnDef="recordID">
+            <th class="px-3 recordID" mat-header-cell *matHeaderCellDef mat-sort-header> Record ID </th>
+            <td class="px-3" mat-cell *matCellDef="let row" [routerLink]="routerLink(row)">
+                {{ row['recordID'] ? row['recordID'] : COMMON_CONSTANT.HYPHEN }}
+                <ng-template #id> {{ row['recordID'] }} </ng-template>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="scope">
+            <th class="px-3 scope" mat-header-cell *matHeaderCellDef>
+                <funnel-filter #scopeSelect header="Scope" type="mono" [entityList]="scope" [selectFC]="scopeFC"
+                    [active]="scopeFlag" (mono)="scopeFlag = true; scopeChange();"
+                    (selected)="toggleScopeChip($event)"></funnel-filter>
+            </th>
+            <td [routerLink]="routerLink(row)" class="px-3" mat-cell *matCellDef="let row"
+                [matTooltip]="row['scopeName']?.length>13? row['scopeName']: ''" matTooltipPosition="above"
+                matTooltipClass="nameTooltip">
+                {{ row['scopeName'] | dotdotdot:13 }}
+            </td>
+        </ng-container>
+
+        <!-- <ng-container matColumnDef="activity">
+            <th class="px-3 activity" mat-header-cell *matHeaderCellDef>
+                <div class="row">
+                    <div class="col-sm-7 centerAlignVertical justify-content-start ">
+                        Activity type
+                    </div>
+                    <div class="col-sm-2 centerAlign">
+                        <button mat-icon-button (click)="activitySelect.open()">
+                            <span class="material-symbols-outlined fs-4 funnel"
+                                [ngClass]="{'text-primary': activityFlag}">
+                                filter_alt
+                            </span>
+                            <div class="funnelFilterDD">
+                                <mat-form-field>
+                                    <mat-select #activitySelect (openedChange)="resetOnNoChange($event)"
+                                        [formControl]="activityFC" multiple>
+                                        <mat-select-trigger class="d-none"></mat-select-trigger>
+                                        <mat-option value="all" (click)="selectAllActivities()">
+                                            All activity types
+                                        </mat-option>
+                                        <mat-option *ngFor="let activities of activity" [value]="activities['keyID']"
+                                            (click)="selectActivity(activities)">
+                                            {{ activities.name }}
+                                        </mat-option>
+                                        <button #activityBtn class="button btn btn-primary applyBtn float-end"
+                                            (click)="activityFlag = true; applyActivityFilter(); activitySelect.close();"
+                                            matRipple [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">
+                                            Apply
+                                        </button>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </th>
+            <td [routerLink]="routerLink(row)" class="px-3" mat-cell *matCellDef="let row"
+                [matTooltip]="row['activityName']?.length>17? row['activityName']: ''" matTooltipPosition="above"
+                matTooltipClass="nameTooltip">
+                {{ row?.activityName | dotdotdot:17}}
+            </td>
+        </ng-container> -->
+
+        <ng-container matColumnDef="activity">
+            <th mat-header-cell *matHeaderCellDef>
+                <div class="row">
+                    <div class="col-sm-12 centerAlignVertical justify-content-start pe-0">
+                        Activity type
+                        <button mat-icon-button (click)="activitySelect.open()">
+                            <span class="material-symbols-outlined fs-4 funnel"
+                                [ngClass]="{'text-primary': activityFlag}">
+                                filter_alt
+                            </span>
+                            <div class="funnelFilterDD">
+                                <mat-form-field>
+                                    <mat-select #activitySelect (openedChange)="resetOnNoChange($event)"
+                                        [formControl]="activityFC" multiple>
+                                        <mat-select-trigger class="d-none"></mat-select-trigger>
+                                        <mat-option value="all" (click)="selectAllActivities()">
+                                            All activity types
+                                        </mat-option>
+                                        <mat-option *ngFor="let activities of activity" [value]="activities['keyID']"
+                                            (click)="selectActivity(activities)">
+                                            {{ activities.name }}
+                                        </mat-option>
+
+                                        <div class="row m-0 dropdownFooter">
+                                            <div class="col-sm-12">
+                                                <button #activityBtn class="button btn btn-primary float-end m-1"
+                                                    [ngClass]="{'disableBtn': activityFC.value.length == 0}"
+                                                    (click)="onApplyFilterClick()"
+                                                    matRipple [matRippleCentered]="MATERIAL_CONSTANT.matRippleCentered">
+                                                    Apply
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </th>
+            <td [routerLink]="routerLink(row)" mat-cell *matCellDef="let row"
+                [matTooltip]="row['activityName']?.length>17? row['activityName']: ''" matTooltipPosition="above"
+                matTooltipClass="nameTooltip">
+                {{ row?.activityName | dotdotdot:17}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="source">
+            <th class="px-3 source" mat-header-cell *matHeaderCellDef> Source </th>
+            <td class="px-3" mat-cell *matCellDef="let row" [ngClass]="{'ps-5': !row['sourceName']?.length}"
+                [routerLink]="routerLink(row)">
+                <span *ngIf="row['sourceName']?.length; else hyphen;"
+                    [matTooltip]="row['sourceName']?.length > 25? row['sourceName']: ''" matTooltipPosition="above"
+                    matTooltipClass="nameTooltip">
+                    {{ row['sourceName'] | dotdotdot: 25 }}
+                </span>
+            </td>
+            <ng-template #hyphen>
+                {{ COMMON_CONSTANT.HYPHEN}}
+            </ng-template>
+        </ng-container>
+
+        <ng-container matColumnDef="startDate">
+            <th mat-header-cell class="accountingPeriod" *matHeaderCellDef mat-sort-header disableClear> Accounting
+                period&nbsp;
+            </th>
+            <td class="accountingPeriod" mat-cell *matCellDef="let record" [routerLink]="routerLink(record)"> {{
+                record['startDate'] | date: 'dd-MMM-yyyy' }}{{ record['startDate'] == record['endDate'] ? '' : (' - ' +
+                (record['endDate'] | date: 'dd-MMM-yyyy')) }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="emission">
+            <th mat-header-cell mat-sort-header *matHeaderCellDef class="px-3 matTableSortRightAlign emission">
+                Emissions <span class="ps-1">(tCO<sub>2</sub>e)</span>
+            </th>
+            <td class="text-end emisson" mat-cell *matCellDef="let record" [matTooltip]="record['emission']"
+                matTooltipPosition="above" matTooltipClass="nameTooltip" [routerLink]="routerLink(record)">
+                {{ record['emission'] | number: '1.2-2' }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="recordType">
+            <th class="px-3 recordType" mat-header-cell *matHeaderCellDef>
+                <div class="row">
+                    <div class="col-sm-7 centerAlignVertical justify-content-start pe-0">
+                        Data source
+                    </div>
+                    <div class="col-sm-2 centerAlign">
+                        <button mat-icon-button (click)="recordTypeSelect.open()">
+                            <span class="material-symbols-outlined fs-4 funnel"
+                                [ngClass]="{'text-primary': recordTypeFlag}">
+                                filter_alt
+                            </span>
+                            <div class="funnelFilterDD">
+                                <mat-form-field>
+                                    <mat-select #recordTypeSelect (openedChange)="reset_recordTypeOnNoChange($event)"
+                                        [formControl]="recordTypeFC" multiple>
+                                        <mat-select-trigger class="d-none"></mat-select-trigger>
+                                        <mat-option value="all" (click)="selectAllRecordTypes()">
+                                            All sources
+                                        </mat-option>
+                                        <mat-option *ngFor="let dcms of dcm" [value]="dcms['dataCollectionMethodID']"
+                                            (click)="selectRecordType(dcms)">
+                                            {{ dcms.dataCollectionMethodName }}
+                                        </mat-option>
+                                        <button #recordTypeBtn class="button btn btn-primary applyBtn float-end"
+                                            (click)="recordTypeFlag = true; applyRecordTypeFilter(); recordTypeSelect.close();"
+                                            matRipple [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">
+                                            Apply
+                                        </button>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </th>
+            <td class="px-3" mat-cell *matCellDef="let row" [routerLink]="routerLink(row)">
+                {{ row['dataCollectionMethodName']}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="option">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let row" [ngClass]="{'d-none': row.activityKeyID === 'employee-commuting'}">
+                <div class="centerAlignVertical">
+                    <ng-container *ngIf="optionVisibility(row)">
+                        <ng-container *ngTemplateOutlet="icon; 
+                        context: {
+                            icon: 'edit',
+                            tooltip: ButtonTooltipEnum.UPDATE,
+                            class: 'text-primary updateIconHover',
+                            function: routeToADUpdate,
+                            functionParameter: [row]
+                        }">
+                        </ng-container>
+
+                        <!-- <div class="btn-group" ngbDropdown placement="left-top">
+                        <button type="button" ngbDropdownToggle
+                            class="dropdown-after dropdownAfter iconBtn text-secondary" matTooltipPosition="below"
+                            [matTooltip]="ButtonTooltipEnum.MORE" matRipple
+                            [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">
+                            <fa-icon [icon]="faEllipsisV"></fa-icon>
+                        </button>
+                        <div ngbDropdownMenu>
+                        </div>
+                    </div> -->
+                    </ng-container>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let record; columns: displayedColumns" class="dataRow cursorPointer">
+        </tr>
+
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumns?.length">
+                {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+            </td>
+        </tr>
+    </table>
+
+    <mat-paginator class="roundedBorder" showFirstLastButtons [length]="resultLength"
+        [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION" [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE">
+    </mat-paginator>
+</div>
+
+<ng-template #icon let-icon="icon" let-tooltip="tooltip" let-class="class" let-function="function"
+    let-functionParameter="functionParameter">
+    <button class="iconBtn centerAlign" [class]="class" matTooltipPosition="below" [matTooltip]="tooltip" matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" (click)="handleClick(function, functionParameter)">
+        <span class="material-symbols-outlined icon">
+            {{ icon }}
+        </span>
+    </button>
+</ng-template>

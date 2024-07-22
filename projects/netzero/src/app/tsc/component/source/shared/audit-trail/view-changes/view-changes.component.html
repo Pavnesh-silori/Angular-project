@@ -1,0 +1,55 @@
+<div class="headerContainer p-0" #header>
+    <div class="headerLeftContainer">
+        <div class="pageTitle">Product Changes</div>
+    </div>
+
+    <div class="headerRightContainer">
+        <div class="headerRightContainerInner">
+            <button class="btn btn-sm centerAlign py-1 iconBtn" matRipple
+                [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                [matTooltip]="ButtonTooltipEnum.CLOSE" mat-dialog-close>
+                <span class="material-symbols-outlined">
+                    close
+                </span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<mat-dialog-content class="mat-typography pt-2">
+    <ng-container *ngIf="isUpdate; else createBlock">
+        <div class="row">
+            <div class="col-sm-6">
+                <mat-card class="card-body cardOverwrite border">
+                    <div class="cardTitle">Previous record</div>
+                    <hr class="mt-0">
+                    <!-- <div class="mt-2"> -->
+                        <app-changes></app-changes>
+                    <!-- </div> -->
+                </mat-card>
+            </div>
+
+            <div class="col-sm-6">
+                <mat-card class="card-body cardOverwrite border">
+                    <div class="cardTitle">Current record</div>
+                    <hr class="mt-0">
+                    <!-- <div class="mt-2"> -->
+                        <app-changes></app-changes>
+                    <!-- </div> -->
+                </mat-card>
+            </div>
+        </div>
+    </ng-container>
+
+    <ng-template #createBlock>
+        <div class="row">
+            <mat-card class="card-body cardOverwrite border">
+                <div class="cardTitle">Product Record</div>
+                <hr class="mt-0">
+                <!-- <div class="mt-2"> -->
+                    <app-changes></app-changes>
+                <!-- </div> -->
+            </mat-card>
+        </div>
+    </ng-template>
+</mat-dialog-content>

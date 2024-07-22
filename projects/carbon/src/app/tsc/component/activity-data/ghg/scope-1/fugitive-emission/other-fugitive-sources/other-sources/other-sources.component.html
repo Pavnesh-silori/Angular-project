@@ -1,0 +1,43 @@
+<div class="card main-card cardOverwrite overflowX">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Fugitive - Sector specific</div>
+            <div class="pageSubtitle">Records of gases released from sector-specific fugitive sources.</div>
+        </div>
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <!-- <app-search-bar class="me-3" type="text" searchBy="group name" [clear]="searchFlag"
+                        (emitSearch)="searchFn($event)"></app-search-bar> -->
+                <div *ngIf="viewFugitiveReleaseCapacity">
+                    <button type="button" class="btn btn-sm btn-success btnBase"
+                        (click)="createEquipmentGroup('CREATE')">
+                        <fa-icon [icon]="faPlus"></fa-icon>Fugitive release record
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <mat-tab-group #tabGroup [(selectedIndex)]="activeTabIndex" (selectedTabChange)="onTabChange($event.index)">
+        <mat-tab *ngFor="let tab of otherSourcesDataBase; let i = index;" [label]="tab['label']">
+            <div class="ps-3 my-2 fs-5 titleSentence">
+                {{ tab['title'] }}
+            </div>
+            <app-active-page-pill [initFolderName]="pill(i)['initFolderName']"
+                [initFolderRoute]="pill(i)['initFolderRoute']">
+            </app-active-page-pill>
+            <ng-container *ngIf="otherSourceType == tab['databaseType']">
+                <router-outlet></router-outlet>
+            </ng-container>
+        </mat-tab>
+    </mat-tab-group> -->
+
+    <nav mat-tab-nav-bar>
+        <a mat-tab-link *ngFor="let tabs of tab" [routerLink]="tabs['routerLink']"
+            (click)="activeLink = tabs['routerLink']" [active]="activeLink == tabs['routerLink']"> {{ tabs['label'] }}
+        </a>
+    </nav>
+
+    <router-outlet></router-outlet>
+
+</div>

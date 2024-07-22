@@ -1,0 +1,137 @@
+<mat-card class="cardOverwrite border">
+    <div class="cardTitle pb-2"> Details </div>
+    <form [formGroup]="activityConfigFG">
+        <ng-container *ngIf="origin == ActivityConfigEnum.PFF">
+            <div formGroupName="activityConfig" class="row">
+                <div class="col-sm-6">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Activity form name</mat-label>
+                        <input matInput type="text" formControlName="configName" required>
+                        <mat-error *ngIf="errorHandling(activityConfigFG, 'activityConfig.configName', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </ng-container>
+
+        <div formArrayName="activityConfigSource" class="row">
+            <div *ngFor="let group of activityConfigSourceFA.controls; let i = index" class="col-sm-6">
+                <div [formGroupName]="i">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Select combustion equipment</mat-label>
+                        <mat-select formControlName="sourceID" required>
+                            <mat-option>
+                                <ngx-mat-select-search [formControl]="assestSearchUtil.filterFC"
+                                    placeholderLabel="Search by combustion equipment name"
+                                    [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                </ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option *ngFor="let assest of assestSearchUtil.filteredEntities | async"
+                                [value]="assest.assetID" (click)="setSourceTypeID(assest)">
+                                <span class="d-flex justify-content-between">
+                                    {{ assest.assetName }}</span>
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="errorHandlingForFormArrayData('sourceID', 'required', i)">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <div formGroupName="activityConfigData">
+            <div class="row">
+                <div class="col-sm-6">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE" id="yearlyField" appYearFormat
+                        (click)="dateService.openDatepickerOnClick(yearly)"
+                        (keydown.arrowdown)="dateService.openDatepickerOnClick(yearly)"
+                        (keydown.enter)="dateService.openDatepickerOnClick(yearly)">
+                        <mat-label>Year of construction</mat-label>
+                        <input class="cursorPointer" matInput [matDatepicker]="yearly"
+                            formControlName="yearOfConstruction" [max]="date" readonly />
+                        <mat-datepicker-toggle matSuffix [for]="yearly"></mat-datepicker-toggle>
+                        <mat-datepicker #yearly startView="multi-year" panelClass="yearPicker"
+                            (yearSelected)="yearDateInput($event, yearly)"
+                            (closed)="dateService.takeFocusAway('yearlyField')"></mat-datepicker>
+                        <mat-error
+                            *ngIf="errorHandling(activityConfigFG, 'activityConfigData.yearOfConstruction', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Select heat transfer medium</mat-label>
+                        <mat-select formControlName="heatTransferMediumID" required>
+                            <mat-option *ngFor="let medium of heatMedium" [value]="medium.id">
+                                <span class="d-flex justify-content-between">
+                                    {{ medium.name }}</span>
+                            </mat-option>
+                        </mat-select>
+                        <mat-error
+                            *ngIf="errorHandling(activityConfigFG, 'activityConfigData.heatTransferMediumID', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div *ngIf="steam" class="pb-4">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <mat-label>Does your steam plant account for condensate return? *</mat-label>
+                        <mat-radio-group formControlName="isCondensateReturn" required>
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <mat-radio-button class="pt-2" [value]="true">Yes
+                                    </mat-radio-button>
+                                </div>
+                                <div class="col-sm-5">
+                                    <mat-radio-button class="pt-2" [value]="false">No
+                                    </mat-radio-button>
+                                </div>
+                                <mat-error class="mt-2"
+                                    *ngIf="errorHandlingForRadio(activityConfigFG, 'activityConfigData.isCondensateReturn', 'required')">
+                                    {{ FormErrorEnum.REQUIRED }}
+                                </mat-error>
+                            </div>
+                        </mat-radio-group>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="exhaustGases" class="pb-4">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <mat-label>Is the temperature of the exhaust gas 250&deg;C or higher?*</mat-label>
+                        <mat-radio-group formControlName="isTemprature250orHigh" required>
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <mat-radio-button class="pt-2" [value]="true">Yes
+                                    </mat-radio-button>
+                                </div>
+                                <div class="col-sm-5">
+                                    <mat-radio-button class="pt-2" [value]="false">No
+                                    </mat-radio-button>
+                                </div>
+                                <mat-error class="mt-2"
+                                    *ngIf="errorHandlingForRadio(activityConfigFG, 'activityConfigData.isTemprature250orHigh', 'required')">
+                                    {{ FormErrorEnum.REQUIRED }}
+                                </mat-error>
+                            </div>
+                        </mat-radio-group>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</mat-card>

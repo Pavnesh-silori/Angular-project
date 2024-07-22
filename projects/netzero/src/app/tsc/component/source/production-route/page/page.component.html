@@ -1,0 +1,91 @@
+<div class="card cardOverwrite overFlowX h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Production Routes</div>
+            <!-- TODO <div class="subTitle">TODO</div> -->
+        </div>
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner pe-3">
+                <lib-search-bar-one #searchBar searchBy="Production route name" (emitSearch)="SearchFn($event)">
+                </lib-search-bar-one>
+            </div>
+            <div class="headerRightContainerInner">
+                <button class="btn btn-sm btn-success" type="button" [routerLink]="['/source/production-route/create']">
+                    <fa-icon [icon]="faPlus"></fa-icon> &nbsp; Production Route
+                </button>
+            </div>
+        </div>
+    </div>
+    <button type="button" class="d-none" #refreshBtn>refresh</button>
+
+    <table class="rowActive" mat-table [dataSource]="dataSource" matSort matSortActive="name" matSortDisableClear matSortDirection="desc">
+
+        <ng-container matColumnDef="name">
+            <th class="name" mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Production Route Name </th>
+            <td class="cursorPointer" mat-cell *matCellDef="let row" (click)="navigateTo(row.id)"
+                [matTooltip]="row.name?.length >= 35? row.name: ''" matTooltipClass="infoTooltip"
+                matTooltipPosition="above">
+                {{ row.name | dotdotdot: 35 }}
+            </td>
+        </ng-container>
+
+        <!-- <ng-container matColumnDef="description">
+            <th mat-header-cell class="description" *matHeaderCellDef disableClear> Description </th>
+            <td class="cursorPointer" mat-cell *matCellDef="let row" (click)="navigateTo(row.id)"
+                [matTooltip]="row.description?.length >= 35? row.description: ''" matTooltipClass="infoTooltip"
+                matTooltipPosition="above">
+                {{ row?.description? (row.description | dotdotdot: 35) : COMMON_CONSTANT.HYPHEN }}
+            </td>
+        </ng-container> -->
+
+        <!-- <ng-container matColumnDef="products">
+            <th mat-header-cell class="products" *matHeaderCellDef disableClear> Products </th>
+            <td class="cursorPointer" mat-cell *matCellDef="let row" (click)="navigateTo(row.id)" >
+                {{ productCount(row.products)? row.products[0] : row.products[0] }}
+                <button *ngIf="productCount(row.products)" class="btn btn-sm rounded-circle circleBtn"  [matTooltip]="formatTooltip(row.products)"
+                    matTooltipClass="infoTooltip" matTooltipPosition="above">
+                    {{ productCount(row.products) }}
+                </button>
+            </td>
+        </ng-container> -->
+
+        <ng-container matColumnDef="action">
+            <th class="ps-3 action" mat-header-cell *matHeaderCellDef></th>
+            <td class="px-3 text-end" mat-cell *matCellDef="let row">
+                <ng-container *ngTemplateOutlet="icon; 
+                    context: {
+                        icon: 'edit',
+                        tooltip: ButtonTooltipEnum.UPDATE,
+                        iconClass: 'text-primary updateIconHover',
+                        function: routeToUpdateProductionRoute,
+                        functionParameter: [row]
+                    }">
+                </ng-container>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="dataRow"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+            </td>
+        </tr>
+    </table>
+
+    <mat-paginator class="roundedBorder" #paginator [length]="resultLength"
+        [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION" [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE"
+        showFirstLastButtons>
+    </mat-paginator>
+</div>
+
+<ng-template #icon let-icon="icon" let-tooltip="tooltip" let-iconClass="iconClass" let-function="function"
+    let-functionParameter="functionParameter">
+    <button class="iconBtn centerAlign" [class]="iconClass" matTooltipPosition="below" [matTooltip]="tooltip" matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" (click)="handleClick(function, functionParameter)">
+        <span class="material-symbols-outlined icon">
+            {{ icon }}
+        </span>
+    </button>
+</ng-template>

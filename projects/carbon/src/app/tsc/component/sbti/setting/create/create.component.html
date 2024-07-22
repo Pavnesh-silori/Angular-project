@@ -1,0 +1,345 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+    </symbol>
+</svg>
+
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Science based targets</div>
+            <div class="pageSubtitle">Setup your organizations Science based targets</div>
+        </div>
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+            </div>
+        </div>
+    </div>
+
+    <ng-container *ngIf="isPreferenceSet; else noPreference;">
+        <div class="card-body pt-0 ms-2">
+            <form [formGroup]="sbtiSettingFG">
+                <div class="row">
+                    <div class="col-sm-10">
+                        <div class="radioBtnGroupLabel">Select organization size *</div>
+                        <mat-radio-group formControlName="orgSizeKeyID" (change)="confimationOrgSizeChange()">
+                            <div class="row mt-2">
+                                <div class="col-sm-6">
+                                    <mat-radio-button class="radioBtnLabel" [value]="OrgSize.SME">
+                                        SME
+                                    </mat-radio-button>
+                                    <div class="text-secondary ps-4 pt-2">Select if: <br /> You are an independent,
+                                        non-subsidiary <br />
+                                        organization with fewer than 500 employees
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <mat-radio-button class="radioBtnLabel" [value]="OrgSize.NON_SME">
+                                        Enterprise
+                                    </mat-radio-button>
+                                    <div class="text-secondary ps-4 pt-2">
+                                        <ul style="padding: 0%; list-style-type:none;">
+                                            Select if:
+                                            <li> You do not meet SME qualifications or </li>
+                                            <li> You are a Financial Institution or
+                                                <span class="material-symbols-outlined fs-4 cursorPointer"
+                                                    (click)="openInfoDialog(financialInstitutionInfo)">
+                                                    info
+                                                </span>
+                                            </li>
+                                            <li> You are a Fossil Fuel company U+F431
+                                                <span class="material-symbols-outlined fs-4 cursorPointer"
+                                                    (click)="openInfoDialog(fossilFuelCompanyInfo)">
+                                                    info
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <mat-error class="radioBtnGroupError ms-1 mt-1"
+                                *ngIf="radioGroupHasError('orgSizeKeyID', 'required')">
+                                Please select organization size.
+                            </mat-error>
+                        </mat-radio-group>
+                    </div>
+                </div>
+
+                <ng-container *ngIf="orgSizeKeyIDAC.value == OrgSize.NON_SME">
+                    <div class="row">
+                        <div class="col-sm-10">
+                            <div class="radioBtnGroupLabel">
+                                Is your organization involved in the sale, transmission, distribution of oil, natural
+                                gas, coal as well as other fossil fuels?
+                            </div>
+                            <mat-radio-group formControlName="isUseOfSoldProducts">
+                                <div class="row my-2">
+                                    <div class="col-sm-6">
+                                        <mat-radio-button class="radioBtnLabel" [value]="true">
+                                            Yes
+                                        </mat-radio-button>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <mat-radio-button class="radioBtnLabel" [value]="false">
+                                            No
+                                        </mat-radio-button>
+                                    </div>
+                                </div>
+                                <mat-error class="radioBtnGroupError ms-1 mt-1"
+                                    *ngIf="radioGroupHasError('isUseOfSoldProducts', 'required')">
+                                    Select an option
+                                </mat-error>
+                            </mat-radio-group>
+                            <ng-container *ngTemplateOutlet="alert; 
+                                context: { message: isUseOfSoldProductsInfo }">
+                            </ng-container>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <div class="row mt-2">
+                    <div class="col-sm-4">
+                        <mat-form-field class="mat-field-width-100" [appearance]="FormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label>Select SBTi sector</mat-label>
+                            <mat-select formControlName="sbtiSectorID" required>
+                                <mat-option>
+                                    <ngx-mat-select-search [formControl]="sectorSearchUtility.filterFC"
+                                        placeholderLabel="Search by sector name"
+                                        noEntriesFoundLabel="No matching sector found.">
+                                    </ngx-mat-select-search>
+                                </mat-option>
+                                <mat-option *ngFor="let sbtiSectors of sectorSearchUtility.filteredEntities | async"
+                                    [value]="sbtiSectors.id">
+                                    {{ sbtiSectors.name }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="radioGroupHasError('sbtiSectorID', 'required')">
+                                SBTi sector is required.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-8 pt-3">
+                        <a class="btn-link"
+                            href="https://sciencebasedtargets.org/resources/files/SBTi-Sector-Classification-Document.pdf"
+                            target="_blank">See sector classification guidance</a>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-10">
+                        <div class="radioBtnGroupLabel">
+                            Is your SBTi base year and recalculation policy the same as GHG base year
+                            {{ ghgBaseYear ? (ghgBaseYear) : null }}?
+                        </div>
+                        <mat-radio-group formControlName="isBaseYearSameAsGHG" (change)="confirmBaseYearTypeChange()">
+                            <div class="row my-2">
+                                <div class="col-sm-6">
+                                    <mat-radio-button class="radioBtnLabel" [value]="true"
+                                        [disabled]="(!meetsSBTiCriteria || !ghgBaseYearExist)">
+                                        Yes
+                                    </mat-radio-button>
+                                </div>
+                                <div class="col-sm-6">
+                                    <mat-radio-button class="radioBtnLabel" [value]="false">
+                                        No
+                                    </mat-radio-button>
+                                </div>
+                            </div>
+                            <ng-container *ngIf="radioGroupHasError('isBaseYearSameAsGHG', 'required'); else hint;">
+                                <mat-error class="radioBtnGroupError ms-1"
+                                    *ngIf="radioGroupHasError('isBaseYearSameAsGHG', 'required')">
+                                    Select an option
+                                </mat-error>
+                            </ng-container>
+                            <ng-template #hint>
+                                <ng-container *ngIf="ghgBaseYearExist">
+                                    <mat-hint class="radioBtnGroupInfo ms-1 mt-1" *ngIf="!orgSizeKeyIDAC.value">
+                                        Please select organization size.
+                                    </mat-hint>
+                                </ng-container>
+                            </ng-template>
+                        </mat-radio-group>
+                        <ng-container *ngIf="!ghgBaseYearExist">
+                            <div class="alert alert-primary centerAlignVertical roundedBorder">
+                                <svg class="bi flex-shrink-0 me-3 extraInfoCardIcon">
+                                    <use xlink:href="#info-fill" />
+                                </svg>
+                                <div class="extraInfoCardText">
+                                    Your GHG base year is not setup right now. To use GHG base year as the SBTi year,
+                                    you
+                                    can setup your GHG base year
+                                    <a [routerLink]="['/carbon-setting/base-year']" target="_blank">here</a>.
+                                </div>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngIf="!meetsSBTiCriteria">
+                            <div class="alert alert-primary centerAlignVertical roundedBorder">
+                                <svg class="bi flex-shrink-0 me-3 extraInfoCardIcon">
+                                    <use xlink:href="#info-fill" />
+                                </svg>
+                                <div class="extraInfoCardText">
+                                    GHG base year and recalculation policy does not fit SBTi criteria and therefore
+                                    cannot
+                                    be used as SBTi base year. You can setup a new SBTi base year
+                                    <a [routerLink]="['/carbon-setting/base-year']" target="_blank">here</a>
+                                    or edit GHG base year. Make sure to save Science based target settings first.
+
+                                    <ol style="padding: 0" class="my-1">
+                                        <strong>SBTi base year criteria:</strong>
+                                        <li class="ms-3"> Base year cannot be before {{ isSME == 'YES'
+                                            ?
+                                            2018 : 2015 }} </li>
+                                        <li class="ms-3"> Significance threshold for recalculation policy cannot be
+                                            greater
+                                            than 5% </li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                        <ng-container *ngIf="isBaseYearSameAsGHGAC.value">
+                            <div class="alert alert-primary centerAlignVertical roundedBorder">
+                                <svg class="bi flex-shrink-0 me-3 extraInfoCardIcon">
+                                    <use xlink:href="#info-fill" />
+                                </svg>
+                                <div class="extraInfoCardText">
+                                    SBTi base year and recalculation policy will be synced with your GHG base year
+                                    setup.
+                                    Recalculations for both can be managed from
+                                    <a [routerLink]="['/carbon-setting/base-year']" target="_blank">Base year</a>
+                                    settings.
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+
+                    <div class="col-sm-10 mt-2">
+                        <div class="radioBtnGroupLabel">Select preferred method to report scope 2 emissions</div>
+                        <div class="infoText">Note- Renewable energy instruments such as renewable energy
+                            certificates (RECs) can only be used to meet reductions of scope 2 emissions using the
+                            market
+                            based approach.</div>
+                        <mat-radio-group formControlName="calculationApproachKeyID">
+                            <div class="row mt-1">
+                                <div class="col-sm-6">
+                                    <mat-radio-button class="radioBtnLabel" [value]="ScopeTwoMethod.LOCATION_BASED">
+                                        Location based
+                                    </mat-radio-button>
+                                </div>
+                                <div class="col-sm-6">
+                                    <mat-radio-button class="radioBtnLabel" [value]="ScopeTwoMethod.MARKET_BASED">
+                                        Market based
+                                    </mat-radio-button>
+                                </div>
+                            </div>
+                            <mat-error class="radioBtnGroupError ms-1 mt-1"
+                                *ngIf="radioGroupHasError('calculationApproachKeyID', 'required')">
+                                Please select preferred method to report scope 2 emissions.
+                            </mat-error>
+                        </mat-radio-group>
+                    </div>
+
+                    <div class="col-sm-10 mt-3">
+                        <div class="radioBtnGroupLabel">
+                            Select preferred consolidation approach for target boundary
+                        </div>
+                        <mat-radio-group formControlName="consolidationApproachKeyID">
+                            <div class="row mt-2">
+                                <ng-container *ngFor="let ca of consolidationApproach">
+                                    <div class="col-sm-12 mb-1">
+                                        <mat-radio-button class="radioBtnLabel" [value]="ca['keyID']">
+                                            {{ ca['name'] }}
+                                        </mat-radio-button>
+                                    </div>
+                                </ng-container>
+                            </div>
+                            <mat-error class="radioBtnGroupError ms-1 mt-1"
+                                *ngIf="radioGroupHasError('consolidationApproachKeyID', 'required')">
+                                Select an option
+                            </mat-error>
+                        </mat-radio-group>
+                    </div>
+
+                    <div class="col-sm-10 mt-3" *ngIf="orgSizeKeyIDAC.value == OrgSize.NON_SME">
+                        <div class="radioBtnGroupLabel">{{organizationM.name}} agrees to</div>
+                        <div *ngFor="let questions of agreementQuestions; let i = index">
+                            <mat-checkbox class="mt-1" (change)="questions['checked'] = $event.checked;" (click)="checkValidation()"
+                                [checked]="questions['checked']"
+                                [disabled]="action == 'update' && orgSize == OrgSize['NON_SME']">
+                                {{ questions.question }}
+                            </mat-checkbox>
+                            <span *ngIf="i == 5" class="material-symbols-outlined fs-4 cursorPointer"
+                                (click)="openInfoDialog(agreementInfo)">
+                                info
+                            </span>
+                        </div>
+                        <div *ngIf="showAgreementError" class="textMatError">
+                            Please check all agreement questions.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="float-end my-2">
+                    <a class="button btn btn-secondary mx-1" type="button" (click)="backBtnClick()" matRipple
+                        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">Cancel</a>
+                    <button *ngIf="action == FormAction.CREATE" class="button btn btn-success ms-1" type="submit" matRipple
+                        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" (click)="submitSbtiSetting()">
+                        {{ ButtonLabelEnum.SUBMIT_BTN_LABEL }}
+                    </button>
+
+                    <button *ngIf="action == FormAction.UPDATE" class="button btn btn-success ms-1" type="submit" matRipple
+                        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER"
+                        (click)="getSettingEmissionDifference()" [disabled]="isEqual">
+                        {{ ButtonLabelEnum.SAVE_BTN_LABEL }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </ng-container>
+</div>
+
+<ng-template #alert let-message="message">
+    <div class="alert alert-primary centerAlignVertical roundedBorder">
+        <svg class="bi flex-shrink-0 me-3 extraInfoCardIcon">
+            <use xlink:href="#info-fill" />
+        </svg>
+        <div class="extraInfoCardText">
+            <div [innerHTML]="message"></div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #noPreference>
+    <div class="infoCardContainer">
+        <div class="extraInfoCard px-3">
+            <div class="alert alert-warning m-0 centerAlignVertical justify-content-between roundedBorder" role="alert">
+                <div class="d-flex align-items-center">
+                    <svg class="bi flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                        <use xlink:href="#exclamation-triangle-fill" />
+                    </svg>
+                    <div class="endAlignVertical">
+                        <div><strong>Calculation preferences have not been configured on the system yet.</strong>
+                        </div>
+                        <div class="mt-2">
+                            Configuring calculation preferences are necessary to create SBTi settings.
+                            To configure preferences, follow this link: <a
+                                routerLink="/carbon-setting/preference/calculation">Calculation Preference</a>.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="centerAlign">
+                    <img class="noPreference" src="/assets/images/preference3.jpg" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+    </symbol>
+</svg>

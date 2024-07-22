@@ -1,0 +1,132 @@
+.activityContainer {
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.activityContainerLeft {
+    flex: 1;
+}
+
+.activityContainerRight {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.activityContainerRightInner {
+    display: flex;
+    align-items: center;
+}
+
+.activityTitle {
+    color: grey;
+    text-transform: capitalize;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.activitySubtitle {
+    color: grey;
+    font-size: 12px;
+    font-weight: 200;
+    text-transform: none;
+}
+
+.matAccordion {
+    box-shadow: none !important;
+    background: whitesmoke;
+    border-radius: 16px !important;
+}
+
+.subType {
+    margin: 5px;
+}
+
+.custom-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.table {
+    width: 100%;
+}
+
+th,
+td {
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    border: none;
+}
+
+.fontRefresh {
+    font-size: xx-large;
+}
+
+.fixWidth {
+    width: 150px !important;
+    max-width: 150px !important;
+    min-width: 150px !important;
+
+}
+
+.panelHeader {
+    display: flex;
+    justify-content: space-between;
+}
+
+.container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 50px;
+}
+
+.box {
+    width: 200px;
+    height: 100px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+}
+
+
+.highlight {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+.fade {
+    color: #888;
+}
+
+.refresh-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+
+.curved-box {
+    border-radius: 15px !important;
+    background-color: #f8f9fa; /* Light background color for the box */
+}
+
+.centerAlignVertical {
+    display: flex;
+    align-items: center;
+}

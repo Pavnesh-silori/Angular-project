@@ -1,0 +1,527 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+    <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+    </symbol>
+</svg>
+<div class="card main-card cardOverwrite h100">
+    <div class="cardHeaderBlock d-flex align-items-center">
+        <div class="col-sm-6 pageTitle">
+            Import Records
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-12">
+                <mat-stepper #stepper labelPosition="bottom" linear>
+                    <mat-step label="Configure">
+                        <form [formGroup]="configureDataFG">
+                            <div class="cardTitle fw-bold pb-3">
+                                {{ methodName }}
+                            </div>
+                            <div class="row mb-2"
+                                *ngIf="(isConfigEdit != CARBON_CONSTANT.YES && isConfigEdit != CARBON_CONSTANT.NO) || (isConfigEdit == CARBON_CONSTANT.YES && !configuredData?.configuredData)">
+                                <div class="col-sm-12">
+                                    <div class="justify-content-start centerAlign fs-5">
+                                        Download a&nbsp;<a [href]="sampleFileSrc" download> sample
+                                            file </a> &nbsp;and compare it with your import file to
+                                        ensure it is perfect for the import.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2 justify-content-start centerAlign"> <span class="fw-bold">
+                                        Import name
+                                    </span>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="text-center">
+                                        <mat-form-field class="matFieldWidth100 cursorPointer mt-2"
+                                            [ngClass]="isConfigEdit == CARBON_CONSTANT.NO ? 'noFocus' : 'none'"
+                                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                            <mat-label class="formLabel"> Import Name </mat-label>
+                                            <input matInput type="text" placeholder="Example:August 2023 transactions"
+                                                formControlName="importName" />
+                                            <mat-error *ngIf="configureDataFG.controls['importName'].invalid">
+                                                Enter import name
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-sm-2 justify-content-start centerAlign">
+                                    <span
+                                        *ngIf="(isConfigEdit != CARBON_CONSTANT.YES && isConfigEdit != CARBON_CONSTANT.NO && !isConfigureBack) || (isConfigEdit == CARBON_CONSTANT.YES && !configuredData?.configuredData && !isConfigureBack)"
+                                        class="fw-bold">
+                                        Upload file
+                                    </span>
+                                    <span
+                                        *ngIf="isConfigEdit == CARBON_CONSTANT.NO || (isConfigEdit === CARBON_CONSTANT.YES && configuredData?.configuredData) || isConfigureBack"
+                                        class="fw-bold">
+                                        Uploaded file
+                                    </span>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="text-center d-flex justify-content-start centerAlignVertical"
+                                        *ngIf="(isConfigEdit != CARBON_CONSTANT.YES && isConfigEdit != CARBON_CONSTANT.NO && !isConfigureBack) || (isConfigEdit == CARBON_CONSTANT.YES && !configuredData?.configuredData && !isConfigureBack)">
+                                        <input #fileUpload id="fileUpload" class="d-none" type="file"
+                                            accept=".xlsx, .xls" (change)="onFileChange($event)" />
+                                        <button class="btn btn-sm btn-primary me-2" type="button"
+                                            (click)="isFileUploadBtn('fileUpload')">
+                                            Choose file
+                                        </button>
+                                        <span *ngIf="!progress">
+                                            {{ fileName }}
+                                        </span>
+                                    </div>
+                                    <div class="text-center d-flex justify-content-start centerAlignVertical"
+                                        *ngIf="isConfigEdit === CARBON_CONSTANT.NO || (isConfigEdit === CARBON_CONSTANT.YES && configuredData?.configuredData) || isConfigureBack">
+                                        <span>
+                                            {{ fileName }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2 justify-content-start centerAlign"> <span class="fw-bold">
+                                        Currency
+                                    </span>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="text-center">
+                                        <mat-form-field class="matFieldWidth100 cursorPointer mt-2" [ngClass]="{
+                                                'noFocus': (isConfigEdit && !(isConfigEdit == CARBON_CONSTANT.YES && configuredData?.configuredData == null) || isConfigEdit == CARBON_CONSTANT.NO || isConfigureBack)
+                                            }" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                            <mat-label class="formLabel"> Select Currency</mat-label>
+                                            <mat-select formControlName="currencyUnitID"
+                                                (selectionChange)="configureDataFG.controls.startDate.value && configureDataFG.controls.endDate.value ? getInflationRate(): ''">
+                                                <mat-option>
+                                                    <ngx-mat-select-search [formControl]="currencySearchUtil.filterFC"
+                                                        placeholderLabel="Search by currency name"
+                                                        noEntriesFoundLabel="No matching currency found.">
+                                                    </ngx-mat-select-search>
+                                                </mat-option>
+                                                <mat-option
+                                                    *ngFor="let currencies of currencySearchUtil.filteredEntities | async"
+                                                    [value]="currencies.currencyID">
+                                                    <span class="d-flex justify-content-between">
+                                                        {{ currencies.currencyName }} -
+                                                        <span>{{ currencies.currencyCode }}</span>
+                                                    </span>
+                                                </mat-option>
+                                            </mat-select>
+                                            <mat-error>
+                                                Select a currency
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-2 mb-2 justify-content-start centerAlign"> <span class="fw-bold">
+                                        Accounting period
+                                    </span>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="text-center">
+                                        <mat-form-field id="startDateFF"
+                                            [ngClass]="isConfigEdit == CARBON_CONSTANT.NO ? 'noFocus' : 'none'"
+                                            (click)="dateService.openDatepickerOnClick(startDate)"
+                                            (keydown.enter)="dateService.openDatepickerOnClick(startDate)"
+                                            (keydown.arrowdown)="dateService.openDatepickerOnClick(startDate)"
+                                            class="matFieldWidth100 cursorPointer cursorPointer"
+                                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                            <mat-label class="formLabel">Start date</mat-label>
+                                            <input matInput (dateInput)="formatDate($event.value, 'startDate')"
+                                                class="noFocus" [matDatepicker]="startDate" formControlName="startDate"
+                                                [max]="today" readonly />
+                                            <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
+                                            <mat-datepicker #startDate [disabled]="false"
+                                                (closed)="dateService.takeFocusAway('startDateFF');configureDataFG.controls.endDate.value && configureDataFG.controls.currencyUnitID.value ? getInflationRate(): ''"></mat-datepicker>
+                                            <mat-error *ngIf="errorHandling('startDate', 'required')">
+                                                Select a start date
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="text-center">
+                                        <mat-form-field id="endDateFF"
+                                            [ngClass]="isConfigEdit == CARBON_CONSTANT.NO ? 'noFocus' : 'none'"
+                                            (click)="dateService.openDatepickerOnClick(endDate)"
+                                            (keydown.enter)="dateService.openDatepickerOnClick(endDate)"
+                                            (keydown.arrowdown)="dateService.openDatepickerOnClick(endDate)"
+                                            class="matFieldWidth100 cursorPointer cursorPointer"
+                                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                            <mat-label class="formLabel">End date</mat-label>
+                                            <input matInput (dateInput)="formatDate($event.value, 'endDate')"
+                                                class="noFocus" [matDatepicker]="endDate" formControlName="endDate"
+                                                [min]="startDateValue" [max]="today" readonly />
+                                            <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
+                                            <mat-datepicker #endDate [disabled]="false"
+                                                (closed)="dateService.takeFocusAway('endDateFF');configureDataFG.controls.startDate.value && configureDataFG.controls.currencyUnitID.value ? getInflationRate(): ''"></mat-datepicker>
+                                            <mat-error *ngIf="errorHandling('endDate', 'required')">
+                                                Select an end date
+                                            </mat-error>
+                                            <mat-error *ngIf="errorHandling('endDate', 'matDatepickerMin')">
+                                                End date can not be before the start date
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row" *ngIf="isInflation && inflationRate.length > 0" formArrayName="inflation">
+                                <div class="col-sm-2 justify-content-start centerAlign">
+                                    <span class="fw-bold">Inflation rates (%) </span>
+                                </div>
+                                <div class="col-sm-2" *ngFor="let inflation of inflationRate; let i = index">
+                                    <div class="text-center" [formGroupName]="i">
+                                        <mat-form-field class="matFieldWidth100 cursorPointer mt-2"
+                                            [ngClass]="isConfigEdit == CARBON_CONSTANT.NO ? 'noFocus' : 'none'"
+                                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                            <mat-label class="formLabel">For year {{ inflation.year }}</mat-label>
+                                            <input matInput type="number" placeholder="0.00" min="0"
+                                                [formControlName]="inflation.year" />
+                                            <mat-error *ngIf="errorHandlingArray(i, inflation.year, 'required')">Enter
+                                                inflation rate</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        <a href="https://www.officialdata.org/countries" target="_blank">
+                                            <u> Check inflation rates</u>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="justify-content-end centerAlignVertical">
+                                    <button type="button" class="btn btn-sm btn-secondary me-2"
+                                        (click)="cancelButtonAction();">
+                                        Cancel
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-success text-white me-2"
+                                        (click)="(isConfigEdit || isConfigureBack) ? updateConfiguredData() : saveConfigureData()">
+                                        Next
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </mat-step>
+                    <mat-step label="Categorize">
+                        <button type="button" class="d-none" #refreshBtn>refresh</button>
+                        <form [formGroup]="categorizeDataFG">
+                            <div class="cardTitle fw-bold pb-3">
+                                <span class="fs-4">
+                                    {{ totalCategorizedRecord }}/{{ resultLength }}
+                                </span><span class="fs-5">
+                                    records categorised from {{
+                                    startRecordDate }}
+                                    to
+                                    {{ endRecordDate }}
+                                </span>
+                                <div class="float-end">
+                                    <lib-search-bar-one class="me-3" #searchBar [searchBy]="'supplier'"
+                                        (emitSearch)="categorizeSearchFn($event)"></lib-search-bar-one>
+                                </div>
+                            </div>
+                            <div class="alert alert-warning roundedBorder" *ngIf="showMessage ==='YES'">
+                                <svg class="bi flex-shrink-0 me-2 extraInfoCardHeaderIcon">
+                                    <use xlink:href="#exclamation-triangle-fill" />
+                                </svg>
+                                If transaction date does not match accounting date, emissions
+                                will not be calculated for these records. To categorise them,
+                                <a (click)="gotoBackPage()" style="color: #3f6ad8; cursor: pointer;">go back</a> and
+                                change the accounting period.
+                            </div>
+                            <div class="overflowX customScrollBar w-100">
+                                <table mat-table class="w-100"
+                                    [ngClass]="isCategorizeEdit == CARBON_CONSTANT.NO ? 'noFocus' : 'none'"
+                                    [dataSource]="dataSource" #sort matSort matSortActive="recordID"
+                                    matSortDirection="desc" matSortDisableClear>
+                                    <ng-container matColumnDef="includeExcludeRecord">
+                                        <th class="ps-3 date" mat-header-cell *matHeaderCellDef> Include/Exclude
+                                        </th>
+                                        <td class="ps-3" mat-cell *matCellDef="let row"
+                                            [ngClass]="{'noFocusCategory': recordAvailableForCategorization(row.transactionDate) === 'NO'}">
+                                            <mat-slide-toggle class="slideToggleBtn"
+                                                [formControl]="getenableRecordFormControl(row.recordID)"></mat-slide-toggle>
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="recordID">
+                                        <th class="ps-3 date" mat-header-cell *matHeaderCellDef mat-sort-header> Record
+                                            ID
+                                        </th>
+                                        <td class="ps-3" mat-cell *matCellDef="let row"
+                                            [ngClass]="{'noFocusCategory': recordAvailableForCategorization(row.transactionDate) === 'NO' || getenableRecordFormControl(row.recordID).value === false}">
+                                            {{ row.recordID }} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="transactionDate">
+                                        <th class="ps-3 date" mat-header-cell *matHeaderCellDef> Date
+                                        </th>
+                                        <td class="ps-3" mat-cell *matCellDef="let row"
+                                            [ngClass]="{'noFocusCategory': recordAvailableForCategorization(row.transactionDate) === 'NO' || getenableRecordFormControl(row.recordID).value === false}">
+                                            {{ row.transactionDate }} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="account">
+                                        <th class="ps-3 account" mat-header-cell *matHeaderCellDef>
+                                            <div class="row">
+                                                <funnel-filter #accountSelect header="Account" type="multi"
+                                                    [entityList]="accountList" value="name" view="name"
+                                                    [selectFC]="accountFC" [active]="accountFlag"
+                                                    selectAllLabel="All account" [resetFlag]="accountFlag"
+                                                    (multi)="accountFlag = true">
+                                                </funnel-filter>
+                                            </div>
+                                        </th>
+                                        <td class="ps-3" mat-cell *matCellDef="let row"
+                                            [ngClass]="availableForCategorization == 'NO' || getenableRecordFormControl(row.recordID).value === false ? 'noFocusCategory' : 'none'">
+                                            {{
+                                            row.account }} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="supplier">
+                                        <th class="ps-3 supplier" mat-header-cell *matHeaderCellDef> Supplier </th>
+                                        <td class="ps-3" mat-cell *matCellDef="let row"
+                                            [ngClass]="availableForCategorization == 'NO' || getenableRecordFormControl(row.recordID).value === false ? 'noFocusCategory' : 'none'">
+                                            {{
+                                            row.supplier }} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="amount">
+                                        <th class="ps-3 amount" mat-header-cell *matHeaderCellDef> Amount {{
+                                            categoryCurrencySymbol ?
+                                            '(' + categoryCurrencySymbol + ')' : '' }} </th>
+                                        <td class="ps-3" mat-cell *matCellDef="let row"
+                                            [ngClass]="availableForCategorization == 'NO' || getenableRecordFormControl(row.recordID).value === false ? 'noFocusCategory' : 'none'">
+                                            {{
+                                            row.amount }} </td>
+                                    </ng-container>
+
+                                    <ng-container formArrayName="categoryValues">
+                                        <ng-container matColumnDef="categorize">
+                                            <th class="ps-3 categorize" mat-header-cell *matHeaderCellDef> Categorize
+                                            </th>
+                                            <td class="ps-3" mat-cell *matCellDef="let row; let i = index"
+                                                [formGroupName]="row.index"
+                                                [ngClass]="availableForCategorization == 'NO' || getenableRecordFormControl(row.recordID).value === false ? 'noFocusCategory' : 'none'">
+                                                <mat-form-field class="matFieldWidth100 cursorPointer mt-3"
+                                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                    <mat-label class="formLabel"> Select Category</mat-label>
+                                                    <mat-select formControlName="categoryStdID">
+                                                        <mat-option>
+                                                            <ngx-mat-select-search
+                                                                [formControl]="categorySearchUtil?.[i]?.filterFC"
+                                                                placeholderLabel="Search by name"
+                                                                noEntriesFoundLabel="No matching name found.">
+                                                            </ngx-mat-select-search>
+                                                        </mat-option>
+                                                        <mat-option
+                                                            *ngFor="let category of categorySearchUtil?.[i]?.filteredEntities | async"
+                                                            [value]="category['id']"
+                                                            [matTooltip]="category['name'].length>30? category['name']: ''"
+                                                            matTooltipPosition="above" matTooltipClass="nameTooltip"
+                                                            (click)="preferneceModel(row.recordID, categoryValues.at(row.index).get('categoryStdID').value, categoryValues.at(row.index).get('activityStdID').value, row.index)">
+                                                            {{ category['name'] }}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                    <mat-error>
+                                                        Select a category
+                                                    </mat-error>
+                                                </mat-form-field>
+                                            </td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="activity">
+                                            <th class="ps-3 categorize" mat-header-cell *matHeaderCellDef> Activity type
+                                            </th>
+                                            <td class="ps-3" mat-cell *matCellDef="let row; let i = index"
+                                                [formGroupName]="row.index"
+                                                [ngClass]="availableForCategorization == 'NO' || getenableRecordFormControl(row.recordID).value === false ? 'noFocusCategory' : 'none'">
+                                                <mat-form-field class="matFieldWidth100 cursorPointer mt-3"
+                                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                    <mat-label class="formLabel"> Select Activity</mat-label>
+                                                    <mat-select formControlName="activityStdID">
+                                                        <mat-option>
+                                                            <ngx-mat-select-search
+                                                                [formControl]="activitySearchUtil?.[i]?.filterFC"
+                                                                placeholderLabel="Search by name"
+                                                                noEntriesFoundLabel="No matching name found.">
+                                                            </ngx-mat-select-search>
+                                                        </mat-option>
+                                                        <mat-option
+                                                            *ngFor="let activity of activitySearchUtil?.[i]?.filteredEntities | async"
+                                                            [value]="activity['id']"
+                                                            (click)="preferneceModel(row.recordID, categoryValues.at(row.index).get('categoryStdID').value, categoryValues.at(row.index).get('activityStdID').value, row.index)">
+                                                            {{ activity['name'] }}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                    <mat-error>
+                                                        Select an activity
+                                                    </mat-error>
+                                                </mat-form-field>
+                                            </td>
+                                        </ng-container>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                    <tr mat-row *matRowDef="let task; columns: displayedColumns;">
+                                    </tr>
+                                    <tr class="mat-row" *matNoDataRow>
+                                        <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                                            {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </form>
+                        <mat-paginator #paginator class="roundedBorder" showFirstLastButtons [length]="resultLength"
+                            [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE"
+                            [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION">
+                        </mat-paginator>
+                        <div class="card-body pt-2 pb-1">
+                            <div class="row">
+                                <div class="justify-content-end centerAlignVertical">
+                                    <button type="button" class="btn btn-sm btn-secondary me-2"
+                                        (click)="cancelButtonAction();">
+                                        Cancel
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-secondary me-2"
+                                        matTooltip="All Categorized records will destroy if you go back."
+                                        matTooltipPosition="above" matTooltipClass="infoTooltip"
+                                        (click)="gotoBackPage()">
+                                        Back
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-warning me-2 text-white"
+                                        (click)="saveCategoryRecordsData('DRAFT')"
+                                        routerLink="/activity-data/spend-based-method/import-history">
+                                        Save as draft
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-success me-2"
+                                        (click)="saveCategoryRecordsData('DONE')">
+                                        Save and next
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-step>
+                    <mat-step label="Preview">
+                        <button type="button" class="d-none" #previewRefreshBtn>refresh</button>
+                        <div class="card-body pt-0 pb-1">
+                            <div class="col-sm-12 pt-1 pb-2">
+                                <div class="float-end">
+                                    <lib-search-bar-one class="me-3" #searchBar [searchBy]="'supplier'"
+                                        (emitSearch)="previewSearchFn($event)"></lib-search-bar-one>
+                                </div>
+                                <div class="alert alert-warning roundedBorder" *ngIf="showMessage ==='YES'">
+                                    <svg class="bi flex-shrink-0 me-2 extraInfoCardHeaderIcon">
+                                        <use xlink:href="#exclamation-triangle-fill" />
+                                    </svg>
+                                    If transaction date does not match accounting date, emissions
+                                    will not be calculated for these records. To categorise them,
+                                    <a (click)="gotoBackPage()" style="color: #3f6ad8; cursor: pointer;">go back</a> and
+                                    change the accounting period.
+                                </div>
+                            </div>
+                            <div class="overflowX customScrollBar w-100">
+                                <table mat-table class="w-100" [dataSource]="previewDataSource" #previewSort matSort
+                                    matSortActive="recordID" matSortDirection="desc" matSortDisableClear>
+                                    <ng-container matColumnDef="recordID">
+                                        <th class="ps-3 date" mat-header-cell *matHeaderCellDef mat-sort-header> Record
+                                            ID
+                                        </th>
+                                        <td class="ps-3" mat-cell *matCellDef="let row"
+                                            [ngClass]="{'noFocusCategory': recordAvailableForCategorization(row.transactionDate) === 'NO'}">
+                                            {{ row.recordID }} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="transactionDate">
+                                        <th class="ps-3 date" mat-header-cell *matHeaderCellDef> Date
+                                        </th>
+                                        <td class="ps-3" mat-cell *matCellDef="let row"
+                                            [ngClass]="{'noFocusCategory': recordAvailableForCategorization(row.transactionDate) === 'NO'}">
+                                            {{ row.transactionDate }} </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="account">
+                                        <th class="ps-3 account" mat-header-cell *matHeaderCellDef>
+                                            <div class="row">
+                                                <funnel-filter #previewAccountSelect header="Account" type="multi"
+                                                    [entityList]="accountList" value="name" view="name"
+                                                    [selectFC]="previewAccountFC" [active]="previewAccountFlag"
+                                                    selectAllLabel="All account" [resetFlag]="previewAccountFlag"
+                                                    (multi)="previewAccountFlag = true">
+                                                </funnel-filter>
+                                            </div>
+                                        </th>
+                                        <td class="ps-3" mat-cell *matCellDef="let row"
+                                            [ngClass]="availableForCategorization == 'NO' ? 'noFocusCategory' : 'none'">
+                                            {{ (row['account'] ? row['account']: COMMON_CONSTANT.HYPHEN)}}
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="supplier">
+                                        <th class="ps-3 supplier" mat-header-cell *matHeaderCellDef> Supplier </th>
+                                        <td class="ps-3" mat-cell *matCellDef="let row"
+                                            [ngClass]="availableForCategorization == 'NO' ? 'noFocusCategory' : 'none'">
+                                            {{ (row['supplier'] ? row['supplier']: COMMON_CONSTANT.HYPHEN)}}
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="amount">
+                                        <th class="ps-3 amount" mat-header-cell *matHeaderCellDef> Amount {{
+                                            previewCurrencySymbol ? '(' + previewCurrencySymbol + ')' : '' }} </th>
+                                        <td class="ps-3" mat-cell *matCellDef="let row"
+                                            [ngClass]="availableForCategorization == 'NO' ? 'noFocusCategory' : 'none'">
+                                            {{ (row['amount'] ? row['amount']: COMMON_CONSTANT.HYPHEN)}}
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="categorize">
+                                        <th class="ps-3 categorize" mat-header-cell *matHeaderCellDef> Categorize </th>
+                                        <td class="ps-3" mat-cell *matCellDef="let row"
+                                            [ngClass]="availableForCategorization == 'NO' ? 'noFocusCategory' : 'none'"
+                                            [matTooltip]="row['category']?.length>25? row['category']: ''"
+                                            matTooltipPosition="above" matTooltipClass="nameTooltip">
+                                            {{ (row['category'] ? row['category']: COMMON_CONSTANT.HYPHEN) |
+                                            dotdotdot:25}}
+                                        </td>
+                                    </ng-container>
+                                    <ng-container matColumnDef="activity">
+                                        <th class="ps-3 categorize" mat-header-cell *matHeaderCellDef> Activity type
+                                        </th>
+                                        <td class="ps-3" mat-cell *matCellDef="let row"
+                                            [ngClass]="availableForCategorization == 'NO' ? 'noFocusCategory' : 'none'"
+                                            [matTooltip]="row['activityName']?.length>25? row['activityName']: ''"
+                                            matTooltipPosition="above" matTooltipClass="nameTooltip">
+                                            {{ (row['activityName'] ? row['activityName']: COMMON_CONSTANT.HYPHEN) |
+                                            dotdotdot:25}}
+                                        </td>
+                                    </ng-container>
+                                    <tr mat-header-row *matHeaderRowDef="previewDisplayedColumns"></tr>
+                                    <tr mat-row *matRowDef="let task; columns: previewDisplayedColumns;">
+                                    </tr>
+                                    <tr class="mat-row" *matNoDataRow>
+                                        <td class="mat-cell text-center"
+                                            [attr.colspan]="previewDisplayedColumns.length">
+                                            {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <mat-paginator #previewPaginator class="roundedBorder" showFirstLastButtons
+                                [length]="previewResultLength" [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE"
+                                [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION">
+                            </mat-paginator>
+                            <div class="row">
+                                <div class="justify-content-end centerAlignVertical">
+                                    <button type="button" class="btn btn-sm btn-secondary me-2" matStepperPrevious>
+                                        Back
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-success text-white me-2"
+                                        (click)="submitPreviewData('DONE')"
+                                        routerLink="/activity-data/spend-based-method/import-history">
+                                        Submit
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-step>
+                </mat-stepper>
+            </div>
+        </div>
+    </div>
+</div>

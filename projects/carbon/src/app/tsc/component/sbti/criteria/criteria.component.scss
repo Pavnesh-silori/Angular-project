@@ -1,0 +1,28 @@
+.checked {
+    color: green;
+}
+
+.dark {
+    color: black;
+}
+
+.linkColor {
+    color: #3f6ad8;
+}
+
+::ng-deep .resizeIcon {
+    .extraInfoCardHeaderIcon {
+        width: 22px;
+        height: 22px;
+    }
+}
+
+.criteriaCard {
+    padding-left: 4%;
+    padding-right: 4%;
+}
+
+.viewContainer{
+    display: flex;
+    justify-content: flex-end;
+}

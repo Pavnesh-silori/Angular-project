@@ -1,0 +1,46 @@
+.spinner-container {
+    display: flex;
+    align-items: end;
+    justify-content: end;
+    padding-top: 10px;
+}
+
+.spinner-label {
+    margin-left: 8px;
+}
+
+.progressStyle {
+    flex: 0 0 50px;
+    align-items: center;
+    display: flex;
+}
+
+.disabled {
+    // pointer-events: none;
+    display: block;
+    opacity: 0.7;
+}
+
+.custom-badge {
+    height: 1rem;
+    width: 4rem;
+
+}
+
+.intervalCards {
+    display: flex;
+}
+
+.cursorStyle {
+    cursor: not-allowed;
+}
+
+.displayStyle {
+    display: flex;
+}
+
+.displayFlex {
+    flex: 1;
+}
+
+

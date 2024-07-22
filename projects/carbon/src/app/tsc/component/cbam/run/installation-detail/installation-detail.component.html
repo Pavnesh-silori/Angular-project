@@ -1,0 +1,224 @@
+<mat-card class="border cardOverwrite">
+    <div class="cardTitle pb-3">
+        1. Installation Details
+    </div>
+
+    <form [formGroup]="installationDetailFG">
+        <div class="row">
+            <div class="col-sm-10">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <mat-form-field class="matFieldWidth100"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel">Name of installation (English name)</mat-label>
+                            <input matInput type="text" formControlName="name" required />
+                            <mat-error *ngIf="errorHandling('name', 'required')">
+                                {{ FormErrorEnum.REQUIRED }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-6">
+                        <mat-form-field class="matFieldWidth100"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel">Economic activity</mat-label>
+                            <input matInput type="text" formControlName="economicActivity" />
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-10">
+                <mat-card class="border cardOverwrite">
+                    <div class="cardTitle pb-3">Address details</div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <mat-form-field class="matFieldWidth100"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Street / Street no</mat-label>
+                                <textarea matInput min="0" [maxlength]="streetCharLength" formControlName="street"
+                                    cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1"
+                                    cdkAutosizeMaxRows="5" required>
+                            </textarea>
+                                <mat-hint>Total number of character remaining: 
+                                    {{charactersRemainingFn(installationDetailFG) }}/ {{ streetCharLength }}
+                                </mat-hint>
+                                <mat-error *ngIf="errorHandling('street', 'required')">
+                                    {{ FormErrorEnum.REQUIRED }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-sm-6">
+                            <mat-form-field class="matFieldWidth100"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">City</mat-label>
+                                <input matInput type="text" formControlName="city" required />
+                                <mat-error *ngIf="errorHandling('city', 'required')">
+                                    {{ FormErrorEnum.REQUIRED }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <mat-form-field class="matFieldWidth100"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Post office box</mat-label>
+                                <input matInput type="text" formControlName="postBox" required />
+                                <mat-error *ngIf="errorHandling('postBox', 'required')">
+                                    {{ FormErrorEnum.REQUIRED }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-sm-6">
+                            <mat-form-field class="matFieldWidth100"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Post code</mat-label>
+                                <input matInput type="text" formControlName="postCode" required />
+                                <mat-error *ngIf="errorHandling('postCode', 'required')">
+                                    {{ FormErrorEnum.REQUIRED }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <mat-form-field class="matFieldWidth100"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Country</mat-label>
+                                <mat-select formControlName="countryCode"
+                                    (selectionChange)="onCountrySelectionChange($event)" required>
+                                    <mat-option>
+                                        <ngx-mat-select-search [formControl]="countryFiltered.filterFC"
+                                            placeholderLabel="Search by country name"
+                                            noEntriesFoundLabel="No matching country found.">
+                                        </ngx-mat-select-search>
+                                    </mat-option>
+                                    <mat-option *ngFor="let countriesM of countryFiltered.filteredEntities | async"
+                                        [value]="countriesM.countryCode">
+                                        <span class="d-flex justify-content-between">
+                                            {{countriesM.countryName}} -
+                                            <span>{{countriesM.countryCode}}</span>
+                                        </span>
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="errorHandling('countryCode', 'required')">
+                                    {{ FormErrorEnum.REQUIRED }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-sm-6">
+                            <mat-form-field class="matFieldWidth100"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">UN location</mat-label>
+                                <mat-select formControlName="unLocationCode"
+                                    (selectionChange)="getCoordinates($event.value)" required>
+                                    <mat-option>
+                                        <ngx-mat-select-search [formControl]="unLocationCodeFiltered.filterFC"
+                                            placeholderLabel="Search by UN location name"
+                                            noEntriesFoundLabel="No matching UN location found.">
+                                        </ngx-mat-select-search>
+                                    </mat-option>
+                                    <mat-option *ngFor="let UNLcode of unLocationCodeFiltered.filteredEntities | async"
+                                        [value]="UNLcode.locationCode">
+                                        <span class="d-flex justify-content-between">
+                                            {{UNLcode.locationCode}} -
+                                            <span>{{UNLcode.name}}</span>
+                                        </span>
+                                    </mat-option>
+                                </mat-select>
+                                <mat-hint *ngIf="!haveCountry()"> Please select country first </mat-hint>
+                                <mat-error *ngIf="errorHandling('unLocationCode', 'required')">
+                                    {{ FormErrorEnum.REQUIRED }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <form formGroupName="coordinates">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Longitude</mat-label>
+                                    <input matInput type="text" placeholder="Longitude" formControlName="longitude"
+                                        required />
+                                    <mat-error *ngIf="errorHandling('coordinates.longitude', 'required')">
+                                        {{ FormErrorEnum.REQUIRED }}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-6">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Latitude</mat-label>
+                                    <input matInput type="text" placeholder="Latitude" formControlName="latitude"
+                                        required />
+                                    <mat-error *ngIf="errorHandling('coordinates.latitude', 'required')">
+                                        {{ FormErrorEnum.REQUIRED }}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </form>
+                </mat-card>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-sm-10">
+                <mat-card class="border cardOverwrite">
+                    <div class="cardTitle pb-3">Authorized Representative Details</div>
+                    <div class="row">
+                        <div class="col-sm-6 mt-1">
+                            <mat-form-field class="matFieldWidth100"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Name of authorized representative</mat-label>
+                                <input matInput type="text" formControlName="representativeName" required />
+                                <mat-error *ngIf="errorHandling('representativeName', 'required')">
+                                    {{ FormErrorEnum.REQUIRED }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-sm-6 pt-2">
+                            <!-- <mat-label class="formLabel"> Phone number</mat-label> -->
+                            <ngx-intl-tel-input [preferredCountries]="preferredCountries"
+                                [enableAutoCountrySelect]="true" [enablePlaceholder]="true" [searchCountryFlag]="true"
+                                [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+                                [selectFirstCountry]="false" [maxLength]="maxLength" [phoneValidation]="true"
+                                [separateDialCode]="separateDialCode" [numberFormat]="PhoneNumberFormat.National"
+                                [formControl]="phoneFormControl" [selectedCountryISO]="currentCountryCode"
+                                class="dropdown-top input-sm" customPlaceholder="Phone number">
+                            </ngx-intl-tel-input>
+                            <mat-error class="telError"
+                                *ngIf="phoneFormControl.touched && phoneFormControl.hasError('required')">
+                                {{ FormErrorEnum.REQUIRED }}
+                            </mat-error>
+                            <mat-error class="telError"
+                                *ngIf="phoneFormControl.invalid && !phoneFormControl.hasError('required')">
+                                Please input a valid mobile number.
+                            </mat-error>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <mat-form-field class="matFieldWidth100"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel"> Email</mat-label>
+                                <input matInput type="text" placeholder="example.abc@domain.com" formControlName="email"
+                                    required />
+                                <mat-error *ngIf="errorHandling('email', 'required')">
+                                    {{ FormErrorEnum.REQUIRED }}
+                                </mat-error>
+                                <mat-error *ngIf="errorHandling('email', 'pattern')">
+                                    Enter a valid email ID.
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+    </form>
+</mat-card>

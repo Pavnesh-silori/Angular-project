@@ -1,0 +1,32 @@
+.mat-tab-link.mat-tab-label-active {
+    color: rgb(4, 4, 132);
+}
+
+.mat-tab-link {
+    // color: black;
+    opacity: 1 !important;
+}
+
+.col-recordID{
+    min-width: 120px;
+}
+
+.col-date{
+    min-width: 140px;
+}
+
+.col-group{
+    min-width: 120px;
+}
+
+.col-gasQuantity{
+    max-width: 130px;
+}
+
+.col-equipmentCapacity{
+    min-width: 140px;
+}
+
+.col-doc{
+    min-width: 140px;
+}

@@ -1,0 +1,343 @@
+<form [formGroup]="activityDataFG">
+    <ng-container formArrayName="activityData">
+        <ng-container *ngFor="let formGroup of activityDataFA.controls; let i=index" [formGroupName]="i">
+            <mat-card class="border cardOverwrite my-1">
+
+                <div class="row">
+                    <div class="col-sm-8 mb-3">
+                        Combustion equipment:
+                        <span class="cardTitle pb-2"> {{ formGroup.get('sourceName').value }} </span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-8">
+                        <lib-date-input class="cursorPointer" #customDateInput
+                            (emitFilter)="dateInpChange(formGroup, i)" [materialFieldWidthInp]="true"
+                            [materialFormFieldAppearanceInp]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE"
+                            [isMandatoryFieldInp]="errorHandlingFA(formGroup, 'startDate', 'required')" [dateInputTypeInp]="DateInputTypeEnum.CUSTOM_INPUT"
+                            [cdrFormatInp]="DateFormatEnum.DD_MMM_YYYY" [labelInp]="'Accounting Period'">
+                        </lib-date-input>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-8">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <button class="btn btn-light w-100 text-start text-secondary fs-6 fuelSelect fuelSelectFormField" type="button"
+                                    [class]="{'fuelSelectErrorFormField': getFuelRequiredError(formGroup)}"
+                                    [matMenuTriggerFor]="fuels"
+                                    (click)="formGroup.get('customFuelID').markAsTouched()">
+                                    <span [class]="{
+                                            'text-danger': getFuelRequiredError(formGroup),
+                                            'fuelSelectedLabel': formGroup.get('fuelName').value
+                                        }">
+                                        {{ formGroup.get('fuelName').value || 'Select fuel' }}
+                                    </span>
+                                </button>
+                                <mat-error class="fuelSelectError" *ngIf="getFuelRequiredError(formGroup)">
+                                    {{ FormErrorEnum.REQUIRED }}
+                                </mat-error>
+                                <mat-menu #fuels="matMenu">
+                                    <button mat-menu-item (click)="customFuel.open();"
+                                        [matMenuTriggerFor]="triggerMenu">
+                                        Custom fuels
+                                    </button>
+                                    <button mat-menu-item [matMenuTriggerFor]="triggerMenu"
+                                        (click)="standardFuel.open()">
+                                        Standard fuels
+                                    </button>
+                                </mat-menu>
+                                <mat-menu #triggerMenu="matMenu"></mat-menu>
+
+                                <div class="funnelFilterDD">
+                                    <mat-form-field class="fuel"
+                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <mat-label class="formLabel">
+                                            Select type of custom fuel consumed
+                                        </mat-label>
+                                        <mat-select #customFuel formControlName="customFuelID"
+                                            (selectionChange)="fuelSelected('CUSTOM', $event.value, formGroup)">
+                                            <mat-option>
+                                                <ngx-mat-select-search [formControl]="customFuelSearchUtil.filterFC"
+                                                    placeholderLabel="Search by custom fuel name"
+                                                    noEntriesFoundLabel="No matching fuel found.">
+                                                </ngx-mat-select-search>
+                                            </mat-option>
+                                            <mat-option
+                                                *ngFor="let type of customFuelSearchUtil.filteredEntities | async"
+                                                [value]="type.id" [matTooltip]="type?.description"
+                                                matTooltipPosition="above" matTooltipClass="infoTooltip">
+                                                {{ type.name }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div class="funnelFilterDD">
+                                    <mat-form-field class="fuel"
+                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <mat-label class="formLabel">
+                                            Select type of standard fuel consumed
+                                        </mat-label>
+                                        <mat-select #standardFuel formControlName="standardFuelID"
+                                            (selectionChange)="fuelSelected('STANDARD', $event.value, formGroup)">
+                                            <mat-option>
+                                                <ngx-mat-select-search [formControl]="fuelTypeSearchUtil.filterFC"
+                                                    placeholderLabel="Search by standard fuel name"
+                                                    noEntriesFoundLabel="No matching fuel found.">
+                                                </ngx-mat-select-search>
+                                            </mat-option>
+                                            <mat-option *ngFor="let type of fuelTypeSearchUtil.filteredEntities | async"
+                                                [value]="type.id" [matTooltip]="type?.description"
+                                                matTooltipPosition="above" matTooltipClass="infoTooltip">
+                                                {{ type.name }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Opening meter reading</mat-label>
+                                    <input matInput type="number" formControlName="openingMeterReading"
+                                        placeholder="0.00" min="0">
+                                    <mat-error *ngIf="errorHandlingFA(formGroup, 'openingMeterReading', 'min')">
+                                        {{ FormErrorEnum.NEGATIVE }}
+                                    </mat-error>
+                                    <mat-error *ngIf="errorHandlingFA(formGroup, 'openingMeterReading', 'required')">
+                                        {{ FormErrorEnum.REQUIRED }}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-3">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Closing meter reading</mat-label>
+                                    <input matInput type="number" formControlName="closingMeterReading"
+                                        placeholder="0.00" min="0">
+                                    <mat-error *ngIf="errorHandlingFA(formGroup, 'closingMeterReading', 'min')">
+                                        {{ FormErrorEnum.NEGATIVE }}
+                                    </mat-error>
+                                    <mat-error *ngIf="errorHandlingFA(formGroup, 'closingMeterReading', 'required')">
+                                        {{ FormErrorEnum.REQUIRED }}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-3">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Select unit</mat-label>
+                                    <mat-select formControlName="meterUnitID">
+                                        <mat-option>
+                                            <ngx-mat-select-search [formControl]="fuelConsumedUnitSearchUtil.filterFC"
+                                                placeholderLabel="Search by unit name"
+                                                noEntriesFoundLabel="No matching found.">
+                                            </ngx-mat-select-search>
+                                        </mat-option>
+                                        <mat-option
+                                            *ngFor="let unit of fuelConsumedUnitSearchUtil.filteredEntities| async"
+                                            [value]="unit.id">
+                                            {{ unit.name }} -
+                                            {{unit.uomCode}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="errorHandlingFA(formGroup, 'meterUnitID', 'min')">
+                                        {{ FormErrorEnum.NEGATIVE }}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Net calorific value(NCV)</mat-label>
+                                    <input class="formPlaceholder" matInput min="0" type="number" matInput
+                                        placeholder="" type="number" formControlName="netCalorificValue" />
+                                    <mat-error *ngIf="errorHandlingFA(formGroup, 'netCalorificValue', 'min')">
+                                        {{ FormErrorEnum.NEGATIVE }}
+                                    </mat-error>
+                                    <mat-error *ngIf="errorHandlingFA(formGroup, 'netCalorificValue', 'required')">
+                                        {{ FormErrorEnum.REQUIRED }}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-4">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Select Numerator</mat-label>
+                                    <mat-select formControlName="ncvNumeratorUnitID">
+                                        <mat-option>
+                                            <ngx-mat-select-search [formControl]="energyUnitSearchUtil.filterFC"
+                                                placeholderLabel="Search by unit name"
+                                                noEntriesFoundLabel="No matching found.">
+                                            </ngx-mat-select-search>
+                                        </mat-option>
+                                        <mat-option *ngFor="let unit of energyUnitSearchUtil.filteredEntities| async"
+                                            [value]="unit.id">
+                                            {{ unit.name }} -
+                                            {{unit.uomCode}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="errorHandlingFA(formGroup, 'ncvNumeratorUnitID', 'required')">
+                                        {{ FormErrorEnum.REQUIRED }}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-4">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Select Denominator</mat-label>
+                                    <mat-select formControlName="ncvDenominatorUnitID">
+                                        <mat-option>
+                                            <ngx-mat-select-search [formControl]="ncvDenominatorSearchUtil.filterFC"
+                                                placeholderLabel="Search by unit name"
+                                                noEntriesFoundLabel="No matching found.">
+                                            </ngx-mat-select-search>
+                                        </mat-option>
+                                        <mat-option
+                                            *ngFor="let unit of ncvDenominatorSearchUtil.filteredEntities| async"
+                                            [value]="unit.id">
+                                            {{ unit.name }} -
+                                            {{unit.uomCode}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="errorHandlingFA(formGroup, 'ncvDenominatorUnitID', 'required')">
+                                        {{ FormErrorEnum.REQUIRED }}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Oxidation factor </mat-label>
+                                    <input class="formPlaceholder" matInput min="0" max="1" type="number"
+                                        placeholder="0.02" formControlName="oxidationFactor" />
+                                    <mat-error *ngIf="errorHandlingFA(formGroup, 'oxidationFactor', 'min')">
+                                        {{ FormErrorEnum.NEGATIVE }}
+                                    </mat-error>
+                                    <mat-error *ngIf="errorHandlingFA(formGroup, 'oxidationFactor', 'max')">
+                                        Value can not be more than 1
+                                    </mat-error>
+                                    <mat-error *ngIf="errorHandlingFA(formGroup, 'oxidationFactor', 'required')">
+                                        {{ FormErrorEnum.REQUIRED }}
+                                    </mat-error>
+                                </mat-form-field>
+
+                            </div>
+                            <div class="col-sm-4">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Biomass Used</mat-label>
+                                    <input class="formPlaceholder" matInput min="0" max="100" type="number"
+                                        placeholder="" formControlName="biomassPct" />
+                                    <span matSuffix class="matSuffix ms-2 pb-5">%</span>
+                                    <mat-error *ngIf="errorHandlingFA(formGroup, 'biomassPct', 'min')">
+                                        {{ FormErrorEnum.NEGATIVE }}
+                                    </mat-error>
+                                    <mat-error *ngIf="errorHandlingFA(formGroup, 'biomassPct', 'max')">
+                                        Value can not be more than 100
+                                    </mat-error>
+                                    <mat-error *ngIf="errorHandlingFA(formGroup, 'biomassPct', 'required')">
+                                        {{ FormErrorEnum.REQUIRED }}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <ng-container *ngIf="formGroup.get('docPath').value == null">
+                            <div class="row">
+                                <div class="col-sm-8 fileInput">
+                                    <input class="form-control" type="file" accept="application/pdf" #fileInput
+                                        (change)="fileUpload($event, formGroup, i)">
+                                </div>
+                            </div>
+                            <div class="row pt-2">
+                                <div class="col-sm-8">
+                                    <div class="border rounded d-flex" [ngClass]="{'d-none': (docFileList[i] == null)}">
+
+                                        <div class="p-1">
+                                            <ng-container *ngTemplateOutlet="docImg"></ng-container>
+                                        </div>
+
+                                        <div class="p-1">
+                                            <div class="centerAlignVertical p-1">
+                                                {{ formGroup.get('docName').value }} <br>
+                                                {{ formGroup.get('docSize').value }}
+                                            </div>
+                                        </div>
+
+                                        <div class="ms-auto p-1">
+                                            <button type="button" class="btn p-1" mat-icon-button
+                                                (click)="removeFile(formGroup, i)">
+                                                <span class="material-symbols-outlined text-danger">
+                                                    delete
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+
+                        <ng-container *ngIf="formGroup.get('docPath').value != null">
+                            <div class="row pt-2">
+                                <div class="col-sm-8">
+                                    <div class="border rounded d-flex">
+
+                                        <ng-container *ngTemplateOutlet="docImg"></ng-container>
+
+                                        <div class="p-1">
+                                            <div class="centerAlignVertical p-3">
+                                                <a href="{{formGroup.get('docPath').value}}" target="_blank"
+                                                    [ngClass]="{'d-none': !formGroup.get('docPath').value}">
+                                                    {{formGroup.get('docName').value}}
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                        <div class="ms-auto p-1">
+                                            <button type="button" class="btn p-1" mat-icon-button matTooltip="Edit"
+                                                matTooltipClass="nameTooltip" matTooltipPosition="below"
+                                                (click)="fileInput.click()">
+                                                <span
+                                                    class="material-symbols-outlined text-primary updateIconHover fs-5">
+                                                    edit
+                                                </span>
+                                            </button>
+                                            <input class="form-control" type="file" accept="application/pdf" #fileInput
+                                                (change)="fileUpload($event, formGroup, i)" style="display: none;">
+
+                                            <button type="button" class="btn p-1" mat-icon-button matTooltip="Delete"
+                                                matTooltipClass="nameTooltip" matTooltipPosition="below"
+                                                (click)="deleteConfirmation(formGroup, i)">
+                                                <span class="material-symbols-outlined text-danger">
+                                                    delete
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </mat-card>
+        </ng-container>
+    </ng-container>
+</form>
+
+<ng-template #docImg>
+    <div class="p-1">
+        <div class="docIcon p-1" matSuffix mat-icon-button mat-raised-button [matTooltip]="billFileName"
+            matTooltipPosition="below">
+            <img height="40px" src="assets/images/default-doc.ico" alt="bill document preview">
+        </div>
+    </div>
+</ng-template>

@@ -1,0 +1,50 @@
+.activityContainer {
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.activityContainerLeft {
+    flex: 1;
+}
+
+.activityContainerRight {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.activityContainerRightInner {
+    display: flex;
+    align-items: center;
+}
+
+.activityTitle {
+    color: grey;
+    text-transform: capitalize;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.activitySubtitle {
+    color: grey;
+    font-size: 12px;
+    font-weight: 200;
+    text-transform: none;
+}
+
+.matAccordion {
+    box-shadow: none !important;
+    background: whitesmoke;
+    border-radius: 16px !important;
+}
+
+.subType {
+    margin: 5px;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}

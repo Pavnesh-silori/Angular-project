@@ -1,0 +1,62 @@
+<ng-container *ngIf="activityConfigWorkflow">
+    <mat-card class="border cardOverwrite">
+        <div class="cardTitle pb-2">
+            Workflow
+        </div>
+
+        <ng-container *ngTemplateOutlet="labelValues; context: {
+            label: 'Assignee',
+            value: activityConfigWorkflow.activityConfigAssignee.assignee,
+            class: 'pt-1'
+        }">
+        </ng-container>
+
+        <ng-container *ngIf="activityConfigWorkflow.activityConfigApprover.isApprover; else autoApprove">
+            <ng-container *ngTemplateOutlet="labelValues; context: {
+                label: 'Approver',
+                value: activityConfigWorkflow.activityConfigApprover.approver,
+                class: 'pt-3'
+            }">
+            </ng-container>
+        </ng-container>
+
+        <ng-template #autoApprove>
+            <ng-container *ngTemplateOutlet="labelValue; context: {
+                label: 'Auto Approve',
+                value: 'Enabled',
+                class: 'pt-3',
+                valueClass: 'text-success'
+            }">
+            </ng-container>
+        </ng-template>
+    </mat-card>
+</ng-container>
+
+<ng-template #labelValue let-label="label" let-value="value" let-class="class" let-valueClass="valueClass">
+    <div class="row" [class]="class">
+        <div class="col-sm-4">
+            {{ label }}
+        </div>
+        <div class="col-sm-8 fw-bold" [class]="valueClass">
+            {{ value ? value : COMMON_CONSTANT.HYPHEN }}
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #labelValues let-label="label" let-value="value" let-class="class" let-valueClass="valueClass">
+    <div class="row" [class]="class">
+        <div class="col-sm-4">
+            {{ label }}
+        </div>
+        <div class="col-sm-8 fw-bold" [class]="valueClass">
+            <div *ngFor="let values of value; let i=index">
+                <div [ngClass]="{'pt-1': i != 0}">
+                    <img class="rounded-circle border profileImageBodyView"
+                        [src]="values.userProfileImgUrl || this.userService.defaultImage(values.userFirstName + ' ', ProfileImg.PROFILE_IMAGE_DROPDOWN_NAME_VIEW)"
+                        alt="profile image">
+                    <span class="ps-2">{{ values.userFirstName }} {{ values.userLastName }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

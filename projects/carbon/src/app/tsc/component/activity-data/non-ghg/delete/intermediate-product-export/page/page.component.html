@@ -1,0 +1,144 @@
+<div class="card main-card cardOverwrite overFlowX h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Process Intermediate Product Export
+            </div>
+            <div class="pageSubtitle">Records of intermediate products exported out of any process
+            </div>
+        </div>
+        <div class="headerRightContainer">
+            <button class="btn btn-sm btn-success" type="button">
+                <fa-icon [icon]="faPlus"></fa-icon> &nbsp;
+                Record
+            </button>
+        </div>
+    </div>
+    <div class="ms-3 me-3">
+        <lib-date-filter #filterChild [defaultFlag]=FrequencyEnum.MONTHLY></lib-date-filter>
+        <div class="ms-1 btn-group float-end" ngbDropdown placement="bottom-right">
+            <button type="button" ngbDropdownToggle class="btn btn-success btn-sm" [ngClass]="{'btn-success': bulkBtnFlag, 'btn-secondary': !bulkBtnFlag, 
+            'custom-cursor': bulkBtnFlag, 'custom-not-allowed': !bulkBtnFlag}">Bulk actions</button>
+            <div ngbDropdownMenu *ngIf="bulkBtnFlag">
+                <button class="dropdown-item" (click)="deleteRows(row, 'bulk')">
+                    Delete
+                </button>
+            </div>
+        </div>
+        <lib-search-bar-one class="me-1 float-end" #searchBar [searchBy]="'Process name'"
+            (emitSearch)="SearchFn($event)"></lib-search-bar-one>
+    </div>
+
+    <button type="button" class="d-none" #refreshBtn></button>
+
+    <table class="w-100" mat-table [dataSource]="dataSource" #sort matSort matSortActive="recordID"
+        matSortDirection="desc" matSortDisableClear>
+
+        <ng-container matColumnDef="isChecked">
+            <th class="columnWidth3" mat-header-cell *matHeaderCellDef>
+                <mat-checkbox class="pe-4" [(ngModel)]="allComplete" (change)="setAll($event.checked)"></mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let row">
+                <mat-checkbox class="pe-5" [(ngModel)]="row['completed']" (change)="updateAllComplete()"></mat-checkbox>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="recordID">
+            <th class="columnWidth" mat-header-cell *matHeaderCellDef>
+                <div class="d-flex align-items-center">
+                    <!-- <mat-checkbox class="pe-4" [(ngModel)]="allComplete" (change)="setAll($event.checked)"></mat-checkbox> -->
+                    <span class="ms-2 mt-1" mat-sort-header disableClear>
+                        Record ID
+                    </span>
+                </div>
+            </th>
+            <td mat-cell *matCellDef="let row">
+                <!-- <mat-checkbox class="pe-5" [(ngModel)]="row['completed']" (change)="updateAllComplete()"></mat-checkbox> -->
+                <span>{{ row.recordID ? row.recordID: COMMON_CONSTANT.HYPHEN }}</span>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="reportingPeriod">
+            <th class="columnWidth2" mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Reporting Period
+            </th>
+            <td mat-cell *matCellDef="let row">
+                {{ row.reportingPeriod ? row.reportingPeriod: COMMON_CONSTANT.HYPHEN}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="process">
+            <th class="columnWidth" mat-header-cell *matHeaderCellDef>Process</th>
+            <td mat-cell *matCellDef="let row">
+                {{ row.process ? row.process: COMMON_CONSTANT.HYPHEN}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="intermediateProductName">
+            <th class="columnWidth2" mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Intermediate Product
+                name</th>
+            <td mat-cell class="columnWidth2" *matCellDef="let row">
+                {{ row.quantityOfFuelConsumed ? row.quantityOfFuelConsumed: COMMON_CONSTANT.HYPHEN }}
+                {{row.quantityOfFuelConsumedUnit}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="quantityOfProductExported">
+            <th class="columnWidth2" mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Quantity of product exported</th>
+            <td mat-cell *matCellDef="let row">
+                {{ row.process ? row.process: COMMON_CONSTANT.HYPHEN}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="document">
+            <th mat-header-cell *matHeaderCellDef class="columnWidth3"></th>
+            <td mat-cell *matCellDef="let row">
+                <span class="material-symbols-outlined cursorPointer">
+                    description
+                </span>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="edit">
+            <th mat-header-cell *matHeaderCellDef class="columnWidth3"></th>
+            <td mat-cell *matCellDef="let row"><span class="material-symbols-outlined cursorPointer text-primary">
+                    edit
+                </span></td>
+        </ng-container>
+
+        <ng-container matColumnDef="delete">
+            <th mat-header-cell *matHeaderCellDef class="columnWidth3"></th>
+            <td mat-cell *matCellDef="let row"><span class="material-symbols-outlined cursorPointer text-danger"
+                    (click)="deleteRows(row,'')">
+                    delete
+                </span></td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let row">
+                <div class="btn-group" ngbDropdown placement="left-top">
+                    <button type="button" ngbDropdownToggle class="dropdown-after dropdownAfter btn">
+                        <fa-icon [icon]="faEllipsisV"></fa-icon>
+                    </button>
+                    <div ngbDropdownMenu>
+                        <button class="dropdown-item">
+                            Audit Trail
+                        </button>
+                    </div>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+            </td>
+        </tr>
+    </table>
+    <mat-paginator class="roundedBorder" #paginator [length]="resultLength"
+        [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION" [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE"
+        showFirstLastButtons>
+    </mat-paginator>
+
+</div>

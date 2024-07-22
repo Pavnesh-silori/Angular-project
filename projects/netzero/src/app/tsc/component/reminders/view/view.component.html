@@ -1,0 +1,56 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Tasks</div>
+            <div class="pageSubtitle">Tasks help you stay organized and remember records that need to be entered.
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-2">
+                <div class="text-center">
+                    <mat-form-field id="monthlyField" appMonthYearFormat (click)="dateService.openDatepickerOnClick(monthly)"
+                        (keydown.arrowdown)="dateService.openDatepickerOnClick(monthly)"
+                        (keydown.enter)="dateService.openDatepickerOnClick(monthly)" class="mat-field-width-100 cursorPointer"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Select month</mat-label>
+                        <input matInput class="noFocus" [matDatepicker]="monthly" [formControl]="durationViewFC"
+                            readonly />
+                        <mat-datepicker-toggle matSuffix class="fs-5" [for]="monthly"></mat-datepicker-toggle>
+                        <mat-datepicker panelClass="monthPicker" #monthly startView="year"
+                            (monthSelected)="monthSelectedHandler($event, monthly)"
+                            (closed)="dateService.takeFocusAway('monthlyField')">
+                        </mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <mat-grid-list [cols]="gridCols" rowHeight="2:1">
+                    <mat-grid-tile *ngFor="let item of daysOfWeek">
+                        <div class="weekday-header">{{ item }}</div>
+                    </mat-grid-tile>
+                    <mat-grid-tile *ngFor="let item of gridData"
+                        (click)="item['reminderDetails'] && seeReminders(item['monthDate'], item['reminderDetails']['task'])"
+                        [ngClass]="{ 'current-date': item.isToday }">
+                        <div class="grid-cell">
+                            <div class="mb-1" *ngIf="item.dayOfMonth !== null">{{ item.dayOfMonth }}</div>
+                            <div class="d-flex align-items-center mt-2" *ngIf="item['reminderDetails']">
+                                <button type="button" class="button btn btn-sm btnBase">
+                                    <span class="material-symbols-outlined text-primary">
+                                        today
+                                    </span>
+                                    <span class="text-dark">
+                                        Tasks: {{ item['reminderDetails']['count'] }}
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </mat-grid-tile>
+                </mat-grid-list>
+            </div>
+        </div>
+    </div>
+</div>

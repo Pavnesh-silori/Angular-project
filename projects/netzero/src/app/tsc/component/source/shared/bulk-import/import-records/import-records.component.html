@@ -1,0 +1,35 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="cardHeaderBlock d-flex align-items-center">
+        <div class="col-sm-6 pageTitle">
+            Import Products
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 stepper-custom-wrapper">
+            <mat-stepper #stepper labelPosition="bottom" linear>
+                <mat-step label="Configure">
+                    <app-configure-records type="stepper"
+                        (configureRecordsEmit)="configureRecords($event)"></app-configure-records>
+                </mat-step>
+
+                <mat-step label="Review Error">
+                    <mat-card *ngIf="isPreviewRecordsError" class="cardOverwrite">
+                        <app-preview-record-error type="stepper"
+                            [importedRecords]="importedRecords"
+                            (previewErrorRecordsEmit)="previewErrorRecordsEmit($event)">
+                        </app-preview-record-error>
+                    </mat-card>
+                </mat-step>
+
+                <mat-step label="Preview">
+                    <mat-card *ngIf="isPreviewRecord" class="cardOverwrite">
+                        <app-preview-record type="stepper" [previewRecords]="previewRecords"
+                            (nextEmit)="nextStepper($event)">
+                        </app-preview-record>
+                    </mat-card>
+                </mat-step>
+            </mat-stepper>
+        </div>
+    </div>
+</div>

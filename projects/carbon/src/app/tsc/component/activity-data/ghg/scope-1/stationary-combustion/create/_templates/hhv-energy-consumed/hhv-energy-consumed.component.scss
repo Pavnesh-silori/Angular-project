@@ -1,0 +1,34 @@
+.customContainer {
+    position: relative;
+    width: 16vw;
+    // height: 48.3px;
+    border: 1px solid rgba(0, 0, 0, 0.23);
+    border-radius: 5px;
+    padding: 5px;
+    padding-bottom: 4px;
+    box-sizing: border-box;
+}
+
+.customLabel {
+    position: absolute;
+    top: -10px;
+    left: 10px;
+    background-color: white;
+    padding: 0 4px;
+    font-size: 11px;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.6);
+    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+}
+
+.contentContainer {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.hypen{
+    padding-left: 50%;
+}
+
+

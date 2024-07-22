@@ -1,0 +1,165 @@
+<div class="card main-card cardOverwrite">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">
+                Subsidiary Emission Data
+            </div>
+        </div>
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <ng-container>
+                    <div class="col-sm-4">
+                        <div class="float-end">
+                            <a mat-icon-button (click)="editEmissionData()" matTooltip="Edit"
+                                matTooltipClass="nameTooltip" matTooltipPosition="below">
+                                <span class="material-symbols-outlined text-primary updateIconHover fs-5">
+                                    edit
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+
+    <div class="row pb-3 ps-3">
+        <div class="col-sm-12">
+            <ng-container *ngTemplateOutlet="value; 
+                        context:{ 
+                            title: 'Record ID', 
+                            value: subsidaryEmissionData?.['recordID'] 
+                        }">
+            </ng-container>
+            <ng-container *ngTemplateOutlet="value; 
+                        context:{ 
+                            title: 'Subsidiary name', 
+                            value: subsidaryEmissionData?.['subsidiaryName'] 
+                        }">
+            </ng-container>
+            <div class="row pb-1" *ngIf="subsidiary">
+                <div class="d-flex justify-content-between">
+                    <div class="col-form-label ms-1"> {{ '% control on Subsidiary/JV' }} </div>
+                    <div class="col-sm-8 py-2">
+                        <div class="col-form-value fw-bold">
+                            <div *ngIf="subsidiary?.['financialControl']">
+                                {{subsidiary?.['financialControl'] + '% Financial control' }}
+                            </div>
+                            <div *ngIf="subsidiary?.['operationalControl']">
+                                {{subsidiary?.['operationalControl'] + '% Operational control' }} 
+                            </div>
+                            <div *ngIf="subsidiary?.['equityControl']">
+                                {{subsidiary?.['equityControl'] + '% Equity control' }} 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <ng-container *ngTemplateOutlet="value; 
+                    context:{ 
+                        title: 'Start date', 
+                        value: subsidaryEmissionData?.['startDate'] | date: 'dd-MMM-yyyy'
+                    }">
+            </ng-container>
+
+            <ng-container *ngTemplateOutlet="value; 
+                context:{ 
+                    title: 'End date', 
+                    value: subsidaryEmissionData?.['endDate'] | date: 'dd-MMM-yyyy'
+                }">
+            </ng-container>
+
+            <ng-container>
+                <mat-card class="border cardOverwrite mt-2">
+                    <div class="row pt-3">
+                        <div class="col-sm-12">
+                            <div class="row activity-container">
+                                <ng-container *ngTemplateOutlet="emissionHeader"></ng-container>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row pt-2 scope-container" *ngFor="let emission of subsidaryEmissionData?.emission">
+                        <div class="col-sm-2 pt-3">
+                            {{ emission.scope }}
+                        </div>
+                        <div class="col-sm-3 pt-3">
+                            {{ emission.activityName }}
+                        </div>
+
+                        <div class="col-sm-7">
+                            <ng-container
+                                *ngFor="let consolidationApproach of subsidaryEmissionData?.consolidationApproachKeyID">
+                                <div class="row pt-3">
+                                    <div class="col-sm-4">
+                                        {{getKeyValue(consolidationApproach) }}
+                                    </div>
+            
+                                    <div class="col-sm-4">
+                                        {{ emission?.[getDataKey(consolidationApproach)].emission ?
+                                            emission?.[getDataKey(consolidationApproach)].emission :
+                                            COMMON_CONSTANT.HYPHEN }}
+                                    </div>
+                                    <div class="col-sm-4">
+                                        {{ emission?.[getDataKey(consolidationApproach)].biogenicEmission ?
+                                            emission?.[getDataKey(consolidationApproach)].biogenicEmission :
+                                            COMMON_CONSTANT.HYPHEN }}
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                </mat-card>
+            </ng-container>
+        </div>
+    </div>
+</div>
+
+<ng-template #value let-title="title" let-value="value">
+    <div class="row pb-1">
+        <div class="d-flex justify-content-between">
+            <div class="col-form-label ms-1"> {{ title }} </div>
+            <div class="col-sm-8 centerAlignVertical">
+                <div class="col-form-value fw-bold" *ngIf="value; else hyphen;">
+                    {{ value }}
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #labelValue let-label="label" let-value="value" let-class="class">
+    <div class="row" [class]="class">
+        <div class="col-sm-4">
+            {{ label }}
+        </div>
+        <div class="col-sm-8 fw-bold">
+            {{ value ? value : COMMON_CONSTANT.HYPHEN }}
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #emissionHeader>
+    <div class="col-sm-2 cardSubTitle fw-bold headerBgColor">
+        Scope
+    </div>
+    <div class="col-sm-3 cardSubTitle fw-bold headerBgColor">
+        Activity type
+    </div>
+    <div class="col-sm-7 headerBgColor">
+        <div class="row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4 cardSubTitle fw-bold ">
+                Emissions ({{ CARBON_CONSTANT.DEFAULT_EMISSION_UNIT.name }})
+            </div>
+            <div class="col-sm-4 cardSubTitle fw-bold ">
+                Biogenic emissions ({{ CARBON_CONSTANT.DEFAULT_EMISSION_UNIT.name }})
+            </div>
+
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #hyphen>
+    <span class="fw-bold"> {{ COMMON_CONSTANT.HYPHEN }} </span>
+</ng-template>

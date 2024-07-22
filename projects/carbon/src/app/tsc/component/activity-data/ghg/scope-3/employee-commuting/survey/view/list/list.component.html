@@ -1,0 +1,63 @@
+<div class="card cardOverwrite overflowX">
+    <div class="ps-4 pt-3 headerLeftContainer">
+        <div class="pageTitle">Survey Responses</div>
+        <div class="pageSubtitle">Analyse the received responses of survey</div>
+    </div>
+
+    <div class="headerRightContainer">
+        <div class="headerRightContainerInner me-4">
+            <lib-search-bar-one #searchBar [searchBy]="'Employee first name'"
+                (emitSearch)="searchFn($event)"></lib-search-bar-one>
+        </div>
+    </div>
+
+    <button type="button" class="d-none" #refreshBtn>refresh</button>
+
+
+    <table mat-table [dataSource]="dataSource" matSort matSortDirection="asc" matSortActive="employeeCode">
+
+        <ng-container matColumnDef="employeeCode">
+            <th mat-header-cell class="employeeCode" *matHeaderCellDef mat-sort-header disableClear> Employee ID </th>
+            <td mat-cell class="employeeCode" *matCellDef="let row"> {{ row.employeeCode? row.employeeCode
+                :COMMON_CONSTANT.HYPHEN}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="employeeName">
+            <th mat-header-cell class="employeeName" *matHeaderCellDef> Name </th>
+            <td mat-cell class="employeeName" *matCellDef="let row"> {{row.firstName}} {{row.lastName}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="submittedOn">
+            <th mat-header-cell clas="submittedOn" *matHeaderCellDef> Submitted on </th>
+            <td mat-cell clas="submittedOn" *matCellDef="let row"> {{row.submittedOn?(row.submittedOn|
+                date:'dd-MMM-yyyy'):COMMON_CONSTANT.HYPHEN}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+            <th mat-header-cell class="status" *matHeaderCellDef>
+                <funnel-filter #status header="Status" type="mono" value="keyID" view="name" [entityList]="statusList"
+                    [selectFC]="statusFC" [active]="statusFlag" (mono)="statusFlag = true;">
+                </funnel-filter>
+            </th>
+
+            <td mat-cell class="status" *matCellDef="let row"> {{row.status?getStatus(row.status):
+                COMMON_CONSTANT.HYPHEN}}
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                {{ TABLE_CONSTANT.NO_DATA }}
+            </td>
+        </tr>
+    </table>
+
+    <mat-paginator class="roundedBorder" #paginator [length]="resultLength"
+        [pageSizeOptions]="TABLE_CONSTANT['pageSizeOption']" [pageSize]="TABLE_CONSTANT['pageSize']"
+        showFirstLastButtons>
+    </mat-paginator>
+
+</div>

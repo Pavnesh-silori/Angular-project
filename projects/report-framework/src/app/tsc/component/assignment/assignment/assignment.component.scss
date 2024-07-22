@@ -1,0 +1,137 @@
+.matAccordion {
+	box-shadow: none !important;
+	background: whitesmoke;
+	border-radius: 16px !important;
+	// border: 1px solid #ccc;
+}
+
+.mat-expansion-panel .mat-expansion-indicator::after {
+	border-style: none !important;
+	display: none !important;
+}
+
+.panelDescription {
+	width: 98%;
+	justify-content: space-between;
+}
+
+.unassignedBtn {
+	background-color: lightgray;
+}
+
+.mat-panel-description {
+	max-height: 200px;
+	overflow: auto;
+}
+
+.headerContainerFlex {
+	flex: 0.5
+}
+
+.header {
+	border-bottom-style: solid;
+	border-color: rgb(149, 148, 148);
+}
+
+$mat-header-row-height: 56px;
+$mat-row-height: 48px;
+$mat-row-horizontal-padding: 24px;
+
+.mat-table {
+	display: block;
+}
+
+.mat-header-row {
+	min-height: $mat-header-row-height;
+}
+
+.mat-row {
+	min-height: $mat-row-height;
+}
+
+.mat-row,
+.mat-header-row {
+	display: flex;
+	border-bottom-width: 0.5px;
+	// border-bottom-style: solid;
+	align-items: center;
+	padding: 0 $mat-row-horizontal-padding;
+	box-sizing: border-box;
+
+	&::after {
+		display: inline-block;
+		min-height: inherit;
+		content: '';
+	}
+}
+
+.mat-cell,
+.mat-header-cell {
+	flex: 1;
+	word-wrap: break-word;
+	min-width: 13vw !important;
+	max-width: 13vw !important;
+}
+
+.sectionWidth {
+	min-width: 35vw !important;
+	max-width: 35vw !important;
+}
+
+.profileImgContainer {
+	width: 60px;
+	min-height: 60px;
+	max-height: auto;
+	float: left;
+	margin: 3px;
+	padding: 3px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.profileImg {
+	position: relative;
+	border-color: rgb(102, 101, 101) !important;
+	width: 25px;
+	margin-left: -10px;
+	transition: transform .25s;
+
+	&:hover {
+		z-index: 100 !important;
+		transform: scale(1.2);
+	}
+}
+
+.dropDownUserImg {
+	position: relative;
+	border-color: rgb(102, 101, 101) !important;
+	width: 25px;
+
+	transition: transform .25s;
+
+	&:hover {
+		z-index: 100 !important;
+		transform: scale(1.2);
+	}
+}
+
+.users {
+	.profileImg:first-child {
+		margin-left: 0;
+	}
+}
+
+.circleBtn {
+	background-color: lightgray;
+	height: 29px;
+	width: 29px;
+	font-size: 9px;
+	font-weight: bold;
+}
+
+.funnelFilterDD {
+    width: 0;
+    height: 0;
+    // overflow: hidden;
+}

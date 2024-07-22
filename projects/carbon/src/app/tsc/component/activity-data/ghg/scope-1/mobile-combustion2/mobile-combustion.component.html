@@ -1,0 +1,40 @@
+<div class="card main-card cardOverwrite main-container">
+    <div class="headerContainer pb-0">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Update {{ activity.name }} record</div>
+        </div>
+    </div>
+    <div class="card-body">
+        <mat-card class="cardOverwrite border">
+            <div class="cardTitle pb-2">
+                Details
+            </div>
+            <app-view [activityConfigData]="activityConfigData" [activityConfigSource]="activityConfigSource" class="d-block" #configCreate ></app-view>
+        </mat-card>
+
+        <div class="mt-3">
+            <app-create-update  #activityDataComp></app-create-update>
+        </div>
+    </div>
+
+    <div class="fixed-footer">
+        <div class="float-end">
+            <button class="btn btn-secondary me-2" type="button" (click)="cancelBtn()">
+                Cancel
+            </button>
+            
+            <button *ngIf="updateBtn" class="btn btn-primary" type="button" (click)="updateActivityData()">
+                Update
+            </button>
+
+            <button *ngIf="submitBtn" class="btn btn-success me-2" type="button" (click)="updateActivityData()"
+                [disabled]="isEqual">
+                Submit for approval
+            </button>
+
+            <button *ngIf="approveBtn" class="btn btn-success" type="button" (click)="updateActivityData()">
+                Save & Approve
+            </button>
+        </div>
+    </div>
+</div>

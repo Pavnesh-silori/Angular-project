@@ -1,0 +1,33 @@
+<div class="row">
+    <div class="titleSentence fs-5 fw-bold">
+        Auto-categorize all records with selected category and activity type that belongs to this-
+    </div>
+    <mat-radio-group class="ps-5" [formControl]="selectedCategoryFC">
+        <div class="row my-2">
+            <div class="col-sm-7 mt-2">
+                <mat-radio-button class="radioBtnLabel" value="account">
+                    Account
+                </mat-radio-button>
+            </div>
+            <div class="col-sm-7 mt-2">
+                <mat-radio-button class="radioBtnLabel" value="supplier">
+                    Supplier
+                </mat-radio-button>
+            </div>
+        </div>
+    </mat-radio-group>
+    <div class="row mt-4 ps-5">
+        <div class="col-sm-7">
+            <mat-checkbox class="text-dark" [formControl]="rememberPreferenceFC">
+                Remember my choice for future imports
+            </mat-checkbox>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="justify-content-end centerAlignVertical">
+        <button class="text btn btn-sm btn-secondary me-2" type="button" mat-dialog-close>Cancel</button>
+        <button class="text btn btn-sm btn-success me-2" type="button" [disabled]="selectedCategoryFC.invalid"
+            (click)="saveUserPrefrenceCategory()">Save</button>
+    </div>
+</div>

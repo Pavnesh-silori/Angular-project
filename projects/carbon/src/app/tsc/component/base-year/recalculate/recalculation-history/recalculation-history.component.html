@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+    </symbol>
+</svg>
+
+<div class="card main-card cardOverwrite">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">
+                Recalculation timeline
+            </div>
+        </div>
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+            </div>
+        </div>
+    </div>
+
+    <ng-container *ngIf="recalculationHistory.length > 0; else noHistory;">
+        <ol class="timeline">
+            <ng-container *ngFor="let history of recalculationHistory">
+                <li class="timeline-item">
+                    <span class="timeline-item-icon recalculate-icon">
+                        <span class="material-icons">
+                            calculate
+                        </span>
+                    </span>
+                    <div class="timeline-item-description centerAlign">
+                        <img class="avatar small border d-block profileImageHeaderView" [src]="history?.['profileImgUrl'] ||
+                                    defaultImage(history?.['userName'])" alt="profile-image" />
+                        <span class="focus">{{ history?.['userName'] }} </span>
+                        <span class="lowFocus">triggered </span>
+                        <span class="focus">a Recalculation</span>
+                        <span class="lowFocus"> on
+                            <time datetime="timeline.date">{{ history.recalculatedOn }}</time>
+                        </span>
+                    </div>
+
+                    <button class="btn btn-link viewBtn" (click)="viewHistoricTimeline(history)">
+                        View changes
+                    </button>
+                </li>
+            </ng-container>
+        </ol>
+    </ng-container>
+    <ng-template #noHistory>
+        <div class="infoCardContainer mt-2">
+            <div class="extraInfoCard px-2">
+                <div class="alert alert-info m-0 centerAlignVertical justify-content-between roundedBorder"
+                    role="alert">
+                    <div class="d-flex align-items-center">
+                        <svg class="bi flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                            <use xlink:href="#info-fill" />
+                        </svg>
+                        <div class="endAlignVertical">
+                            <div><strong>No recalculation history available.</strong>
+                            </div>
+                            <div class="mt-2">
+                                Currently, there's no data in the recalculation history for your base year
+                                emissions, as no recalculation has been initiated for the base year emissions yet.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="centerAlign">
+                        <img class="noBaseYear" src="/assets/images/no-recalculation-history.jpg" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+
+    <div align="end" class="w-100">
+        <mat-paginator #paginator class="roundedBorder" showFirstLastButtons [length]="totalCount"
+        [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION" [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE">
+        </mat-paginator>
+    </div>
+
+</div>

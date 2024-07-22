@@ -1,0 +1,231 @@
+<div *ngIf="recordData?.calculationApproachKeyID == CalculationApproachKeyIDEnum.CALCULATION_SERVICE_MYSELF || 
+             recordData?.calculationApproachKeyID == CalculationApproachKeyIDEnum.CALCULATION_PRODUCT_MANUFACTURER"
+    class="ms-1 me-3 mt-2">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="sectionHeader">
+                <span class="header">Inventory details</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 sectionSubHeader ms-3">Opening Inventory</div>
+    <div class="row mb-3 ms-3 me-2">
+        <div class="col-sm-6">{{ recordData?.startDate }}</div>
+        <div class="col-sm-6">
+            <span class="float-end">{{ openingInventory?.capacity?(openingInventory?.capacity):COMMON_CONSTANT.HYPHEN
+                }} {{ openingInventory?.unit }}</span>
+        </div>
+    </div>
+
+    <div class="col-sm-6 sectionSubHeader ms-3">Closing Inventory</div>
+    <div class="row mb-3 ms-3 me-2">
+        <div class="col-sm-6">{{ recordData?.endDate }}</div>
+        <div class="col-sm-6">
+            <span class="float-end">{{ closingInventory?.capacity ?(
+                closingInventory?.capacity):COMMON_CONSTANT.HYPHEN}} {{ closingInventory?.unit }}</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 text-end px-4 linkColor">
+            <a (click)="navigateToRecordPage(recordData?.calculationApproachKeyID,'inventory')">View all inventory
+                changes</a>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="recordData?.calculationApproachKeyID == CalculationApproachKeyIDEnum.CALCULATION_SCREENING">
+    <div class="ms-1 me-3 mt-2">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="sectionHeader">
+                    <span class="header"> Equipment group details </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row py-2 px-4 pt-3">
+            <div class="col-sm-6">
+                Gas Name
+            </div>
+            <div class="col-sm-6 fw-bold text-end">
+                {{recordData?.gasName}}
+            </div>
+        </div>
+
+        <div class="row py-2 px-4">
+            <div class="col-sm-6">
+                Description
+            </div>
+            <div class="col-sm-6 fw-bold text-end">
+                {{recordData?.description}}
+            </div>
+        </div>
+
+        <div class="row py-2 px-4">
+            <div class="col-sm-6">
+                IPCC equipment type
+            </div>
+            <div class="col-sm-6 fw-bold text-end">
+                {{recordData?.ipccName}}
+            </div>
+        </div>
+    </div>
+    <div class="ms-1 me-3 mt-2">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="sectionHeader">
+                    <span class="header"> Capacity Changes </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row py-2 px-4 pt-3">
+            <div class="col-sm-8">
+                {{recordData?.startDate | date:'dd-MMM-yyyy'}}
+            </div>
+            <div class="col-sm-4 fw-bold text-end">
+                {{initialCapacity?.capacity}}
+            </div>
+        </div>
+
+        <div class="row py-2 px-4">
+            <div class="col-sm-8">
+                {{recordData?.endDate | date:'dd-MMM-yyyy'}}
+            </div>
+            <div class="col-sm-4 fw-bold text-end">
+                {{lastCapacity?.capacity}}
+            </div>
+        </div>
+
+        <div class="row m-2">
+            <div class="col-sm-12 text-end">
+                <a class="btn-link linkColor" (click)="capacityChanges()">View all capacity changes</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-container
+    *ngIf="recordData?.calculationApproachKeyID == CalculationApproachKeyIDEnum.CALCULATION_SCREENING;else elseBlock ">
+    <div class="ms-1 me-3 mt-2">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="sectionHeader">
+                    <span class="header"> Purchase & Sale </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row m-3">
+            <div class="col-sm-8 ps-6">
+                No.ofPurchases
+            </div>
+            <div class="col-sm-4 text-end px-2">
+                <span
+                    (click)="recordDataCount?.purchaseCount != 0 ? navigateToRecordPage('screening','purchase-acquisition') : null"
+                    [style.color]="recordDataCount?.purchaseCount != 0 ? '#3f6ad8' : 'black'">
+                    {{ recordDataCount?.purchaseCount }}
+                </span>
+            </div>
+        </div>
+
+        <div class="row m-3">
+            <div class="col-sm-8">
+                No.ofSales
+            </div>
+            <div class="col-sm-4 text-end px-2">
+                <span
+                    (click)="recordDataCount?.saleCount == 0 ? navigateToRecordPage('screening','sales-disbursement') : null"
+                    [style.color]="recordDataCount?.saleCount != 0 ? '#3f6ad8' : 'black'">
+                    {{ recordDataCount?.saleCount }}
+                </span>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<ng-template #elseBlock>
+    <div class="ms-1 me-3 mt-2">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="sectionHeader">
+                    <span class="header"> Purchase, Sales & Retrofits </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ng-container *ngTemplateOutlet="labelValue; context: {
+        label: 'No. of Purchases',
+        value: recordData?.purchaseCount,
+        endPoint:'purchase-acquisition',
+        startDate:recordData?.startDate,
+        endDate:recordData?.endDate,
+        calculationApproach:recordData?.calculationApproachKeyID,
+        type:gasName,
+        class: 'pt-1'
+    }"></ng-container>
+
+    <ng-container *ngTemplateOutlet="labelValue; context: {
+        label: 'No. of Sales',
+        value: recordData?.salesCount,
+        endPoint:'sales-disbursement',
+        startDate:recordData?.startDate,
+        endDate:recordData?.endDate,
+        calculationApproach:recordData?.calculationApproachKeyID,
+        type:gasName,
+        class: 'pt-3'
+    }"></ng-container>
+
+
+    <div *ngIf="recordData.calculationApproachKeyID == CalculationApproachKeyID['SERVICE_BY_CONTRACTOR']">
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'No. of Servicing',
+            value: recordData?.servicingCount,
+            endPoint:'equipment-servicing',
+            startDate:recordData?.startDate,
+            endDate:recordData?.endDate,
+            calculationApproach:recordData?.calculationApproachKeyID,
+            type:gasName,
+            class: 'pt-3'
+        }"></ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'No. of Retrofits use',
+            value: recordData?.retrofitUseCount,
+            endPoint:'retrofitting',
+            startDate:recordData?.startDate,
+            endDate:recordData?.endDate,
+            calculationApproach:recordData?.calculationApproachKeyID,
+            type:gasName,
+            class: 'pt-3'
+        }"></ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'No. of Retrofits away',
+            value: recordData?.retrofitAwayCount,
+            endPoint:'retrofitting',
+            startDate:recordData?.startDate,
+            endDate:recordData?.endDate,
+            calculationApproach:recordData?.calculationApproachKeyID,
+            type:gasName,
+            class: 'pt-3'
+        }"></ng-container>
+    </div>
+</ng-template>
+
+<ng-template #labelValue let-label="label" let-value="value" let-endPoint="endPoint" let-startDate="startDate"
+    let-endDate="endDate" let-type="type" let-calculationApproach="calculationApproach" let-class="class">
+    <div class="row m-3">
+        <div class="col-sm-8 ps-3">
+            {{ label }}
+        </div>
+        <div class=" col-sm-4 text-end px-4">
+            <span (click)="value != 0 ? navigateToRecordPage(calculationApproach,endPoint) : null"
+                [style.color]="value != 0 ? '#3f6ad8' : 'black'">
+                {{ value }}
+            </span>
+        </div>
+    </div>
+</ng-template>

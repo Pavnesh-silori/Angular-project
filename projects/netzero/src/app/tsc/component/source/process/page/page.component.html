@@ -1,0 +1,110 @@
+<div class="card cardOverwrite overFlowX h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Processes</div>
+            <!-- TODO <div class="subTitle"></div> -->
+        </div>
+        <div class="headerRightContainer">
+            <div class="headerLeftContainerInner pe-3">
+                <lib-search-bar-one #searchBar searchBy="process name" (emitSearch)="SearchFn($event)">
+                </lib-search-bar-one>
+            </div>
+            <div class="headerRightContainerInner">
+                <button class="btn btn-sm btn-success" type="button" [routerLink]="['/source/process/create']">
+                    <fa-icon [icon]="faPlus"></fa-icon> &nbsp; Process
+                </button>
+            </div>
+        </div>
+    </div>
+    <button type="button" class="d-none" #refreshBtn>refresh</button>
+
+    <table class="rowActive" mat-table [dataSource]="dataSource" matSort matSortActive="name" matSortDisableClear
+        matSortDirection="desc">
+
+        <ng-container matColumnDef="name">
+            <th class="name" mat-header-cell *matHeaderCellDef mat-sort-header disableClear
+                (click)="navigateTo(row.id)">
+                Process Name </th>
+            <td class="cursorPointer" mat-cell *matCellDef="let row" (click)="navigateTo(row.id)"
+                [matTooltip]="row.name?.length >= 35? row.name: ''" matTooltipClass="infoTooltip"
+                matTooltipPosition="above">
+                {{ row?.name? (row.name | dotdotdot: 35) : COMMON_CONSTANT.HYPHEN }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+            <th mat-header-cell class="description" *matHeaderCellDef disableClear> Description </th>
+            <td class="cursorPointer" mat-cell *matCellDef="let row" (click)="navigateTo(row.id)"
+                [matTooltip]="row.description?.length >= 35? row.description: ''" matTooltipClass="infoTooltip"
+                matTooltipPosition="above">
+                {{ row?.description? (row.description | dotdotdot: 35) : COMMON_CONSTANT.HYPHEN }}
+            </td>
+        </ng-container>
+
+        <!-- <ng-container matColumnDef="dataInputField">
+            <th mat-header-cell class="px-3 dataInputField" *matHeaderCellDef disableClear> Input field </th>
+            <td mat-cell *matCellDef="let row" class="px-3 cursorPointer" (click)="navigateTo(row.id)"
+                [matTooltip]="row.dataInputField?.length >= 35? row.dataInputField: ''" matTooltipClass="infoTooltip"
+                matTooltipPosition="above">
+                {{ row?.dataInputField? (row.dataInputField | dotdotdot: 35) : COMMON_CONSTANT.HYPHEN }}
+            </td>
+        </ng-container> -->
+
+        <ng-container matColumnDef="isCBAM">
+            <th mat-header-cell class="px-3 col-sm-2" *matHeaderCellDef disableClear>
+                <funnel-filter #processTypeSelect header="Is CBAM process" headerWidth="10" type="mono"
+                    [entityList]="processTypeList" [selectFC]="processTypeFC" [active]="processTypeFlag"
+                    (mono)="processTypeFlag = true;">
+                </funnel-filter>
+            </th>
+
+            <td mat-cell *matCellDef="let row" class="px-3 cursorPointer" (click)="navigateTo(row.id)">
+                <span *ngIf="row.isCBAMProcess" class="cbamColor">
+                    CBAM
+                </span>
+                <span *ngIf="!row.isCBAMProcess">
+                    Non-CBAM
+                </span>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+            <th class="ps-3 action" mat-header-cell *matHeaderCellDef></th>
+            <td class="ps-3" mat-cell *matCellDef="let row">
+                <ng-container *ngTemplateOutlet="icon; 
+                    context: {
+                        icon: 'edit',
+                        tooltip: ButtonTooltipEnum.UPDATE,
+                        iconClass: 'text-primary updateIconHover',
+                        function: routeToUpdateProcess,
+                        functionParameter: [row]
+                    }">
+                </ng-container>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="dataRow"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+            </td>
+        </tr>
+    </table>
+
+    <mat-paginator class="roundedBorder" #paginator [length]="resultLength"
+        [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION" [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE"
+        showFirstLastButtons>
+    </mat-paginator>
+</div>
+
+<ng-template #icon let-icon="icon" let-tooltip="tooltip" let-iconClass="iconClass" let-function="function"
+    let-functionParameter="functionParameter">
+    <button class="iconBtn centerAlign" [class]="iconClass" matTooltipPosition="below" [matTooltip]="tooltip" matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" (click)="handleClick(function, functionParameter)">
+        <span class="material-symbols-outlined icon">
+            {{ icon }}
+        </span>
+    </button>
+</ng-template>

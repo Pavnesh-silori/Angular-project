@@ -1,0 +1,48 @@
+<div mat-dialog-title>
+    <strong class="dialogHeader">
+        Update base year
+    </strong>
+</div>
+<div mat-dialog-content>
+    <form [formGroup]="updateFG">
+        <div class="row">
+            <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                <mat-label class="formLabel">Recalculation Policy</mat-label>
+                <textarea matInput placeholder="Write your company policy here" type="text" [maxLength]="2000"
+                    formControlName="recalculationPolicy"></textarea>
+                <mat-hint *ngIf="updateFG.get('recalculationPolicy').value?.length">Total number of
+                    character remaining: {{ updateFG.get('recalculationPolicy').value.length}}
+                    /2000
+                </mat-hint>
+                <mat-error *ngIf="updateFG.get('recalculationPolicy').hasError('required')">
+                    Recalculation Policy is required
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="row pt-3">
+            <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                <mat-label class="formLabel">Significance Threshold</mat-label>
+                <input class="formPlaceholder" matInput formControlName="significanceThreshold" type="number">
+                <span matSuffix class="m-3">%</span>
+                <mat-error *ngIf="updateFG.get('significanceThreshold').hasError('required')">
+                    Significance Threshold is required
+                </mat-error>
+                <mat-error *ngIf="updateFG.get('significanceThreshold').hasError('min')">
+                    Significance Threshold can not be negative
+                </mat-error>
+                <mat-error *ngIf="updateFG.get('significanceThreshold').hasError('max')">
+                    Significance Threshold can not exceed {{ maxThreshold }} %
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div align="end">
+            <button type="button" class="btn btn-secondary me-2" mat-dialog-close>
+                Cancel
+            </button>
+            <button type="submit" class="btn btn-success" (click)="updateData()" [ngClass]="{'disabled': isEqual}">
+                Update
+            </button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,85 @@
+<mat-card class="cardOverWrite">
+    <form [formGroup]="activityDataFG">
+        <mat-form-field class="col-sm-2 cursorPointer" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel">Accounting Period</mat-label>
+            <input type="text" matInput ngxDaterangepickerMd
+                [locale]="{direction: 'ltr', applyLabel: 'Apply', format: 'DD-MMM-YYYY'}" [drops]="'down'"
+                [opens]="'right'" [alwaysShowCalendars]="true" [keepCalendarOpeningWithRange]="true"
+                [showDropdowns]="true" [showCancel]="true" autocomplete="off" name="dateRange"
+                formControlName="dateRange" readonly />
+        </mat-form-field>
+        
+        <div>
+            <mat-form-field class="col-sm-2 pe-2" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                <mat-label class="formLabel">Opening meter reading</mat-label>
+                <input matInput type="number" formControlName="openingMeterReading" placeholder="0.00" min="0">
+                <mat-error *ngIf="activityDataFG.get('openingMeterReading').hasError('min')">
+                    Odometer reading can't be negative.
+                </mat-error>
+                <mat-error *ngIf="errorHandling('openingMeterReading', 'required')">
+                    This field is equired
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="col-sm-2 pe-2" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                <mat-label class="formLabel">Closing meter reading</mat-label>
+                <input matInput type="number" formControlName="closingMeterReading" placeholder="0.00" min="0">
+                <mat-error *ngIf="activityDataFG.get('closingMeterReading').hasError('min')">
+                    Odometer reading can't be negative.
+                </mat-error>
+                <mat-error *ngIf="errorHandling('closingMeterReading', 'required')">
+                    This field is equired
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="col-sm-2" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                <mat-label class="formLabel">Select unit</mat-label>
+                <mat-select formControlName="meterUnitID">
+                    <mat-option>
+                        <ngx-mat-select-search [formControl]="fuelUnitTypeSearchUtil.filterFC"
+                            placeholderLabel="Search by unit name" noEntriesFoundLabel="No matching found.">
+                        </ngx-mat-select-search>
+                    </mat-option>
+                    <mat-option *ngFor="let unit of fuelUnitTypeSearchUtil.filteredEntities| async" [value]="unit.id">
+                        {{ unit.name }} -
+                        {{unit.uomCode}}
+                    </mat-option>
+                </mat-select>
+                <mat-error>
+                    Meter unit is required.
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="col-sm-4" *ngIf="activityDataFG.get('activityDataID').value == null">
+            <div class="row" [ngClass]="{'d-none': !noBillFileAvailable}">
+                <div class="d-flex justify-content-between">
+                    <button class="button btn btn-light uploadBtn" type="button" (click)="uploadDoc()">
+                        Attach proof
+                    </button>
+                    <input #fileInput type="file" accept="application/pdf" class="d-none" (change)="fileUpload($event)">
+                </div>
+            </div>
+            <div class="border border-2 rounded" [ngClass]="{'d-none': noBillFileAvailable}">
+                <div class="col-sm-3 docIcon" matSuffix mat-icon-button mat-raised-button [matTooltip]="billFileName"
+                    matTooltipPosition="below">
+                    <img height="40px" src="assets/images/default-doc.ico" alt="noc document preview">
+                </div>
+                <div class="col-sm-4 centerAlignVertical uploadDocumentFont">
+                    {{ billFileName }}
+                </div>
+                <div class="col-sm-2 ms-2">
+                    <button type="button" class="btn" mat-icon-button (click)="removeFile()">
+                        <span class="material-symbols-outlined text-danger">
+                            delete
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2" *ngIf="activityDataFG.get('docID').value != null">
+            <a href="{{activityDataFG.get('docPath').value}}" target="_blank">View bill</a>
+        </div>
+
+    </form>
+</mat-card>

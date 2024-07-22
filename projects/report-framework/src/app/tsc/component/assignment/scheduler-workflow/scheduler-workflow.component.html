@@ -1,0 +1,142 @@
+<div class="headerContainer p-0" #header>
+    <div class="headerLeftContainer">
+        <div class="pageTitle">{{ assigneData.length }} {{ assigneData.length === 1 ? 'Section' : 'Sections' }} selected
+        </div>
+    </div>
+
+    <div class="headerRightContainer">
+        <div class="headerRightContainerInner">
+            <button class="btn btn-sm centerAlign py-1 iconBtn" matRipple
+                [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                [matTooltip]="ButtonTooltipEnum.CLOSE" mat-dialog-close>
+                <span class="material-symbols-outlined">
+                    close
+                </span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<lib-message-alert [messageAlertTypeInp]="messageAlertTypeEnum.INFO"
+    [messageAlertIconInp]="messageAlertIconEnum.INFO_ICON"
+    contentInp=" Establishing a workflow is mandatory, while setting a reminder is optional.">
+</lib-message-alert>
+
+<mat-dialog-content class="mat-typography customScrollBar pt-4" #body>
+    <form [formGroup]="schedulerFG">
+        <ng-container formGroupName="workflow">
+            <div class="row">
+                <p class="col-sm-4 pt-3">Who will enter this data?</p>
+                <mat-form-field class="col-sm-4" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Select assignee</mat-label>
+                    <mat-select formControlName="assigneeID">
+                        <mat-option>
+                            <ngx-mat-select-search [formControl]="userSearchUtil.filterFC"
+                                placeholderLabel="Search by user name"
+                                [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                            </ngx-mat-select-search>
+                        </mat-option>
+
+                        <mat-option *ngFor="let user of userSearchUtil.filteredEntities | async" [value]="user.id">
+                            {{ user.name }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+
+            <div class="row">
+                <div class="col-sm-4 pt-3">Who will approve this data?</div>
+
+                <mat-form-field class="col-sm-4" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Select approver</mat-label>
+                    <mat-select formControlName="approverID" [disabled]="isSlideToggleChecked">
+                        <mat-option>
+                            <ngx-mat-select-search [formControl]="userSearchUtil.filterFC"
+                                placeholderLabel="Search by user name"
+                                [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option *ngFor="let user of userSearchUtil.filteredEntities | async" [value]="user.id">
+                            {{ user.name }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-slide-toggle class="col-sm-4 pt-4" formControlName="isAutoApprove" (change)="openApprover()">
+                    Auto approve
+                </mat-slide-toggle>
+            </div>
+
+            <div class="ps-4">
+                <input type="checkbox" formControlName="isReminderSet" (change)="openReminder()"
+                    class="larger-checkbox">
+                <span class="ps-2">Schedule reminders for assignee</span>
+            </div>
+
+        </ng-container>
+
+        <ng-container formGroupName="reminder">
+            <div [class.disabled]="isReminderChecked" class="pt-2 ps-5">
+                <div class="row">
+                    <mat-form-field class="col-sm-2" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Reminder days</mat-label>
+                        <input class="formPlaceholder" matInput type="number" placeholder="Send a reminder every"
+                            formControlName="frequencyInterval" />
+                    </mat-form-field>
+
+                    <mat-form-field class="col-sm-3" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Days</mat-label>
+                        <mat-select formControlName="frequencyID">
+                            <mat-option *ngFor="let method of intervalList" [value]="method.id">
+                                {{ method.name }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <mat-form-field class="col-sm-5" id="monthlyField" appMonthYearFormat
+                    (click)="openDatepickerOnClick(startDatePicker)"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE" appMonthYearFormat
+                    (keydown.arrowdown)="openDatepickerOnClick(startDatePicker)"
+                    (keydown.enter)="openDatepickerOnClick(startDatePicker)">
+                    <mat-label class="formLabel">Starts on</mat-label>
+                    <input matInput class="noFocus" (dateInput)="formatDate('startDate')"
+                        [matDatepicker]="startDatePicker" formControlName="startDate" [max]="today" readonly />
+                    <mat-datepicker-toggle matSuffix class="fs-5" [for]="startDatePicker"></mat-datepicker-toggle>
+                    <mat-datepicker panelClass="monthPicker" #startDatePicker startView="year"
+                        (monthSelected)="monthSelectedHandlerForStartDate($event, startDatePicker)"
+                        (closed)="takeFocusAway('monthlyField')">
+                    </mat-datepicker>
+                </mat-form-field>
+
+                <div>
+                    <mat-form-field class="col-sm-5" id="monthlyField" appMonthYearFormat
+                        (click)="openDatepickerOnClick(endDatePicker)"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE" appMonthYearFormat
+                        (keydown.arrowdown)="openDatepickerOnClick(endDatePicker)"
+                        (keydown.enter)="openDatepickerOnClick(endDatePicker)">
+                        <mat-label class="formLabel">Ends on</mat-label>
+                        <input matInput class="noFocus" (dateInput)="formatDate('endDate')"
+                            [matDatepicker]="endDatePicker" formControlName="endDate" [max]="today" readonly />
+                        <mat-datepicker-toggle matSuffix class="fs-5" [for]="endDatePicker"></mat-datepicker-toggle>
+                        <mat-datepicker panelClass="monthPicker" #endDatePicker startView="year"
+                            (monthSelected)="monthSelectedHandlerForEndDate($event, endDatePicker)"
+                            (closed)="takeFocusAway('monthlyField')">
+                        </mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+        </ng-container>
+    </form>
+</mat-dialog-content>
+
+<div class="tscDialogFooter" #footer>
+    <button class="btn btn-success me-2" type="button" (click)="createScheduleWorkFlow()">
+        Save
+    </button>
+    <button type="button" class="button btn btn-secondary me-2" mat-dialog-close>
+        Cancel
+    </button>
+
+</div>

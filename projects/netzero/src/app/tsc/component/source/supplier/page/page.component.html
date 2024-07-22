@@ -1,0 +1,273 @@
+<div class="card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Suppliers</div>
+            <div class="pageSubtitle">
+                Create suppliers for supplier-level accounting and collaboration for scope 3 emissions.
+            </div>
+        </div>
+
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+
+                <lib-search-bar-one class="me-3" #searchBar [searchBy]="'supplier name'"
+                    (emitSearch)="searchFn($event)">
+                </lib-search-bar-one>
+
+                <button class="btn btn-sm btn-light refreshBtn centerAlign me-3 py-1" #refreshBtn matRipple
+                    [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                    [matTooltip]="ButtonTooltipEnum.REFRESH">
+                    <span class="material-symbols-outlined text-secondary">
+                        refresh
+                    </span>
+                </button>
+
+                <button type="button" class="btn btn-sm btn-success btnRightRadiusZero"
+                    (click)="createUpdateSupplier('create', '')" matRipple
+                    [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                    [matTooltip]="ButtonTooltipEnum.CREATE">
+                    <fa-icon [icon]="faPlus" class="me-1"></fa-icon>Supplier
+                </button>
+
+                <div class="btn-group" ngbDropdown placement="bottom-right" matTooltipPosition="below"
+                    [matTooltip]="ButtonTooltipEnum.MORE">
+                    <button type="button" ngbDropdownToggle class="btn btn-sm btn-success btnLeftRadiusZero">
+                    </button>
+
+                    <div ngbDropdownMenu>
+                        <button class="dropdown-item" (click)="bulkUpload()" matRipple
+                            [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">
+                            Import
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk upload code  -->
+
+    <!-- <div [ngStyle]="{'display': isFirstTemplate ? '' : 'none'}">
+        <div class="pe-3 me-1 btn-group float-end" ngbDropdown placement="bottom-right"
+            [class]="bulkBtnFlag ? 'custom-cursor' : 'disableCursor'">
+            <button type="button" ngbDropdownToggle class="btn btn-sm btn-secondary" [disabled]="!bulkBtnFlag">
+                Bulk actions
+            </button>
+
+            <div ngbDropdownMenu *ngIf="bulkBtnFlag">
+                <button class="dropdown-item" (click)="bulkUpdate('active')">
+                    <span class="ms-2">Mark all as active</span>
+                </button>
+                <button class="dropdown-item" (click)="bulkUpdate('inactive')">
+                    <span class="ms-2">Mark all as inactive</span>
+                </button>
+                <button class="dropdown-item" (click)="bulkUpdate('delete')">
+                    <span class="ms-2 text-danger">
+                        {{ ButtonLabelEnum.DELETE_BTN_LABEL }} all
+                    </span>
+                </button>
+            </div>
+        </div>
+
+        <div class="ms-3 mb-4 me-3">
+            <button matRipple [matRippleCentered]="true" class="btn btn-link float-end"
+                (click)="resetFilter();resetFlag=!resetFlag" [disabled]="isDisabledReset()">
+                <span class="material-symbols-outlined fs-6">
+                    filter_list_off
+                </span>
+                Reset Filters
+            </button>
+        </div>
+    </div> -->
+
+    <div class="ms-3 mb-4 me-3">
+        <button matRipple [matRippleCentered]="true" class="btn btn-link float-end"
+            (click)="resetFilter();resetFlag=!resetFlag" [disabled]="isDisabledReset()">
+            <span class="material-symbols-outlined fs-6">
+                filter_list_off
+            </span>
+            Reset Filters
+        </button>
+    </div>
+
+    <table mat-table class="equal-width-columns" [dataSource]="dataSource" #sort="matSort" matSort
+        matSortActive="supplierName" matSortDisableClear matSortDirection="desc">
+
+        <ng-container matColumnDef="supplierCode">
+            <th class="columnWidth" mat-header-cell *matHeaderCellDef>
+                <div class="d-flex align-items-center">
+                    <!-- <mat-checkbox [(ngModel)]="allComplete" (change)="selectAll($event.checked)">
+                    </mat-checkbox> -->
+                    <span class="ms-2 mt-1" mat-sort-header disableClear>
+                        Supplier Code
+                    </span>
+                </div>
+            </th>
+            <td mat-cell *matCellDef="let supplierRow">
+                <!-- <mat-checkbox [(ngModel)]="supplierRow['completed']" (change)="rowSelected()"></mat-checkbox> -->
+                <span class="ms-2 mt-1">
+                    {{ supplierRow.supplierCode == null ? '--': supplierRow.supplierCode }}
+                </span>
+            </td>
+        </ng-container>
+
+
+        <!-- Bulk upload code -->
+        <!-- <ng-container matColumnDef="supplierName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Name </th>
+            <td mat-cell *matCellDef="let supplierRow">
+                <span class="cursorPointer text-primary" (click)="navigateToViewPage(supplierRow.supplierID)"
+                    [matTooltip]="supplierRow.supplierName?.length >= 15? supplierRow.supplierName: ''"
+                    matTooltipPosition="above">
+                    {{ supplierRow.supplierName ? supplierRow.supplierName : COMMON_CONSTANT.HYPHEN }}
+                </span>
+            </td>
+        </ng-container> -->
+
+        <ng-container matColumnDef="supplierName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Name </th>
+            <td mat-cell *matCellDef="let supplierRow">
+                <span [matTooltip]="supplierRow.supplierName?.length >= 15? supplierRow.supplierName: ''"
+                    matTooltipPosition="above">
+                    {{ supplierRow.supplierName ? supplierRow.supplierName : COMMON_CONSTANT.HYPHEN }}
+                </span>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="supplierType">
+            <th mat-header-cell *matHeaderCellDef>
+                <funnel-filter #supplierTypeFilter header="Type" type="multi" [entityList]="supplierTypes" value="keyID"
+                    view="name" [selectFC]="supplierTypeFC" [active]="supplierTypeFlag"
+                    selectAllLabel="All supplier type" (multi)="supplierTypeFlag = true;" [resetFlag]="resetFlag">
+                </funnel-filter>
+            </th>
+            <td mat-cell *matCellDef="let supplierRow" [matTooltip]="formatCaegoryTooltip(supplierRow.supplierType)"
+                matTooltipClass="nameTooltip" matTooltipPosition="above">
+                {{supplierRow.supplierType[0] }}
+                <button *ngIf="categoryDisplayCount(supplierRow.supplierType) >= 1"
+                    class="btn btn-sm rounded-circle circleBtn">
+                    {{ categoryDisplayCount(supplierRow.supplierType) }}
+                </button>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="shareFacilities">
+            <th mat-header-cell *matHeaderCellDef>
+                <funnel-filter #shareFacilitiesFilter header="Assigned suppliers" type="mono"
+                    [entityList]="shareFacilitiesList" [selectFC]="shareFacilitiesFC" [active]="shareFacilitiesFlag"
+                    (mono)="shareFacilitiesFlag = true;" [resetFlag]="resetFlag">
+                </funnel-filter>
+            </th>
+            <td mat-cell *matCellDef="let supplierRow">
+                <mat-slide-toggle [ngModel]="supplierRow.assigneFlag === 'YES'"
+                    (change)="onToggleChange(supplierRow.supplierID, $event.checked)">
+                </mat-slide-toggle>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="portalAccess">
+            <th mat-header-cell *matHeaderCellDef>
+                <funnel-filter #portalAccessFilter header="Supplier portal access" type="mono"
+                    [entityList]="portalAccessList" [selectFC]="portalAccessFC" [active]="portalAccessFlag"
+                    (mono)="portalAccessFlag = true;" [resetFlag]="resetFlag">
+                </funnel-filter>
+            </th>
+            <td mat-cell *matCellDef="let supplierRow">
+                <a class="cursorPointer" (click)="createUpdateSupplier('update', supplierRow)"
+                    [ngClass]="supplierRow.isPortalEnabled ? 'text-success' : 'text-danger'">
+                    {{ supplierRow.isPortalEnabled ? 'Enabled' : 'Disabled' }}
+                </a>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef>
+                <funnel-filter #statusFilter header="Status" type="mono" [entityList]="statusList" [selectFC]="statusFC"
+                    [active]="statusFlag" (mono)="statusFlag = true;" [resetFlag]="resetFlag">
+                </funnel-filter>
+            </th>
+            <td mat-cell *matCellDef="let supplierRow">
+                <span [ngClass]="supplierRow.status ? 'text-success' : 'text-danger'">
+                    {{ supplierRow.status ? 'Active' : 'Inactive' }}
+                </span>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="keyID">
+            <th mat-header-cell *matHeaderCellDef> API Key ID </th>
+            <td mat-cell *matCellDef="let supplierRow;">
+                <button class="mx-auto" mat-icon-button type="button" #tooltip="matTooltip" matTooltipPosition="above"
+                    matTooltipHideDelay="0" [matTooltip]="COMMON_CONSTANT.VIEW_API_KEY_ID" [popover]="myPopover"
+                    popoverPlacement="top" [popoverOnHover]="false" [popoverAnimation]="true">
+                    <span type="button" class="material-symbols-outlined fs-5">
+                        visibility
+                    </span>
+                </button>
+
+                <popover-content #myPopover [animation]="true" [closeOnClickOutside]="true">
+                    <span>{{ supplierRow.supplierKeyID }}</span>
+                    <button class="float-end" [cdkCopyToClipboard]="supplierRow.supplierKeyID" mat-icon-button
+                        type="button">
+                        <span class="material-symbols-outlined fs-5" #tooltip="matTooltip" matTooltipPosition="above"
+                            matTooltipHideDelay="0" matTooltipClass="nameTooltip" matTooltip="Copy">
+                            content_copy
+                        </span>
+                    </button>
+                </popover-content>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="option">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell class="option" *matCellDef="let supplierRow">
+                <div class="btn-group" ngbDropdown placement="left-top">
+                    <button type="button" ngbDropdownToggle class="dropdown-after dropdownAfter btn">
+                        <fa-icon [icon]="faEllipsisV"></fa-icon>
+                    </button>
+                    <div ngbDropdownMenu>
+                        <button class="dropdown-item" (click)="createUpdateSupplier('update',supplierRow)">
+                            {{ ButtonLabelEnum.UPDATE_BTN_LABEL }}
+                        </button>
+
+                        <!-- <button class="dropdown-item" (click)="createUpdateSupplier('update',supplierRow)">
+                            <ng-container *ngIf="supplierRow.status == 'INACTIVE'; else activeContainer">
+                                {{ ButtonLabelEnum.MARK_ACTIVE_BTN_LABEL }}
+                            </ng-container>
+                            <ng-template #activeContainer>
+                                {{ ButtonLabelEnum.MARK_INACTIVE_BTN_LABEL }}
+                            </ng-template>
+                        </button> -->
+
+                        <!-- <button class="dropdown-item" (click)="createUpdateSupplier('update',supplierRow)">
+                            {{ ButtonLabelEnum.DELETE_BTN_LABEL }}
+                        </button> -->
+                    </div>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let supplierRow; columns: displayedColumns;" class="dataRow"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+            </td>
+        </tr>
+    </table>
+
+    <mat-paginator class="roundedBorder" #paginator [length]="dataSourceLength"
+        [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION" [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE"
+        showFirstLastButtons>
+    </mat-paginator>
+</div>
+
+<ng-template #icon let-icon="icon" let-tooltip="tooltip" let-class="class" let-function="function"
+    let-functionParameter="functionParameter">
+    <button class="iconBtn centerAlign" [class]="class" matTooltipPosition="below" [matTooltip]="tooltip" matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" (click)="handleClick(function, functionParameter)">
+        <span class="material-symbols-outlined icon">
+            {{ icon }}
+        </span>
+    </button>
+</ng-template>

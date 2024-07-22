@@ -1,0 +1,195 @@
+<mat-card class="border cardOverwrite">
+    <div class="cardTitle pb-3">
+        4. Track progress
+    </div>
+
+    <div class="row pb-3">
+        <div class="col-sm-3">
+            <div class="border p-3 curved-box">
+                <p class="m-0"><strong>{{totalActivites}} Total activity forms mapped</strong></p>
+            </div>
+        </div>
+        <div class="col-sm-3">
+            <div class="border p-3 curved-box">
+                <p class="m-0"><strong>{{linkedRecords}} Total records collected</strong></p>
+            </div>
+        </div>
+        <div class="col-sm-3 pt-2">
+            <span class="material-symbols-outlined text-primary cursorPointer fontRefresh" (click)="refreshData()">
+                refresh
+            </span>
+        </div>
+    </div>
+
+    <mat-accordion multi="true">
+        <mat-expansion-panel class="cardOverwrite matAccordion mb-2" *ngFor="let process of process" expanded="false">
+            <mat-expansion-panel-header class="centerAlignVertical panelHeader">
+                <div class="row w-100">
+                    <div class="col-sm-8 centerAlignVertical"><strong>Process Name - {{ process.name }}</strong></div>
+                    <div class="col-sm-2">{{process.activityCount}} Activity forms</div>
+                    <div class="col-sm-2">{{process.linkedRecords}} records collected</div>
+                </div>
+            </mat-expansion-panel-header>
+
+            <div class="cardOverwrite border card-body bg-light">
+                <div class="text-secondary fs-5 pb-3"><strong>Input</strong></div>
+                <mat-accordion multi="true">
+                    <ng-container *ngFor="let input of process.input">
+                        <mat-expansion-panel class="cardOverwrite mb-2" expanded="false"
+                            [disabled]="!canAddRecord('INPUT', input.keyID)">
+                            <mat-expansion-panel-header
+                                [class]="{'cursorDefault': !canAddRecord('INPUT', input.keyID)}">
+                                <div class="row w-100">
+                                    <div class="col-sm-8">
+                                        <mat-panel-title>
+                                            <span [class]="{'text-secondary': !canAddRecord('INPUT', input.keyID)}">
+                                                {{ input.name }}
+                                            </span>
+                                        </mat-panel-title>
+                                    </div>
+                                    <div class="col-sm-4 text-end">
+                                        {{ canAddRecord('INPUT', input.keyID)? getTotalRecords(input) + ' records
+                                        collected': 'No action required' }}
+                                    </div>
+                                </div>
+                            </mat-expansion-panel-header>
+
+                            <ng-container *ngFor="let source of input.source;">
+                                <div class="text-secondary bg-light px-3 py-2 cardOverwrite d-flex justify-content-between"
+                                    *ngIf="source.name">
+                                    <strong>{{ source.name }}</strong>
+                                    {{ source.linkedRecords }} records collected
+                                </div>
+                                <ng-container *ngFor="let activity of source.activity; let i = index">
+                                    <ng-container *ngIf="activity.config.length > 0; else noFormsMapped">
+                                        <table class="table pt-3" (onchange)="check(activity)">
+                                            <thead *ngIf="i == 0">
+                                                <tr>
+                                                    <th>Form Name</th>
+                                                    <th>Activity Type</th>
+                                                    <th>Form Type</th>
+                                                    <th>Linked Records</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let config of activity.config">
+                                                    <td mat-cell (click)="viewActivityConfig(config)" class="fixWidth"
+                                                        [ngClass]="{'cursorPointer': showCursorPointer(config)}">
+                                                        <a [ngClass]="{'text-primary': showCursorPointer(config)}"
+                                                            [matTooltip]="config.name.length > 25 ? config.name : ''">{{config.name
+                                                            ?
+                                                            (config.name.length > 25 ?
+                                                            config.name.substring(0, 25) + '...' : config.name) :
+                                                            COMMON_CONSTANT.HYPHEN}}</a>
+                                                    </td>
+                                                    <td class="pt-3 fixWidth">{{ activity.name }}</td>
+                                                    <td class="pt-3 fixWidth">
+                                                        <span class="badge rounded-pill activityFormTypeLabel cbamBadge"
+                                                            [ngClass]="{ 'cbamBadge': activity.type[0].keyID == ACTIVITY_FORM_TYPE_KEYID_ENUM.CBAM_FORM, 'ghgBadge': activity.type[0].keyID == ACTIVITY_FORM_TYPE_KEYID_ENUM.GHG_FORM }">
+                                                            {{ activity.type[0].name }}
+                                                        </span>
+                                                    </td>
+                                                    <td class="pt-3 fixWidth"
+                                                        [ngClass]="{'link-primary cursorPointer': (config.linkedRecords > 0)}"
+                                                        (click)="linkedRecordsActivity(config, activity)">
+                                                        {{ config.linkedRecords }}
+                                                    </td>
+
+                                                    <td class="pt-3 fixWidth">
+                                                        <button class="btn btn-success"
+                                                            (click)="routeToPFF(config, activity.id)">
+                                                            <fa-icon [icon]="faPlus" class="me-1"></fa-icon>Record
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </ng-container>
+                                </ng-container>
+                            </ng-container>
+                        </mat-expansion-panel>
+                    </ng-container>
+                </mat-accordion>
+
+                <div class="text-secondary fs-5 pb-3 pt-3"><strong>Output</strong></div>
+                <mat-accordion multi="true">
+                    <ng-container *ngFor="let output of process.output">
+                        <mat-expansion-panel class="cardOverwrite mb-2" expanded="false"
+                            [disabled]="!canAddRecord('OUTPUT', output.keyID)">
+                            <mat-expansion-panel-header>
+                                <div class="row w-100">
+                                    <div class="col-sm-8">
+                                        <mat-panel-title>
+                                            <span [class]="{'text-secondary': !canAddRecord('OUTPUT', output.keyID)}">
+                                                {{ output.name }}
+                                            </span>
+                                        </mat-panel-title>
+                                    </div>
+                                    <div class="col-sm-4 text-end">
+                                        {{ canAddRecord('OUTPUT', output.keyID)? getTotalRecords(output) + ' records
+                                        collected': 'No action required' }}
+                                    </div>
+                                </div>
+                            </mat-expansion-panel-header>
+
+                            <ng-container *ngFor="let source of output.source">
+                                <div class="text-secondary bg-light px-3 py-2 cardOverwrite d-flex justify-content-between"
+                                    *ngIf="source.name">
+                                    <strong>{{ source.name }}</strong>
+                                    {{ source.linkedRecords }} records collected
+                                </div>
+
+                                <ng-container *ngFor="let activity of source.activity; let i = index">
+                                    <ng-container *ngIf="activity.config.length > 0; else noFormsMapped">
+                                        <table class="table pt-3">
+                                            <thead *ngIf="i == 0">
+                                                <tr>
+                                                    <th>Form Name</th>
+                                                    <th>Activity Type</th>
+                                                    <th>Form Type</th>
+                                                    <th>Linked Records</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let config of activity.config">
+                                                    <td mat-cell (click)="viewActivityConfig(config)" class="fixWidth"
+                                                        [ngClass]="{'cursorPointer': showCursorPointer(config)}">
+                                                        <a [ngClass]="{'text-primary': showCursorPointer(config)}"
+                                                            [matTooltip]="config.name.length > 25 ? config.name : ''">{{config.name
+                                                            ?
+                                                            (config.name.length > 25 ?
+                                                            config.name.substring(0, 25) + '...' : config.name) :
+                                                            COMMON_CONSTANT.HYPHEN}}</a>
+                                                    </td>
+                                                    <td class="pt-3 fixWidth">{{ activity.name }}</td>
+                                                    <td class="pt-3 fixWidth">
+                                                        <span class="badge rounded-pill activityFormTypeLabel cbamBadge"
+                                                            [ngClass]="{ 'cbamBadge': activity.type[0].keyID == ACTIVITY_FORM_TYPE_KEYID_ENUM.CBAM_FORM, 'ghgBadge': activity.type[0].keyID == ACTIVITY_FORM_TYPE_KEYID_ENUM.GHG_FORM }">
+                                                            {{ activity.type[0].name }}
+                                                        </span>
+                                                    </td>
+                                                    <td class="pt-3 fixWidth"
+                                                        [ngClass]="{'link-primary cursorPointer': (config.linkedRecords > 0)}"
+                                                        (click)="linkedRecordsActivity(config, activity)">
+                                                        {{ config.linkedRecords }}
+                                                    </td>
+
+                                                    <td class="pt-3 fixWidth">
+                                                        <button class="btn btn-success"
+                                                            (click)="routeToPFF(config, activity.id)">
+                                                            <fa-icon [icon]="faPlus" class="me-1"></fa-icon>Record
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </ng-container>
+                                </ng-container>
+                            </ng-container>
+                        </mat-expansion-panel>
+                    </ng-container>
+                </mat-accordion>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</mat-card>

@@ -1,0 +1,22 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">
+                Carbon Preferences
+            </div>
+            <div class="pageSubtitle">
+                Settings or options individuals or systems prefer when performing calculations
+            </div>
+        </div>
+    </div>
+
+    <nav mat-tab-nav-bar>
+        <ng-container *ngFor="let tabs of tab; let i = index;">
+            <a mat-tab-link [routerLink]="tabs['routerLink']" (click)="activeLink = tabs['routerLink']"
+                [active]="activeLink == tabs['routerLink']">
+                {{ tabs['label'] }}
+            </a>
+        </ng-container>
+    </nav>
+    <router-outlet></router-outlet>
+</div>

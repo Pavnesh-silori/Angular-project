@@ -1,0 +1,352 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+    </symbol>
+</svg>
+
+<div class="card main-card cardOverwrite h100">
+
+    <app-interval-config-details [configIntervalID]="configIntervalID"
+        [refresh]="refresh"></app-interval-config-details>
+
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+        </div>
+
+        <div class="headerRightContainer me-2">
+            <div class="headerRightContainerInner">
+                <lib-search-bar-one #searchBtn searchBy="section name"
+                    (emitSearch)="searchFn($event)"></lib-search-bar-one>
+            </div>
+        </div>
+
+        <div class="headerRightContainerInner">
+            <div class="ms-1 btn-group" ngbDropdown placement="bottom-right">
+                <button type="button" ngbDropdownToggle class="btn btn-success btn-sm" [ngClass]="{'btn-success': bulkBtnFlag, 
+                    'custom-cursor': bulkBtnFlag, 'custom-not-allowed': !bulkBtnFlag}"> Bulk actions
+                </button>
+                <div ngbDropdownMenu *ngIf="bulkBtnFlag">
+                    <button class="dropdown-item" (click)="sendRemainderToAssigneeOrApprover('', 'assignees', 'bulk')">
+                        Send reminder to assignee
+                    </button>
+                    <button class="dropdown-item" (click)="sendRemainderToAssigneeOrApprover('', 'approvers', 'bulk')">
+                        Send reminder to approver
+                    </button>
+                    <button class="dropdown-item" (click)="sendSectionGroupListToAssign(FormAction.CREATE,null)">
+                        Assign
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button type="button" class="d-none" #refreshBtn>refresh</button>
+
+    <div class="p-4">
+        <button matRipple [matRippleCentered]="true" class="btn btn-link float-end" (click)="refreshFilter()"
+            [disabled]="(assigneeFlag == false && approverFlag == false)">
+            <span class="material-symbols-outlined fs-6">
+                filter_list_off
+            </span>
+            Reset Filters
+        </button>
+    </div>
+
+    <mat-accordion displayMode="flat" multi class="mat-table cardOverwrite">
+        <section #sort matSort matSortActive="sectionID" matSortDirection="asc" class="mat-header-row header ms-2">
+            <span class="mat-header-cell sectionWidth">
+                <mat-checkbox class="pb-1" [formControl]="selectUnselectAllFC" (change)="selectUnselectAll($event)">
+                    Section name
+                </mat-checkbox>
+            </span>
+            <span class="mat-header-cell ms-2">
+                <funnel-filter #assigneeSelect header="Assignee" type="multi" [entityList]="userList" value="id"
+                    view="name" [selectFC]="assigneeFC" [active]="assigneeFlag" selectAllLabel="All assignee"
+                    (multi)="assigneeFlag = true;" [resetFlag]="resetFlag">
+                </funnel-filter>
+            </span>
+            <span class="mat-header-cell">
+                
+                <funnel-filter #approverSelect header="Approver" type="multi" [entityList]="userList" value="id"
+                view="name" [selectFC]="approverFC" [active]="approverFlag" selectAllLabel="All approver"
+                (multi)="approverFlag = true;" [resetFlag]="resetFlag">
+            </funnel-filter>
+            </span>
+            <span class="mat-header-cell metricWidth" mat-sort-header="filledMetric" #sort
+                mat-sort-header="filled metric">Filled
+                metrics</span>
+            <span class="mat-header-cell metricWidth" mat-sort-header="approvedMetric" #sort
+                mat-sort-header="approved metric">Approved metrics</span>
+            <span class="mat-header-cell curdWidth"></span>
+
+        </section>
+
+        <ng-container *ngFor="let section of sectionGroupDataList; let i = index;">
+            <mat-expansion-panel #panel class="cardOverwrite matAccordion m-2"
+                [expanded]="section.id === activeSectionID" (opened)="onSectionPanelOpen(section)"
+                (closed)="closeAllOpenPanel()">
+                <mat-expansion-panel-header class="mat-row">
+                    <span class="sectionWidth pt-2">
+                        <mat-checkbox class="me-2" [checked]="isSectionChecked(section.id)"
+                            (change)="selectUnselectSection($event,section.id, section.group); panel.expanded = !panel.expanded;">
+                            <span #tooltip="matTooltip" matTooltipPosition="above" [matTooltip]="((section.name)?.length > 32) ? 
+                        section.name : ''" matTooltipClass="nameTooltip">
+                                {{section.name | dotdotdot: 32}}
+                            </span>
+                        </mat-checkbox>
+                    </span>
+
+                    <span *ngIf="section.assignee.length > 0" class="mat-cell pt-2 ps-2 users">
+                        <ng-container *ngFor="let assignee of section.assignee.slice(0,3); let index = index">
+                            <img class="profileImg rounded-circle border" [src]="showAssigneeApprover(assignee, index)"
+                                alt="profile-image" #tooltip="matTooltip" matTooltipPosition="above"
+                                [matTooltip]="(assignee?.['firstName'] ? assignee['firstName'] + ' ' + (assignee?.['lastName'] != null ? assignee?.['lastName'] : '') : '')"
+                                matTooltipClass="nameTooltip" [ngStyle]="{'z-index': 80 - index*20}" />
+                            <span *ngIf="section.assignee.length == 1">
+                                {{assignee['firstName']}} {{assignee['lastName']}}
+                            </span>
+                        </ng-container>
+                        <button *ngIf="assigneeDisplayCount(section.assignee) >= 1" [matMenuTriggerFor]="menu"
+                            class="btn btn-sm rounded-circle circleBtn"
+                            (click)="showAllAssigneeApprooverDropdown(section.assignee)">
+                            {{assigneeDisplayCount(section.assignee)}}</button>
+                        <mat-menu #menu="matMenu" class="menuWidth">
+                            <button mat-menu-item *ngFor="let user of assigneeApproverList">
+                                <img class="profileImg rounded-circle border me-1" [src]="user.profileImg">
+                                {{ user.name }}
+                            </button>
+                        </mat-menu>
+                    </span>
+
+                    <span *ngIf="section.assignee.length == 0" class="mat-cell ps-2 pt-2">
+                        <ng-container *ngTemplateOutlet="unassigned; 
+                        context: {
+                            index: index
+                        }">
+                        </ng-container>
+                    </span>
+
+                    <span *ngIf="section.approver.length > 0" class="mat-cell pt-2 ps-2 users">
+                        <ng-container *ngFor="let approver of section.approver.slice(0,3); let index = index">
+                            <img class="profileImg rounded-circle border userImg"
+                                [src]="showAssigneeApprover(approver, index)" alt="profile-image" #tooltip="matTooltip"
+                                matTooltipPosition="above"
+                                [matTooltip]="(approver?.['firstName'] ? approver['firstName'] + ' ' + (approver?.['lastName'] != null ? approver?.['lastName'] : '') : '')"
+                                matTooltipClass="nameTooltip" />
+                            <span *ngIf="section.approver.length == 1">
+                                {{approver['firstName']}} {{approver['lastName']}}
+                            </span>
+                        </ng-container>
+                        <button *ngIf="assigneeDisplayCount(section.approver) >= 1" [matMenuTriggerFor]="menu"
+                            class="btn btn-sm rounded-circle circleBtn"
+                            (click)="showAllAssigneeApprooverDropdown(section.approver)">
+                            {{assigneeDisplayCount(section.approver)}}</button>
+                        <mat-menu #menu="matMenu" class="menuWidth">
+                            <button mat-menu-item *ngFor="let user of assigneeApproverList">
+                                <img class="profileImg rounded-circle border me-1" [src]="user.profileImg">
+                                {{ user.name }}
+                            </button>
+                        </mat-menu>
+                    </span>
+
+                    <span *ngIf="!section.isAutoApproved && section.approver.length == 0" class="mat-cell pt-2 ps-2">
+                        <ng-container *ngTemplateOutlet="unassigned; 
+                            context: {
+                                index: index
+                            }">
+                        </ng-container>
+                    </span>
+
+                    <span *ngIf="section.isAutoApproved" class="mat-cell pt-2 ps-2">
+                        <ng-container *ngTemplateOutlet="autoApproved"></ng-container>
+                    </span>
+
+                    <span class="metricWidth pt-2 ps-2">
+                        <span [ngClass]="textColor(section.filledMetric,section.totalMetric)">
+                            {{ section.filledMetric }}</span> / {{ section.totalMetric }}
+                    </span>
+                    <span class="metricWidth pt-2 ps-2">
+                        <span [ngClass]="textColor(section.approvedMetric,section.totalMetric )">
+                            {{ section.approvedMetric }}</span> / {{ section.totalMetric }}
+                    </span>
+
+                    <span class="mat-cell">
+                        <button type="button" mat-icon-button [matMenuTriggerFor]="afterMenu"
+                            aria-label="Example icon-button with a menu" (click)="panel.expanded = !panel.expanded;">
+                            <fa-icon [icon]="faEllipsisV" class="me-2"></fa-icon>
+                        </button>
+                        <mat-menu #afterMenu="matMenu" xPosition="after">
+                            <button *ngIf="section.assignee.length != 0" mat-menu-item
+                                (click)="sendRemainderToAssigneeOrApprover(section.assignee, 'assignees', 'section', section.id, section.group, '')">
+                                Send reminder to assignee
+                            </button>
+                            <button *ngIf="section.approver.length != 0" mat-menu-item
+                                (click)="sendRemainderToAssigneeOrApprover(section.approver, 'approvers', 'section', section.id, section.group, '')">
+                                Send reminder to approver
+                            </button>
+                            <button mat-menu-item
+                                (click)="unassignedAssigneMetric(section.id,section.group,'section', 'assign')">
+                                Assign
+                            </button>
+                            <button *ngIf="section.isAssigned" mat-menu-item
+                                (click)="unassignedAssigneMetric(section.id,section.group,'section', 'unassign')">
+                                Unassign
+                            </button>
+                        </mat-menu>
+                    </span>
+                </mat-expansion-panel-header>
+
+
+                <mat-accordion displayMode="flat" multi>
+                    <mat-expansion-panel #groupPanel class="cardOverwrite m-2"
+                        *ngFor="let group of section.group; let i = index" (opened)="onGroupPanelOpen(group)"
+                        [expanded]="((activeAccodianGroup == group) || (group.id === activeGroupID))">
+                        <mat-expansion-panel-header class="mat-row">
+                            <mat-checkbox class="sectionWidth me-2 pt-2" [checked]="isGroupChecked(group.id)"
+                                (change)="selectUnselectGroup($event,section.id,section.group[i].id, section.group); groupPanel.expanded = !groupPanel.expanded;">
+                                <span #tooltip="matTooltip" matTooltipPosition="above" [matTooltip]="((group.name)?.length > 35) ? 
+                                    group.name : ''" matTooltipClass="nameTooltip">
+                                    {{group.name | dotdotdot: 35}}
+                                </span>
+                            </mat-checkbox>
+
+                            <span *ngIf="group.assignee.length > 0" class="mat-cell pt-2 ps-2 users">
+                                <span *ngFor="let assignee of group.assignee.slice(0,3); let index = index">
+                                    <img class="profileImg rounded-circle border userImg"
+                                        [src]="showAssigneeApprover(assignee, index)" alt="profile-image"
+                                        #tooltip="matTooltip" matTooltipPosition="above"
+                                        [matTooltip]="(assignee?.['firstName'] ? assignee['firstName'] + ' ' + (assignee?.['lastName'] != null ? assignee?.['lastName'] : '') : '')"
+                                        matTooltipClass="nameTooltip" />
+                                    <span *ngIf="group.assignee.length == 1">
+                                        {{assignee['firstName']}} {{assignee['lastName']}}
+                                    </span>
+                                </span>
+                            </span>
+
+                            <span *ngIf="group.assignee.length == 0" class="mat-cell pt-2 ps-2">
+                                <ng-container *ngTemplateOutlet="unassigned; 
+                                context: {
+                                    index: 0
+                                }">
+                                </ng-container>
+                            </span>
+
+                            <span *ngIf="group.approver.length > 0" class="mat-cell pt-2 ps-2 users">
+                                <span *ngFor="let approver of group.approver.slice(0,3); let index = index">
+                                    <img class="profileImg rounded-circle border userImg"
+                                        [src]="showAssigneeApprover(approver, index)" alt="profile-image"
+                                        #tooltip="matTooltip" matTooltipPosition="above"
+                                        [matTooltip]="(approver?.['firstName'] ? approver['firstName'] + ' ' + (approver?.['lastName'] != null ? approver?.['lastName'] : '') : '')"
+                                        matTooltipClass="nameTooltip" />
+                                    <span *ngIf="group.approver.length == 1">
+                                        {{approver['firstName']}} {{approver['lastName']}}
+                                    </span>
+                                </span>
+                            </span>
+
+                            <span *ngIf="!group.isAutoApproved && group.approver.length == 0"
+                                class="mat-cell pt-2 ps-2">
+                                <ng-container *ngTemplateOutlet="unassigned; 
+                                context: {
+                                    index: 0
+                                }">
+                                </ng-container>
+                            </span>
+
+                            <span *ngIf="group.isAutoApproved" class="mat-cell pt-2 ps-2">
+                                <ng-container *ngTemplateOutlet="autoApproved"></ng-container>
+                            </span>
+
+                            <span class="metricWidth pt-2">
+                                {{ group.filledMetric }} {{ '/'}} {{ group.totalMetric }}
+                            </span>
+                            <span class="metricWidth pt-2">
+                                {{ group.approvedMetric }} {{ '/'}} {{ group.totalMetric }}
+                            </span>
+
+                            <span class="mat-cell curdWidth">
+                                <button type="button" mat-icon-button [matMenuTriggerFor]="afterMenu"
+                                    aria-label="Example icon-button with a menu"
+                                    (click)="groupPanel.expanded = !groupPanel.expanded;">
+                                    <fa-icon [icon]="faEllipsisV" class=""></fa-icon>
+                                </button>
+                                <mat-menu #afterMenu="matMenu" xPosition="after">
+                                    <button *ngIf="group.assignee.length != 0" mat-menu-item
+                                        (click)="sendRemainderToAssigneeOrApprover(group.assignee, 'assignees', 'group', section.id, section.group, section.group[i].id)">
+                                        Send reminder to assignee
+                                    </button>
+                                    <button *ngIf="group.approver.length != 0" mat-menu-item
+                                        (click)="sendRemainderToAssigneeOrApprover(group.approver, 'approvers', 'group', section.id, section.group, section.group[i].id)">
+                                        Send reminder to approver
+                                    </button>
+                                    <button mat-menu-item
+                                        (click)="unassignedAssigneMetric(section.id,group.id,'group', 'assign')">
+                                        Assign
+                                    </button>
+                                    <button *ngIf="group.isAssigned" mat-menu-item
+                                        (click)="unassignedAssigneMetric(section.id,group.id,'group', 'unassign')">
+                                        Unassign
+                                    </button>
+                                    <button mat-menu-item (click)="auditTrail(section.id,group.id)">
+                                        Audit trail
+                                    </button>
+                                </mat-menu>
+
+                            </span>
+                        </mat-expansion-panel-header>
+                        <ng-container *ngIf="activeAccodianGroup == group">
+                            <div *ngIf="matchingMetricFlag" class="alert alertCard" role="alert">
+                                <div class="col-sm-10 d-flex align-items-center">
+                                    <span class="material-symbols-outlined">
+                                        link
+                                    </span>
+                                    <span class="fw-bold ms-2 textColor">Matching metric</span>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-10 d-flex align-items-center">
+                                        <span class="fw-bold">Found similar entries</span><br>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <button class="btn btn-sm btnColor" type="button"
+                                            (click)="getMatchingMetric(group.id)">
+                                            Matching metric
+                                        </button>
+                                    </div>
+                                </div>
+                                <p>This question matches with one of the entries filled by you
+                                </p>
+                            </div>
+
+                            <ng-container *ngIf="activeAccodianGroup == group">
+                                <app-data-create-update [groupID]="group.id" [isReadOnly]="isReadOnly"
+                                    [pageType]="pageType" [isAssignee]="group.isAssignee" [isApprover]="group.isApprover"
+                                    (emit)="emitter($event,section.id, group.id)"></app-data-create-update>
+                            </ng-container>
+                        </ng-container>
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </mat-expansion-panel>
+        </ng-container>
+    </mat-accordion>
+
+    <div *ngIf="sectionGroupDataList.length == 0" class="mat-cell text-center mx-auto mt-3">
+        No section found.
+    </div>
+</div>
+
+<ng-template #unassigned let-index="index">
+    <img class="profileImageHeaderView ms-0 rounded-circle border" src="../assets/images/default-profile-img.jpg"
+        alt="profile-image" [ngStyle]="{'z-index': 80 - index*20}" />
+    unassigned
+</ng-template>
+
+<ng-template #autoApproved>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+        class="check-circle-fill flex-shrink-0 dialogHeaderIcon textActiveStatus" viewBox="0 0 16 16" role="img"
+        aria-label="Success:">
+        <path
+            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+    </svg>
+    Auto Approved
+</ng-template>

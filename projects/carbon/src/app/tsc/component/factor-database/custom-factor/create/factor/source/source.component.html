@@ -1,0 +1,115 @@
+<!-- <mat-card class="border cardOverwrite"> -->
+<!-- <div class="cardTitle pb-2"> Factor source </div> -->
+
+<form [formGroup]="sourceFG">
+    <div class="row">
+        <ng-container *ngFor="let field of formFields">
+            <div [class]="field['width']">
+                <ng-container [ngSwitch]="field['input']">
+                    <ng-container *ngSwitchCase="'input'">
+                        <mat-form-field class="matFieldWidth100"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel">{{ field['label'] }}</mat-label>
+                            <input class="formPlaceholder" matInput [type]="field['type']"
+                                [formControlName]="field['control']" [placeholder]="field['placeholder']">
+                            <mat-error *ngFor="let validators of field['validators']">
+                                <ng-container *ngIf="errorHandling(field['control'], validators['validator'])">
+                                    {{ validators['error'] }}
+                                </ng-container>
+                            </mat-error>
+                        </mat-form-field>
+                    </ng-container>
+
+                    <ng-container *ngSwitchCase="'file'">
+                        <div class="row">
+                            <!-- <div class="col-sm-7" style="height: 41px;">
+                                <span class="ps-2 fs-5 ">
+                                    Verification document
+                                </span>
+                                <mat-error class="ms-2 ps-1 fw-normal" style="font-size: 10px;" *ngIf="invalidFile">
+                                    Please upload a file
+                                </mat-error>
+                            </div> -->
+
+                            <div class="col-sm-12 fileInput">
+                                <input class="form-control" type="file" accept="application/pdf" #fileInput
+                                    (change)="fileUpload($event)">
+                            </div>
+
+                            <!-- <div class="col-sm-5">
+                                <input #fileInput type="file" accept="application/pdf" class="d-none"
+                                    (change)="fileUpload($event)">
+                                <ng-container align="end">
+                                    <button *ngIf="fileUrl" class="btn float-end" type="button"
+                                        matTooltip="Uploading a new document will result in deletion of previously uploaded document!"
+                                        matTooltipPosition="above" matTooltipClass="nameTooltip">
+                                        <span mat-icon-button class="material-symbols-outlined text-warning">
+                                            error
+                                        </span>
+                                    </button>
+                                    <button type="button" class="btn btn-light float-end" (click)="fileInput.click()">
+                                        {{ fileUrl ? 'Upload new' : 'Upload' }}
+                                    </button>
+                                </ng-container>
+                            </div> -->
+                            <div class="col-sm-12 mt-1 p-1" *ngIf="fileName !== null">
+                                <div class="row border border-2 rounded cardOverwrite m-1 p-2">
+                                    <div class="col-sm-2 docIcon centerAlign">
+                                        <img height="50px" src="assets/images/default-doc.ico"
+                                            alt="verification document preview">
+                                    </div>
+                                    <div class="col-sm-8 centerAlign" [ngClass]="{'col-sm-10': !fileUrl}"
+                                        style="font-family: Roboto, Helvetica Neue, sans-serif;">
+                                        {{ fileName | dotdotdot: 25 }}
+                                    </div>
+                                    <ng-container *ngIf="fileUrl">
+                                        <div class="col-sm-2 centerAlignVertical">
+                                            <a [href]="fileUrl" target="_blank" class="btn text-primary" mat-icon-button
+                                                matTooltip="Open file in new window" matTooltipPosition="above">
+                                                <span class="material-symbols-outlined">
+                                                    open_in_new
+                                                </span>
+                                            </a>
+                                            <!-- <button type="button" class="btn float-end" mat-icon-button
+                                                        (click)="removeFile()">
+                                                        <span class="material-symbols-outlined text-danger">
+                                                            delete
+                                                        </span>
+                                                    </button> -->
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+  
+
+                    <ng-template #docImg>
+                        <div class="p-1 centerAlignVertical">
+                            <div class="docIcon p-1" matSuffix mat-icon-button mat-raised-button
+                                [matTooltip]="billFileName" matTooltipPosition="below">
+                                <img height="40px" src="assets/images/default-doc.ico" alt="bill document preview">
+                            </div>
+                        </div>
+                    </ng-template>
+
+                    <ng-container *ngSwitchDefault>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="col-form-label fs-5 fw-bold">
+                                    {{ field['title'] }}
+                                </div>
+                            </div>
+                            <div class="col-sm-8">
+                                <div class="form-control-plaintext fw-bold">
+                                    {{ field['value'] }}
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </div>
+        </ng-container>
+    </div>
+</form>
+<!-- </mat-card> -->

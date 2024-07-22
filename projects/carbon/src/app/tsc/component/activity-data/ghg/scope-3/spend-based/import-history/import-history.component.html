@@ -1,0 +1,188 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">All imports</div>
+            <div class="pageSubtitle">View, edit and delete all imports.</div>
+        </div>
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <lib-search-bar-one class="me-3" #searchBar [searchBy]="'config name'"
+                    (emitSearch)="searchFn($event)"></lib-search-bar-one>
+            </div>
+        </div>
+    </div>
+
+    <button type="button" class="d-none" #refreshBtn>refresh</button>
+
+    <div class="overflowX customScrollBar">
+        <table class="w-100" mat-table [dataSource]="dataSource" #sort matSort matSortActive="createdDate"
+            matSortDirection="desc" matSortDisableClear>
+
+            <ng-container matColumnDef="name">
+                <th class="ps-3 name" mat-header-cell *matHeaderCellDef> Name
+                </th>
+                <td class="ps-3" mat-cell *matCellDef="let row"
+                    [matTooltip]="row['configName'].length>15? row['configName']: ''" matTooltipPosition="above"
+                    matTooltipClass="nameTooltip">
+                    {{ (row['configName'] ? row['configName']: COMMON_CONSTANT.HYPHEN) | dotdotdot:15}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="type">
+                <th class="px-3 type" mat-header-cell *matHeaderCellDef>
+                    Type
+                </th>
+                <td class="px-3" mat-cell *matCellDef="let row"
+                    [matTooltip]="row['methodType'].length>20? row['methodType']: ''" matTooltipPosition="above"
+                    matTooltipClass="nameTooltip">
+                    {{ (row['methodType'] ? row['methodType']: COMMON_CONSTANT.HYPHEN) | dotdotdot:20}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="accountingPeriod">
+                <th class="ps-3 accountingPeriod" mat-header-cell *matHeaderCellDef>
+                    Accounting Period
+                </th>
+                <td class="ps-3" mat-cell *matCellDef="let row">
+                    {{ (row['startDate'] ? row['startDate'] : COMMON_CONSTANT.HYPHEN) + ' - ' + (row['endDate'] ?
+                    row['endDate'] : COMMON_CONSTANT.HYPHEN) }}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="createdDate">
+                <th class="ps-3 createdBy" mat-header-cell *matHeaderCellDef mat-sort-header> Created By
+                </th>
+                <td class="ps-3" mat-cell *matCellDef="let row">
+                    <img class="rounded-circle border border-3 profileImageDropdownView"
+                        [src]="row['createdBy']['profileImgUrl'] ||
+                                    userService.defaultImage(row['createdBy']['name'], ProfileImg.PROFILE_IMAGE_DROPDOWN_NAME_VIEW)" alt="profile img">
+                    <span matTooltipPosition="above"
+                        [matTooltip]="((row['createdBy']['name'] && row['createdDate'] && (row['createdBy']['name'] + row['createdDate']).length > 12) ? row['createdBy']['name'] + ' on ' + row['createdDate'] : '')"
+                        matTooltipClass="nameTooltip">
+                        {{ (row['createdBy']['name'] ? row['createdBy']['name'] : COMMON_CONSTANT.HYPHEN) + ' on ' +
+                        (row['createdDate'] ?
+                        row['createdDate'] : COMMON_CONSTANT.HYPHEN)
+                        | dotdotdot:12 }}
+                    </span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="uploadedBy">
+                <th class="ps-3 uploadedBy" mat-header-cell *matHeaderCellDef> Uploaded By
+                </th>
+                <td class="ps-3" mat-cell *matCellDef="let row">
+                    <img class="rounded-circle border border-3 profileImageDropdownView"
+                        [src]="row['uploadedBy']['profileImgUrl'] || 
+                                                        userService.defaultImage(row['uploadedBy']['name'], ProfileImg.PROFILE_IMAGE_DROPDOWN_NAME_VIEW)" alt="profile img">
+                    <span matTooltipPosition="above"
+                        [matTooltip]="((row['uploadedBy']['name'] && row['uploadedDate'] && (row['uploadedBy']['name'] + row['uploadedDate']).length > 12) ? row['uploadedBy']['name'] + ' on ' + row['uploadedDate'] : '')"
+                        matTooltipClass="nameTooltip">
+                        {{ (row['uploadedBy']['name'] ? row['uploadedBy']['name'] : COMMON_CONSTANT.HYPHEN) + ' on ' +
+                        (row['uploadedDate'] ?
+                        row['uploadedDate'] : COMMON_CONSTANT.HYPHEN)
+                        | dotdotdot:12 }}
+                    </span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="categorizedBy">
+                <th class="ps-3 categorizedBy" mat-header-cell *matHeaderCellDef> Categorized By
+                </th>
+                <td class="ps-3" mat-cell *matCellDef="let row">
+                    <img class="rounded-circle border border-3 profileImageDropdownView"
+                        [src]="row['categorizedBy']['profileImgUrl'] || 
+                                                    userService.defaultImage(row['categorizedBy']['name'], ProfileImg.PROFILE_IMAGE_DROPDOWN_NAME_VIEW)" alt="profile img">
+                    <span matTooltipPosition="above"
+                        [matTooltip]="((row['categorizedBy']['name'] && row['categorizedDate'] && (row['categorizedBy']['name'] + row['categorizedDate']).length > 12) ? row['categorizedBy']['name'] + ' on ' + row['categorizedDate'] : '')"
+                        matTooltipClass="nameTooltip">
+                        {{ (row['categorizedBy']['name'] ? row['categorizedBy']['name'] : COMMON_CONSTANT.HYPHEN) + ' on
+                        ' +
+                        (row['categorizedDate'] ?
+                        row['categorizedDate'] : COMMON_CONSTANT.HYPHEN)
+                        | dotdotdot:12 }}
+                    </span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+                <th class="px-3 text-center status" mat-header-cell *matHeaderCellDef>
+                    <div class="row">
+                        <funnel-filter #status header="Status" type="mono" [entityList]="statusList" value="key"
+                            view="value" [selectFC]="statusFC" [active]="statusFlag" [showSearchBar]="false"
+                            [resetFlag]="statusFlag" (mono)="statusFlag = true;">
+                        </funnel-filter>
+                    </div>
+                </th>
+                <td class="px-3" mat-cell *matCellDef="let row">
+                    <ng-container [ngSwitch]="row.status">
+                        <button class="btn btn-sm w-100 bg-success rounded-pill text-white" type="button"
+                            *ngSwitchCase="'DONE'">
+                            {{ row['status'] | titlecase}}
+                        </button>
+                        <button class="btn btn-sm w-100 bg-warning rounded-pill text-white" type="button"
+                            *ngSwitchCase="'DRAFT'">
+                            {{ row['status'] | titlecase}}
+                        </button>
+                        <button class="btn btn-sm w-100 bg-primary rounded-pill text-white" type="button"
+                            *ngSwitchCase="'TODO'">
+                            {{ row['status'] | titlecase}}
+                        </button>
+                    </ng-container>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="record">
+                <th class="ps-3 record" mat-header-cell *matHeaderCellDef> Categorized records </th>
+                <td class="ps-3" mat-cell *matCellDef="let row"> <a
+                        [routerLink]="['/activity-data/spend-based-method/import-data']"
+                        [queryParams]="{configID: row.configID, isConfigEdit: row['configPermission']['isConfigEdit'], isCategorizeEdit: row['configPermission']['isCategorizeEdit'], configMethodID: row['methodID']}"
+                        class="ms-3">
+                        {{ row['categorizedRecords'] }} /
+                        {{ row['totalRecords'] }} </a></td>
+            </ng-container>
+
+            <ng-container matColumnDef="action">
+                <th class="ps-3 action" mat-header-cell *matHeaderCellDef></th>
+                <td class="ps-3" mat-cell *matCellDef="let row">
+                    <div class="btn-group" ngbDropdown placement="left-top">
+                        <button type="button" ngbDropdownToggle class="dropdown-after dropdownAfter btn">
+                            <fa-icon [icon]="faEllipsisV" class="projectOption">
+                            </fa-icon>
+                        </button>
+                        <div ngbDropdownMenu>
+                            <a class="dropdown-item"
+                                *ngIf="row['configPermission']['isConfigEdit'] || row['configPermission']['isCategorizeEdit']"
+                                [routerLink]="['/activity-data/spend-based-method/import-data']"
+                                [queryParams]="{configID: row.configID, isConfigEdit: row['configPermission']['isConfigEdit'], isCategorizeEdit: row['configPermission']['isCategorizeEdit'], configMethodID: row['methodID']}">
+                                Edit
+                            </a>
+                            <a class="dropdown-item btn btn-outline-danger"
+                                (click)="deleteImportRecordConfig(row.configID)">
+                                Delete
+                            </a>
+                            <!-- <a class="dropdown-item">
+                                Audit log
+                            </a> -->
+                        </div>
+                    </div>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let task; columns: displayedColumns;">
+            </tr>
+
+            <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                    {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+                </td>
+            </tr>
+
+        </table>
+    </div>
+
+    <mat-paginator class="roundedBorder" showFirstLastButtons [length]="resultLength"
+        [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE" [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION">
+    </mat-paginator>
+
+</div>

@@ -1,0 +1,211 @@
+<div class="card main-card cardOverwrite">
+    <div class="headerContainer p-0">
+        <div class="col-sm-11">
+            <div class="pageTitle">
+                <ng-container *ngIf="isUpdate; else add;">
+                    {{ isRerequest? 'Re-request' : 'Edit Subsidiary/JV emission request' }}
+                </ng-container>
+                <ng-template #add>
+                    New Subsidiary/JV emission request
+                </ng-template>
+            </div>
+        </div>
+        <div class="col-sm-1 mb-auto">
+            <button mat-icon-button mat-dialog-close cdkFocusInitial class="float-end matDialogClose" matTooltip="Close"
+                matTooltipPosition="before">
+                <span class="material-symbols-outlined">
+                    close
+                </span>
+            </button>
+        </div>
+    </div>
+    <div *ngIf="isRerequest" class="mt-2">
+        <div class="mb-2">
+            <lib-message-alert [messageAlertTypeInp]="messageAlertTypeEnum.INFO"
+                [messageAlertIconInp]="messageAlertIconEnum.INFO_ICON" contentInp="Since your last request was declined, try requesting emissions from a different person or make
+                some other changes to submit the request again.">
+            </lib-message-alert>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <form [formGroup]="requestFG" (ngSubmit)="isValidForm()">
+            <div class="row">
+                <div class="col-sm-12">
+                    <mat-form-field [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE" class="matFieldWidth100">
+                        <mat-label> Select Subsidiary/JV </mat-label>
+                        <mat-select formControlName="subsidiaryID"
+                            (selectionChange)="getSubsidiaryUserListByOrgIDAndsubsidiaryID($event.value);">
+                            <mat-option>
+                                <ngx-mat-select-search [formControl]="subSelectSearch.filterFC"
+                                    placeholderLabel="Search by name"
+                                    noEntriesFoundLabel="No matching subsidiary/JV found.">
+                                </ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option *ngFor="let subsidiary of subSelectSearch.filteredEntities | async"
+                                [value]="subsidiary.id">
+                                {{ subsidiary['name'] }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="errorHandling('subsidiaryID', 'required')">
+                            Subsidiary/JV is mandatory
+                        </mat-error>
+                    </mat-form-field>
+
+                    <ng-container *ngIf="subsidiary">
+                        <div class="row pb-1">
+                            <div class="d-flex justify-content-between">
+                                <div class="col-form-label ms-1"> % control on Subsidiary/JV </div>
+                                <div class="py-2">
+                                    <div class="col-form-value fw-bold">
+                                        <div class="pb-1">
+                                            <div *ngIf="subsidiary?.['financialControl']">
+                                                {{subsidiary?.['financialControl'] + '%' }} Financial control
+                                            </div>
+                                            <div *ngIf="subsidiary?.['operationalControl']">
+                                                {{subsidiary?.['operationalControl'] + '%' }} Operational control
+                                            </div>
+                                            <div *ngIf="subsidiary?.['equityControl']">
+                                                {{subsidiary?.['equityControl'] + '%' }} Equity control
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="subsidiaryIDAC.value">
+                        <ng-container *ngIf="isInternal; else external;">
+                            <mat-form-field [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE" class="matFieldWidth100 pt-3">
+                                <mat-label> Request emissions from(Select user) </mat-label>
+                                <mat-select formControlName="assigneeID" multiple>
+                                    <mat-option>
+                                        <ngx-mat-select-search [formControl]="assigneeSelectSearch.filterFC"
+                                            placeholderLabel="Search by user name"
+                                            noEntriesFoundLabel="No matching user found.">
+                                        </ngx-mat-select-search>
+                                    </mat-option>
+                                    <mat-option
+                                        *ngFor="let assignee of assigneeSelectSearch.filteredEntities | async"
+                                        [value]="assignee.id">
+                                        {{ assignee['name'] }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="errorHandling('assigneeID', 'required')">
+                                    Assignee is mandatory
+                                </mat-error>
+                            </mat-form-field>
+                        </ng-container>
+
+                        <ng-template #external>
+                            <mat-form-field class="matFieldWidth100 pt-3" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel"> Request emissions from(Enter email id)</mat-label>
+                                <mat-chip-list #chipList>
+                                    <mat-chip *ngFor="let email of email.value" (removed)="removeEmail(email)">
+                                        {{ email }}
+                                        <button matChipRemove>
+                                            <mat-icon>cancel</mat-icon>
+                                        </button>
+                                    </mat-chip>
+                                    <input [placeholder]="assigneeEmail?.value?.length < 2? 'user.email@domain.com': ''"
+                                        [matChipInputFor]="chipList"
+                                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes" matChipInputAddOnBlur
+                                        (matChipInputTokenEnd)="addAssigneeEmail($event)">
+                                </mat-chip-list>
+                                <mat-error *ngIf="chipList.errorState">
+                                    Assignee email is mandatory
+                                </mat-error>
+                                <mat-error *ngIf="invalidEmailFormat">
+                                    Invalid email format
+                                </mat-error>
+                            </mat-form-field>
+                        </ng-template>
+
+                    </ng-container>
+
+                    <ng-container *ngIf="consolidationApproach.length > 1; else singleCA;">
+                        <mat-form-field [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE" class="matFieldWidth100">
+                            <mat-label> Select consolidation approach </mat-label>
+                            <mat-select formControlName="consolidationApproachKeyID" multiple>
+                                <mat-option>
+                                    <ngx-mat-select-search [formControl]="caSelectSearch.filterFC"
+                                        placeholderLabel="Search by consolidation approach name"
+                                        noEntriesFoundLabel="No matching approach found.">
+                                    </ngx-mat-select-search>
+                                </mat-option>
+                                <mat-option
+                                    *ngFor="let consolidationApproach of caSelectSearch.filteredEntities | async"
+                                    [value]="consolidationApproach.keyID">
+                                    {{ consolidationApproach['name'] }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="errorHandling('consolidationApproachKeyID', 'required')">
+                                Consolidation approach is mandatory
+                            </mat-error>
+                        </mat-form-field>
+                    </ng-container>
+
+                    <ng-template #singleCA>
+                        <ng-container *ngTemplateOutlet="value; 
+                            context: {
+                                title: 'Consolidation approach',
+                                value: consolidationApproach[0]?.name
+                            }">
+                        </ng-container>
+                    </ng-template>
+
+                    <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel"> Accounting period </mat-label>
+                        <input type="text" matInput ngxDaterangepickerMd [readonly]="true"
+                            [locale]="{direction: 'ltr', applyLabel: 'Apply', format: 'DD-MMM-YYYY', customRangeLabel: 'Custom Range'}"
+                            [drops]="'down'" [opens]="'right'" [alwaysShowCalendars]="true" startKey="start"
+                            endKey="end" [keepCalendarOpeningWithRange]="true" [showDropdowns]="true"
+                            [showCancel]="true" autocomplete="off" name="daterange"
+                            [formControl]="accountingPeriodFC" />
+                        <mat-datepicker-toggle matSuffix [for]="dateRangePicker"></mat-datepicker-toggle>
+                        <mat-error *ngIf="accountingPeriodFC.hasError('required')">
+                            Accounting period is mandatory
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel"> Add a note </mat-label>
+                        <textarea matInput rows="3" formControlName="requestNote"></textarea>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div align="end">
+                <ng-container *ngIf="isUpdate; else create;">
+                    <button *ngIf="isRerequest" type="submit" class="btn btn-success">
+                        {{ CARBON_CONSTANT.RE_REQUEST_BTN_LABEL}}
+                    </button>
+                    <button *ngIf="!isRerequest" type="submit" class="btn btn-success" [disabled]="isEqual">
+                        {{ ButtonLabelEnum.SAVE_BTN_LABEL }}
+                    </button>
+                </ng-container>
+                <ng-template #create>
+                    <button type="submit" class="btn btn-success">
+                        {{ ButtonLabelEnum.CREATE_BTN_LABEL }}
+                    </button>
+                </ng-template>
+            </div>
+        </form>
+    </div>
+</div>
+
+<ng-template #value let-title="title" let-value="value">
+    <div class="row">
+        <div class="d-flex justify-content-between">
+            <div class="col-form-label ms-1"> {{ title }} </div>
+            <div class="col-form-value fw-bold" *ngIf="value; else hyphen;">
+                {{ value }}
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #hyphen>
+    <span class="fw-bold"> {{ COMMON_CONSTANT.HYPHEN }} </span>
+</ng-template>

@@ -1,0 +1,23 @@
+.id {
+    width: 15vw !important;
+}
+
+.name {
+    width: 30vw !important;
+}
+
+.accountingPeriod {
+    min-width: 20vw !important;
+}
+
+::ng-deep .accountingPeriod .md-drppicker {
+    left: auto !important;
+}
+
+.status {
+    width: 15vw !important;
+}
+
+.action {
+    width: 10vw !important;
+}

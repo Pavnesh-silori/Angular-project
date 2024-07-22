@@ -1,0 +1,250 @@
+<div class="card main-card cardOverwrite h100">
+
+    <div *ngIf="type == null" class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Assignment</div>
+            <div class="pageSubtitle">
+                The assignment template assigns questions or sections to users, which will be the same for all the
+                chosen reporting frequency.
+            </div>
+        </div>
+    </div>
+    <div class="headerContainer">
+        <div>
+            <lib-message-alert [messageAlertTypeInp]="messageAlertTypeEnum.INFO"
+                [messageAlertIconInp]="messageAlertIconEnum.INFO_ICON"
+                contentInp="Assignment can be done with a focus on either section-specific and metric-specific levels.">
+            </lib-message-alert>
+        </div>
+
+        <div class="headerRightContainer me-2">
+            <div class="headerRightContainerInner">
+                <lib-search-bar-one #searchBar searchBy="section name"
+                    (emitSearch)="searchFn($event)"></lib-search-bar-one>
+            </div>
+        </div>
+
+        <div class="headerRightContainerInner">
+            <button type="button" class="btn btn-sm ps-2 pe-2 mb-1" [disabled]="!assignBtnFlag"
+                [ngClass]="{'btn-success': assignBtnFlag, 'btn-secondary': !assignBtnFlag}"
+                (click)="sendSectionGroupListToAssign(FormAction.CREATE)">
+                Assign
+            </button>
+        </div>
+    </div>
+    <button type="button" class="d-none" #refreshBtn>refresh</button>
+
+    <mat-accordion displayMode="flat" multi class="mat-table cardOverwrite">
+        <section matSort class="mat-header-row header ms-2">
+            <span class="mat-header-cell sectionWidth">
+                <mat-checkbox class="pb-1" [formControl]="selectUnselectAllFC" (change)="selectUnselectAll($event)">
+                    Section name
+                </mat-checkbox>
+            </span>
+
+            <span class="mat-header-cell ms-3">Assignee</span>
+            <span class="mat-header-cell ms-2">Approver</span>
+            <span class="mat-header-cell"></span>
+        </section>
+
+        <ng-container *ngFor="let section of sectionGroupDataList; let i = index;">
+            <mat-expansion-panel #panel class="cardOverwrite matAccordion m-2">
+                <mat-expansion-panel-header class="mat-row">
+                    <mat-checkbox class="sectionWidth me-2 pt-2" [checked]="isSectionChecked(section.id)"
+                        (change)="selectUnselectSection($event,section.id, section.group); panel.expanded = !panel.expanded;">
+                        <span #tooltip="matTooltip" matTooltipPosition="above" [matTooltip]="((section.name)?.length > 65) ? 
+                        section.name : ''" matTooltipClass="nameTooltip">
+                            {{section.name | dotdotdot: 65}}
+                        </span>
+                    </mat-checkbox>
+
+                    <span *ngIf="section.assignee.length > 0" class="mat-cell pt-2 ps-2 users">
+
+                        <ng-container *ngFor="let assignee of section.assignee.slice(0,3); let index = index">
+                            <img class="profileImg rounded-circle border" [src]="showAssigneeApprover(assignee, index)"
+                                alt="profile-image" #tooltip="matTooltip" matTooltipPosition="above"
+                                [matTooltip]="(assignee?.['firstName'] ? assignee['firstName'] + ' ' + (assignee?.['lastName'] != null ? assignee?.['lastName'] : '') : '')"
+                                matTooltipClass="nameTooltip" [ngStyle]="{'z-index': 80 - index*20}" />
+                            
+                                <span *ngIf="section.assignee.length == 1">
+                                {{assignee['firstName']}} {{assignee['lastName']}}
+                            </span>
+
+                        </ng-container>
+                        <button *ngIf="assigneeDisplayCount(section.assignee) >= 1" [matMenuTriggerFor]="menu"
+                            class="btn btn-sm rounded-circle circleBtn"
+                            (click)="showAllAssigneeApprooverDropdown(section.assignee)">
+                            {{assigneeDisplayCount(section.assignee)}}</button>
+                        <mat-menu #menu="matMenu" class="menuWidth">
+                            <button mat-menu-item *ngFor="let user of assigneeApproverList">
+                                <img class="profileImg rounded-circle border me-1" [src]="user.profileImg">
+                                {{ user.name }}
+                            </button>
+                        </mat-menu>
+                    </span>
+            
+                    <span *ngIf="section.assignee.length == 0" class="mat-cell pt-2 ps-2">
+                        <ng-container *ngTemplateOutlet="unassigned; 
+                        context: {
+                            index: index
+                        }">
+                        </ng-container>
+                    </span>
+
+                    <span *ngIf="section.approver.length > 0" class="mat-cell pt-2 ps-2 users">
+
+                        <ng-container *ngFor="let approver of section.approver.slice(0,3); let index = index">
+                            <img class="profileImg rounded-circle border userImg"
+                                [src]="showAssigneeApprover(approver, index)" alt="profile-image" #tooltip="matTooltip"
+                                matTooltipPosition="above"
+                                [matTooltip]="(approver?.['firstName'] ? approver['firstName'] + ' ' + (approver?.['lastName'] != null ? approver?.['lastName'] : '') : '')"
+                                matTooltipClass="nameTooltip" />
+                            <span *ngIf="section.approver.length == 1">
+                                {{approver['firstName']}} {{approver['lastName']}}
+                            </span>
+                        </ng-container>
+
+                        <button *ngIf="assigneeDisplayCount(section.approver) >= 1" [matMenuTriggerFor]="menu"
+                            class="btn btn-sm rounded-circle circleBtn"
+                            (click)="showAllAssigneeApprooverDropdown(section.approver)">
+                            {{assigneeDisplayCount(section.approver)}}</button>
+                        <mat-menu #menu="matMenu" class="menuWidth">
+                            <button mat-menu-item *ngFor="let user of assigneeApproverList">
+                                <img class="profileImg rounded-circle border me-1" [src]="user.profileImg">
+                                {{ user.name }}
+                            </button>
+                        </mat-menu>
+                    </span>
+
+                    <span *ngIf="!section.isAutoApproved && section.approver.length == 0" class="mat-cell pt-2 ps-2">
+                        <ng-container *ngTemplateOutlet="unassigned; 
+                            context: {
+                                index: index
+                            }">
+                        </ng-container>
+                    </span>
+
+                    <span *ngIf="section.isAutoApproved" class="mat-cell pt-2 ps-2">
+                        <ng-container *ngTemplateOutlet="autoApproved"></ng-container>
+                    </span>
+
+                    <span class="mat-cell pt-2">
+                        <img *ngIf="section.isAssigned" class="profileImageHeaderView rounded-circle border"
+                            src="../assets/images/default-profile-img.jpg" alt="profile-image" #tooltip="matTooltip"
+                            matTooltipPosition="above" matTooltip="Unassigned" matTooltipClass="nameTooltip"
+                            (click)="unAssignedMetric(section.id,section.group,'section'); panel.expanded = !panel.expanded;" />
+                    </span>
+                </mat-expansion-panel-header>
+
+                <mat-accordion displayMode="flat" multi>
+                    <mat-expansion-panel #groupPanel class="cardOverwrite m-2"
+                        *ngFor="let group of section.group; let i = index" (opened)="onSectionPanelOpen(group)"
+                        [expanded]="activeAccodianGroup == group">
+                        <mat-expansion-panel-header class="mat-row">
+                            <mat-checkbox class="sectionWidth me-2 pt-2" [checked]="isGroupChecked(group.id)"
+                                (change)="selectUnselectGroup($event,section.id,section.group[i].id, section.group); groupPanel.expanded = !groupPanel.expanded;">
+                                <span #tooltip="matTooltip" matTooltipPosition="above" [matTooltip]="((group.name)?.length > 65) ? 
+                                    group.name : ''" matTooltipClass="nameTooltip">
+                                    {{group.name | dotdotdot: 65}}
+                                </span>
+                            </mat-checkbox>
+
+                            <span *ngIf="group.assignee.length > 0" class="mat-cell pt-2 ps-2 users">
+                                <span *ngFor="let assignee of group.assignee.slice(0,3); let index = index">
+                                    <img class="profileImg rounded-circle border userImg"
+                                        [src]="showAssigneeApprover(assignee, index)" alt="profile-image"
+                                        #tooltip="matTooltip" matTooltipPosition="above"
+                                        [matTooltip]="(assignee?.['firstName'] ? assignee['firstName'] + ' ' + (assignee?.['lastName'] != null ? assignee?.['lastName'] : '') : '')"
+                                        matTooltipClass="nameTooltip" />
+                                    <span *ngIf="group.assignee.length == 1">
+                                        {{assignee['firstName']}} {{assignee['lastName']}}
+                                    </span>
+                                </span>
+                            </span>
+
+                            <span *ngIf="group.assignee.length == 0" class="mat-cell pt-2 ps-2">
+                                <ng-container *ngTemplateOutlet="unassigned; 
+                                context: {
+                                    index: 0
+                                }">
+                                </ng-container>
+                            </span>
+
+                            <span *ngIf="group.approver.length > 0" class="mat-cell pt-2 ps-2 users">
+                                <span *ngFor="let approver of group.approver.slice(0,3); let index = index">
+                                        <img class="profileImg rounded-circle border userImg"
+                                            [src]="showAssigneeApprover(approver, index)" alt="profile-image"
+                                            #tooltip="matTooltip" matTooltipPosition="above"
+                                            [matTooltip]="(approver?.['firstName'] ? approver['firstName'] + ' ' + (approver?.['lastName'] != null ? approver?.['lastName'] : '') : '')"
+                                            matTooltipClass="nameTooltip"/>
+
+                                            <span *ngIf="group.approver.length == 1">
+                                                {{approver['firstName']}} {{approver['lastName']}}
+                                            </span>
+                                </span>
+                            </span>
+
+                            <span *ngIf="!group.isAutoApproved && group.approver.length == 0"
+                                class="mat-cell pt-2">
+                                <ng-container *ngTemplateOutlet="unassigned; 
+                                context: {
+                                    index: 0
+                                }">
+                                </ng-container>
+                            </span>
+
+                            <span *ngIf="group.isAutoApproved" class="mat-cell pt-2 ps-2">
+                                <ng-container *ngTemplateOutlet="autoApproved;"></ng-container>
+                            </span>
+
+                            <span class="mat-cell pt-2">
+                                <img *ngIf="group.isAssigned" class="profileImageHeaderView rounded-circle border"
+                                    src="../assets/images/default-profile-img.jpg" alt="profile-image"
+                                    #tooltip="matTooltip" matTooltipPosition="above" matTooltip="Unassigned"
+                                    matTooltipClass="nameTooltip"
+                                    (click)="unAssignedMetric(section.id,group.id,'group'); groupPanel.expanded = !groupPanel.expanded;" />
+                            </span>
+                        </mat-expansion-panel-header>
+                        <ng-container *ngIf="activeAccodianGroup == group">
+                            <app-data-create-update [groupID]="group.id" pageType="assignment"
+                                [isReadOnly]="true"></app-data-create-update>
+                        </ng-container>
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </mat-expansion-panel>
+        </ng-container>
+    </mat-accordion>
+
+    <div *ngIf="sectionGroupDataList.length == 0" class="mat-cell text-center mx-auto mt-3">
+        No section found.
+    </div>
+
+    <div class="row m-2">
+        <div class="col-sm-12">
+            <div class="float-end">
+                <button *ngIf="createBtnFlag" class="btn btn-sm btn-success me-2" type="button" (click)="saveBtn()">
+                    {{ ButtonLabelEnum.CREATE_BTN_LABEL }}
+                </button>
+                <button class="btn btn-sm btn-warning" type="button" routerLink="/reporting-framework/tab/tracking">
+                    {{ 'Next' }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #unassigned let-index="index">
+    <img class="profileImageHeaderView ms-0 rounded-circle border" src="../assets/images/default-profile-img.jpg"
+        alt="profile-image">
+    unassigned
+</ng-template>
+
+<ng-template #autoApproved>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+        class="check-circle-fill flex-shrink-0 dialogHeaderIcon textActiveStatus" viewBox="0 0 16 16" role="img"
+        aria-label="Success:">
+        <path
+            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+    </svg>
+    Auto Approved
+</ng-template>

@@ -1,0 +1,129 @@
+<mat-card class="cardOverwrite border">
+    <div class="cardTitle pb-2">
+        Details
+    </div>
+
+    <form [formGroup]="activityConfigFG">
+        <div class="row">
+            <div class="col-sm-8">
+                <ng-container *ngIf="origin == ActivityConfigEnum.PFF" formGroupName="activityConfig" class="col-sm-8">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Activity Form Name</mat-label>
+                        <input class="formPlaceholder" type="text" placeholder="Activity form name" matInput
+                            formControlName="configName" required>
+                        <mat-error *ngIf="errorHandling(activityConfigFG, 'activityConfig.configName', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </ng-container>
+            </div>
+        </div>
+
+        <div formGroupName="activityConfigData">
+            <div class="row">
+                <div class="col-sm-8">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Select Process</mat-label>
+                        <mat-select formControlName="processRecordID" required
+                            (selectionChange)="processChange(currentOrgID, $event.value, true)">
+                            <mat-option>
+                                <ngx-mat-select-search [formControl]="processSelectSearch.filterFC"
+                                    placeholderLabel="Search by process name"
+                                    [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                </ngx-mat-select-search>
+                            </mat-option>
+
+                            <mat-option *ngFor="let process of processSelectSearch.filteredEntities | async"
+                                [value]="process.recordID">
+                                {{ process.name }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error
+                            *ngIf="errorHandling(activityConfigFG, 'activityConfigData.processRecordID', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-3">{{ entityTypeLabel }}</div>
+                <div class="col-sm-9">
+                    <ng-container *ngIf="entity.length > 0; else noEntity">
+                        <div *ngFor="let entities of entity; let i = index">
+                            <div class="row">
+                                <div class="col-sm-12 fw-bold">
+                                    <li>{{ entities.name }}</li>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+
+            <div class="row pt-2">
+                <mat-label class="formLabel">Enter Data Using</mat-label>
+                <mat-radio-group formControlName="dataInputMethodStdID">
+                    <mat-radio-button class="col-sm-3 pt-1" *ngFor="let input of dataInputMethod" [value]="input.id"
+                        (change)="dataInputMethodChange(input.keyID)">
+                        {{ input.name }}
+                    </mat-radio-button>
+                    <mat-error
+                        *ngIf="errorHandlingForRadio(activityConfigFG, 'activityConfigData.dataInputMethodStdID', 'required')">
+                        {{ FormErrorEnum.REQUIRED }}
+                    </mat-error>
+                </mat-radio-group>
+            </div>
+
+            <ng-container *ngIf="isMeterReading">
+                <div class="row pt-3">
+                    <div class="col-sm-5">
+                        <mat-form-field class="matFieldWidth100"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel">Meter Rollover Value</mat-label>
+                            <input class="formPlaceholder" type="number" placeholder="Meter Rollover Value" matInput
+                                formControlName="meterRolloverValue" min="0" required />
+                            <mat-error
+                                *ngIf="errorHandling(activityConfigFG, 'activityConfigData.meterRolloverValue', 'min')">
+                                {{ FormErrorEnum.NEGATIVE }}
+                            </mat-error>
+                            <mat-error
+                                *ngIf="errorHandling(activityConfigFG, 'activityConfigData.meterRolloverValue', 'required')">
+                                {{ FormErrorEnum.REQUIRED }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <mat-form-field class="matFieldWidth100"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel">Select Meter Unit</mat-label>
+                            <mat-select formControlName="meterRolloverUnitID">
+                                <mat-option>
+                                    <ngx-mat-select-search [formControl]="unitSelectSearch.filterFC"
+                                        placeholderLabel="Search by unit name"
+                                        [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                    </ngx-mat-select-search>
+                                </mat-option>
+
+                                <mat-option *ngFor="let unit of unitSelectSearch.filteredEntities | async"
+                                    [value]="unit.id">
+                                    {{ unit.name }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error
+                                *ngIf="errorHandling(activityConfigFG, 'activityConfigData.meterRolloverUnitID', 'required')">
+                                {{ FormErrorEnum.REQUIRED }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </form>
+</mat-card>
+
+<ng-template #noEntity>
+    {{ COMMON_CONSTANT.HYPHEN }}
+</ng-template>

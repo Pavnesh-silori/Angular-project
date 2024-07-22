@@ -1,0 +1,198 @@
+<div class="card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">{{ activity.name }}</div>
+            <div class="pageSubtitle">Records of process emission in any process.</div>
+        </div>
+
+        <div class="headerRightContainer">
+            <lib-search-bar-one class="me-3 float-end" #searchBar searchBy="process name"
+                (emitSearch)="searchFn($event)"></lib-search-bar-one>
+
+            <button class="btn btn-sm btn-light refreshBtn centerAlign me-3 py-1" #refreshBtn matRipple
+                [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                [matTooltip]="ButtonTooltipEnum.REFRESH">
+                <span class="material-symbols-outlined text-secondary">
+                    refresh
+                </span>
+            </button>
+
+            <div class="btn-group" ngbDropdown placement="bottom-right" matTooltipPosition="below"
+            [matTooltip]="ButtonTooltipEnum.MORE">
+            <button type="button" ngbDropdownToggle class="hideDropdownIcon btn btn-sm btn-success" matRipple
+            [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER"><fa-icon
+                    [icon]="faPlus"></fa-icon>&nbsp;&nbsp;Record
+                    <fa-icon [icon]="faCaretDown" class="ms-2"></fa-icon>
+            </button>
+            <div ngbDropdownMenu>
+                <button class="dropdown-item" matRipple [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER"
+                (click)="routeToAdHoc()">
+                    Add New Record
+                </button>
+                <button class="dropdown-item" matRipple [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" (click)="showActivityConfigSelection()">
+                    Use Activity Form
+                </button>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="ms-3 me-3">
+        <lib-date-filter [ngClass]="{'d-none': !dateFlag}" #filterChild></lib-date-filter>
+    </div>
+
+    <table mat-table matSort #sort="matSort" matSortActive="id" matSortDirection="desc" matSortDisableClear
+        [dataSource]="dataSource">
+
+        <ng-container matColumnDef="recordID">
+            <th mat-header-cell *matHeaderCellDef>
+                <div class="d-flex align-items-center">
+                    <span mat-sort-header disableClear>
+                        Record ID
+                    </span>
+                </div>
+            </th>
+
+            <td mat-cell *matCellDef="let row">
+                <ng-container
+                    *ngIf="row.calculationErrorReason && row.calculationErrorReason.length !== 0; else noError">
+                    <img matTooltipPosition="above" matTooltip="{{ row.calculationErrorReason }}" class="ps-2 img"
+                        src="/assets/images/icons8-calculation-error-100.png" />
+                    {{row.recordID}}
+                </ng-container>
+                <ng-template #noError>
+                    <span class="noError">
+                        {{row.recordID}}
+                    </span>
+                </ng-template>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="reportingPeriod">
+            <th mat-header-cell *matHeaderCellDef>
+                <div class="d-flex align-items-center">
+                    <span mat-sort-header disableClear>
+                        Reporting Period
+                    </span>
+                </div>
+            </th>
+            <td mat-cell *matCellDef="let row">
+                <span> {{ row.startDate ? (row.startDate | date: 'dd-MMM-yyyy') + ' to ' + (row.endDate | date:
+                    'dd-MMM-yyyy')
+                    : COMMON_CONSTANT.HYPHEN }}</span>
+            </td>
+        </ng-container>>
+
+        <ng-container matColumnDef="state">
+            <th mat-header-cell *matHeaderCellDef>State</th>
+            <td mat-cell *matCellDef="let row">{{ row.address.state.name ? row.address.state.name :
+                COMMON_CONSTANT.HYPHEN }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="process">
+            <th mat-header-cell *matHeaderCellDef disableClear> Process </th>
+            <td mat-cell *matCellDef="let row" [matTooltip]="row.process.name?.length >= 22? row.process.name: ''"
+                matTooltipClass="infoTooltip" matTooltipPosition="above">
+                {{ row.process.name ? (row.process.name | dotdotdot: 22) : COMMON_CONSTANT.HYPHEN}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="amount">
+            <th mat-header-cell *matHeaderCellDef>
+                <div class="d-flex align-items-center text-end amount">
+                    <span>
+                        Amount
+                    </span>
+                </div>
+            </th>
+            <td class="text-end amount" mat-cell *matCellDef="let row" matTooltipPosition="above"
+                matTooltip={{row.amount}}{{row.unit.uomCode}}>
+                {{ row.amount ? (row.amount | number:'1.0-2') : COMMON_CONSTANT.HYPHEN }}
+                {{row.unit.uomCode}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="emission">
+            <th mat-header-cell class="text-end emission" *matHeaderCellDef disableClear>Emission<span
+                    class="ps-1">(tCO<sub>2</sub>e)</span></th>
+            <td mat-cell class="emission text-end " *matCellDef="let row" matTooltipPosition="above"
+                matTooltip={{row.emission}}>
+                {{ row.emission != null ? (row.emission | number:'1.0-2') : COMMON_CONSTANT.HYPHEN }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="doc">
+            <th mat-header-cell *matHeaderCellDef disableClear></th>
+            <td mat-cell *matCellDef="let row">
+                <a href="{{row.doc ? row.doc.path : null}}" target="_blank" [ngClass]="{'d-none': !row.doc}">
+                    <span class="material-symbols-outlined cursorPointer centerAlign"> description </span>
+                </a>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="option">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let row">
+                <div class="centerAlignVertical">
+                    <ng-container *ngTemplateOutlet="icon; 
+                    context: {
+                        icon: 'edit',
+                        tooltip: ButtonTooltipEnum.UPDATE,
+                        iconClass: 'text-primary updateIconHover',
+                        function: routeToADUpdate,
+                        functionParameter: [row]
+                    }">
+                    </ng-container>
+
+                    <!-- <ng-container *ngTemplateOutlet="icon; 
+                    context: {
+                        icon: 'delete',
+                        tooltip: ButtonTooltipEnum.DELETE,
+                        iconClass: 'text-danger deleteIconHover',
+                        function: deleteRecord,
+                        functionParameter: [row]
+                    }">
+                    </ng-container> -->
+
+                    <!-- <div class="btn-group" ngbDropdown placement="left-top">
+                        <button type="button" ngbDropdownToggle
+                            class="dropdown-after dropdownAfter iconBtn text-secondary" matTooltipPosition="below"
+                            [matTooltip]="ButtonTooltipEnum.MORE" matRipple
+                            [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">
+                            <fa-icon [icon]="faEllipsisV"></fa-icon>
+
+                        </button>
+                        <div ngbDropdownMenu>
+                            <button class="dropdown-item">
+                                Audit Trail
+                            </button>
+                        </div>
+                    </div> -->
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+            </td>
+        </tr>
+    </table>
+    <mat-paginator class="roundedBorder" #paginator [length]="resultLength"
+        [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION" [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE"
+        showFirstLastButtons>
+    </mat-paginator>
+
+</div>
+
+<ng-template #icon let-icon="icon" let-tooltip="tooltip" let-iconClass="iconClass" let-function="function"
+    let-functionParameter="functionParameter">
+    <button class="iconBtn centerAlign" [class]="iconClass" matTooltipPosition="below" [matTooltip]="tooltip" matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" (click)="handleClick(function, functionParameter)">
+        <span class="material-symbols-outlined icon">
+            {{ icon }}
+        </span>
+    </button>
+</ng-template>

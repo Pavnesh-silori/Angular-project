@@ -1,0 +1,125 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+    </symbol>
+</svg>
+
+<div class="card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">
+                Fugitive - Refrigeration Configurator
+            </div>
+            <div class="pageSubtitle">Select between three calculation approaches used to calculate these emissions
+                based
+                on
+                whether transactions are available at gas or equipment level.
+            </div>
+        </div>
+    </div>
+
+    <div class="cardSubtitle fw-bold fs-6 ms-4 mt-3">
+        Select one or more
+    </div>
+    <div class="ms-3 mt-1" [formGroup]="approachFG">
+        <div class="fs-5 ms-3 mt-2">
+            <mat-checkbox class="matCheckboxLayout ms-3 mt-3" formControlName="purchaseManufacturerApproach">
+                <div class="cardTitle ms-2">
+                    Sales based approach (Product Manufacture)
+                </div>
+            </mat-checkbox>
+            <div class="ps-5 mt-2">
+                I am a manufacturer of refrigeration, air conditioning or fire suppression
+                equipment and I maintain inventory, purchase and sales records of gas
+                transactions.
+            </div>
+        </div>
+
+        <div class="fs-5 ms-3 mt-2">
+            <mat-checkbox class="matCheckboxLayout mt-3 mb-2 ps-3" [checked]="isOtherThanManufacturer"
+                (change)="changeFugitiveApproach()">
+                <div class="ms-2">
+                    I am a user of refrigeration, air conditioning or fire suppression equipment and I,
+                </div>
+            </mat-checkbox>
+
+            <mat-radio-group [formControl]="approachFC" [(ngModel)]="selectedApproach">
+                <div class="radio-button matRadioButtonLayout" *ngFor="let approach of fugitiveApproaches">
+                    <div class="mt-3" *ngIf="approach.label != 'All'">
+                        <mat-radio-button [value]="approach.keyID" class="ms-2">
+                            <div class="cardTitle ms-2">
+                                {{ approach.label }}
+                            </div>
+                        </mat-radio-button>
+                        <div class="ps-5">
+                            {{ approach.name }}
+                        </div>
+                    </div>
+                    <div class="mt-3" *ngIf="approach.label == 'All'">
+                        <mat-radio-button [value]="approach.keyID" class="ms-2">
+                            <div class="ms-2">
+                                {{ approach.name }}
+                            </div>
+                        </mat-radio-button>
+                    </div>
+
+                    <div class="col-sm-8 info"
+                        *ngIf="approachFC.value =='screeningApproach' && approach.keyID=='screeningApproach'">
+                        <div class="alert alert-primary centerAlignVertical roundedBorder">
+                            <svg class="extraInfoCardIcon">
+                                <use xlink:href="#info-fill" />
+                            </svg>
+                            <div class="extraInfoCardText ps-3 fs-6">
+                                To account for fugitive emissions from refrigeration,ac and fire
+                                suppression,creating
+                                <a href="/source/refrigeration-fire-suppressiong-equipments" target="_blank">
+                                    <u> equipment groups</u>
+                                </a> is mandatory.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info" *ngIf="purchaseManufacturer 
+                    && ((approachFC.value =='all' && approach.keyID =='all') 
+                    || (approachFC.value =='serviceMyselfApproach' && approach.keyID =='serviceMyselfApproach'))">
+                        <div class="alert alert-primary centerAlignVertical roundedBorder">
+                            <svg class="extraInfoCardIcon">
+                                <use xlink:href="#info-fill" />
+                            </svg>
+                            <div class="extraInfoCardText ps-3 fs-6">
+                                It looks like your organization is a refrigerant/ ac equipment manufacturer & user
+                                both.
+                                <br>
+                                Please note that separate physical gas inventories and gas transactions have to be
+                                maintained both for equipment manufacturer and equipment used. You can account for
+                                emissions
+                                from manufactured equipments from <a href="/product-manufacturer/inventory"
+                                    target="_blank">
+                                    <u> product manufacture </u>
+                                </a>
+                                &nbsp; and from use of equipments from &nbsp;<a
+                                    href="/fugitive-emission-racfs/service-myself/inventory" target="_blank">
+                                    <u> service-myself</u>
+                                </a> .
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </mat-radio-group>
+        </div>
+    </div>
+
+    <div align="end" class="me-3 mb-3">
+        <button type="button" class="button btn btn-secondary me-2" (click)="navigateTo()">
+            {{ ButtonLabelEnum.CANCEL_BTN_LABEL }}
+        </button>
+        <div class="d-inline">
+            <button type="submit" class="button btn btn-success" (click)="onSubmit()">
+                {{ FUGITIVE_EMISSION.CONFIGURE_BTN_LABEL}}
+            </button>
+        </div>
+    </div>
+
+</div>

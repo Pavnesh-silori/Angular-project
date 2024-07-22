@@ -1,0 +1,57 @@
+<mat-card class="cardOverwrite border">
+    <div class="cardTitle pb-2"> Details </div>
+    <form [formGroup]="activityConfigFG" (ngSubmit)="emitFormData()">
+
+        <div formGroupName="activityConfig" *ngIf="origin == 'pff'" class="col-sm-8">
+            <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                <mat-label>Activity Form Name</mat-label>
+                <input matInput placeholder="Activity Form Name" formControlName="configName">
+            </mat-form-field>
+        </div>
+        <div class="row">
+            <div class="col-sm-8">
+                <div formGroupName="activityConfigSource">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Supplier Name</mat-label>
+                        <mat-select formControlName="sourceID">
+                            <mat-option *ngFor="let supplier of supplierList" [value]="supplier['supplierID']">
+                                {{ supplier.supplierName}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="errorHandling('activityConfigSource.sourceID' ,'required')">
+                            Please choose a supplier</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div *ngIf="!supplierList.length" class="col-sm-4 centerAlignVertical mb-3">
+                <span class="material-symbols-outlined">
+                    info
+                </span>
+                <span class="ms-2">
+                    You have not created any supplier. Please create one
+                    <a [routerLink]="'/source/supplier/page'" target="_blank">here</a>.
+                </span>
+            </div>
+        </div>
+        <div class="col-sm-8" formGroupName="activityConfigData">
+            <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                <mat-label class="formLabel"> Waste Type</mat-label>
+                <mat-select formControlName="wasteTypes" multiple>
+                    <mat-option>
+                        <ngx-mat-select-search [formControl]="wasteTypeSerarch.filterFC"
+                            placeholderLabel="Search by name" noEntriesFoundLabel="No matching name found.">
+                        </ngx-mat-select-search>
+                    </mat-option>
+                    <mat-option *ngFor="let waste of wasteTypeSerarch.filteredEntities | async" [value]="waste.id">
+                        {{ waste.name }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="errorHandling('activityConfigData.wasteTypes','required')">
+                    Please choose at least one waste type
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </form>
+</mat-card>

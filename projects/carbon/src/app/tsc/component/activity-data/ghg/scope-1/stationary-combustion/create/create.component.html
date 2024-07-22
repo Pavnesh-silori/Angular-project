@@ -1,0 +1,43 @@
+<div class="alert alert-warning alert-dismissible centerAlignVertical roundedBorder m-5"
+    *ngIf="emissionFactorDatabaseID == null">
+    <svg class="bi flex-shrink-0 me-3 extraInfoCardIcon">
+        <use xlink:href="#info-fill" />
+    </svg>
+    <div class="extraInfoCardText pe-4">
+        Preference is not set.
+        <a href="carbon-setting/preference/calculation">
+            Click here to set
+            preference</a>
+    </div>
+</div>
+
+<!-- <stationary-combustion-energy-consumed
+    *ngIf="(dataInputMethodKeyID == DataInputMethodKeyIDEnum.TOTAL_AMOUNT && fuelMonitorDataInputMethodKeyID == DataInputMethodKeyIDEnum.ENERGY_GENERATED)"
+    (formGroupChange)="onChildFormGroupChange($event)"
+    [activityConfig]="activityConfig" [getAllSource]="getAllSource"
+    [docFileList]="docFileList" [databaseKeyID]="databaseKeyID" [sector]="sector"></stationary-combustion-energy-consumed> -->
+
+<stationary-combustion-energy-consumed
+    *ngIf="(emissionFactorDatabaseID != null && dataInputMethodKeyID == DataInputMethodKeyIDEnum.TOTAL_AMOUNT && fuelMonitorDataInputMethodKeyID == DataInputMethodKeyIDEnum.ENERGY_GENERATED)"
+    (formGroupChange)="onChildFormGroupChange($event)" [activityConfig]="activityConfig" [getAllSource]="getAllSource"
+    [docFileList]="docFileList" [activityID]="activityID"
+    [emissionFactorDatabaseID]="emissionFactorDatabaseID" [emissionFactorDatabaseKeyID]="emissionFactorDatabaseKeyID"></stationary-combustion-energy-consumed>
+
+<stationary-combustion-meter-reading
+    *ngIf="(emissionFactorDatabaseID != null && dataInputMethodKeyID == DataInputMethodKeyIDEnum.METER_READING && fuelMonitorDataInputMethodKeyID == DataInputMethodKeyIDEnum.ENERGY_GENERATED)"
+    (formGroupChange)="onChildFormGroupChange($event)" [activityConfig]="activityConfig" [getAllSource]="getAllSource"
+    [activityID]="activityID" [docFileList]="docFileList"
+    [emissionFactorDatabaseID]="emissionFactorDatabaseID" [emissionFactorDatabaseKeyID]="emissionFactorDatabaseKeyID"></stationary-combustion-meter-reading>
+
+<stationary-combustion-hhv-energy-consumed
+    *ngIf="(emissionFactorDatabaseID != null && dataInputMethodKeyID == DataInputMethodKeyIDEnum.TOTAL_AMOUNT && fuelMonitorDataInputMethodKeyID == DataInputMethodKeyIDEnum.FUEL_CONSUMPTION)"
+    (formGroupChange)="onChildFormGroupChange($event)" [activityConfig]="activityConfig" [getAllSource]="getAllSource"
+    [activityID]="activityID" [docFileList]="docFileList"
+    [emissionFactorDatabaseID]="emissionFactorDatabaseID" [emissionFactorDatabaseKeyID]="emissionFactorDatabaseKeyID"></stationary-combustion-hhv-energy-consumed>
+
+<stationary-combustion-hhv-meter-reading
+    *ngIf="(emissionFactorDatabaseID != null && dataInputMethodKeyID == DataInputMethodKeyIDEnum.METER_READING && fuelMonitorDataInputMethodKeyID == DataInputMethodKeyIDEnum.FUEL_CONSUMPTION)"
+    (formGroupChange)="onChildFormGroupChange($event)" (formGroupChange)="onChildFormGroupChange($event)"
+    (docUploadChange)="onChildDocChange($event)" [activityConfig]="activityConfig" [getAllSource]="getAllSource"
+    [activityID]="activityID" [docFileList]="docFileList"
+    [emissionFactorDatabaseID]="emissionFactorDatabaseID" [emissionFactorDatabaseKeyID]="emissionFactorDatabaseKeyID"></stationary-combustion-hhv-meter-reading>

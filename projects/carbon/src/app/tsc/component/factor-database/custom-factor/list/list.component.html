@@ -1,0 +1,276 @@
+<div class="headerContainer pt-0">
+    <div class="headerLeftContainer">
+        <div class="pageTitle">{{ tableTitle }}</div>
+        <div class="pageSubtitle">{{ tableSubTitle}}</div>
+    </div>
+    <div class="headerRightContainer">
+        <div class="headerRightContainerInner">
+            <lib-search-bar-one #searchBar [searchBy]="table[tableType]['searchBy']" (emitSearch)="searchFn($event)">
+            </lib-search-bar-one>
+            <button type="button" class="btn button btn-success btnBase ms-3" (click)="create()">
+                <fa-icon [icon]="faPlus"></fa-icon>{{ tableType | titlecase}}
+            </button>
+        </div>
+    </div>
+</div>
+<button #refreshBtn class="d-none"></button>
+
+<ng-container *ngIf="tableType == 'factor'">
+    <div class="row mx-2 h-auto" [ngClass]="{'d-none': chips.length == 0}">
+        <div class="col-sm-10 py-1 chipListContainer">
+            <mat-chip-list #chipList>
+                <mat-chip *ngFor="let chip of chips" (removed)="removeChip(chip)">
+                    <span class="fw-normal">{{ chip['filter'] }}</span>
+                    <button matChipRemove>
+                        <mat-icon>cancel</mat-icon>
+                    </button>
+                </mat-chip>
+            </mat-chip-list>
+        </div>
+        <div class="col-sm-2 centerAlignVertical justify-content-end">
+            <button matRipple [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER"
+                class="button btn btn-link float-end" (click)="clearAllChips()">
+                <span class="material-symbols-outlined fs-6">
+                    filter_list_off
+                </span>
+                Reset Filters
+            </button>
+        </div>
+    </div>
+</ng-container>
+
+<div class="overflowX customScrollBar">
+    <table class="w-100" mat-table [dataSource]="dataSource" #sort matSort [matSortActive]="table[tableType]['sortBy']"
+        matSortDirection="desc" matSortDisableClear>
+
+        <ng-container *ngFor="let activities of table[tableType]['data']; let i = index">
+            <ng-container *ngIf="activities['databaseType'] == 'all' || activities['databaseType'] == databaseType"
+                [matColumnDef]="activities['column']">
+                <th class="px-3" mat-header-cell *matHeaderCellDef mat-sort-header
+                    [disabled]="tableHeader(i)['disable-sort']" [ngClass]="{
+                        'status': activities['column'] == 'daysLeft',
+                        'other': activities['column'] != 'daysLeft'
+                    }">
+
+                    <ng-container *ngIf="tableHeader(i)['hasFilter'] && tableHeader(i)['filterType'] == 'scope'; 
+                            else elseBlock">
+                        <funnel-filter #scopeSelect header="Scope" type="mono" [entityList]="scope" [selectFC]="scopeFC"
+                            [active]="scopeFlag" (mono)="scopeFlag = true; scopeChange();"
+                            (selected)="toggleScopeChip($event)">
+                        </funnel-filter>
+                    </ng-container>
+
+                    <ng-template #elseBlock>
+                        <ng-container *ngIf="tableHeader(i)['hasFilter'] && tableHeader(i)['filterType'] == 'status'; 
+                            else elseBlock">
+                            <funnel-filter #statusSelect header="Status" type="mono" [active]="statusFlag"
+                                [entityList]="status" [selectFC]="statusFC" (mono)="statusFlag = true;"
+                                (selected)="toggleStatusChip($event)"></funnel-filter>
+                        </ng-container>
+                        <ng-template #elseBlock>
+                            <ng-container
+                                *ngIf="tableHeader(i)['hasFilter'] && tableHeader(i)['filterType'] == 'activity'; else elseBlock">
+                                <div class="row">
+                                    <div class="col-sm-7 centerAlignVertical justify-content-start pe-0">
+                                        Activity type
+                                    </div>
+                                    <div class="col-sm-2 centerAlign">
+                                        <button mat-icon-button (click)="activitySelect.open()">
+                                            <span class="material-symbols-outlined fs-4 funnel"
+                                                [ngClass]="{'text-primary': activityFlag}">
+                                                filter_alt
+                                            </span>
+                                            <div class="funnelFilterDD">
+                                                <mat-form-field>
+                                                    <mat-select #activitySelect (openedChange)="resetOnNoChange($event)"
+                                                        [formControl]="activityFC" multiple>
+                                                        <mat-select-trigger class="d-none"></mat-select-trigger>
+                                                        <mat-option value="all" (click)="selectAllActivities()">
+                                                            All activity types
+                                                        </mat-option>
+                                                        <mat-option *ngFor="let activities of activity"
+                                                            [value]="activities['keyID']"
+                                                            (click)="selectActivity(activities)">
+                                                            {{ activities.name }}
+                                                        </mat-option>
+                                                        <button #activityBtn
+                                                            class="button btn btn-primary applyBtn float-end"
+                                                            (click)="activityFlag = true; applyActivityFilter(); activitySelect.close();"
+                                                            matRipple
+                                                            [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">
+                                                            Apply
+                                                        </button>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+                                        </button>
+                                    </div>
+                                </div>
+                            </ng-container>
+                            <ng-template #elseBlock>
+                                {{ tableHeader(i)['heading'] }}
+                            </ng-template>
+                        </ng-template>
+                    </ng-template>
+                </th>
+                <td class="px-3" mat-cell *matCellDef="let row" [ngClass]="{
+                    'cursorPointer': tableData(i)['cursorPointer'],
+                        'text-center': tableData(i)['text-center'],
+                        'status': activities['column'] == 'daysLeft',
+                        'other': activities['column'] != 'daysLeft'
+                    }" [routerLink]="getRoute(row, activities['column'])">
+                    <ng-container *ngIf="activities['isLink']; else elseBlock;">
+                        <div *ngIf="tableType !== 'version'">
+                            <span
+                                [matTooltip]="row[activities['column']]?.length > nameSize? row[activities['column']] : '' "
+                                matTooltipPosition="above" matTooltipClass="nameTooltip">
+                                {{ row[activities['column']] | dotdotdot: nameSize}}
+                            </span>
+                        </div>
+                        <div *ngIf="tableType == 'version'">
+                            <div *ngFor="let action of activities['actions']" (click)="execute(action['method'], row)">
+                                <span
+                                    [matTooltip]="row[activities['column']]?.length > nameSize? row[activities['column']] : '' "
+                                    matTooltipPosition="above" matTooltipClass="nameTooltip">
+                                    {{ row[activities['column']] | dotdotdot: nameSize}}
+                                </span>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-template #elseBlock>
+                        <ng-container *ngIf="activities['column'] == 'actions'; else elseBlock">
+                            <div class="centerAlignVertical">
+                                <ng-container *ngFor="let action of activities.actions">
+                                    <ng-container *ngTemplateOutlet="icon; 
+                                        context: {
+                                            icon: action.icon,
+                                            tooltip: action.tooltip,
+                                            iconClass: action.iconClass,
+                                            function: action.function,
+                                            functionParameter: [row]
+                                        }">
+                                    </ng-container>
+                                </ng-container>
+                                <ng-container *ngIf="activities['more-actions'].length > 0">
+                                    <div class="btn-group" ngbDropdown placement="left">
+                                        <button type="button" ngbDropdownToggle
+                                            class="btn dropdown-after dropdownAfter">
+                                            <fa-icon [icon]="faEllipsisV"></fa-icon>
+                                        </button>
+                                        <div ngbDropdownMenu>
+                                            <a *ngFor="let action of activities['more-actions']"
+                                                [class]="'dropdown-item ' +  action['class']"
+                                                (click)="execute(action.method, row)">
+                                                {{ action['name'] }}
+                                            </a>
+                                        </div>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </ng-container>
+                        <ng-template #elseBlock>
+                            <ng-container *ngIf="activities['hasProfileImage']; else elseBlock">
+                                <img class="rounded-circle border border-3 profileImageDropdownView"
+                                    [src]="row['profileImgUrl'] || 
+                                    userService.defaultImage(row[activities['column']], ProfileImg.PROFILE_IMAGE_DROPDOWN_NAME_VIEW)" alt="profile img">
+                                <span
+                                    [matTooltip]="(row[activities['column']]?.length + 4 + row['creationDate']?.length) > 10?  row[activities['column']] + ' on ' + row['creationDate'] : ''"
+                                    matTooltipPosition="above" matTooltipClass="nameTooltip">
+                                    {{ row[activities['column']] + ' on ' + row['creationDate'] | dotdotdot: 10}}
+                                </span>
+                            </ng-container>
+                            <ng-template #elseBlock>
+                                <ng-container *ngIf="activities['column'] == 'daysLeft'; else elseBlock;">
+                                    <ng-container *ngIf="row['scheduled'] == 'YES';
+                                        else elseBlock;">
+                                        <button class="btn btn-sm w-100 btn-primary rounded-pill cursorDefaultHover"
+                                            type="button">
+                                            {{ 'Scheduled in ' + row['daysLeft'] + ' days'}}
+                                        </button>
+                                    </ng-container>
+                                    <ng-template #elseBlock>
+                                        <button *ngIf="row['daysLeft'] > 30"
+                                            class="btn btn-sm w-100 btn-success rounded-pill cursorDefaultHover"
+                                            type="button">
+                                            Active
+                                        </button>
+                                        <button *ngIf="row['daysLeft'] < 1"
+                                            class="btn btn-sm w-100 btn-danger rounded-pill cursorDefaultHover"
+                                            type="button">
+                                            Expired
+                                        </button>
+                                        <button *ngIf="row['daysLeft'] >= 1 && row['daysLeft'] <= 30"
+                                            class="btn btn-sm w-100 btn-success rounded-pill cursorDefaultHover"
+                                            type="button">
+                                            {{ 'Expiring in ' + row['daysLeft'] + ' days'}}
+                                        </button>
+                                    </ng-template>
+                                </ng-container>
+                                <ng-template #elseBlock>
+                                    <ng-container *ngIf="activities['column'] == 'versionSourceName'; else elseBlock;">
+                                        <ng-container *ngIf="activities['column'] == 'versionSourceName'">
+                                            <a [href]="[row['sourceVersionDocPath']]" target="_blank"
+                                                matTooltip="Download factor source file" matTooltipPosition="above">
+                                                {{ row['sourceVersionName'] }}
+                                            </a>
+                                        </ng-container>
+                                    </ng-container>
+                                    <ng-template #elseBlock>
+                                        <ng-container
+                                            *ngIf="activities['column'] == 'linkedReportingPeriods'; else elseBlock;">
+                                            {{row['linkedReportingPeriods']?.length ?
+                                            row['linkedReportingPeriods']?.[0] : COMMON_CONSTANT.HYPHEN }}
+                                            <div *ngIf="row['linkedReportingPeriods']?.length > 1"
+                                                class="rounded-circle d-inline-block moreCircle"
+                                                [matTooltip]="getTooltipValue(row['linkedReportingPeriods'])"
+                                                matTooltipPosition="above" matTooltipClass="nameTooltip">
+                                                <span class="moreCircleCount">
+                                                    +{{ row['linkedReportingPeriods']?.length-1 }}
+                                                </span>
+                                            </div>
+                                        </ng-container>
+                                        <ng-template #elseBlock>
+                                            <ng-container *ngIf="row[activities['column']] == null; else elseBlock;">
+                                                {{ COMMON_CONSTANT.HYPHEN }}
+                                            </ng-container>
+                                            <ng-template #elseBlock>
+                                                <span
+                                                    [matTooltip]="row[activities['column']].length > 15? row[activities['column']] : ''"
+                                                    matTooltipPosition="above" matTooltipClass="nameTooltip">
+                                                    {{ row[activities['column']] | dotdotdot: 15 }}
+                                                </span>
+                                            </ng-template>
+                                        </ng-template>
+                                    </ng-template>
+                                </ng-template>
+                            </ng-template>
+                        </ng-template>
+                    </ng-template>
+                </td>
+            </ng-container>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+            </td>
+        </tr>
+    </table>
+</div>
+<mat-paginator class="roundedBorder" showFirstLastButtons [length]="resultLength"
+    [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE" [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION">
+</mat-paginator>
+
+
+<ng-template #icon let-icon="icon" let-tooltip="tooltip" let-iconClass="iconClass" let-function="function"
+    let-functionParameter="functionParameter">
+    <button class="iconBtn centerAlign" [class]="iconClass" matTooltipPosition="below" [matTooltip]="tooltip" matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" (click)="handleClick(function, functionParameter)">
+        <span class="material-symbols-outlined icon">
+            {{ icon }}
+        </span>
+    </button>
+</ng-template>

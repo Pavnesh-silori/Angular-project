@@ -1,0 +1,43 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="headerRightContainerInner">
+                <div class="pageTitle">
+                    Production route view
+                </div>
+            </div>
+            <!-- TODO 
+                <div class="subTitle">
+                TODO
+            </div> -->
+        </div>
+
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <button class="btn btn-sm btn-light centerAlign me-3 py-1" (click)="refresh = !refresh" matRipple
+                    [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                    [matTooltip]="ButtonTooltipEnum.REFRESH">
+                    <span class="material-symbols-outlined">
+                        refresh
+                    </span>
+                </button>
+                <button class="btn btn-sm btn-light centerAlign me-3 py-1 text-primary"
+                    (click)="routeToUpdateProductionRoute()" matRipple
+                    [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                    [matTooltip]="ButtonTooltipEnum.UPDATE">
+                    <span class="material-symbols-outlined">
+                        edit
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="border cardOverwrite  centerAlign">
+            <div class="overflowX customScrollBar">
+                <production-route [refresh]="refresh"></production-route>
+            </div>
+        </div>
+    </div>
+</div>

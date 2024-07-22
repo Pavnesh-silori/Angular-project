@@ -1,0 +1,29 @@
+<div mat-dialog-title>
+    <strong class="dialogTitle">
+        Capacity Changes
+    </strong>
+
+    <button mat-icon-button mat-dialog-close cdkFocusInitial class="float-end matDialogClose" matTooltip="Close"
+        matTooltipPosition="before">
+        <span class="material-symbols-outlined">close</span>
+    </button>
+</div>
+
+<div class="card main-card cardOverwrite h100">
+    <table mat-table [dataSource]="capacityData">
+
+        <ng-container matColumnDef="date">
+            <th mat-header-cell *matHeaderCellDef>Date</th>
+            <td mat-cell *matCellDef="let element">{{ element.startDate }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="capacity">
+            <th mat-header-cell *matHeaderCellDef>Capacity</th>
+            <td mat-cell *matCellDef="let element">{{ element.capacity }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    </table>
+</div>

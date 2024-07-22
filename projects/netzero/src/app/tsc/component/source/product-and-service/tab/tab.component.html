@@ -1,0 +1,20 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Products and Services</div>
+            <div class="pageSubtitle">
+                Create products and services that are purchased, sold or traded by your organization.
+            </div>
+        </div>
+    </div>
+
+    <nav mat-tab-nav-bar>
+        <ng-container *ngFor="let tabs of tab; let i = index;">
+            <a mat-tab-link [routerLink]="tabs['routerLink']" (click)="activeLink = tabs['routerLink']"
+                [active]="activeLink == tabs['routerLink']">
+                {{ tabs['label'] }}
+            </a>
+        </ng-container>
+    </nav>
+    <router-outlet></router-outlet>
+</div>

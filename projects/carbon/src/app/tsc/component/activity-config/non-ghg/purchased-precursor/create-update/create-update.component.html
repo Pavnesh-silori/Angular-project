@@ -1,0 +1,96 @@
+<mat-card class="cardOverwrite border">
+    <div class="cardTitle pb-2"> Details </div>
+    <form [formGroup]="activityConfigFG">
+        <ng-container *ngIf="origin == ActivityConfigEnum.PFF">
+            <div formGroupName="activityConfig" class="row">
+                <div class="col-sm-6">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Activity form name</mat-label>
+                        <input formControlName="configName" type="text" matInput required>
+                        <mat-error *ngIf="errorHandling(activityConfigFG, 'activityConfig.configName', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </ng-container>
+
+
+        <div formArrayName="activityConfigSource" class="row">
+            <div *ngFor="let group of activityConfigSourceFA.controls; let i = index" class="col-sm-6">
+                <div [formGroupName]="i">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Select precursor</mat-label>
+                        <mat-select formControlName="sourceID" required>
+                            <mat-option>
+                                <ngx-mat-select-search [formControl]="productSearchUtil.filterFC"
+                                    placeholderLabel="Search by precursor name" [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                </ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option *ngFor="let product of productSearchUtil.filteredEntities | async"
+                                [value]="product.id" (click)="setSourceTypeID(product)">
+                                <span class="d-flex justify-content-between">{{ product.name }}</span>
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="errorHandlingForFormArrayData('sourceID', 'required', i)">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <div formGroupName="activityConfigData">
+            <div class="row">
+                <div class="col-sm-6">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Select supplier</mat-label>
+                        <mat-select formControlName="supplierID" required>
+                            <mat-option>
+                                <ngx-mat-select-search [formControl]="supplierSearchUtil.filterFC"
+                                    placeholderLabel="Search by supplier name" [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                </ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option *ngFor="let supplier of supplierSearchUtil.filteredEntities | async" [value]="supplier.supplierID">
+                                <span class="d-flex justify-content-between">{{ supplier.supplierName }}</span>
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="errorHandling(activityConfigFG, 'activityConfigData.supplierID', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-6 centerAlignVertical" *ngIf="origin == ActivityConfigEnum.PFF">
+                    <a href="/source/supplier/page">Click here to create a new supplier</a>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Enter precursor producer’s email ID </mat-label>
+                        <mat-chip-list #chipList formControlName="producerEmails" required>
+                            <mat-chip *ngFor="let email of producerEmails.value" [removable]="removable"
+                                (removed)="removeEmail(email)">
+                                {{ email }}
+                                <button matChipRemove *ngIf="removable">
+                                    <mat-icon>cancel</mat-icon>
+                                </button>
+                            </mat-chip>
+                            <input [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event)"
+                                (input)="onInput()">
+                        </mat-chip-list>
+                        <mat-error *ngIf="errorHandling(activityConfigFG,'activityConfigData.producerEmails', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+    </form>
+</mat-card>

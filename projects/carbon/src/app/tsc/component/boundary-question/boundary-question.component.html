@@ -1,0 +1,401 @@
+<div class="card cardOverwrite h100">
+    <div class="headerContainer mb-2">
+        <div class="col-sm-10 card-title my-auto">
+            <div class="pageTitle">
+                Boundary questions
+            </div>
+            <small class="pageSubtitle">
+                Boundary questions are a set of 'Yes or No' questions that help you identify emission
+                causing activities inside your organization. Answer all questions and save for each scope.
+            </small>
+        </div>
+        <div class="col-sm-2 fw-bold text-end needHelp">
+            <a routerLink="/faq">Need help?</a>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <mat-accordion>
+            <form [formGroup]="scope1BQFG" (ngSubmit)="onSubmit(scope1BQFG)" class="mt-1">
+                <mat-expansion-panel class="cardOverwrite mt-2 border" expanded="true">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title class="fs-5 fw-bold pageSubCardTitle">
+                            Scope 1
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <div *ngIf="showScope1Edit" [hidden]="!disableScope1Form" align="end">
+                        <div (click)="changeFormEnabledFlag('One')" class="me-2">
+                            <span class="material-symbols-outlined fs-5 cursorPointer">
+                                edit_square
+                            </span>
+                        </div>
+                    </div>
+
+                    <mat-card class="border cardOverwrite mt-1"
+                        [ngClass]="{'border-danger': errorHandling('stationary-combustion',scope1BQFG), 'text-secondary': disableScope1Form}">
+                        <div class="lh-lg">
+                            Does your facility burn fuels on-site (e.g., natural gas, propane, coal,
+                            fuel oil for heating, diesel fuel for backup generators, biomass fuels)?
+                        </div>
+
+                        <mat-card-actions align="end">
+                            <mat-radio-group formControlName="stationary-combustion" [disabled]="disableScope1Form">
+                                <mat-radio-button class="mx-3" [value]="true"> YES </mat-radio-button>
+                                <mat-radio-button class="mx-3" [value]="false"> NO </mat-radio-button>
+                            </mat-radio-group>
+                        </mat-card-actions>
+                    </mat-card>
+
+                    <mat-card class="border cardOverwrite mt-3"
+                        [ngClass]="{'border-danger': errorHandling('mobile-combustion',scope1BQFG), 'text-secondary': disableScope1Form}">
+                        <div class="lh-lg">
+                            Do any vehicles fall within your organizational boundary? This can include cars, trucks,
+                            propane forklifts, aircraft, boats. Only vehicles owned or leased by your company should
+                            be included here.
+                        </div>
+
+                        <mat-card-actions align="end">
+                            <mat-radio-group formControlName="mobile-combustion" [disabled]="disableScope1Form">
+                                <mat-radio-button class="mx-3" [value]="true"> YES </mat-radio-button>
+                                <mat-radio-button class="mx-3" [value]="false"> NO </mat-radio-button>
+                            </mat-radio-group>
+                        </mat-card-actions>
+                    </mat-card>
+
+                    <mat-card class="border cardOverwrite mt-3"
+                        [ngClass]="{'border-danger': errorHandling('refrigeration-ac-and-fire-suppression',scope1BQFG), 'text-secondary': disableScope1Form}">
+                        <div class="lh-lg">
+                            Does your facility use refrigeration, air conditioning or fire suppression equipment?
+                        </div>
+
+                        <mat-card-actions align="end">
+                            <mat-radio-group formControlName="refrigeration-ac-and-fire-suppression"
+                                [disabled]="disableScope1Form">
+                                <mat-radio-button class="mx-3" [value]="true"> YES </mat-radio-button>
+                                <mat-radio-button class="mx-3" [value]="false"> NO </mat-radio-button>
+                            </mat-radio-group>
+                        </mat-card-actions>
+                    </mat-card>
+
+                    <mat-card class="border cardOverwrite mt-3"
+                        [ngClass]="{'border-danger': errorHandling('other-fugitive-emission',scope1BQFG), 'text-secondary': disableScope1Form}">
+                        <div class="lh-lg">
+                            other-fugitive-emission
+                        </div>
+
+                        <mat-card-actions align="end">
+                            <mat-radio-group formControlName="other-fugitive-emission" [disabled]="disableScope1Form">
+                                <mat-radio-button class="mx-3" [value]="true"> YES </mat-radio-button>
+                                <mat-radio-button class="mx-3" [value]="false"> NO </mat-radio-button>
+                            </mat-radio-group>
+                        </mat-card-actions>
+                    </mat-card>
+
+                    <mat-card class="border cardOverwrite mt-3"
+                        [ngClass]="{'border-danger': errorHandling('process-emission',scope1BQFG), 'text-secondary': disableScope1Form}">
+                        <div class="lh-lg">
+                            process-emission
+                        </div>
+
+                        <mat-card-actions align="end">
+                            <mat-radio-group formControlName="process-emission" [disabled]="disableScope1Form">
+                                <mat-radio-button class="mx-3" [value]="true"> YES </mat-radio-button>
+                                <mat-radio-button class="mx-3" [value]="false"> NO </mat-radio-button>
+                            </mat-radio-group>
+                        </mat-card-actions>
+                    </mat-card>
+
+                    <!-- <ng-container *ngTemplateOutlet="scope; context: {
+                                formControl: 'process-emission',
+                                scopeFG: scope1BQFG,
+                                question: 'process-emission',
+                                disableScope1Form: disableScope1Form
+                            }"></ng-container> -->
+
+                    <ng-container
+                        *ngTemplateOutlet="infoMsg; context: { activityList: scope1ActivityList, message: scope1Message }">
+                    </ng-container>
+
+                    <mat-action-row class="me-3" [hidden]="disableScope1Form">
+                        <button type="button" class="button btn btn-secondary me-2" *ngIf="showScope1Edit"
+                            (click)="changeFormEnabledFlag('One')">
+                            {{ ButtonLabelEnum.CANCEL_BTN_LABEL }}
+                        </button>
+
+                        <button type="submit" class="button btn btn-success" [ngClass]="{'disabled': scope1isEqual}">
+                            {{ ButtonLabelEnum.SAVE_BTN_LABEL }}
+                        </button>
+                    </mat-action-row>
+                </mat-expansion-panel>
+            </form>
+        </mat-accordion>
+
+        <mat-accordion>
+            <form [formGroup]="scope2BQFG" (ngSubmit)="onSubmit(scope2BQFG)" class="mt-1">
+                <mat-expansion-panel class="cardOverwrite mt-2 border">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title class="fs-5 fw-bold pageSubCardTitle">
+                            Scope 2
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <div *ngIf="showScope2Edit" [hidden]="!disableScope2Form" align="end">
+                        <div (click)="changeFormEnabledFlag('Two')" class="me-2">
+                            <span class="material-symbols-outlined fs-5 cursorPointer">
+                                edit_square
+                            </span>
+                        </div>
+                    </div>
+
+                    <mat-card class="border cardOverwrite mt-3"
+                        [ngClass]="{'border-danger': errorHandling('purchased-electricity',scope2BQFG), 'text-secondary': disableScope2Form}">
+                        <div class="lh-lg">
+                            Are any of your electricity-consuming facilities located in areas where grid customers can
+                            be provided with product or
+                            supplier-specific data in the form of certificates, contracts with generators or suppliers
+                            for specified source
+                            electricity, supplier labels, supplier emission rates, green tariffs, contracts, residual
+                            mixes, or other contractual
+                            instruments?
+                        </div>
+
+                        <mat-card-actions align="end">
+                            <mat-radio-group formControlName="purchased-electricity" [disabled]="disableScope2Form">
+                                <mat-radio-button class="mx-3" [value]="true"> YES
+                                </mat-radio-button>
+                                <mat-radio-button class="mx-3" [value]="false"> NO </mat-radio-button>
+                            </mat-radio-group>
+                        </mat-card-actions>
+                    </mat-card>
+
+                    <mat-card class="border cardOverwrite mt-3"
+                        [ngClass]="{'border-danger': errorHandling('purchased-heat-steam',scope2BQFG), 'text-secondary': disableScope2Form}">
+                        <div class="lh-lg">
+                            Are any of your heat/steam-consuming facilities located in areas where customers can be
+                            provided with product or
+                            supplier-specific data in the form of certificates, contracts with generators or suppliers
+                            for specified source
+                            heat/steam, supplier labels, supplier emission rates, contracts or other contractual
+                            instruments?
+                        </div>
+
+                        <mat-card-actions align="end">
+                            <mat-radio-group formControlName="purchased-heat-steam" [disabled]="disableScope2Form">
+                                <mat-radio-button class="mx-3" [value]="true"> YES </mat-radio-button>
+                                <mat-radio-button class="mx-3" [value]="false"> NO </mat-radio-button>
+                            </mat-radio-group>
+                        </mat-card-actions>
+                    </mat-card>
+
+                    <mat-card class="border cardOverwrite mt-3"
+                        [ngClass]="{'border-danger': errorHandling('purchased-cooling',scope2BQFG), 'text-secondary': disableScope2Form}">
+                        <div class="lh-lg">
+                            Are any of your cooling-consuming facilities located in areas where grid customers can be
+                            provided with product or
+                            supplier-specific data in the form of certificates, contracts with generators or suppliers
+                            for specified source cooling,
+                            supplier labels, supplier emission rates, contracts or other contractual instruments?
+                        </div>
+
+                        <mat-card-actions align="end">
+                            <mat-radio-group formControlName="purchased-cooling" [disabled]="disableScope2Form">
+                                <mat-radio-button class="mx-3" [value]="true"> YES </mat-radio-button>
+                                <mat-radio-button class="mx-3" [value]="false"> NO </mat-radio-button>
+                            </mat-radio-group>
+                        </mat-card-actions>
+                    </mat-card>
+
+                    <ng-container
+                        *ngTemplateOutlet="infoMsg; context: { activityList: scope2ActivityList, message: scope2Message }">
+                    </ng-container>
+
+                    <mat-action-row class="me-3" [hidden]="disableScope2Form">
+                        <button type="button" class="button btn btn-secondary me-2" *ngIf="showScope2Edit"
+                            (click)="changeFormEnabledFlag('Two')">
+                            {{ ButtonLabelEnum.CANCEL_BTN_LABEL }}
+                        </button>
+
+                        <button type="submit" class="button btn btn-success" [ngClass]="{'disabled': scope2isEqual}">
+                            {{ ButtonLabelEnum.SAVE_BTN_LABEL }}
+                        </button>
+                    </mat-action-row>
+                </mat-expansion-panel>
+            </form>
+        </mat-accordion>
+
+        <mat-accordion>
+            <form [formGroup]="scope3BQFG" (ngSubmit)="onSubmit(scope3BQFG)" class="mt-1">
+                <mat-expansion-panel class="cardOverwrite mt-2 border">
+                    <mat-expansion-panel-header>
+                        <mat-panel-title class="fs-5 fw-bold pageSubCardTitle">
+                            Scope 3
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+
+                    <div *ngIf="showScope3Edit" [hidden]="!disableScope3Form" align="end">
+                        <div (click)="changeFormEnabledFlag('Three')" class="me-2">
+                            <span class="material-symbols-outlined fs-5 cursorPointer">
+                                edit_square
+                            </span>
+                        </div>
+                    </div>
+
+                    <mat-card class="border cardOverwrite mt-1"
+                        [ngClass]="{'border-danger': errorHandling('purchased-goods-and-services',scope3BQFG), 'text-secondary': disableScope3Form}">
+                        <div class="lh-lg">
+                            Does you organization purchase goods (tangible products) and services (intangible products)?
+                        </div>
+                        <mat-card-actions align="end">
+                            <mat-radio-group formControlName="purchased-goods-and-services"
+                                [disabled]="disableScope3Form">
+                                <mat-radio-button class="mx-3" [value]="true"> YES </mat-radio-button>
+                                <mat-radio-button class="mx-3" [value]="false"> NO </mat-radio-button>
+                            </mat-radio-group>
+                        </mat-card-actions>
+                    </mat-card>
+
+                    <mat-card class="border cardOverwrite mt-3"
+                        [ngClass]="{'border-danger': errorHandling('capital-goods',scope3BQFG), 'text-secondary': disableScope3Form}">
+                        <div class="lh-lg">
+                            Does your organization purchase capital goods?
+                        </div>
+                        <mat-card-actions align="end">
+                            <mat-radio-group formControlName="capital-goods" [disabled]="disableScope3Form">
+                                <mat-radio-button class="mx-3" [value]="true"> YES </mat-radio-button>
+                                <mat-radio-button class="mx-3" [value]="false"> NO </mat-radio-button>
+                            </mat-radio-group>
+                        </mat-card-actions>
+                    </mat-card>
+
+                    <mat-card class="border cardOverwrite mt-3"
+                        [ngClass]="{'border-danger': errorHandling('upstream-transportation-and-distribution',scope3BQFG), 'text-secondary': disableScope3Form}">
+                        <div class="lh-lg">
+                            Does your organization purchase third-party transportation and distribution services for
+                            purchased products or transportation of sold products to retailers?
+                        </div>
+                        <mat-card-actions align="end">
+                            <mat-radio-group formControlName="upstream-transportation-and-distribution"
+                                [disabled]="disableScope3Form">
+                                <mat-radio-button class="mx-3" [value]="true"> YES </mat-radio-button>
+                                <mat-radio-button class="mx-3" [value]="false"> NO </mat-radio-button>
+                            </mat-radio-group>
+                        </mat-card-actions>
+                    </mat-card>
+
+                    <mat-card class="border cardOverwrite mt-3"
+                        [ngClass]="{'border-danger': errorHandling('downstream-transportation-and-distribution',scope3BQFG), 'text-secondary': disableScope3Form}">
+                        <div class="lh-lg">
+                            downstream-transportation-and-distribution QUESTION
+                        </div>
+                        <mat-card-actions align="end">
+                            <mat-radio-group formControlName="downstream-transportation-and-distribution"
+                                [disabled]="disableScope3Form">
+                                <mat-radio-button class="mx-3" [value]="true"> YES </mat-radio-button>
+                                <mat-radio-button class="mx-3" [value]="false"> NO </mat-radio-button>
+                            </mat-radio-group>
+                        </mat-card-actions>
+                    </mat-card>
+
+                    <mat-card class="border cardOverwrite mt-3"
+                        [ngClass]="{'border-danger': errorHandling('business-travel',scope3BQFG), 'text-secondary': disableScope3Form}">
+                        <div class="lh-lg">
+                            Do your employees travel for business using transportation other than company-owned or
+                            leased vehicles (e.g., commercial airline flights, rental cars, trains)?
+                        </div>
+                        <mat-card-actions align="end">
+                            <mat-radio-group formControlName="business-travel" [disabled]="disableScope3Form">
+                                <mat-radio-button class="mx-3" [value]="true"> YES </mat-radio-button>
+                                <mat-radio-button class="mx-3" [value]="false"> NO </mat-radio-button>
+                            </mat-radio-group>
+                        </mat-card-actions>
+                    </mat-card>
+
+                    <mat-card class="border cardOverwrite mt-3"
+                        [ngClass]="{'border-danger': errorHandling('employee-commuting',scope3BQFG), 'text-secondary': disableScope3Form}">
+                        <div class="lh-lg">
+                            Do your employees commute to work in personal vehicles or use public transportation?
+                        </div>
+                        <mat-card-actions align="end">
+                            <mat-radio-group formControlName="employee-commuting" [disabled]="disableScope3Form">
+                                <mat-radio-button class="mx-3" [value]="true"> YES </mat-radio-button>
+                                <mat-radio-button class="mx-3" [value]="false"> NO </mat-radio-button>
+                            </mat-radio-group>
+                        </mat-card-actions>
+                    </mat-card>
+
+                    <mat-card class="border cardOverwrite mt-3"
+                        [ngClass]="{'border-danger': errorHandling('waste-generated-in-operations',scope3BQFG), 'text-secondary': disableScope3Form}">
+                        <div class="lh-lg">
+                            waste-generated-in-operations
+                        </div>
+                        <mat-card-actions align="end">
+                            <mat-radio-group formControlName="waste-generated-in-operations"
+                                [disabled]="disableScope3Form">
+                                <mat-radio-button class="mx-3" [value]="true"> YES </mat-radio-button>
+                                <mat-radio-button class="mx-3" [value]="false"> NO </mat-radio-button>
+                            </mat-radio-group>
+                        </mat-card-actions>
+                    </mat-card>
+
+                    <ng-container
+                        *ngTemplateOutlet="infoMsg; context: { activityList: scope3ActivityList, message: scope3Message }">
+                    </ng-container>
+
+                    <mat-action-row class="me-3" [hidden]="disableScope3Form">
+                        <button type="button" class="button btn btn-secondary me-2" *ngIf="showScope3Edit"
+                            (click)="changeFormEnabledFlag('Three')">
+                            {{ ButtonLabelEnum.CANCEL_BTN_LABEL }}</button>
+
+                        <button type="submit" class="button btn btn-success" [ngClass]="{'disabled': scope3isEqual}">
+                            {{ ButtonLabelEnum.SAVE_BTN_LABEL }}
+                        </button>
+                    </mat-action-row>
+                </mat-expansion-panel>
+            </form>
+        </mat-accordion>
+    </div>
+</div>
+
+<ng-template #infoMsg let-activityList="activityList" let-message="message">
+    <div class="alert alert-primary centerAlignVertical roundedBorder d-inline-flex mt-3">
+        <svg class="extraInfoCardIcon">
+            <use xlink:href="#info-fill" />
+        </svg>
+        <div class="extraInfoCardText ps-3">
+            <span *ngIf="activityList.length == 1"><strong>{{ message }}</strong>
+                is a suggested activity that you should account for.</span>
+            <span *ngIf="activityList.length > 1"><strong>{{ message }}</strong>
+                are suggested activities that you should account for.</span>
+            <span class="lh-lg" *ngIf="activityList.length == 0">
+                There are no suggestions for activities that you should account for. You can still
+                account for any activity type in Data Acquisition.
+            </span>
+        </div>
+    </div>
+</ng-template>
+
+<!-- <ng-template #scope let-formControl="formControl" let-scopeFG="scopeFG" let-question="question"
+    let-disableScope1Form="disableScope1Form">
+
+    <mat-card class="border cardOverwrite mt-3"
+        [ngClass]="{'border-danger': errorHandling('process-emission',scope1BQFG), 'text-secondary': disableScope1Form}">
+        <div class="lh-lg">
+            process-emission
+        </div>
+
+        <mat-card-actions align="end">
+            <mat-radio-group formControlName="process-emission" [disabled]="disableScope1Form">
+                <mat-radio-button class="mx-3" [value]="true"> YES </mat-radio-button>
+                <mat-radio-button class="mx-3" [value]="false"> NO </mat-radio-button>
+            </mat-radio-group>
+        </mat-card-actions>
+    </mat-card>
+</ng-template> -->
+
+<svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+    </symbol>
+</svg>

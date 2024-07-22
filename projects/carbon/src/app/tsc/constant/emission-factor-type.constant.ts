@@ -1,0 +1,4 @@
+export const EMISSION_FACTOR_TYPE = {
+    CUSTOM: 'CUSTOM',
+    STANDARD: 'STANDARD'
+}

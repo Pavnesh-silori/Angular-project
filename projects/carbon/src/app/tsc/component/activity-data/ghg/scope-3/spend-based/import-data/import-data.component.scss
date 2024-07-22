@@ -1,0 +1,64 @@
+::ng-deep .mat-horizontal-stepper-header {
+    pointer-events: none !important;
+}
+
+::ng-deep .mat-stepper-horizontal {
+    display: flex;
+    justify-content: center;
+}
+
+::ng-deep .mat-step-header {
+    width: 100% !important;
+}
+
+::ng-deep .mat-stepper-horizontal .mat-horizontal-stepper-header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Remove the gray color background from the stepper */
+::ng-deep .mat-step-header {
+    background-color: transparent !important;
+}
+
+.date {
+    min-width: 120px;
+}
+
+.account {
+    min-width: 150px;
+}
+
+.supplier {
+    min-width: 150px;
+}
+
+.amount {
+    min-width: 150px;
+}
+
+.categorize {
+    min-width: 150px;
+}
+
+/* DD: dropdown */
+.funnelFilterDD {
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+.applyBtn {
+    height: 25px;
+    width: 100px;
+    padding: 0 10px;
+    position: sticky;
+    right: 7px;
+    bottom: 10px;
+}
+
+.noFocusCategory {
+    pointer-events: none;
+    color: gray !important; /* Apply text color directly to the element */
+}

@@ -1,0 +1,120 @@
+{
+    "compileOnSave": false,
+    "compilerOptions": {
+        "baseUrl": "./",
+        "downlevelIteration": true,
+        "outDir": "./dist/out-tsc",
+        "sourceMap": true,
+        "declaration": false,
+        "module": "es2020",
+        "moduleResolution": "node",
+        "experimentalDecorators": true,
+        "importHelpers": true,
+        "target": "es2015",
+        "typeRoots": [
+            "node_modules/@types"
+        ],
+        "lib": [
+            "es2018",
+            "dom"
+        ],
+        "paths": {
+            "@rootProject/*": [
+                "src/app/*"
+            ],
+            "@netzero/*": [
+                "projects/netzero/src/app/tsc/*"
+            ],
+            "@carbon/*": [
+                "projects/carbon/src/app/tsc/*"
+            ],
+            "@report-framework/*":[
+                "projects/report-framework/src/app/tsc/*"
+            ],
+            "@library/storage-service": [
+                "library/storage-service/library-storage-service",
+                "library/storage-service"
+            ],
+            "@library/toastr-service": [
+                "library/toastr-service/library-toastr-service",
+                "library/toastr-service"
+            ],
+            "@library/authentication-service": [
+                "library/authentication-service/library-authentication-service",
+                "library/authentication-service"
+            ],
+            "@library/application-service": [
+                "library/application-service/library-application-service",
+                "library/application-service"
+            ],
+            "@library/rbac-service": [
+                "library/rbac-service/library-rbac-service",
+                "library/rbac-service"
+            ],
+            "@library/feature-service": [
+                "library/feature-service/library-feature-service",
+                "library/feature-service"
+            ],
+            "@library/user-service": [
+                "library/user-service/library-user-service",
+                "library/user-service"
+            ],
+            "@library/facility-service": [
+                "library/facility-service/library-facility-service",
+                "library/facility-service"
+            ],
+            "@library/organization-service": [
+                "library/organization-service/library-organization-service",
+                "library/organization-service"
+            ],
+            "@library/layout-service": [
+                "library/layout-service/library-layout-service",
+                "library/layout-service"
+            ],
+            "@library/tsc-common": [
+                "library/tsc-common/library-tsc-common",
+                "library/tsc-common"
+            ],
+            "@library/subscription-service": [
+                "library/subscription-service/library-subscription-service",
+                "library/subscription-service"
+            ],
+            "@library/generate-otp": [
+                "library/generate-otp/library-generate-otp",
+                "library/generate-otp"
+            ],
+            "@library/unit-service": [
+                "library/unit-service/library-unit-service",
+                "library/unit-service"
+            ],
+            "@library/date": [
+                "library/date/library-date",
+                "library/date"
+            ],
+            "@library/authorization": [
+                "library/authorization/library-authorization",
+                "library/authorization"
+            ],
+            "@library/netzero": [
+                "library/netzero/library-netzero",
+                "library/netzero"
+            ],
+            "@library/tsc-lite": [
+                "library/tsc-lite/library-tsc-lite",
+                "library/tsc-lite"
+            ],
+            "@library/alerts": [
+                "library/alerts/library-alerts",
+                "library/alerts"
+            ],
+            "@library/chart": [
+                "library/chart/library-chart",
+                "library/chart"
+            ],
+            "@library/echart": [
+                "library/echart/library-echart",
+                "library/echart"
+            ]
+        }
+    }
+}

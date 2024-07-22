@@ -1,0 +1,68 @@
+<div class="card main-card cardOverwrite ms-2">
+    <div class="row">
+        <div class="col-sm-8 px-4 py-2">
+            <ng-container
+                *ngIf="recordData?.calculationApproachKeyID == CalculationApproachKeyIDEnum.CALCULATION_PRODUCT_MANUFACTURER;else elseBlock">
+                <div class="pageTitle">
+                    <span> Fugitive-Product Manufacture Record</span>
+                    <button #refreshBtn type="button" class="d-none"></button>
+                </div>
+            </ng-container>
+            <ng-template #elseBlock>
+                <div class="pageTitle">
+                    <span>Fugitive-Refrigeration Record</span>
+                    <button #refreshBtn type="button" class="d-none"></button>
+                </div>
+            </ng-template>
+        </div>
+        <ng-container>
+            <div class="col-sm-4">
+
+            </div>
+        </ng-container>
+    </div>
+    <div class="row">
+        <div class="row py-2 px-4">
+            <div class="col-sm-6">
+                <div class="col-sm-12">
+                    Calculation Method : <strong>{{recordData?.calculationApproachName}}</strong>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="col-sm-12">
+                    Accounting period :<strong>{{recordData?.startDate | date:'dd-MMM-yyyy'}} -
+                        {{recordData?.endDate | date:'dd-MMM-yyyy'}}</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="row py-2 px-4 pb-4">
+            <div class="col-sm-6">
+                <div class="row">
+                    <ng-container
+                        *ngIf="recordData?.calculationApproachKeyID == CalculationApproachKeyIDEnum.CALCULATION_SCREENING; else ElseBlock">
+                        <div class="col-sm-12">
+                            Equipment Group: <strong>{{ recordData?.name }}</strong>
+                            <button #refreshBtn type="button" class="d-none"></button>
+                        </div>
+                    </ng-container>
+                    <ng-template #ElseBlock>
+                        <div class="col-sm-12">
+                            Gas: <strong>{{ gasName }}</strong>
+                            <button #refreshBtn type="button" class="d-none"></button>
+                        </div>
+                    </ng-template>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="row">
+                    <div class="col-sm-12 ">
+                        Data source :
+                        <strong> {{recordData?.dataSource}} </strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

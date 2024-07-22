@@ -1,0 +1,74 @@
+<div class="overflowX customScrollBar">
+    <div class="headerContainer pt-0">
+        <div class="headerLeftContainer">
+            <div class="pageTitle"> Databases </div>
+            <div class="pageSubtitle">
+                Access our library of global standard emission factor databases.
+            </div>
+        </div>
+    </div>
+
+    <table class="w-100" mat-table [dataSource]="dataSource" #sort matSort matSortActive="name" matSortDirection="desc"
+        matSortDisableClear>
+        <ng-container matColumnDef="type">
+            <th class="px-3" mat-header-cell *matHeaderCellDef> </th>
+            <td class="px-3" mat-cell *matCellDef="let row">
+                <ng-container [ngSwitch]="row['type']">
+                    <span class="badge bg-info w-100" *ngSwitchCase="'FREE'">
+                        Free
+                    </span>
+                    <span class="badge bg-secondary w-100" *ngSwitchCase="'PAID'">
+                        Paid
+                    </span>
+                    <span class="badge bg-light w-100" *ngSwitchDefault>
+                        {{ row['type'] }}
+                    </span>
+                </ng-container>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+            <th class="px-3" mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+            <td class="px-3 cursorPointer" mat-cell *matCellDef="let row"
+                [routerLink]="[row?.['name'], row?.['emissionFactorSourceID'], 'version']"
+                [matTooltip]="row['name'].length > 50? row['name'] : ''" matTooltipPosition="above"
+                matTooltipClass="nameTooltip">
+                <ng-container *ngIf="row?.['name']">
+                    {{row['name'] | dotdotdot: 50}}
+                </ng-container>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="country">
+            <th class="px-3" mat-header-cell *matHeaderCellDef> Country </th>
+            <td class="px-3 cursorPointer" mat-cell *matCellDef="let row"
+                [routerLink]="[row?.['name'], row?.['emissionFactorSourceID'], 'version']"> {{ row['country']}} </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="linkedActivities">
+            <th class="px-3 text-center" mat-header-cell *matHeaderCellDef> Activity types in this database </th>
+            <td class="px-3 text-center" mat-cell *matCellDef="let row">
+                <!-- <a [routerLink]="['view',row.linkedActivities]"
+                    [queryParams]="{}">
+                    {{row['linkedActivities']}}
+                </a> -->
+                {{row['linkedActivities']}}
+            </td>
+        </ng-container>
+
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let record; columns: displayedColumns">
+        </tr>
+
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+            </td>
+        </tr>
+    </table>
+</div>
+<mat-paginator class="roundedBorder" showFirstLastButtons [length]="resultLength"
+    [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE" [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION">
+</mat-paginator>

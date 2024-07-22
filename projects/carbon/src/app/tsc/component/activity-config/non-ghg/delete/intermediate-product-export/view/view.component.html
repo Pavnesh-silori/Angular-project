@@ -1,0 +1,38 @@
+<div class="card cardOverwrite h100">
+        <div class="row">
+            <div class="col-sm-12">
+                <mat-card class="border cardOverwrite">
+                    <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Combustion equipment',
+                        value: activityConfig?.assetName,
+                        class: 'pt-1'
+                    }">
+                    </ng-container>
+
+                    <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Process name',
+                        value: activityConfig?.activityConfigData?.processName,
+                        class: 'pt-3'
+                    }">
+                    </ng-container>
+                    <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Product name',
+                        value: activityConfig?.activityConfigData?.productName,
+                        class: 'pt-3'
+                    }">
+                    </ng-container>
+                </mat-card>
+            </div>
+    </div>
+</div>
+
+<ng-template #labelValue let-label="label" let-value="value" let-class="class" let-valueClass="valueClass">
+    <div class="row" [class]="class">
+        <div class="col-sm-4">
+            {{ label }}
+        </div>
+        <div class="col-sm-8 fw-bold" [class]="valueClass">
+            {{ value ? value : COMMON_CONSTANT.HYPHEN }}
+        </div>
+    </div>
+</ng-template>

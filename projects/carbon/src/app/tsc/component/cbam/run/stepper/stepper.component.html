@@ -1,0 +1,147 @@
+<div class="card cardOverwrite main-container">
+    <div class="card-body">
+        <mat-accordion>
+            <mat-expansion-panel class="cardOverwrite mt-2 border" expanded="true">
+                <mat-expansion-panel-header>
+                    <mat-panel-title class="pageTitle">
+                        {{ products.name }}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <ng-container *ngTemplateOutlet="labelValue; context: {
+                            label: 'CN Code',
+                            value: products.cn,
+                            class: 'pt-1'
+                        }">
+                        </ng-container>
+                    </div>
+                    <div class="col-sm-6">
+                        <ng-container *ngTemplateOutlet="labelValue; context: {
+                            label: 'Run ID',
+                            value: runID,
+                            class: 'pt-1'
+                        }">
+                        </ng-container>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <ng-container *ngTemplateOutlet="labelValue; context: {
+                            label: 'Aggregated Goods Category',
+                            value: products.aggregatedCode,
+                            class: 'pt-1'
+                        }">
+                        </ng-container>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="row pt-1">
+                            <div class="col-sm-4">Run Status</div>
+                            <div class="col-sm-8">
+                                <span [ngClass]="statusColour(currentRunStatus.key)" class="rounded-pill badge">
+                                    {{ currentRunStatus.value }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <ng-container *ngTemplateOutlet="labelValue; context: {
+                            label: 'Product Description',
+                            value: products.description,
+                            class: 'pt-1'
+                        }">
+                        </ng-container>
+                    </div>
+                    <div class="col-sm-6">
+                        <ng-container *ngTemplateOutlet="labelValue; context: {
+                            label: 'Reporting Period',
+                            value: startDate + ' - ' + endDate,
+                            class: 'pt-1'
+                        }">
+                        </ng-container>
+                    </div>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+
+        <mat-horizontal-stepper [linear]="false" #stepper (selectionChange)="onStepChange($event)"
+            class="mt-4 cbamRunStepper">
+            <mat-step>
+                <ng-template matStepLabel>Installation Details</ng-template>
+                <div class="mt-4">
+                    <app-installation-detail #installationDetails></app-installation-detail>
+                </div>
+            </mat-step>
+
+            <mat-step>
+                <ng-template matStepLabel>Process Map</ng-template>
+                <mat-card class="border cardOverwrite mt-4">
+                    <div class="cardTitle">
+                        2. Process map
+                    </div>
+                    <div class="centerAlign">
+                        <div class="customScrollBar overflowX">
+                            <production-route #processMap></production-route>
+                        </div>
+                    </div>
+                </mat-card>
+            </mat-step>
+
+            <mat-step>
+                <ng-template matStepLabel>Configure Data Collection</ng-template>
+                <div class="mt-4">
+                    <app-process-map #dataCollection></app-process-map>
+                </div>
+            </mat-step>
+
+            <mat-step>
+                <ng-template matStepLabel>Track Progress</ng-template>
+                <div class="mt-4">
+                    <app-track-progress [isDataCollection]="isDataCollection" [stepperIndex]="currentIndex"
+                        #trackProgress></app-track-progress>
+                </div>
+            </mat-step>
+
+            <mat-step>
+                <ng-template matStepLabel>Allocate, Review and Run</ng-template>
+                <div class="mt-4">
+                    <app-allocate-review-run #allocateRunReview [isDataCollection]="isDataCollection"
+                        [stepperIndex]="currentIndex" [linkedRecordsInp]="linkedRecords" [runStatusInp]="runStatus"
+                        (runStatusChange)="runStatusChangeFnc($event)"></app-allocate-review-run>
+                </div>
+            </mat-step>
+        </mat-horizontal-stepper>
+    </div>
+    <div class="fixed-footer">
+        <div class="float-end">
+            <div *ngIf="showSaveAndNextBtn(runStatus);">
+                <!-- <div> -->
+                <button *ngIf="stepper.selectedIndex > 0" class="btn btn-sm btn-secondary me-2" type="button"
+                    (click)="goBack()">
+                    Back
+                </button>
+                <button class="btn btn-sm btn-success" type="submit" (click)="saveAndNext()">
+                    {{ saveAndNextBtnLabel(runStatus) }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #labelValue let-label="label" let-value="value" let-class="class" let-valueClass="valueClass">
+    <div class="row" [class]="class">
+        <div class="col-sm-4">
+            {{ label }}
+        </div>
+        <div class="col-sm-8 fw-bold">
+            <span [ngClass]="valueClass" matTooltipPosition="above" [matTooltip]="value?.length > 25 ? value : ''">
+                {{ value ? (value | dotdotdot: 25) : COMMON_CONSTANT.HYPHEN }}
+            </span>
+        </div>
+    </div>
+</ng-template>

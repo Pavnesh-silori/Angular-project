@@ -1,0 +1,114 @@
+<div class="content">
+    <div mat-dialog-header>
+        <div class="row">
+            <div class="col-sm-11">
+                <div class="pageTitle dialogHeader">{{ pageTitle }} Subsidiary/JV emission record</div>
+                <div class="pageSubtitle">
+                </div>
+            </div>
+            <div class="col-sm-1">
+                <button mat-icon-button mat-dialog-close cdkFocusInitial class="float-end matDialogClose"
+                    matTooltip="Close" matTooltipPosition="before">
+                    <span class="material-symbols-outlined">
+                        close
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="mt-2">
+        <div class="col-sm-12">
+            <form [formGroup]="formDataFG">
+                <mat-form-field class="col-sm-6 ms-3" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label> Select Subsidiary/JV </mat-label>
+                    <mat-select formControlName="subsidiaryID"
+                        (selectionChange)="getSubsidiaryUserListByOrgIDAndsubsidiaryID($event.value);"
+                        [disabled]="isDisable">
+                        <mat-option>
+                            <ngx-mat-select-search [formControl]="subSelectSearch.filterFC"
+                                placeholderLabel="Search by name"
+                                noEntriesFoundLabel="No matching subsidiary/JV found.">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option *ngFor="let subsidiary of subSelectSearch.filteredEntities | async"
+                            [value]="subsidiary.id">
+                            {{ subsidiary['name'] }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="errorHandling('subsidiaryID', 'required')">
+                        Subsidiary/JV is mandatory
+                    </mat-error>
+                </mat-form-field>
+
+                <ng-container *ngIf="subsidiary">
+                    <div class="row pb-1">
+                        <div class="col-sm-6 d-flex justify-content-between">
+                            <div class="col-form-label ms-3"> % control on Subsidiary/JV </div>
+                            <div class="py-2">
+                                <div class="col-form-value fw-bold">
+                                    <div class="pb-1">
+                                        <div *ngIf="subsidiary?.['financialControl']">
+                                            {{subsidiary?.['financialControl'] + '%' }} Financial control
+                                        </div>
+                                        <div *ngIf="subsidiary?.['operationalControl']">
+                                            {{subsidiary?.['operationalControl'] + '%' }} Operational control
+                                        </div>
+                                        <div *ngIf="subsidiary?.['equityControl']">
+                                            {{subsidiary?.['equityControl'] + '%' }} Equity control
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+
+                <mat-form-field class="col-sm-6 ms-3" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE"
+                    (click)="openCalendar()">
+                    <mat-label class="formLabel"> Select accounting period </mat-label>
+                    <input type="text" matInput ngxDaterangepickerMd
+                        [locale]="{direction: 'ltr', applyLabel: 'Apply', format: 'DD-MMM-YYYY', customRangeLabel: 'Custom Range'}"
+                        [drops]="'down'" [opens]="'right'" [alwaysShowCalendars]="true"
+                        [keepCalendarOpeningWithRange]="true" [showDropdowns]="true" [showCancel]="true"
+                        autocomplete="off" name="daterange" [formControl]="daterange"
+                        (ngModelChange)="accodingPeriodDateRange(daterange.value)" placeholder="dd-mm-yyyy - dd-mm-yyyy"
+                        required [readonly]="true" />
+                    <mat-datepicker-toggle matSuffix [for]="pickerDirective"></mat-datepicker-toggle>
+                    <mat-error *ngIf="daterange.hasError('required')">
+                        Accounting period is mandatory
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="col-sm-6 ms-3" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Select consolidation approach</mat-label>
+                    <mat-select formControlName="consolidationApproachIDs" multiple
+                        [disabled]="consolidationApproachList.length == 1" required>
+                        <mat-option *ngFor="let consolidationApproach of consolidationApproachList"
+                            [value]="consolidationApproach['id']" [selected]="true">
+                            {{consolidationApproach.name}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="errorHandling('consolidationApproachIDs', 'required')">
+                        Consolidation approach is required field.
+                    </mat-error>
+                </mat-form-field>
+
+                <div class="overflowX">
+                    <app-emission-data #emissionDataComp
+                        [consolidationApproachKeyIDList]="formDataFG.get('consolidationApproachKeyID').value"
+                        [emissionData]="formDataFG.get('emission').value" [action]="action"></app-emission-data>
+                </div>
+
+            </form>
+        </div>
+        <div class="row mt-2">
+            <div class="col-sm-12">
+                <div class="float-end">
+                    <button class="btn btn-success" type="button" (click)="submitBtnClk()">
+                        {{ submitBtnLabel }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

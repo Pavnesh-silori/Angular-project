@@ -1,0 +1,59 @@
+<div class="card cardOverwrite height ps-1">
+    <h4 class="pt-3 pb-1 ps-4 pageTitle"> Survey Details</h4>
+    <div>
+        <ng-template #labelValue let-label="label" let-value="value" let-class="class">
+            <div class="row  px-4">
+                <div class="col-sm-8">
+                    {{label}}:
+                </div>
+                <div class=" col-sm-4 text-end ">
+                    <p><strong>{{value?value:COMMON_CONSTANT.HYPHEN}}</strong></p>
+                </div>
+            </div>
+        </ng-template>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'Survey ID',
+            value: surveyDetails.id,
+            class: 'pe-1'
+        }"></ng-container>
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'Survey Name',
+            value: surveyDetails.name,
+            class: 'pe-1'
+        }"></ng-container>
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'Accounting Start Date',
+            value: surveyDetails.accountingStartDate| date:'dd-MMM-yyyy',
+            class: 'pe-1'
+        }"></ng-container>
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'Total Employees',
+            value: surveyDetails.totalEmployee,
+            class: 'pe-1'
+        }"></ng-container>
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'Sample Set',
+            value: surveyDetails.sampleSetPct+' %',
+            class: 'pe-1'
+        }"></ng-container>
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'Status',
+            value: getStatus(surveyDetails.status),
+            class: 'pe-1'
+        }"></ng-container>
+    </div>
+    <div class="row px-4">
+        <div class="col-sm-8">
+            Received Responses:
+        </div>
+        <div class="col-sm-4 text-end">
+            <ng-container *ngIf="surveyDetails.recivedResponses && surveyDetails.expectedResponses; else elseBlock">
+                <p><strong>{{surveyDetails.recivedResponses }}/{{ surveyDetails.expectedResponses }}</strong></p>
+            </ng-container>
+            <ng-template #elseBlock>
+                <strong> {{ COMMON_CONSTANT.HYPHEN }}</strong>
+            </ng-template>
+        </div>
+    </div>
+</div> 

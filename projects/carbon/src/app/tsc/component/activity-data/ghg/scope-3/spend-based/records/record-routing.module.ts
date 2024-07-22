@@ -1,0 +1,19 @@
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { RecordsComponent } from './records.component';
+
+const routes: Routes = [
+    {
+        path: '',
+        component: RecordsComponent,
+        data: {
+            title: 'Import Record List Page'
+        }
+    }
+];
+
+@NgModule({
+    imports: [RouterModule.forChild(routes)],
+    exports: [RouterModule]
+})
+export class RecordRoutingModule { }

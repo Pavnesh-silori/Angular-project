@@ -1,0 +1,32 @@
+.mat-cell,
+.mat-header-cell {
+    border: none !important;
+}
+
+td.mat-cell,
+td.mat-footer-cell {
+    padding: 0;
+    border-bottom-style: none;
+}
+
+table > :not(caption) > * > * {
+    padding: 1.6rem 0.5rem;
+}
+
+.columnWidth1 {
+    min-width: 120px;
+}
+
+.columnWidth2 {
+    min-width: 160px;
+}
+
+.tableRowBgColor{
+    background-color: aliceblue;
+}
+
+// table {
+//     width: 120%;
+//     table-layout: fixed;
+//   }
+

@@ -1,0 +1,123 @@
+<style>
+    .header {
+        height: 40px;
+    }
+</style>
+<div class="cardHeaderBlock ">
+    <div class="row centerAlignVertical mb-2 header">
+        <div class="col-sm-10">
+            <div class="cardTitle">
+                <ng-container *ngIf="isUpdate; else newRecord;">
+                    {{ title }}
+                </ng-container>
+                <ng-template #newRecord>
+                    <ng-container
+                        *ngIf="recordData?.calculationApproachKeyID == 'fugitive-product-manufacturer';else elseBlock">
+                        <div class="pageTitle">
+                            <span> Fugitive-Product Manufacture Record</span>
+                            <button #refreshBtn type="button" class="d-none"></button>
+                        </div>
+                    </ng-container>
+                    <ng-template #elseBlock>
+                        <div class="pageTitle">
+                            <span>Fugitive-Refrigeration Record</span>
+                            <button #refreshBtn type="button" class="d-none"></button>
+                        </div>
+                    </ng-template>
+                </ng-template>
+                <button #refreshBtn type="button" class="d-none"></button>
+            </div>
+        </div>
+        <ng-container *ngIf="view">
+            <div class="col-sm-2 pe-0">
+                <a class="float-end btn btn-link" mat-icon-button matTooltip="open in new window"
+                    matTooltipClass="infoTooltip" matTooltipPosition="below" target="_blank"
+                    [routerLink]="['/sustainability-accounting/carbon/view', activityKeyID, activityData?.activityDataID, cedID]">
+                    <span class="material-symbols-outlined">
+                        open_in_new
+                    </span>
+                </a>
+            </div>
+        </ng-container>
+    </div>
+
+    <!-- <div class="row">
+        <div class="col-sm-8 px-4 py-2">
+            <ng-container
+                *ngIf="recordData?.calculationApproachKeyID == 'fugitive-product-manufacturer';else elseBlock">
+                <div class="pageTitle">
+                    <span> Fugitive-Product Manufacture Record</span>
+                    <button #refreshBtn type="button" class="d-none"></button>
+                </div>
+            </ng-container>
+            <ng-template #elseBlock>
+                <div class="pageTitle">
+                    <span>Fugitive-Refrigeration Record</span>
+                    <button #refreshBtn type="button" class="d-none"></button>
+                </div>
+            </ng-template>
+        </div>
+    </div> -->
+
+    <div class="row">
+        <div class="col-sm-12 centerAlignVertical justify-content-between">
+            <div class="col-form-label ms-1"> Calculation Method :</div>
+            <span class="fw-bold">
+                {{recordData?.calculationApproachName}}
+            </span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12 centerAlignVertical justify-content-between">
+            <div class="col-form-label ms-1"> Accounting period :</div>
+            <span class="fw-bold">
+                {{recordData?.startDate | date:'dd-MMM-yyyy'}} -
+                {{recordData?.endDate | date:'dd-MMM-yyyy'}}
+            </span>
+        </div>
+    </div>
+
+    <ng-container *ngIf="recordData?.calculationApproachKeyID == 'screening-method'; else ElseBlock">
+        <div class="row">
+            <div class="col-sm-12 centerAlignVertical justify-content-between">
+                <div class="col-form-label ms-1"> Equipment Group :</div>
+                <span class="fw-bold">
+                    {{recordData?.name}}
+                </span>
+            </div>
+        </div>
+    </ng-container>
+    <ng-template #ElseBlock>
+        <div class="row">
+            <div class="col-sm-12 centerAlignVertical justify-content-between">
+                <div class="col-form-label ms-1"> Gas :</div>
+                <span class="fw-bold">
+                    {{gwpResponse?.gasName}}
+                </span>
+            </div>
+        </div>
+    </ng-template>
+
+    <div class="row">
+        <div class="col-sm-12 centerAlignVertical justify-content-between">
+            <div class="col-form-label ms-1"> Data source :</div>
+            <span class="fw-bold">
+                {{recordData?.dataSource}}
+            </span>
+        </div>
+    </div>
+</div>
+
+<!-- 
+<ng-template #labelValue let-label="label">
+    <div class="row">
+        <div class="col-sm-12 centerAlignVertical justify-content-between">
+            <div class="col-form-label ms-1"> {{ label }}</div>
+            <span class="fw-bold">
+                {{ activityData?.accountingPeriod? activityData.accountingPeriod
+                : globalConstant['HYPHEN'] }}
+            </span>
+        </div>
+    </div>
+</ng-template> -->

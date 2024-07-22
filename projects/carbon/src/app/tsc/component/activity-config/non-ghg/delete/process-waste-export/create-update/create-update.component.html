@@ -1,0 +1,86 @@
+<mat-card class="cardOverwrite border">
+    <div class="pt-2">
+        <div class="cardTitle">Details</div>
+    </div>
+
+    <form [formGroup]="activityConfigFG">
+        <div formGroupName="activityConfig" class="row">
+            <div class="col-sm-6">
+                <mat-form-field class="matFieldWidth100"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Activity form name</mat-label>
+                    <input placeholder="Activity form name" matInput formControlName="configName" type="text" required>
+                    <mat-error *ngIf="errorHandling('activityConfig.configName', 'required')">
+                        {{ formErrorEnum.REQUIRED }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <div formGroupName="activityConfigData">
+            <div class="row mb-1">
+                <div class="col-sm-6">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Select Process</mat-label>
+                        <mat-select formControlName="processID" required>
+                            <mat-option>
+                                <ngx-mat-select-search [formControl]="processSearch.filterFC"
+                                    placeholderLabel="Search by name" noEntriesFoundLabel="No matching name found.">
+                                </ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option *ngFor="let process of processSearch.filteredEntities | async"
+                                [value]="process.id">
+                                {{ process.name }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="errorHandling('activityConfigData.processID', 'required')">
+                            {{ formErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+          
+            <div class="row mb-3">
+                <mat-label class="formLabel ms-2 pb-2"> Enter gas exported amount using</mat-label>
+                <mat-radio-group formControlName="dataInputMethodStdID">
+                    <span class="col-sm-3 ps-2" *ngFor="let input of dataInputMethodList">
+                        <mat-radio-button class="col-sm-3" [value]="input.id" (change)="inputMethodChange(input.keyID)">
+                            {{ input.name }}
+                        </mat-radio-button>
+                    </span>
+                </mat-radio-group>
+                <mat-error *ngIf="radioError('activityConfigData.processID', 'required')">
+                    {{ formErrorEnum.REQUIRED }}
+                </mat-error>
+            </div>
+
+            <div class="row form-fields-container" *ngIf="inputMethod == DataInputMethodKeyIDEnum.METER_READING">
+                <mat-form-field class="col-sm-3 pe-3"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Meter rollover value</mat-label>
+                    <input class="formPlaceholder" matInput min="0" type="number" matInput placeholder="" type="number"
+                        formControlName="meterRolloverValue" />
+                    <mat-error *ngIf="activityConfigFG.get('activityConfigData.meterRolloverValue').hasError('min')">
+                        Meter reading can't be negative.
+                    </mat-error>
+                    <mat-error>
+                        Please enter odometer reading
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="col-sm-2" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Select Unit</mat-label>
+                    <mat-select formControlName="meterReadingUnitID">
+                        <mat-option *ngFor="let unit of VolumeUnit" [value]="unit.id">
+                            {{ unit.name }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error>
+                        Please select unit
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+
+    </form>
+</mat-card>

@@ -1,0 +1,53 @@
+<ng-container *ngIf="activityConfig">
+    <mat-card class="border cardOverwrite">
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'Combustion equipment',
+            value: activityConfig.activityConfigSource[0].source[0].name,
+            class: 'pt-1'
+        }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'Year of construction',
+            value: activityConfig.activityConfigData.yearOfConstruction,
+            class: 'pt-3'
+        }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'Heat Transfer Medium',
+            value: activityConfig.activityConfigData.heatTransferMedium.name,
+            class: 'pt-3'
+        }">
+        </ng-container>
+
+        <ng-container *ngIf="activityConfig.activityConfigData.heatTransferMedium.keyID == HeatTransferMediumKeyIDEnum.DIRECT_USE_OF_EXHAUST_GASES">
+            <ng-container *ngTemplateOutlet="labelValue; context: {
+                                    label: 'Is the temperature of the exhaust gas 250°C or higher?',
+                                    value: activityConfig.activityConfigData.isTemprature250orHigh ? 'Yes' : 'No',
+                                    class: 'pt-3'
+                                }">
+            </ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="activityConfig.activityConfigData.heatTransferMedium.keyID == HeatTransferMediumKeyIDEnum.STEAM">
+            <ng-container *ngTemplateOutlet="labelValue; context: {
+                                    label: 'Does your steam plant account for condensate return?',
+                                    value: activityConfig.activityConfigData.isCondensateReturn ? 'Yes' : 'No', 
+                                    class: 'pt-3'
+                                }">
+            </ng-container>
+        </ng-container>
+    </mat-card>
+</ng-container>
+
+<ng-template #labelValue let-label="label" let-value="value" let-class="class" let-valueClass="valueClass">
+    <div class="row" [class]="class">
+        <div class="col-sm-4">
+            {{ label }}
+        </div>
+        <div class="col-sm-8 fw-bold" [class]="valueClass">
+            {{ value ? value : COMMON_CONSTANT.HYPHEN }}
+        </div>
+    </div>
+</ng-template>

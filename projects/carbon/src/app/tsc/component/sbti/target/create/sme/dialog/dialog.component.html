@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+    </symbol>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+    </symbol>
+</svg>
+
+<div mat-dialog-title>
+    <strong class="dialogTitle">
+        New science based target
+    </strong>
+    <button mat-icon-button mat-dialog-close cdkFocusInitial class="float-end matDialogClose" matTooltip="Close"
+        matTooltipPosition="before">
+        <span class="material-symbols-outlined">
+            close
+        </span>
+    </button>
+</div>
+
+<div class="matDialogContent" mat-dialog-content>
+    <div class="cardTitle">Set a near term target</div>
+    <div class="cardSubtitle pt-1">
+        Near-term science-based targets are absolute scope 1 and 2 GHG emissions reduction or maintenance targets
+        that should be achieved by 2030, from a predefined base year.
+    </div>
+
+    <div class="row pt-4">
+        <div class="col-sm-5">
+            <div class="cardOverwrite cardHeight bg-light border">
+                <div class="card-body">
+                    <div class="cardTitle">Reduction target</div>
+                    <p class="cardSubtitle pt-2">Set a more ambitious custom reduction target for scope 1 & 2 emissions
+                        based on
+                        your base year emissions.</p>
+                    <p class="fw-bold">Minimum Ambition- 1.5C</p>
+                    <div class="pt-2 d-flex flex-wrap">
+                        <button class="btn centerAlign me-2 mt-1"
+                            [ngClass]="canCreateTarget(NearTerm.NEAR_TERM_REDUCTION) ? 'btn-success' : 'btn-secondary disableButton'"
+                            type="button"
+                            (click)="canCreateTarget(NearTerm.NEAR_TERM_REDUCTION)? setNearTermTarget(NearTerm.AUTO_CALCULATED) : null"
+                            matTooltipPosition="above" matTooltipClass="infoTooltip"
+                            [matTooltip]="canCreateTarget(NearTerm.NEAR_TERM_REDUCTION) ? '' : reductionTargetYearMsg">
+                            Set auto-calculated target
+                        </button>
+
+                        <button class="btn centerAlign  mt-1"
+                            [ngClass]="canCreateTarget(NearTerm.NEAR_TERM_REDUCTION) ? 'btn-success' : 'btn-secondary disableButton'"
+                            type="button"
+                            (click)="canCreateTarget(NearTerm.NEAR_TERM_REDUCTION)? setNearTermTarget(NearTerm.CUSTOM_RANGE) : null"
+                            matTooltipPosition="above" matTooltipClass="infoTooltip"
+                            [matTooltip]="canCreateTarget(NearTerm.NEAR_TERM_REDUCTION) ? '' : reductionTargetYearMsg">
+                            Set custom target
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-5 ms-3">
+            <div class="cardOverwrite cardHeight bg-light border">
+                <div class="card-body">
+                    <div class="iconStyle">
+                        <span class="material-symbols-outlined cursorPointer" #myTooltip="matTooltip"
+                            matTooltipPosition="above" matTooltipClass="infoTooltip"
+                            [matTooltip]="'Organizations whose scope 1 or 2 emissions are deemed immaterial are eligible to set a maintenance target. This means either your Scope 1 or Scope 2 emissions should be 0 in your base year or current year.'"
+                            [matTooltipHideDelay]="1000">info</span>
+                    </div>
+                    <div>
+                        <div class="cardTitle row ps-3">Maintenance target</div>
+                        <p class="cardSubtitle pt-2" style="margin-left: 3px;">Set a maintenance target for scope 1 & 2
+                            emissions based on your
+                            base year emissions.</p>
+                        <p class="fw-bold">Minimum Ambition- 1.5C</p>
+                        <div class="pt-4">
+
+                            <button class="btn centerAlign mt-1"
+                                [ngClass]="canCreateTarget(NearTerm.NEAR_TERM_MAINTENANCE) ? 'btn-success' : 'btn-secondary disableButton'"
+                                type="button"
+                                (click)="canCreateTarget(NearTerm.NEAR_TERM_MAINTENANCE)? setMaintenanceTarget() : null"
+                                matTooltipPosition="above" matTooltipClass="infoTooltip"
+                                [matTooltip]="canCreateTarget(NearTerm.NEAR_TERM_MAINTENANCE) ? '' : maintenanceTargetYearMsg">
+                                Set target
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pt-3">
+            <div class="cardTitle pt-3">Set a long term target</div>
+            <div class="cardSubtitle pt-1">
+                Long-term science-based targets are absolute scope 1, 2 and 3 GHG emissions reduction targets that
+                should be achieved by 2050 at the latest, from a predefined base year. They also include a commitment to
+                neutralize any unabated emissions when the long-term science-based target is achieved.
+            </div>
+        </div>
+        <div class="col-sm-6 pt-4">
+            <div class="cardOverwrite cardHeight bg-light border">
+                <div class="card-body">
+                    <div class="iconStyle">
+                        <span class="material-symbols-outlined cursorPointer" #myTooltip1="matTooltip"
+                            matTooltipPosition="above" matTooltipClass="infoTooltip"
+                            [matTooltip]="'In order to commit to a netzero target, your organization must also set a 1.5°C aligned near-term target. Alternatively, a netzero target can be set without a near term target if the target year is within a 5-10 year timeframe from the current year.'"
+                            [matTooltipHideDelay]="1000">info
+                        </span>
+                    </div>
+
+                    <div>
+                        <div class="cardTitle">Netzero target</div>
+                        <p class="cardSubtitle pt-1">Set a netzero target for scope 1, 2 and 3 based on your base year
+                            emissions.</p>
+                        <p class="fw-bold">Minimum Ambition- 1.5C</p>
+                        <div class="pt-4">
+                            <button class="btn centerAlign mt-1"
+                                [ngClass]="canCreateTarget(LongTerm.LONG_TERM_NETZERO) ? 'btn-success' : 'btn-secondary disableButton'"
+                                type="button"
+                                (click)="canCreateTarget(LongTerm.LONG_TERM_NETZERO)? setLongTermTarget() : null"
+                                matTooltipPosition="above" matTooltipClass="infoTooltip"
+                                [matTooltip]="canCreateTarget(LongTerm.LONG_TERM_NETZERO) ? '' : netZeroTargetYearMsg">
+                                Set target
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

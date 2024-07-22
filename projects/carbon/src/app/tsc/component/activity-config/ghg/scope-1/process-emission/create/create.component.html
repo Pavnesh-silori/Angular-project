@@ -1,0 +1,92 @@
+<mat-card class="cardOverwrite border">
+    <div class="cardTitle pb-2">
+        Details
+    </div>
+
+    <form [formGroup]="activityConfigFG">
+        <div class="row">
+            <div class="col-sm-6">
+                <ng-container *ngIf="origin == ActivityConfigEnum.PFF" formGroupName="activityConfig" class="col-sm-8">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Activity form name</mat-label>
+                        <input class="formPlaceholder" type="text" placeholder="Activity form name" matInput
+                            formControlName="configName" required>
+                        <mat-error *ngIf="errorHandling(activityConfigFG, 'activityConfig.configName', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </ng-container>
+            </div>
+        </div>
+
+        <div formGroupName="activityConfigData">
+            <div class="row">
+                <div class="col-sm-6">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <!-- <mat-label class="formLabel">Select custom/standard process</mat-label> -->
+                        <mat-label class="formLabel">Select process</mat-label>
+                        <mat-select formControlName="processID" required>
+                            <mat-option>
+                                <ngx-mat-select-search [formControl]="processSelectSearch.filterFC"
+                                    placeholderLabel="Search by process name"
+                                    [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                </ngx-mat-select-search>
+                            </mat-option>
+
+                            <!-- <mat-optgroup label="Standard Process"> -->
+                                <ng-container *ngFor="let process of processSelectSearch.filteredEntities | async">
+                                    <mat-option *ngIf="process.isStandard" [value]="process.id"
+                                        (click)="processChange(process)">
+                                        {{ process.name }}
+                                    </mat-option>
+                                </ng-container>
+                            <!-- </mat-optgroup> -->
+
+                            <!-- <mat-optgroup label="Custom Process">
+                                <ng-container *ngFor="let process of processSelectSearch.filteredEntities | async">
+                                    <mat-option *ngIf="!process.isStandard" [value]="process.id"
+                                        (click)="processChange(process)">
+                                        {{ process.name }}
+                                    </mat-option>
+                                </ng-container>
+                            </mat-optgroup> -->
+                        </mat-select>
+                        <mat-error *ngIf="errorHandling(activityConfigFG, 'activityConfigData.processID', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-sm-6">
+                    <ng-container *ngIf="showIpccProcessParamTech">
+                        <mat-form-field class="matFieldWidth100"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel">Select parameter/technology</mat-label>
+                            <mat-select formControlName="ipccProcessParamTechMapID" required>
+                                <mat-option>
+                                    <ngx-mat-select-search [formControl]="processParamTechSelectSearch.filterFC"
+                                        placeholderLabel="Search by parameter name"
+                                        [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                    </ngx-mat-select-search>
+                                </mat-option>
+
+                                <mat-option
+                                    *ngFor="let processParamTech of processParamTechSelectSearch.filteredEntities | async"
+                                    [value]="processParamTech.id"
+                                    [matTooltip]="getProcessParamTechName(processParamTech)" matTooltipPosition="above">
+                                    {{ getProcessParamTechName(processParamTech) }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error
+                                *ngIf="errorHandling(activityConfigFG, 'activityConfigData.ipccProcessParamTechMapID', 'required')">
+                                {{ FormErrorEnum.REQUIRED }}
+                            </mat-error>
+                        </mat-form-field>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </form>
+</mat-card>

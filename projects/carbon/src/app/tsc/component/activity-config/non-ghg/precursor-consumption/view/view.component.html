@@ -1,0 +1,115 @@
+<ng-container *ngIf="activityConfig">
+    <mat-card class="border cardOverwrite">
+        <div class="cardTitle pb-2">
+            Process
+        </div>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'Name',
+            value: activityConfigData.process.name,
+            class: 'pt-1'
+        }">
+        </ng-container>
+
+        <div class="row">
+            <div class="col-sm-9">
+                <table class="table table-bordered mt-3">
+                    <thead>
+                        <tr>
+                            <th>Precursor</th>
+                            <th>Source</th>
+                            <th>Supplier</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container *ngIf="this.entity.length > 0; else noEntitySource">
+                            <ng-container *ngFor="let entity2 of entity; let i = index">
+                                <ng-container *ngFor="let entitySource of entity2.inputOutputSource; let j=index">
+                                    <tr *ngIf="j == 0; else noRowSpan">
+                                        <td [attr.rowspan]="entity2.inputOutputSource.length">{{ entity2.entity.name }}
+                                        </td>
+                                        <td>{{ entitySource.name }}</td>
+                                        <td>
+                                            <ng-container
+                                                *ngIf="entitySource.keyID == SourceKeyID.PURCHASED_FROM_A_SUPPLIER; else noSupplier">
+                                                <div *ngFor="let source of entitySource.source">
+                                                    {{ source.name }}
+                                                </div>
+                                            </ng-container>
+                                        </td>
+                                    </tr>
+
+                                    <ng-template #noRowSpan>
+                                        <tr>
+                                            <td>{{ entitySource.name }}</td>
+                                            <td>
+                                                <ng-container
+                                                    *ngIf="entitySource.keyID == SourceKeyID.PURCHASED_FROM_A_SUPPLIER; else noSupplier">
+                                                    <div *ngFor="let source of entitySource.source">
+                                                        {{ source.name }}
+                                                    </div>
+                                                </ng-container>
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </ng-container>
+                            </ng-container>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </mat-card>
+
+    <mat-card class="border cardOverwrite mt-3">
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+                label: 'Data Input Method',
+                value: activityConfigData.dataInputMethod.name,
+                class: 'pt-1'
+            }">
+        </ng-container>
+
+        <ng-container *ngIf="activityConfigData.dataInputMethod.keyID == DataInputMethodKeyIDEnum.METER_READING">
+            <div class="cardTitle mt-3">
+                Meter
+            </div>
+
+            <ng-container *ngTemplateOutlet="labelValue; context: {
+                    label: 'Rollover Value',
+                    value: activityConfigData.meterRollover.value,
+                    class: 'pt-1'
+                }">
+            </ng-container>
+
+            <ng-container *ngTemplateOutlet="labelValue; context: {
+                    label: 'Unit',
+                    value: activityConfigData.meterRollover.unit.uomName,
+                    class: 'pt-1'
+                }">
+            </ng-container>
+        </ng-container>
+    </mat-card>
+</ng-container>
+
+<ng-template #labelValue let-label="label" let-value="value" let-class="class" let-valueClass="valueClass">
+    <div class="row" [class]="class">
+        <div class="col-sm-4">
+            {{ label }}
+        </div>
+        <div class="col-sm-8 fw-bold" [class]="valueClass">
+            {{ value ? value : COMMON_CONSTANT.HYPHEN }}
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #noEntitySource>
+    <tr>
+        <td>{{ COMMON_CONSTANT.HYPHEN }}</td>
+        <td>{{ COMMON_CONSTANT.HYPHEN }}</td>
+        <td>{{ COMMON_CONSTANT.HYPHEN }}</td>
+    </tr>
+</ng-template>
+
+<ng-template #noSupplier>
+    {{ COMMON_CONSTANT.HYPHEN }}
+</ng-template>

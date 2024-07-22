@@ -1,0 +1,212 @@
+<div class="sectionHeader ms-3 me-1">
+    <span class="header"> Factor details </span>
+</div>
+
+<div class="ms-4 me-1">
+    <!-- this is for scope-1,2,3 for both standard and custom emission factors-->
+    <ng-container *ngIf="emissionData">
+        <ng-container *ngTemplateOutlet="emissionFactorHeader; context: {
+                header: emissionData.emissionType + ' emission factors',
+                href: emissionData.sourceDocPath,
+                tooltip: emissionData.databaseName + ': '  + emissionData.sourceDocName
+            }"></ng-container>
+        <ng-container *ngTemplateOutlet="emissionFactor; context: {data: emissionData}"></ng-container>
+    </ng-container>
+
+    <!-- this is for scope 2, if cef is used-->
+    <ng-container *ngIf="estimationData">
+        <ng-container *ngTemplateOutlet="emissionFactorHeader; context: {
+                header: 'Custom estimation factors',
+                href: estimationData.sourceDocPath,
+                tooltip: estimationData.databaseName + ': ' + estimationData.sourceDocName
+            }"></ng-container>
+
+        <ng-template *ngTemplateOutlet="valueAndUnit; 
+            context: {
+                title: 'Electricity price',
+                value: estimationData?.amount,
+                unit: estimationData.numeratorUomCode + '/' + estimationData.denominatorUomCode
+            }">
+        </ng-template>
+    </ng-container>
+
+    <ng-container *ngIf="gasValueGwp">
+        <div class="pe-3">
+            <div class="sectionSubHeader fs-5 d-flex justify-content-between mt-2">
+                GWP dataset
+            </div>
+            <div class="row fw-bold mb-3">
+                <div class="col-sm-6"> Gas </div>
+                <div class="col-sm-3">
+                    <span class="float-end"> GWP </span>
+                </div>
+                <div class="col-sm-3">
+                    <span class="float-end"> Dataset </span>
+                </div>
+            </div>
+            <ng-container *ngFor="let gas of gasValueGwp">
+                <ng-template *ngTemplateOutlet="gasGwp; 
+                            context: {
+                                gas: gas.gasName,
+                                value: gas.gwpValue,
+                                dataset: gas.gwpDatasetkeyID
+                            }">
+                </ng-template>
+            </ng-container>
+        </div>
+    </ng-container>
+
+    <ng-container *ngIf="isEmployeeCommutingAverageMethod || isEmployeeCommutingDistanceFuelMethod">
+        <div class="sectionSubHeader fs-5 d-flex justify-content-between ms-2 mt-2">
+            Standard emission factors
+        </div>
+
+        <ng-container *ngIf="employeeCommutingEmission">
+            <table style="max-height: 100px; overflow-y: auto;">
+                <tbody>
+                    <tr *ngFor="let transport of employeeCommutingEmission">
+                        <td class="pt-3"
+                            [matTooltip]="transport.modeOfTransportName && transport.modeOfTransportName.length > 4 ? transport.modeOfTransportName : null"
+                            matTooltipPosition="above" matTooltipClass="nameTooltip">
+                            {{ transport.modeOfTransportName !== null ? (transport.modeOfTransportName.length > 4 ?
+                            transport.modeOfTransportName.slice(0, 4) + '...' : transport.modeOfTransportName) :
+                            COMMON_CONSTANT.HYPHEN }}
+                        </td>
+                        <td class="pt-3 ps-3"
+                            [matTooltip]="transport.modeOfTransportLevelOneName && transport.modeOfTransportLevelOneName.length > 8 ? transport.modeOfTransportLevelOneName : null"
+                            matTooltipPosition="above" matTooltipClass="nameTooltip">
+                            {{ transport.modeOfTransportLevelOneName !== null ?
+                            (transport.modeOfTransportLevelOneName.length > 8 ?
+                            transport.modeOfTransportLevelOneName.slice(0, 8) + '...' :
+                            transport.modeOfTransportLevelOneName) : COMMON_CONSTANT.HYPHEN }}
+                        </td>
+                        <td class="pt-3 ps-3"
+                            [matTooltip]="transport.modeOfTransportLevelTwoName && transport.modeOfTransportLevelTwoName.length > 8 ? transport.modeOfTransportLevelTwoName : null"
+                            matTooltipPosition="above" matTooltipClass="nameTooltip">
+                            {{ transport.modeOfTransportLevelTwoName !== null ?
+                            (transport.modeOfTransportLevelTwoName.length > 8 ?
+                            transport.modeOfTransportLevelTwoName.slice(0, 8) + '...' :
+                            transport.modeOfTransportLevelTwoName) : COMMON_CONSTANT.HYPHEN }}
+                        </td>
+                        <td class="pt-3 ps-3"
+                            [matTooltip]="transport.modeOfTransportLevelThreeName && transport.modeOfTransportLevelThreeName.length > 8 ? transport.modeOfTransportLevelThreeName : null"
+                            matTooltipPosition="above" matTooltipClass="nameTooltip">
+                            {{ transport.modeOfTransportLevelThreeName !== null ?
+                            (transport.modeOfTransportLevelThreeName.length > 8 ?
+                            transport.modeOfTransportLevelThreeName.slice(0, 8) + '...' :
+                            transport.modeOfTransportLevelThreeName) : COMMON_CONSTANT.HYPHEN }}
+                        </td>
+
+                        <td class="ps-3 pt-3">
+                            <span
+                                [matTooltip]="transport.co2e + ' ' + transport.co2eNumeratorUomCode + '/' + transport.co2eDenominatorUomCode"
+                                matTooltipPosition="above" matTooltipClass="nameTooltip">
+                                {{ transport.co2e !== null ? (transport.co2e | number: '1.2-2') + ' ' +
+                                transport.co2eNumeratorUomCode + '/' + transport.co2eDenominatorUomCode :
+                                COMMON_CONSTANT.HYPHEN }}
+                            </span>
+                        </td>
+
+                        <td class="ps-3 pt-3">
+                            <span
+                                [matTooltip]="transport.fossilCo2 + ' ' + transport.fossilCo2NumeratorUomCode + '/' + transport.fossilCo2DenominatorUomCode"
+                                matTooltipPosition="above" matTooltipClass="nameTooltip">
+                                {{ transport.fossilCo2 !== null ? (transport.fossilCo2 | number: '1.2-2') + ' ' +
+                                transport.fossilCo2NumeratorUomCode + '/' + transport.fossilCo2DenominatorUomCode :
+                                COMMON_CONSTANT.HYPHEN }}
+                            </span>
+                        </td>
+
+                        <td class="ps-3 pt-3">
+                            <span
+                                [matTooltip]="transport.ch4 + ' ' + transport.ch4NumeratorUomCode + '/' + transport.ch4DenominatorUomCode"
+                                matTooltipPosition="above" matTooltipClass="nameTooltip">
+                                {{ transport.ch4 !== null ? (transport.ch4 | number: '1.2-2') + ' ' +
+                                transport.ch4NumeratorUomCode + '/' + transport.ch4DenominatorUomCode :
+                                COMMON_CONSTANT.HYPHEN }}
+                            </span>
+                        </td>
+
+                        <td class="ps-3 pt-3">
+                            <span
+                                [matTooltip]="transport.n2o + ' ' + transport.n2oNumeratorUomCode + '/' + transport.n2oDenominatorUomCode"
+                                matTooltipPosition="above" matTooltipClass="nameTooltip">
+                                {{ transport.n2o !== null ? (transport.n2o | number: '1.2-2') + ' ' +
+                                transport.n2oNumeratorUomCode + '/' + transport.n2oDenominatorUomCode :
+                                COMMON_CONSTANT.HYPHEN }}
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </ng-container>
+    </ng-container>
+
+    <ng-template #valueAndUnit let-title="title" let-value="value" let-unit="unit">
+        <div class="row">
+            <div class="d-flex justify-content-between">
+                <div class="col-form-label ms-1" [matTooltip]="title.length > title_length? title : ''"
+                    matTooltipPosition="above" matTooltipClass="nameTooltip">
+                    {{ title | dotdotdot: title_length }}
+                </div>
+                <div class="col-form-value fw-bold pe-3" *ngIf="viewUtil.haveValue(value); else hyphen;">
+                    <span [matTooltip]="value + ' ' + unit" matTooltipPosition="above" matTooltipClass="nameTooltip">
+                        {{ (value | number: '1.2-2') + " " + unit}}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #gasGwp let-gas="gas" let-value="value" let-dataset="dataset">
+        <div class="row">
+            <div class="col-sm-6" [matTooltip]="gas.length > title_length? gas : ''" matTooltipPosition="above"
+                matTooltipClass="nameTooltip">
+                <p> {{ gas | dotdotdot: title_length }} </p>
+            </div>
+            <div class="col-sm-3 fw-bold pe-3" *ngIf="viewUtil.haveValue(value); else hyphen;">
+                <span class="float-end" [matTooltip]="value" matTooltipPosition="above" matTooltipClass="nameTooltip">
+                    {{ value | number: '1.2-2' }}
+                </span>
+            </div>
+            <div class="col-sm-3 fw-bold">
+                <span class="float-end"> {{ dataset }} </span>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #hyphen>
+        <span class="fw-bold pe-3"> {{ COMMON_CONSTANT.HYPHEN }} </span>
+    </ng-template>
+
+    <ng-template #emissionFactorHeader let-header="header" let-href="href" let-tooltip="tooltip">
+        <div class="sectionSubHeader fs-5 d-flex justify-content-between ms-1">
+            <span class="mt-2">
+                {{ header }}
+            </span>
+            <span>
+                <a [href]="href" target="_blank" download [matTooltip]="tooltip" matTooltipPosition="above"
+                    matTooltipClass="nameTooltip">
+                    <button mat-icon-button class="btn">
+                        <span class="material-symbols-outlined fs-4">
+                            description
+                        </span>
+                    </button>
+                </a>
+            </span>
+        </div>
+    </ng-template>
+
+    <ng-template #emissionFactor let-data="data">
+        <ng-container *ngFor="let factor of data.factorDetails">
+            <ng-template *ngTemplateOutlet="valueAndUnit; 
+            context: {
+                title: factor.gasName,
+                value: factor?.factor,
+                unit: factor.denominatorUnit.uomCode ? factor.numeratorUnit.uomCode + '/' + factor.denominatorUnit.uomCode : factor.numeratorUnit.uomCode
+            }">
+            </ng-template>
+        </ng-container>
+    </ng-template>
+
+</div>

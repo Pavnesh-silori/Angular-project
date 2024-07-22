@@ -1,0 +1,156 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+    </symbol>
+</svg>
+
+<div class="card main-card cardOverwrite">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">
+                Changes timeline
+            </div>
+        </div>
+        <ng-container *ngIf="isBaseYearExist && isRecalculationAvailable;">
+            <div class="headerRightContainer">
+                <div class="headerRightContainerInner">
+                    <a class="btn btn-link"
+                        [routerLink]="['/carbon-setting/base-year', baseYearRouteKey, 'recalculate', 'history']">
+                        Recalculation timeline
+                    </a>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+
+    <ng-container *ngIf="isRecalculationAvailable; else recalculationUnavilable;">
+        <ng-container *ngIf="isBaseYearExist; else noBaseYear;">
+            <div class="container">
+                <mat-card class="cardOverwrite border mx-2">
+                    <mat-card-header></mat-card-header>
+                    <div class="row centerAlignVertical">
+                        <div class="col-sm-2">
+                            <mat-card-title>Significance Threshold</mat-card-title>
+                            <mat-card-subtitle class="mb-0 pb-0">as per recalculation policy</mat-card-subtitle>
+                        </div>
+
+                        <div class="col-sm-8">
+                            <div echarts [options]="options" style="max-width: 1400px; max-height: 300px;"></div>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" class="btn ms-3"
+                                [class]="canRecalculate? 'btn-success' : 'btn-secondary disableButton'"
+                                (click)="canRecalculate ? recalculateBaseYearEmission() : null"
+                                matTooltipPosition="above" matTooltipClass="nameTooltip"
+                                [matTooltip]="canRecalculate ? '' : 'Significant emission changes have not yet crossed threshold'">
+                                Recalculate
+                            </button>
+                        </div>
+                    </div>
+                </mat-card>
+
+                <ng-container *ngIf="timeline.length > 0; else noTimeline;">
+                    <app-timeline [timeline]="timeline"
+                        [baseYearKeyID]="baseYearKeyID" [rootOrgID]="rootOrgID">
+                    </app-timeline>
+                </ng-container>
+                <ng-template #noTimeline>
+                    <div class="infoCardContainer mt-2">
+                        <div class="extraInfoCard px-2">
+                            <div class="alert alert-info m-0 centerAlignVertical justify-content-between roundedBorder"
+                                role="alert">
+                                <div class="d-flex align-items-center">
+                                    <svg class="bi flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                        <use xlink:href="#info-fill" />
+                                    </svg>
+                                    <div class="endAlignVertical">
+                                        <div><strong>No changes on base year emissions.</strong>
+                                        </div>
+                                        <div class="mt-2">
+                                            Data is only displayed on the recalculation page if you have made any
+                                            changes on base year emissions like activity data creation or update
+                                            etc. Since you haven't done any of that yet, no data is to be shown here.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="centerAlign">
+                                    <img class="noBaseYear" src="/assets/images/no-timeline.jpg" alt="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+                <div align="end" class="w-100">
+                    <mat-paginator [length]="totalCount" [pageSize]="100" [pageSizeOptions]="[100, 500, 1000, 2500]"
+                        showFirstLastButtons>
+                    </mat-paginator>
+                </div>
+            </div>
+        </ng-container>
+    </ng-container>
+
+    <ng-template #noBaseYear>
+        <div class="infoCardContainer">
+            <div class="extraInfoCard px-3">
+                <div class="alert alert-warning m-0 centerAlignVertical justify-content-between roundedBorder"
+                    role="alert">
+                    <div class="d-flex align-items-center">
+                        <svg class="bi flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                            <use xlink:href="#exclamation-triangle-fill" />
+                        </svg>
+                        <div class="endAlignVertical">
+                            <div><strong>{{ baseYearType }} Base Year Setup Pending.</strong>
+                            </div>
+                            <div class="mt-2">
+                                Data is only displayed on the recalculation page if you have a configured base year.
+                                Since you haven't set up your base year yet, please visit the
+                                <a [routerLink]="['/carbon-setting/base-year', baseYearRouteKey]">Base
+                                    Year</a>
+                                to initiate the process and ensure accurate recalculations .
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="centerAlign">
+                        <img class="noBaseYear" src="/assets/images/base-year.jpg" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</div>
+
+<ng-template #recalculationUnavilable>
+    <div class="infoCardContainer">
+        <div class="extraInfoCard px-3">
+            <div class="alert alert-warning m-0 centerAlignVertical justify-content-between roundedBorder" role="alert">
+                <div class="d-flex align-items-center">
+                    <svg class="bi flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                        <use xlink:href="#exclamation-triangle-fill" />
+                    </svg>
+                    <div class="endAlignVertical">
+                        <div><strong>Recalculation is unavailable as custom emissions were used to establish the base
+                                year.</strong>
+                        </div>
+                        <div class="mt-2">
+                            Please note that recalculation is currently unavailable as custom emissions were used to
+                            establish the base year. For any necessary adjustments, you can access and update your
+                            initial emission data through, please visit the
+                            <a [routerLink]="['/carbon-setting/base-year', baseYearRouteKey]">Base
+                                Year view</a>.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="centerAlign">
+                    <img class="noBaseYear" src="/assets/images/recalculation-not-available.jpg" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

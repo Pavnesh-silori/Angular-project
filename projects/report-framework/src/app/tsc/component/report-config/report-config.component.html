@@ -1,0 +1,150 @@
+<div class="card main-card cardOverwrite" [ngClass]="{'h100': this.action == FormAction.UPDATE, 'border':action == FormAction.CREATE}">
+    <div *ngIf="action == FormAction.UPDATE" class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Update report</div>
+            <div class="pageSubtitle">
+                Based on your reporting settings create the report details as you prefer.
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <form [formGroup]="formDataFG">
+            <div class="row">
+                <mat-form-field class="col-sm-5 ms-3" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Report name</mat-label>
+                    <input class="formPlaceholder" matInput type="text" formControlName="name" />
+                    <mat-error *ngIf="errorHandling('name', 'required')">
+                        Name is required field.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="row">
+                <mat-form-field class="col-sm-5 ms-3" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Select reporting framework</mat-label>
+                    <mat-select formControlName="reportingFrameworkID" (selectionChange)="getSector($event.value)"
+                        [disabled]="isReadOnly">
+                        <mat-option>
+                            <ngx-mat-select-search [formControl]="frameworkSearchUtil.filterFC"
+                                placeholderLabel="Search by framework name" noEntriesFoundLabel="No matching found.">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option *ngFor="let framework of frameworkSearchUtil.filteredEntities | async"
+                            [value]="framework.reportFrameworkID">
+                            <span class="d-flex justify-content-between">
+                                {{ framework.reportFrameworkName }}
+                            </span>
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="errorHandling('reportingFrameworkID', 'required')">
+                        Reporting framework is required field.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+
+            <div *ngIf="formDataFG.controls['reportingFrameworkID'].value != null" class="row mt-2">
+                <div class="col-sm-3 ms-3 justify-content-start centerAlign">
+                    <span class="fw-bold"> Reporting sector </span>
+                </div>
+                <div class="col-sm-6 justify-content-start centerAlign">
+                    <span> {{ reportingSector == null ? COMMON_CONSTANT.HYPHEN : reportingSector}} </span>
+                </div>
+            </div>
+
+            <div class="row mt-2">
+                <div class="col-sm-3 ms-3 justify-content-start centerAlign">
+                    <span class="fw-bold">
+                        Organization reporting period
+                    </span>
+                </div>
+                <div class="col-sm-6 justify-content-start centerAlign">
+                    <span> {{ orgReportingPeriod }} </span>
+                </div>
+            </div>
+
+            <div *ngIf="formDataFG.controls['reportingFrameworkID'].value != null && reportingFrameworkExistYearList.length != 0"
+                class="row mt-4">
+                <mat-form-field class="col-sm-5 ms-3" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Select reporting year</mat-label>
+                    <mat-select formControlName="reportingYear"
+                        (selectionChange)="convertPeriodToStartAndEndDate($event.value)" [disabled]="isReadOnly">
+                        <mat-option *ngFor="let year of reportingFrameworkExistYearList" [value]="year.name">
+                            <span class="d-flex justify-content-between">
+                                {{ year.name }}
+                            </span>
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="errorHandling('reportingYear', 'required')">
+                        Reporting year is required field.
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="row">
+                <div *ngIf="formDataFG.controls['reportingFrameworkID'].value != null && reportingFrameworkExistYearList.length != 0"
+                    class="row mt-2">
+                    <div class="col-sm-3 ms-3 justify-content-start centerAlign">
+                        <span class="fw-bold">
+                            Reporting interval
+                        </span>
+                    </div>
+                    <div class="col-sm-6 ms-1 justify-content-start centerAlign"
+                        [ngSwitch]="formDataFG.controls['reportingInterval'].value">
+                        <span *ngSwitchCase="FrequencyKeyIDEnum['YEARLY']">
+                            Yearly
+                        </span>
+                        <span *ngSwitchCase="FrequencyKeyIDEnum['HALF_YEARLY']">
+                            Half-Yearly
+                        </span>
+                        <span *ngSwitchCase="FrequencyKeyIDEnum['QUARTERLY']">
+                            Quarterly
+                        </span>
+                        <span *ngSwitchDefault>
+                            {{ reportInterval }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="formDataFG.controls['reportingInterval'].value != null && formDataFG.controls['reportingYear'].value != null"
+                class="row mt-2">
+                <div class="col-sm-3 ms-2">
+                    <span class="fw-bold ms-2">Reporting frequency</span>
+                </div>
+                <div class="col-sm-6 ms-2">
+                    <div *ngFor="let frequency of frequencyList">
+                        <span>{{ frequency }} <br> </span>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div *ngIf="action == FormAction.UPDATE">
+        <ng-container *ngTemplateOutlet="saveBtn"></ng-container>
+    </div>
+</div>
+<div *ngIf="action == FormAction.CREATE">
+    <ng-container *ngTemplateOutlet="saveBtn"></ng-container>
+</div>
+
+<ng-template #saveBtn>
+    <div class="row mb-3 mt-3">
+        <div class="col-sm-12">
+            <div class="float-end">
+                <button type="button" class="button btn btn-sm btn-secondary me-2" (click)="cancelBtn()">
+                    {{ ButtonLabelEnum.CANCEL_BTN_LABEL }}
+                </button>
+                <button class="btn btn-success btn-sm me-2" type="button" [disabled]="isDisable"
+                    (click)="submit(ButtonLabelEnum.SAVE_BTN_LABEL)">
+                    {{ ButtonLabelEnum.SAVE_BTN_LABEL }}
+                </button>
+                <button *ngIf="type != null" class="btn btn-warning btn-sm" type="button" [disabled]="isDisable"
+                    (click)="submit('NEXT')">
+                    {{ 'Next' }}
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-template>

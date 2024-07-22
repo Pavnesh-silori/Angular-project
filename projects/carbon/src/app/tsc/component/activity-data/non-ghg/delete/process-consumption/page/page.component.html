@@ -1,0 +1,167 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Process {{ source }} Consumption</div>
+            <div class="pageSubtitle">Records of {{ source }} consumed in any process.</div>
+        </div>
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <lib-search-bar-one class="me-3" #searchBar [searchBy]="searchByPlaceHolder"
+                    (emitSearch)="searchFn($event)"></lib-search-bar-one>
+
+                <button class="btn btn-sm btn-light refreshBtn centerAlign me-3 py-1" #refreshBtn matRipple
+                    [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                    [matTooltip]="ButtonTooltipEnum.REFRESH">
+                    <span class="material-symbols-outlined text-secondary">
+                        refresh
+                    </span>
+                </button>
+
+                <button type="button" class="btn btn-sm btn-success btnRightRadiusZero" matRipple
+                    [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                    [matTooltip]="ButtonTooltipEnum.CREATE">
+                    <fa-icon [icon]="faPlus" class="me-1"></fa-icon>Record
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="ms-3">
+        <lib-date-filter #filterChild></lib-date-filter>
+
+        <div class="ms-1 btn-group float-end mt-2" ngbDropdown placement="bottom-right">
+            <button type="button" ngbDropdownToggle class="btn btn-success btn-sm " [ngClass]="{'btn-success': bulkBtnFlag, 'btn-secondary': !bulkBtnFlag, 
+            'custom-cursor': bulkBtnFlag, 'custom-not-allowed': !bulkBtnFlag}">Bulk action</button>
+            <div ngbDropdownMenu *ngIf="bulkBtnFlag">
+                <button class="dropdown-item" (click)="deleteRows(row, 'bulk')">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <table class="w-100" mat-table [dataSource]="dataSource" #sort matSort matSortActive="recordID"
+        matSortDirection="asc" matSortDisableClear>
+        <ng-container matColumnDef="recordID">
+            <th class="columnWidth" mat-header-cell *matHeaderCellDef>
+                <div class="d-flex align-items-center">
+                    <mat-checkbox *ngIf="dataSource.totalCount > 0" [(ngModel)]="allComplete" (change)="setAll($event.checked)"></mat-checkbox>
+                    <span class="ms-2 mt-1" mat-sort-header disableClear>
+                        Record ID
+                    </span>
+                </div>
+            </th>
+            <td mat-cell *matCellDef="let row">
+                <mat-checkbox [(ngModel)]="row['completed']" (change)="updateAllComplete()">
+                    {{ row.recordID ? row.recordID: COMMON_CONSTANT.HYPHEN }}
+                </mat-checkbox>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="reportingPeriod">
+            <th class="columnWidth" mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Reporting Period</th>
+            <td mat-cell *matCellDef="let row">
+                {{ row.reportingPeriod ? row.reportingPeriod: COMMON_CONSTANT.HYPHEN}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="process">
+            <th class="columnWidth" mat-header-cell *matHeaderCellDef>Process</th>
+            <td mat-cell *matCellDef="let row">
+                {{ row.process ? row.process: COMMON_CONSTANT.HYPHEN}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="electricitySource">
+            <th class="columnWidth" mat-header-cell *matHeaderCellDef>Electricity Source
+            </th>
+            <td mat-cell *matCellDef="let row">
+                {{ row.electricitySource ? row.electricitySource: COMMON_CONSTANT.HYPHEN}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="heatSource">
+            <th class="columnWidth" mat-header-cell *matHeaderCellDef>Heat Source</th>
+            <td mat-cell *matCellDef="let row">
+                {{ row.heatSource ? row.heatSource: COMMON_CONSTANT.HYPHEN}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="quantityElectricityConsumed">
+            <th class="columnWidth" mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Quantity of
+                electricity consumed</th>
+            <td mat-cell *matCellDef="let row">
+                {{ row.quantityElectricityConsumed ? row.quantityElectricityConsumed: COMMON_CONSTANT.HYPHEN}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="quantityHeatConsumed">
+            <th class="columnWidth" mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Quantity of heat
+                consumed</th>
+            <td mat-cell *matCellDef="let row">
+                {{ row.quantityHeatConsumed ? row.quantityHeatConsumed: COMMON_CONSTANT.HYPHEN }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="document">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let row">
+                <span class="material-symbols-outlined">
+                    description
+                </span>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="edit">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let row">
+                <div class="text-primary cursorPointer" matTooltip="Edit" matTooltipPosition="above">
+                    <span class="material-symbols-outlined">
+                        edit_square
+                    </span>
+                </div>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="delete">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let row">
+                <div class="text-danger cursorPointer" matTooltip="Delete" matTooltipPosition="above"
+                    (click)="deleteRows(row,'')">
+                    <span class="material-symbols-outlined">
+                        delete
+                    </span>
+                </div>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let row">
+                <div class="btn-group" ngbDropdown placement="left-top">
+                    <button type="button" ngbDropdownToggle class="dropdown-after dropdownAfter btn">
+                        <fa-icon [icon]="faEllipsisV"></fa-icon>
+                    </button>
+                    <div ngbDropdownMenu>
+                        <button class="dropdown-item">
+                            Audit Trail
+                        </button>
+                    </div>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+            </td>
+        </tr>
+    </table>
+    <mat-paginator class="roundedBorder" #paginator [length]="resultLength"
+        [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION" [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE"
+        showFirstLastButtons>
+    </mat-paginator>
+
+</div>

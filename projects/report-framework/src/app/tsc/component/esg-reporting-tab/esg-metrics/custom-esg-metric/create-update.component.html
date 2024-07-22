@@ -1,0 +1,129 @@
+<div class="headerContainer p-0" #header>
+    <div class="headerLeftContainer">
+        <div class="pageTitle">
+            {{action == FormAction.CREATE ? 'Add' : 'Update' }} Custom ESG Metric</div>
+    </div>
+
+    <div class="headerRightContainer">
+        <div class="headerRightContainerInner">
+            <button class="btn btn-sm centerAlign py-1 iconBtn" matRipple
+                [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                [matTooltip]="ButtonTooltipEnum.CLOSE" mat-dialog-close>
+                <span class="material-symbols-outlined">
+                    close
+                </span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<mat-dialog-content class="mat-typography customScrollBar pt-2" #body>
+    <form [formGroup]="formDataFG" (ngSubmit)="submit()">
+
+        <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel">Select activity type</mat-label>
+            <mat-select formControlName="activityStdID" (selectionChange)="getMetricType($event.value)">
+                <mat-option>
+                    <ngx-mat-select-search [formControl]="activityTypeSearchUtil.filterFC"
+                        placeholderLabel="Search by activity type name" noEntriesFoundLabel="No matching found.">
+                    </ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let activityType of activityTypeSearchUtil.filteredEntities | async"
+                    [value]="activityType.id">
+                    <span class="d-flex justify-content-between">
+                        {{ activityType.name }}
+                    </span>
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="errorHandling('activityStdID', 'required')">
+                Activity type is required field.
+            </mat-error>
+        </mat-form-field>
+
+        <div *ngIf="formDataFG.controls['activityStdID'].value != null" class="row pb-3" >
+            <div class="col-sm-3 justify-content-start centerAlign">
+                <span class="fw-bold"> Metric type </span>
+            </div>
+            <div class="col-sm-6 justify-content-start centerAlign">
+                <span class="badge rounded-pill" [ngClass]="{ 'greenBadge': formDataFG.controls['esgTypeKeyID'].value == EsgTypeKeyIDEnum.ENVIRONMENTAL,
+                 'blueBadge': formDataFG.controls['esgTypeKeyID'].value == EsgTypeKeyIDEnum.GOVERNANCE,
+                  'yellowBadge':formDataFG.controls['esgTypeKeyID'].value == EsgTypeKeyIDEnum.SOCIAL }">
+                    {{esgTypeName == null ? COMMON_CONSTANT.HYPHEN : esgTypeName}}
+                </span>
+            </div>
+        </div>
+
+        <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel">ESG metric name</mat-label>
+            <input class="formPlaceholder" matInput type="text" formControlName="metricName" />
+            <mat-error *ngIf="errorHandling('metricName', 'required')">
+              ESG metric name is required field.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel">Select quantitative / qualitative</mat-label>
+            <mat-select formControlName="control" (selectionChange)="addValidator($event.value)">
+                <mat-option *ngFor="let control of ESG_CONSTANT.METRIC_CONTROL"
+                    [value]="control.keyID">
+                    <span class="d-flex justify-content-between">
+                        {{ control.name }}
+                    </span>
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="errorHandling('control', 'required')">
+               Required field.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="formDataFG.controls['control'].value == 'number'" class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel">Select unit type</mat-label>
+            <mat-select formControlName="unitTypeID">
+                <mat-option>
+                    <ngx-mat-select-search [formControl]="unitTypeSearchUtil.filterFC"
+                        placeholderLabel="Search by unit type name" noEntriesFoundLabel="No matching found.">
+                    </ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let unitType of unitTypeSearchUtil.filteredEntities | async"
+                    [value]="unitType.id">
+                    <span class="d-flex justify-content-between">
+                        {{ unitType.name }}
+                    </span>
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="errorHandling('unitTypeID', 'required')">
+                Activity type is required field.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field *ngIf="formDataFG.controls['control'].value == 'number'" class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel">Select consolidation logic</mat-label>
+            <mat-select formControlName="consolidationLogicKeyID">
+                <mat-option *ngFor="let consolidationLogic of consolidationLogicList"
+                    [value]="consolidationLogic.keyID">
+                    <span class="d-flex justify-content-between">
+                        {{ consolidationLogic.name }}
+                    </span>
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="errorHandling('consolidationLogicKeyID', 'required')">
+                Consolidation logic required field.
+            </mat-error>
+        </mat-form-field>
+
+        <button class="d-none" type="submit" #formSubmitBtn></button>
+
+    </form>
+</mat-dialog-content>
+
+<div class="tscDialogFooter" #footer>
+    <button class="btn btn-sm btn-success" [ngClass]="{'disabled': isEqual && action == FormAction.UPDATE}"
+        (click)="formSubmitBtn.click()" matRipple>
+        {{ tSCCommonService.getButtonLabel(action) }}
+    </button>
+    
+        <button class="btn btn-sm btn-secondary me-2" mat-dialog-close matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">
+        Cancel
+    </button>
+</div>

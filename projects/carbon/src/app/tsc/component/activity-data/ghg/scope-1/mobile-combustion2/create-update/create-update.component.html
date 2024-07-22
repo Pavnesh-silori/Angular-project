@@ -1,0 +1,19 @@
+<fuel-distance-travelled
+    *ngIf="(dIMKeyID == DataInputMethodKeyIDEnum.DISTANCE_TRAVELLED && fuelMonitorDIMKeyID == DataInputMethodKeyIDEnum.FUEL_AMOUNT)"
+    (formGroupChange)="onChildFormGroupChange($event)"
+    [activityConfig]="activityConfig" [allVechile]="allVechile" [activityID]="activityID" [docFileList]="docFileList"></fuel-distance-travelled>
+
+<price-distance-travelled
+    *ngIf="(dIMKeyID == DataInputMethodKeyIDEnum.DISTANCE_TRAVELLED && fuelMonitorDIMKeyID == DataInputMethodKeyIDEnum.PRICE_BASED_METHOD)"
+    (formGroupChange)="onChildFormGroupChange($event)"
+    [activityConfig]="activityConfig" [allVechile]="allVechile" [activityID]="activityID" [docFileList]="docFileList"></price-distance-travelled>
+
+<fuel-odometer-reading
+    *ngIf="(dIMKeyID == DataInputMethodKeyIDEnum.ODOMETER_READING && fuelMonitorDIMKeyID == DataInputMethodKeyIDEnum.FUEL_AMOUNT)"
+    (formGroupChange)="onChildFormGroupChange($event)"
+    [activityConfig]="activityConfig" [allVechile]="allVechile" [activityID]="activityID" [docFileList]="docFileList"></fuel-odometer-reading>
+
+<price-odometer-reading
+    *ngIf="(dIMKeyID == DataInputMethodKeyIDEnum.ODOMETER_READING && fuelMonitorDIMKeyID == DataInputMethodKeyIDEnum.PRICE_BASED_METHOD)"
+    (formGroupChange)="onChildFormGroupChange($event)"
+    [activityConfig]="activityConfig" [allVechile]="allVechile" [activityID]="activityID" [docFileList]="docFileList"></price-odometer-reading>

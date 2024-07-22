@@ -1,0 +1,60 @@
+<div class="card cardOverwrite h100">
+    <ng-container *ngIf="allActivity">
+        <div class="headerContainer">
+            <div class="headerLeftContainer">
+                <div class="pageTitle">{{ activity.name }}
+                    <span *ngFor="let formType of activity.types">
+                        <span class="badge rounded-pill ms-2 activityFormTypeLabel"
+                            [ngClass]="{'cbamBadge': formType.keyID.includes(ACTIVITY_FORM_TYPE_KEYID_ENUM.CBAM_FORM), 'ghgBadge': formType.keyID.includes(ACTIVITY_FORM_TYPE_KEYID_ENUM.GHG_FORM)}">
+                            {{ formType.name }}
+                        </span>
+                    </span>
+                </div>
+                <div class="pageSubtitle">{{ activity.description }}</div>
+            </div>
+
+            <div class="headerRightContainer">
+                <div class="headerRightContainerInner">
+                    <button class="btn btn-sm btn-light centerAlign me-3 py-1  headerIconBtn refreshBtn"
+                        (click)="getConfigByID(currentOrgID, activityKeyID, activityConfigID)" matRipple
+                        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                        [matTooltip]="ButtonTooltipEnum.REFRESH">
+                        <span class="material-symbols-outlined">
+                            refresh
+                        </span>
+                    </button>
+                    <button class="btn btn-sm btn-light centerAlign me-3 py-1 headerIconBtn updateBtn"
+                        (click)="updateActivityConfig(activityConfig)" matRipple
+                        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                        [matTooltip]="ButtonTooltipEnum.UPDATE">
+                        <span class="material-symbols-outlined">
+                            edit
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+
+    <div class="card-body">
+        <ng-container *ngIf="activityConfig">
+            <app-config-view [configInp]="config"></app-config-view>
+
+            <div class="mt-3">
+                <router-outlet name="activityConfig" (activate)="activityConfigCompInit($event)"></router-outlet>
+            </div>
+
+            <div class="mt-3">
+                <app-workflow-view [activityConfigWorkflowInp]="activityConfigWorkflow"></app-workflow-view>
+            </div>
+
+            <div class="mt-3">
+                <app-scheduler-view [activityConfigSchedulerInp]="activityConfigScheduler"></app-scheduler-view>
+            </div>
+
+            <div class="mt-3">
+                <app-api-view [activityConfigApiInp]="activityConfigApi"></app-api-view>
+            </div>
+        </ng-container>
+    </div>
+</div>

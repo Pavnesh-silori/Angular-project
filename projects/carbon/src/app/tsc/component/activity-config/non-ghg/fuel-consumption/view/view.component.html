@@ -1,0 +1,75 @@
+<ng-container *ngIf="activityConfig">
+    <div class="card cardOverwrite">
+        <div class="row">
+            <div class="col-sm-12">
+                <mat-card class="border cardOverwrite">
+
+                    <ng-container *ngTemplateOutlet="labelValue; context: {
+                            label: 'Process name',
+                            value: activityConfigData?.process.name,
+                            class: 'pt-1'
+                        }">
+                    </ng-container>
+
+                    <!-- <div class="row pt-3">
+                        <div class="col-sm-4"> Fuel </div>
+                        <div class="col-sm-8">
+                            <ng-container *ngIf="entity.length > 0">
+                                <div *ngFor="let entities of entity; let i = index">
+                                    <div class="row">
+                                        <div class="col-sm-12 fw-bold">
+                                            <li>{{ entities.name }}</li>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div> -->
+                </mat-card>
+
+                <mat-card class="border cardOverwrite mt-3">
+                    <ng-container *ngTemplateOutlet="labelValue; context: {
+                            label: 'Data Input Method',
+                            value: activityConfigData?.dataInputMethod.name,
+                            class: 'pt-1'
+                        }">
+                    </ng-container>
+
+                    <ng-container
+                        *ngIf="activityConfigData.dataInputMethod.keyID == DataInputMethodKeyIDEnum.METER_READING">
+                        <div class="cardTitle pb-1 mt-3">
+                            Meter
+                        </div>
+
+                        <ng-container *ngTemplateOutlet="labelValue; 
+                            context: {
+                                label: 'Rollover Value',
+                                value: activityConfigData.meterRollover.value,
+                                class: 'pt-1'
+                            }">
+                        </ng-container>
+
+                        <ng-container *ngTemplateOutlet="labelValue; 
+                            context: {
+                                label: 'Unit',
+                                value: activityConfigData.meterRollover.unit.uomName,
+                                class: 'pt-1'
+                            }">
+                        </ng-container>
+                    </ng-container>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<ng-template #labelValue let-label="label" let-value="value" let-class="class" let-valueClass="valueClass">
+    <div class="row" [class]="class">
+        <div class="col-sm-4">
+            {{ label }}:
+        </div>
+        <div class="col-sm-8 fw-bold" [class]="valueClass">
+            {{ value ? value : COMMON_CONSTANT.HYPHEN }}
+        </div>
+    </div>
+</ng-template>

@@ -1,0 +1,187 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+    <symbol id="exclamation-triangle-fill" fill="#fd7e14" viewBox="0 0 16 16">
+        <path
+            d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+    </symbol>
+</svg>
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Update {{ tabType }} Record</div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-12">
+                <form [formGroup]="updateInOutsourcingFG">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <mat-form-field class="matFieldWidth100"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Business entity name</mat-label>
+                                <input matInput placeholder="Business entity name" type="text"
+                                    formControlName="entityName" />
+                                <mat-error *ngIf="errorHandling('entityName', 'required')">
+                                    Business entity name is required
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label>Business entity start year</mat-label>
+                                <mat-select formControlName="entityStartYear">
+                                    <mat-option disabled>Select Business entity base year</mat-option>
+                                    <mat-option *ngFor="let years of year" [value]="years">
+                                        {{ years }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="errorHandling('entityStartYear', 'required')">
+                                    Business entity start year is required
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">{{ tabType }} description</mat-label>
+                                <input class="formPlaceholder" matInput formControlName="description" [maxlength]="maxLength" #input />
+                                <mat-hint>Total number of character remaining: {{input.value.length}} /{{maxLength}}</mat-hint>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <mat-form-field (click)="openDatepicker(date)" (keydown.enter)="openDatepicker(date)"
+                                (keydown.arrowdown)="openDatepicker(date)" class="matFieldWidth100"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">{{ tabType }} date </mat-label>
+                                <input matInput class="noFocus" (dateInput)="formatDate('eventDate')" [matDatepicker]="date"
+                                    formControlName="eventDate" [max]="today" />
+                                <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+                                <mat-datepicker #date disabled="false"></mat-datepicker>
+                                <mat-error *ngIf="errorHandling('eventDate', 'required')">
+                                    {{ tabType }} date is required
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Select activity type</mat-label>
+                                <mat-select formControlName="activityID" multiple>
+                                    <mat-option *ngFor="let activity of activityList" [value]="activity['id']">
+                                        {{ activity.name }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="errorHandling('activityID', 'required')">
+                                    Activity is required
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <ng-container *ngIf="updateInOutsourcingFG.controls['entityStartYear'].value > baseYear">
+                        <div class="extraInfoCard mb-4">
+                            <div class="alert alert-warning m-0 roundedBorder warningCardWidth">
+                                <div class="d-flex align-items-center">
+                                    <svg class="bi flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                                        <use xlink:href="#exclamation-triangle-fill" />
+                                    </svg>
+                                        <div class="mt-2">For submitting the record you have to confirm emissions for atleast one year.</div>
+                                    </div>
+                            </div>
+                        </div>
+                    </ng-container>
+
+                    <div class="row" *ngIf="showEmissionYear">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="card-title">
+                                    <div class="cardTitle">
+                                        Enter emissions
+                                    </div>
+                                </div>
+                            </div>
+                            <ng-container *ngIf="noEntityYearRange && baseYear != null">
+                                <div class="row">
+                                    <div class="col-sm-2">
+                                        {{ noEntityYearRange }}
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="d-flex align-items-center">
+                                            <svg fill="#fd7e14"
+                                                class="exclamation-triangle-fill flex-shrink-0 fs-5 dialogHeaderIcon verifiedIcon me-2"
+                                                viewBox="0 0 16 16">
+                                                <path
+                                                    d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+                                            </svg>
+                                            <span *ngIf="updateInOutsourcingFG.controls['entityStartYear'].value < baseYear">
+                                                Not applicable
+                                            </span>
+                                            <span *ngIf="updateInOutsourcingFG.controls['entityStartYear'].value > baseYear">
+                                                Business entity did not exist in this year
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+                            <ng-container *ngFor="let years of emissionYear">
+                                <div class="row mt-4">
+                                    <ng-container>
+                                        <div class="col-sm-2">
+                                            {{ years }}
+                                            <span *ngIf="(years != baseYear) && (years >= baseYear)"> (optional)
+                                            </span>
+                                        </div>
+
+                                        <div class="col-sm-4" *ngIf="years >= baseYear">
+                                                <button *ngIf="fillEmissionYear.includes(years)" class="btn btn-link btn-sm"
+                                                    type="button" (click)="openGhgEmissionDialog(years,'update')">
+                                                    {{ 'Update Emission' }}
+                                                </button>
+                                                <button *ngIf="!fillEmissionYear.includes(years)" class="btn btn-link btn-sm"
+                                                    type="button" (click)="openGhgEmissionDialog(years, 'create')">
+                                                    {{ 'Enter Emission' }}
+                                                </button>
+                                        </div>
+                                        <div class="col-sm-6 text-danger"
+                                            *ngIf="(years == baseYear) && emissionsForBaseYearRequired">
+                                            Please enter emissions for the base year.
+                                        </div>
+                                        <div class="col-sm-6 text-danger" *ngIf="resetEmissionList.includes(years) && resetEmissionDataRequired">
+                                            Please update emissions for selected activity.
+                                        </div>
+
+                                    </ng-container>
+                                </div>
+                            </ng-container>
+
+                        </div>
+                    </div>
+
+                    <div class="row pt-4">
+                        <div class="col-sm-12">
+                            <div class="float-end">
+                                <button class="btn btn-secondary me-2" type="button" (click)="location.back();">
+                                    {{ ButtonLabelEnum.CANCEL_BTN_LABEL }}
+                                </button>
+                                <button class="btn btn-success" type="button" [ngClass]="{'disabled': isEqual}"
+                                    (click)="updateInOutSource()">
+                                    {{ ButtonLabelEnum.SUBMIT_BTN_LABEL }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,150 @@
+<mat-card class="cardOverwrite border">
+    <div class="cardTitle pb-2"> Details </div>
+    <form [formGroup]="activityConfigFG">
+
+        <div div formGroupName="activityConfig" class="row">
+            <div class="col-sm-6">
+                <mat-form-field class="matFieldWidth100"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Activity form name</mat-label>
+                    <input formControlName="configName" type="text" matInput required>
+                    <mat-error *ngIf="errorHandling('activityConfig.configName', 'required')">
+                        {{ formErrorEnum.REQUIRED }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div formGroupName="activityConfigData">
+            <div class="row">
+                <div class="col-sm-6">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Select process</mat-label>
+                        <mat-select formControlName="processID" required
+                            (selectionChange)="getProcessByID(currentOrgID, $event.value)">
+                            <mat-option>
+                                <ngx-mat-select-search [formControl]="processSearchUtil.filterFC"
+                                    placeholderLabel="Search by name" noEntriesFoundLabel="No matching name found.">
+                                </ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option *ngFor="let process of processSearchUtil.filteredEntities | async"
+                                [value]="process.id">
+                                <span class="d-flex justify-content-between">
+                                    {{ process.name }}
+                                </span>
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="errorHandling('activityConfigData.processID', 'required')">
+                            {{ formErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th class="fw-normal">Precursor Name</th>
+                        <th class="fw-normal ps-4">Entity Sources</th>
+                        <th class="fw-normal ps-4">Source</th>
+                        <th class="fw-normal ps-4">Supplier</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngIf="productNamesWithSources.length == 0">
+                        <td class="pt-2">--</td>
+                        <td class="ps-4 pt-2 ">--</td>
+                        <td class="ps-4 pt-2">--</td>
+                        <td class="ps-4 pt-2">--</td>
+                    </tr>
+                    <tr *ngFor="let product of productNamesWithSources; let i = index">
+                        <td class="pt-2">{{ product.productName }}</td>
+                        <td class="ps-4 pt-2">
+                            <li *ngFor="let entitySource of product.entitySources">{{ entitySource }}</li>
+                        </td>
+                        <td class="ps-4 pt-2">
+                            <mat-form-field class="matFieldWidth100"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Select precursor source</mat-label>
+                                <mat-select formControlName="inputOutputSourceID" required
+                                    (change)="alterValidatorsForSource(i,$event.value)">
+                                    <mat-option *ngFor="let source of precursorSource" [value]="source.id" (change)="alterValidatorsForSource(source.keyID)">
+                                        <span class="d-flex justify-content-between">{{ source.description }}</span>
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="radioError('activityConfigData.inputOutputSourceID', 'required')">
+                                    {{ formErrorEnum.REQUIRED }}
+                                </mat-error>
+                            </mat-form-field>
+                        </td>
+                        <td class="ps-4 pt-2">
+                            <div
+                                *ngIf="this.activityConfigFG.get('activityConfigData').get('inputOutputSourceID').value == '16'">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Select supplier</mat-label>
+                                    <mat-select formControlName="supplierID" required>
+                                        <mat-option *ngFor="let supplier of suppliers" [value]="supplier.supplierID">
+                                            <span class="d-flex justify-content-between">{{ supplier.supplierName
+                                                }}</span>
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="errorHandling('activityConfigData.supplierID', 'required')">
+                                        {{ formErrorEnum.REQUIRED }}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="row">
+                <mat-label class="formLabel mb-2 mt-3"> Enter data using*</mat-label>
+                <mat-radio-group formControlName="dataInputMethodStdID">
+                    <mat-radio-button class="col-sm-3" *ngFor="let input of dataInputMethodList" [value]="input.id"
+                        (change)="alterValidatorsForDataInput(input.keyID)">
+                        {{ input.name }}
+                    </mat-radio-button>
+                    <mat-error class="ms-2 mt-2"
+                        *ngIf="radioError('activityConfigData.dataInputMethodStdID', 'required')">
+                        {{ formErrorEnum.REQUIRED }}
+                    </mat-error>
+                </mat-radio-group>
+            </div>
+            <div *ngIf="isMeterReading">
+                <div class="row mt-3">
+                    <div class="col-sm-3">
+                        <mat-form-field class="matFieldWidth100"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel">Meter rollover value</mat-label>
+                            <input class="formPlaceholder" matInput min="0" type="number"
+                                placeholder="Meter rollover value" formControlName="meterRolloverValue" />
+                            <mat-error *ngIf="errorHandling('activityConfigData.meterRolloverValue', 'min')">
+                                Meter reading can't be negative.
+                            </mat-error>
+                            <mat-error *ngIf="errorHandling('activityConfigData.meterRolloverValue', 'required')">
+                                {{ formErrorEnum.REQUIRED }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-3">
+                        <mat-form-field class="matFieldWidth100"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel">Meter unit</mat-label>
+                            <mat-select formControlName="meterRolloverUnitID">
+                                <mat-option *ngFor="let unit of distanceUnit" [value]="unit.id">
+                                    {{ unit.name }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="errorHandling('activityConfigData.meterRolloverUnitID', 'required')">
+                                {{ formErrorEnum.REQUIRED }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</mat-card>

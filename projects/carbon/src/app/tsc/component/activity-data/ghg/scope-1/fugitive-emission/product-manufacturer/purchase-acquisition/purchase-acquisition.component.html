@@ -1,0 +1,173 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="mb-2">
+                <lib-message-alert [messageAlertTypeInp]="messageAlertTypeEnum.INFO"
+                    [messageAlertIconInp]="messageAlertIconEnum.INFO_ICON"
+                    contentInp="Records of gases purchased or otherwise acquired.">
+                </lib-message-alert>
+            </div>
+        </div>
+
+        <div class="headerRightContainer">
+            <button type="button" class="btn btn-success btnBase" (click)="createPurchaseAcquisitionRecord('CREATE')"
+                *ngIf="showAddRecordButton">
+                <fa-icon [icon]="faPlus"></fa-icon>
+                Purchase Record
+            </button>
+        </div>
+    </div>
+
+    <button type="button" class="d-none" #refreshBtn>refresh</button>
+
+    <div class="ms-3 me-3">
+        <lib-date-filter #filterChild></lib-date-filter>
+    </div>
+
+    <div class="ms-3 mb-4">
+        <!-- Below records are from
+        <strong> {{this.filterChild.startDate.value | date: 'dd-MMM-yyyy' }} </strong> to
+        <strong> {{this.filterChild.endDate.value| date: 'dd-MMM-yyyy' }} </strong> -->
+        <button matRipple [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" class="btn btn-link float-end"
+            (click)="clearAllFilters()" [disabled]="chips?.length == 0">
+            <span class="material-symbols-outlined fs-6">
+                filter_list_off
+            </span>
+            Reset Filters
+        </button>
+    </div>
+
+    <div class="row mx-2 h-auto mb-3" [ngClass]="{'d-none': chips?.length == 0}">
+        <div class="col-sm-10 py-1 chipListContainer">
+            <mat-chip-list #chipList>
+                <mat-chip *ngFor="let chip of chips" (removed)="removeChip(chip)">
+                    <span class="fw-normal">{{ chip['filter'] }}</span>
+                    <button matChipRemove>
+                        <mat-icon>cancel</mat-icon>
+                    </button>
+                </mat-chip>
+            </mat-chip-list>
+        </div>
+    </div>
+
+    <div class="overflowX customScrollBar h100">
+        <table class="w-100" mat-table [dataSource]="dataSource" matSort matSortActive="recordID"
+            matSortDirection="desc" matSortDisableClear>
+
+            <ng-container matColumnDef="recordID">
+                <th mat-header-cell class="col-recordID" *matHeaderCellDef mat-sort-header disableClear>
+                    Record ID</th>
+                <td class="col-recordID" mat-cell *matCellDef="let row">
+                    {{ row.recordID ? (row.recordID) : COMMON_CONSTANT.HYPHEN }}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="date">
+                <th mat-header-cell class="col-date" *matHeaderCellDef>Purchased / Acquired on</th>
+
+                <td class="col-date" mat-cell *matCellDef="let row">
+                    {{row.recordDate | date: 'dd-MMM-yyyy'}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="gasName">
+                <th class="col-gas" mat-header-cell *matHeaderCellDef>
+                    <funnel-filter #gasSelect header="Gas" type="mono" value="id" view="name" [entityList]="gasList"
+                        [selectFC]="gasNameFC" [active]="gasFlag" (mono)="gasFlag = true;"
+                        (selected)="applyFilter($event,'gas')" headerWidth="4">
+                    </funnel-filter>
+                </th>
+                <td class="col-gasQuantity" mat-cell *matCellDef="let row">
+                    <span class="cursorPointer" matTooltipPosition="above" matTooltip="{{row.gasName}}"
+                        matTooltipClass="nameTooltip">
+                        {{ columnDisplay(row.gasName,18) }}
+                    </span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="gasQuantity">
+                <th mat-header-cell class="col-gasQuantity text-end" *matHeaderCellDef>
+                    Quantity of gas purchased (kg)</th>
+                <td class="px-3 col-gasQuantity text-end" mat-cell *matCellDef="let row">
+                    <span class="cursorPointer" matTooltipPosition="above"
+                        matTooltip="{{row.gasQuantity}} {{row.gasQuantityUnitName}}" matTooltipClass="nameTooltip">
+                        {{ row.gasQuantity ? (row.gasQuantity | number: '1.2-3') : 'NA'}}
+                    </span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="purchaseTypeName">
+                <th class="col-purchaseType ps-5" mat-header-cell *matHeaderCellDef>
+                    <funnel-filter #purchaseTypeSelect header="Purchase type" type="mono" value="id" view="name"
+                        [entityList]="purchaseTypeList" [selectFC]="purchaseTypeFC" [active]="purchaseTypeFlag"
+                        (mono)="purchaseTypeFlag = true;" (selected)="applyFilter($event,'purchase')" headerWidth="4">
+                    </funnel-filter>
+                </th>
+                <td class="col-purchaseType ps-5" mat-cell *matCellDef="let row">
+                    <span class="cursorPointer" matTooltipPosition="above" matTooltip="{{row.equipmentTypeName}}"
+                        matTooltipClass="nameTooltip">
+                        {{ columnDisplay(row.equipmentTypeName,30) }}
+                    </span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="doc">
+                <th class="col-doc" mat-header-cell *matHeaderCellDef disableClear> Bill
+                </th>
+                <td class="col-doc" mat-cell *matCellDef="let row">
+                    <a href="{{row.docPath}}" target="_blank" [ngClass]="{'d-none': row.docPath  == null}">View bill</a>
+                    <button type="button" class="button btn btn-primary" (click)="uploadFile('Create', row.id)"
+                        [ngClass]="{'d-none': row.docPath  != null}"> Upload bill</button>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="note">
+                <th class="col-note text-end" mat-header-cell *matHeaderCellDef>
+                </th>
+                <td class="col-note text-end" mat-cell *matCellDef="let row">
+                    <span class="material-symbols-outlined cursorPointer mt-2" (click)="openNoteDialog(row)"
+                        *ngIf="row.note != null && row.note.length != 0">
+                        description
+                    </span>
+                    <span class="me-2" *ngIf="row.note == null || row.note.length == 0">
+                        {{ COMMON_CONSTANT.HYPHEN }}
+                    </span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td class="text-center" mat-cell *matCellDef="let row">
+                    <div class="mt-2 btn-group" ngbDropdown placement="left">
+                        <button type="button" ngbDropdownToggle class="dropdown-after dropdownAfter btn">
+                            <fa-icon [icon]="faEllipsisV"></fa-icon>
+                        </button>
+                        <div ngbDropdownMenu>
+                            <button class="dropdown-item" (click)="updatePurchaseAcquisitionRecord('UPDATE',row)">
+                                {{ ButtonLabelEnum.UPDATE_BTN_LABEL }}
+                            </button>
+                            <a class="dropdown-item btn btn-outline-danger" (click)="confirmDelete(row)">
+                                {{ ButtonLabelEnum.DELETE_BTN_LABEL }}
+                            </a>
+                        </div>
+                    </div>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                    {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+                </td>
+            </tr>
+
+        </table>
+    </div>
+
+    <mat-paginator #paginator [length]="resultLength" [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION"
+        [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE" showFirstLastButtons>
+    </mat-paginator>
+
+</div>

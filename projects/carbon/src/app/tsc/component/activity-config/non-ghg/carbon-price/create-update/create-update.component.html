@@ -1,0 +1,54 @@
+<mat-card class="cardOverwrite border">
+    <div class="ps-2">
+        <div class="cardTitle">Details</div>
+    </div>
+
+    <form [formGroup]="activityConfigFG">
+        <ng-container *ngIf="origin == ActivityConfigEnum.PFF">
+            <div formGroupName="activityConfig" class="row">
+                <div class="col-sm-7">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Activity form name</mat-label>
+                        <input placeholder="Activity form name" matInput formControlName="configName" type="text"
+                            required>
+                        <mat-error *ngIf="errorHandling(activityConfigAC, 'configName', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </ng-container>
+
+        <ng-container formArrayName="activityConfigSource">
+            <ng-container *ngFor="let source of activityConfigSourceFA.controls; let i = index;">
+                <ng-container [formGroupName]="i">
+                    <div class="row">
+                        <div class="col-sm-7">
+                            <mat-form-field class="matFieldWidth100"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Select product</mat-label>
+                                <mat-select formControlName="sourceID" multiple required>
+                                    <mat-option>
+                                        <ngx-mat-select-search [formControl]="productSearchUtil.filterFC"
+                                            placeholderLabel="Search by product name"
+                                            [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                        </ngx-mat-select-search>
+                                    </mat-option>
+                                    <mat-option *ngFor="let product of productSearchUtil.filteredEntities | async"
+                                        [value]="product.id" (click)="setSourceTypeID(i, product)">
+                                        <span class="d-flex justify-content-between">
+                                            {{ product.name }}</span>
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="errorHandlingFA(source, 'sourceID', 'required')">
+                                    {{ FormErrorEnum.REQUIRED }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </ng-container>
+            </ng-container>
+        </ng-container>
+    </form>
+</mat-card>

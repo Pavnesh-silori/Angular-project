@@ -1,0 +1,33 @@
+//to remove lines between table cells
+.mat-cell,
+.mat-header-cell {
+    border: none !important;
+}
+
+td.mat-cell,
+td.mat-footer-cell {
+    padding: 0;
+    border-bottom-style: none;
+}
+
+// .tablePadding {
+//     padding-left: 100px !important;
+// }
+
+.columnWidth1 {
+    min-width: 10vw;
+}
+
+.columnWidth2 {
+    min-width: 8vw;
+}
+
+.columnWidth3 {
+    min-width: 5vw;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

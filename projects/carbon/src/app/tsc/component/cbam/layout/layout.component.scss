@@ -1,0 +1,29 @@
+.content {
+    display: flex;
+    overflow: auto;
+}
+
+.side-bar {
+    // @extend .max-height;
+    transition: width 0.5s;
+
+    width: 270px;
+    height: 100%;
+    &.closed-sidebar {
+        width: 30px !important;
+    }
+}
+
+
+.main-content {
+    // @extend .max-height;
+
+    transition: width 0.5s;
+    overflow-y: auto;
+    width: calc(100% - 270px);
+    max-height: calc(100vh - 170px) !important;
+    
+    &.full-width {
+        width: calc(100% - 50px) !important;
+    }
+}

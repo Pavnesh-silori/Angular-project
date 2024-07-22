@@ -1,0 +1,69 @@
+<ng-container *ngIf="activityConfig">
+    <mat-card class="border cardOverwrite">
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+                                label: 'Process',
+                                value: activityConfig.activityConfigData.processName,
+                                class: 'pt-1'
+                            }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Electricity Source',
+                        value: getSouceList(activityConfig.activityConfigData.inputOutputSource),
+                        class: 'pt-3'
+                    }">
+        </ng-container>
+
+        <ng-container *ngIf="activityConfig.activityConfigData.inputOutputSource.keyID == SourceKeyID.GRID">
+            <ng-container *ngTemplateOutlet="labelValue; context: {
+                            label: 'Grid Supplier',
+                            value: getGridSupplierList(activityConfig.activityConfigSource),
+                            class: 'pt-3'
+                        }">
+            </ng-container>
+        </ng-container>
+
+        <!-- <ng-container *ngIf="getPrivateSupplierList(activityConfig.activityConfigSource)">
+            <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'Private Supplier',
+            value: getPrivateSupplierList(activityConfig.activityConfigSource),
+            class: 'pt-3'
+        }">
+            </ng-container>
+        </ng-container> -->
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+                                label: 'Entered data using',
+                                value: activityConfig.activityConfigData.dataInputMethodStdKeyID,
+                                class: 'pt-3'
+                            }">
+        </ng-container>
+
+        <ng-container
+            *ngIf="activityConfig.activityConfigData.dataInputMethodStdKeyID == DataInputMethodKeyIDEnum.METER_READING">
+            <ng-container *ngTemplateOutlet="labelValue; context: {
+                                    label: 'Meter rollover value',
+                                    value: activityConfig.activityConfigData.meterRolloverValue, 
+                                    class: 'pt-3'
+                                }">
+            </ng-container>
+            <ng-container *ngTemplateOutlet="labelValue; context: {
+                                    label: 'Meter unit ',
+                                    value: activityConfig.activityConfigData.meterRollover.unit.uomName, 
+                                    class: 'pt-3'
+                                }">
+            </ng-container>
+        </ng-container>
+    </mat-card>
+</ng-container>
+
+<ng-template #labelValue let-label="label" let-value="value" let-class="class" let-valueClass="valueClass">
+    <div class="row" [class]="class">
+        <div class="col-sm-4">
+            {{ label }}
+        </div>
+        <div class="col-sm-8 fw-bold" [class]="valueClass">
+            {{ value ? value : COMMON_CONSTANT.HYPHEN }}
+        </div>
+    </div>
+</ng-template>

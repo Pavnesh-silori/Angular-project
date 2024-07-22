@@ -1,0 +1,274 @@
+<mat-card class="cardOverwrite border">
+    <mat-checkbox *ngIf="false" [formControl]="saveAsPffFC">
+        <div class="cardTitle pb-3">
+            Do you want to save it as activity form?
+        </div>
+    </mat-checkbox>
+
+    <div class="cardTitle pb-2"> Details </div>
+
+    <form [formGroup]="activityConfigFG">
+        <div class="row">
+            <div *ngIf="origin == 'pff'" formGroupName="activityConfig" class="col-sm-8">
+                <mat-form-field class="matFieldWidth100"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Activity form name</mat-label>
+                    <input matInput type="text" formControlName="configName">
+                    <mat-error *ngIf="errorHandling('configName', 'required')">
+                        Activity form name is mandatory
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div formGroupName="activityConfigSource" class="col-sm-8">
+                <mat-form-field class="matFieldWidth100"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Select supplier</mat-label>
+                    <mat-select formControlName="sourceID">
+                        <mat-option>
+                            <ngx-mat-select-search [formControl]="supplierSearchUtil.filterFC"
+                                placeholderLabel="Search by supplier name"
+                                noEntriesFoundLabel="No matching supplier found.">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option *ngFor="let suppliers of supplierSearchUtil.filteredEntities | async"
+                            [value]="suppliers['supplierID']">
+                            {{ suppliers['supplierName'] }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="errorHandlingACS('sourceID', 'required')">
+                        Select a supplier
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div *ngIf="noSuppliers" class="col-sm-4 centerAlignVertical mb-3">
+                <span class="material-symbols-outlined">
+                    info
+                </span>
+                <span class="ms-2">
+                    You have not created any supplier. Please create one
+                    <a [routerLink]="'/source/supplier/page'" target="_blank">here</a>.
+                </span>
+            </div>
+        </div>
+
+        <div formGroupName="activityConfigData">
+            <div class="row">
+                <div class="col-sm-10">
+                    <div class="ps-1 radioBtnField">
+                        <div class="radioBtnGroupLabel"> Do you have a contractual instrument? </div>
+                        <mat-radio-group formControlName="haveContractualInstrument"
+                            (change)="contractualInstrumentChange($event.value)">
+                            <div class="row my-2">
+                                <div class="col-sm-6">
+                                    <mat-radio-button class="radioBtnLabel" [value]="YES">
+                                        Yes
+                                    </mat-radio-button>
+                                </div>
+                                <div class="col-sm-6">
+                                    <mat-radio-button class="radioBtnLabel" [value]="NO">
+                                        No
+                                    </mat-radio-button>
+                                </div>
+                                <mat-error class="radioBtnGroupError ms-1 mt-1" *ngIf="
+                                                        errorHandlingACD('haveContractualInstrument', 'required') && 
+                                                        haveContractualInstrumentAC.touched">
+                                    Select an option
+                                </mat-error>
+                            </div>
+                        </mat-radio-group>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="haveContractualInstrumentAC.value == YES" class="row">
+                <div class="col-sm-5">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Select contractual instrument</mat-label>
+                        <mat-select formControlName="contractualInstrumentID">
+                            <mat-option>
+                                <ngx-mat-select-search [formControl]="contInst.filterFC"
+                                    placeholderLabel="Search by contractual instrument's name"
+                                    noEntriesFoundLabel="No matching contractual instrument found.">
+                                </ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option *ngFor="let contractualInstruments of contInst.filteredEntities | async"
+                                [value]="contractualInstruments['id']">
+                                {{ contractualInstruments['name'] }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="errorHandlingACD('contractualInstrumentID', 'required')">
+                            Select an option
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-3 alignSuffix" formGroupName="energy">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel"> Percentage </mat-label>
+                        <input matInput type="number" placeholder="0" min="0" max="100" formControlName="percentage"
+                            (blur)="checkValue()">
+                        <span matSuffix class="matSuffix">% renewable</span>
+                        <mat-error>
+                            Invalid value
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row pt-1">
+                <div class="col-sm-10">
+                    <div *ngIf="haveContractualInstrumentAC.value == NO" class="ps-1 radioBtnField">
+                        <div class="radioBtnGroupLabel"> Do you know your energy consumption? </div>
+                        <mat-radio-group formControlName="knowsEnergyConsumption"
+                            (change)="knowsConsumptionChange($event.value)">
+                            <div class="row my-2">
+                                <div class="col-sm-6">
+                                    <mat-radio-button class="radioBtnLabel" [value]="YES">
+                                        Yes
+                                    </mat-radio-button>
+                                </div>
+                                <div class="col-sm-6">
+                                    <mat-radio-button class="radioBtnLabel" [value]="NO">
+                                        No, use an estimation method
+                                    </mat-radio-button>
+                                </div>
+                                <mat-error class="radioBtnGroupError ms-1 mt-1"
+                                    *ngIf="errorHandlingACD('knowsEnergyConsumption', 'required') && knowsEnergyConsumptionAC.touched">
+                                    Select how you want to report your electricity consumption
+                                </mat-error>
+                            </div>
+                        </mat-radio-group>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-10 pt-1" *ngIf="
+                                haveContractualInstrumentAC.value == YES || 
+                                knowsEnergyConsumptionAC.value == YES">
+                <div class="ps-1 radioBtnField">
+                    <div class="radioBtnGroupLabel"> Enter data using </div>
+                    <mat-radio-group formControlName="dataInputMethodID">
+                        <div class="row my-2">
+                            <div class="col-sm-6" *ngFor="let dataEntryMethods of dataEntryMethod">
+                                <mat-radio-button class="radioBtnLabel"
+                                    (change)="dataEntryMethodChange(dataEntryMethods['keyID'])"
+                                    [value]="dataEntryMethods['id']">
+                                    {{ dataEntryMethods['name'] }}
+                                </mat-radio-button>
+                            </div>
+                            <mat-error class="radioBtnGroupError ms-1 mt-1"
+                                *ngIf="errorHandlingACD('dataInputMethodID', 'required') && dataInputMethodIDAC.touched">
+                                Select how you want to enter data
+                            </mat-error>
+                        </div>
+                    </mat-radio-group>
+                </div>
+            </div>
+
+            <div *ngIf="dataEntryMethodUsed == DataEntryMethod.METER_READING" class="row">
+                <div class="col-sm-5">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel"> Meter rollover value </mat-label>
+                        <input matInput type="number" placeholder="00000000" min="0"
+                            formControlName="meterRolloverValue">
+                        <mat-error *ngIf="errorHandlingACD('meterRolloverValue', 'required')">
+                            Enter a meter rollover value
+                        </mat-error>
+                        <mat-error *ngIf="errorHandlingACD('meterRolloverValue', 'min')">
+                            Meter rollover value can not be negative
+                        </mat-error>
+                        <mat-error *ngIf="errorHandlingACD('meterRolloverValue', 'max')">
+                            Rollover value cannot exceed 10 characters
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-3">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel"> Meter unit </mat-label>
+                        <mat-select formControlName="meterReadingUnitID">
+                            <mat-option>
+                                <ngx-mat-select-search [formControl]="energyUnitSearchUtil.filterFC"
+                                    placeholderLabel="Search by unit name"
+                                    noEntriesFoundLabel="No matching unit found.">
+                                </ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option *ngFor="let units of energyUnitSearchUtil.filteredEntities | async"
+                                [value]="units.id">
+                                <span class="d-flex justify-content-between">
+                                    {{ units.name }} - <span>{{ units.uomCode }}</span>
+                                </span>
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="errorHandlingACD('meterReadingUnitID', 'required')">
+                            Select unit
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="col-sm-10 pt-1" *ngIf="knowsEnergyConsumptionAC.value == NO">
+                <div class="ps-1 radioBtnField">
+                    <div class="radioBtnGroupLabel"> Select estimation method </div>
+                    <mat-radio-group formControlName="dataInputMethodID">
+                        <div class="row my-2">
+                            <div class="col-sm-6" *ngFor="let estimationMethods of estimationMethod">
+                                <mat-radio-button class="radioBtnLabel" [value]="estimationMethods['id']"
+                                    (change)="estimationMethodChange(estimationMethods['keyID'])">
+                                    {{ estimationMethods['name'] }}
+                                </mat-radio-button>
+                            </div>
+                            <mat-error class="radioBtnGroupError ms-1 mt-1"
+                                *ngIf="errorHandlingACD('dataInputMethodID', 'required') && dataInputMethodIDAC.touched">
+                                Select an energy estimation method
+                            </mat-error>
+                        </div>
+                    </mat-radio-group>
+                </div>
+            </div>
+
+            <div *ngIf="estimationMethodUsed == DataEstimationMethod.AREA_BASED" class="col-sm-8">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <mat-form-field class="matFieldWidth100"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel">Total facility area</mat-label>
+                            <input matInput type="number" formControlName="facilityArea" min="0">
+                            <mat-error *ngIf="errorHandlingACD('facilityArea', 'required')">
+                                Area value is mandatory
+                            </mat-error>
+                            <mat-error *ngIf="errorHandlingACD('facilityArea', 'min')">
+                                Area value can not be negative
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-sm-4">
+                        <mat-form-field class="matFieldWidth100"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel">Area unit</mat-label>
+                            <mat-select formControlName="facilityAreaUnitID">
+                                <mat-option>
+                                    <ngx-mat-select-search [formControl]="areaUnitSearchUtil.filterFC"
+                                        placeholderLabel="Search by unit name"
+                                        noEntriesFoundLabel="No matching unit found.">
+                                    </ngx-mat-select-search>
+                                </mat-option>
+                                <mat-option *ngFor="let units of areaUnitSearchUtil.filteredEntities | async"
+                                    [value]="units.id">
+                                    <span class="d-flex justify-content-between">
+                                        {{ units.name }} - <span>{{ units.uomCode }}</span>
+                                    </span>
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="errorHandlingACD('facilityAreaUnitID', 'required')">
+                                Select unit
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</mat-card>

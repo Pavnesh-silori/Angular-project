@@ -1,0 +1,94 @@
+<ng-container *ngIf="activityConfig">
+    <mat-card class="border cardOverwrite">
+        <div class="cardTitle pb-2">
+            Process
+        </div>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'Name',
+            value: this.activityConfig.activityConfigData.process.name,
+            class: 'pt-1'
+        }">
+        </ng-container>
+
+        <div class="row">
+            <div class="col-sm-9">
+                <table class="table table-bordered mt-3">
+                    <thead>
+                        <tr>
+                            <th>{{ entityTypeLabel }}</th>
+                            <th>Supplier</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ng-container
+                            *ngIf="this.activityConfig.activityConfigData.ioSourceConfig.length > 0; else noEntitySource">
+                            <tr *ngFor="let entity of this.activityConfig.activityConfigData.ioSourceConfig">
+                                <td>{{ entity.inputOutputSource.name }}</td>
+                                <td>
+                                    <ng-container *ngIf="entity.source; else hyphen">
+                                        <div *ngFor="let source of entity.source">
+                                            {{ source.name ? source.name : COMMON_CONSTANT.HYPHEN }}<br>
+                                        </div>
+                                    </ng-container>
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </mat-card>
+
+    <mat-card class="border cardOverwrite mt-3">
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'Data Input Method',
+            value: this.activityConfig.activityConfigData.dataInputMethod.name,
+            class: 'pt-1'
+        }">
+        </ng-container>
+
+        <ng-container
+            *ngIf="this.activityConfig.activityConfigData.dataInputMethod.keyID == DataInputMethodKeyIDEnum.METER_READING">
+            <div class="cardTitle mt-3">
+                Meter
+            </div>
+
+            <ng-container *ngTemplateOutlet="labelValue; context: {
+                label: 'Rollover Value',
+                value: this.activityConfig.activityConfigData.meterRollover.value,
+                class: 'pt-1'
+            }">
+            </ng-container>
+
+            <ng-container *ngTemplateOutlet="labelValue; context: {
+                label: 'Unit',
+                value: this.activityConfig.activityConfigData.meterRollover.unit.uomName,
+                class: 'pt-1'
+            }">
+            </ng-container>
+        </ng-container>
+    </mat-card>
+</ng-container>
+
+<ng-template #labelValue let-label="label" let-value="value" let-class="class" let-valueClass="valueClass">
+    <div class="row" [class]="class">
+        <div class="col-sm-4">
+            {{ label }}
+        </div>
+        <div class="col-sm-8 fw-bold" [class]="valueClass">
+            {{ value ? value : COMMON_CONSTANT.HYPHEN }}
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #noEntitySource>
+    <tr>
+        <td>{{ COMMON_CONSTANT.HYPHEN }}</td>
+        <td>{{ COMMON_CONSTANT.HYPHEN }}</td>
+    </tr>
+</ng-template>
+
+<ng-template #hyphen>
+    {{ COMMON_CONSTANT.HYPHEN }}
+</ng-template>

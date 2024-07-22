@@ -1,0 +1,203 @@
+<div class="card cardOverwrite">
+    <div class="card-body">
+        <div class="row" *ngIf="productAndServiceM">
+            <div class="col-sm-12">
+                <mat-card class="cardOverwrite">
+                    <!-- <span *ngIf="tabType == ProductServiceTabTypeEnum.SERVICE">
+                        <ng-container *ngTemplateOutlet="labelValue; context: {
+                            label: 'Product Code',
+                            value: productAndServiceM.code,
+                            class: ''
+                        }">
+                        </ng-container>
+                    </span>
+
+
+                    <span *ngIf="tabType == ProductServiceTabTypeEnum.PRODUCT">
+                        <ng-container *ngTemplateOutlet="labelValue; context: {
+                            label: 'Service Code',
+                            value: productAndServiceM.code,
+                            class: ''
+                        }">
+                        </ng-container>
+                    </span> -->
+
+                    <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: tabType == ProductServiceTabTypeEnum.SERVICE ? 'Service Code' : 'Product Code' ,
+                        value: productAndServiceM.code,
+                        class: ''
+                    }">
+                    </ng-container>
+
+                    <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Name',
+                        value: productAndServiceM.name,
+                        class: 'pt-3'
+                    }">
+                    </ng-container>
+
+                    <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Description',
+                        value: productAndServiceM.description,
+                        class: 'pt-3'
+                    }">
+                    </ng-container>
+
+                    <span *ngIf="tabType == ProductServiceTabTypeEnum.PRODUCT">
+                        <ng-container *ngTemplateOutlet="labelValue; context: {
+                            label: 'Type',
+                            value: productAndServiceM.productTypeName,
+                            class: 'pt-3'
+                        }">
+                        </ng-container>
+                    </span>
+
+                    <ng-container *ngTemplateOutlet="listView; context: {
+                        label: 'Categories',
+                        value: productAndServiceM.categoryName,
+                        class: 'pt-3'
+                    }">
+                    </ng-container>
+
+                    <div *ngIf="tabType == ProductServiceTabTypeEnum.PRODUCT" class="row pt-3">
+                        <div class="col-sm-4">
+                            Is CBAM compliant product
+                        </div>
+                        <div class="col-sm-8 fw-bold">
+                            {{ productAndServiceM.isCbamCompliant == true ? 'Yes' : 'No' }}
+                        </div>
+                    </div>
+
+                    <span *ngIf="tabType == ProductServiceTabTypeEnum.PRODUCT">
+                        <ng-container *ngTemplateOutlet="labelValue; context: {
+                            label: 'CN',
+                            value: productAndServiceM.cn,
+                            class: 'pt-3'
+                        }">
+                        </ng-container>
+                    </span>
+
+                    <span *ngIf="tabType == ProductServiceTabTypeEnum.PRODUCT">
+                        <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'HSN',
+                        value: productAndServiceM.hsn,
+                        class: 'pt-3'
+                    }">
+                        </ng-container>
+                    </span>
+
+                    <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'EAN',
+                        value: productAndServiceM.ean,
+                        class: 'pt-3'
+                    }">
+                    </ng-container>
+
+                    <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'UPC',
+                        value: productAndServiceM.upc,
+                        class: 'pt-3'
+                    }">
+                    </ng-container>
+
+                    <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'ISBN',
+                        value: productAndServiceM.isbn,
+                        class: 'pt-3'
+                    }">
+                    </ng-container>
+
+                    <span *ngIf="tabType == ProductServiceTabTypeEnum.SERVICE">
+                        <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'SAC',
+                        value: productAndServiceM.sac,
+                        class: 'pt-3'
+                    }">
+                        </ng-container>
+                    </span>
+
+                    <div *ngIf="productAndServiceM" class="row pt-3">
+                        <div class="col-sm-4">
+                            Status
+                        </div>
+                        <div class="col-sm-8 fw-bold">
+                            <span [ngClass]="StatusService.getStatusClass(productAndServiceM?.status)">
+                                {{ productAndServiceM?.status ? StatusService.getStatusValue(productAndServiceM?.status)
+                                : COMMON_CONSTANT.HYPHEN }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <ng-container *ngTemplateOutlet="apiKeyLabel; context: {
+                        label: 'API Key ID',
+                        value: productAndServiceM.keyID ? productAndServiceM.keyID : null,
+                        class: 'pt-3'
+                    }">
+                    </ng-container>
+
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #apiKeyLabel let-label="label" let-value="value" let-class="class">
+    <div [ngClass]="class" class="d-flex align-items-center">
+        <div class="col-sm-4">
+            {{ label }}
+        </div>
+        <div class="col-sm-8 fw-bold d-flex align-items-center ps-2">
+            <span *ngIf="value; else noKey">
+                <span *ngIf="!showApiKey; else showKey">************</span>
+                <ng-template #showKey>{{ value }}</ng-template>
+
+                <button mat-icon-button type="button" class="icon-button border-0 " style="background: none;"
+                    (click)="showApiKey = !showApiKey">
+                    <span class="material-symbols-outlined fs-5 pt-2">
+                        {{ !showApiKey ? 'visibility_off' : 'visibility' }}
+                    </span>
+                </button>
+
+                <button mat-icon-button type="button" class="icon-button ms-2 border-0" style="background: none;"
+                    [cdkCopyToClipboard]="value" matTooltip="Copy" (click)="copyTooltip.show()"
+                    #copyTooltip="matTooltip">
+                    <span class="material-symbols-outlined fs-5 pt-2" matTooltipPosition="above" matTooltipHideDelay="0"
+                        matTooltipClass="nameTooltip">
+                        content_copy
+                    </span>
+                </button>
+            </span>
+            <ng-template #noKey>
+                <span>{{ COMMON_CONSTANT.HYPHEN }}</span>
+            </ng-template>
+        </div>
+    </div>
+</ng-template>
+
+
+
+<ng-template #labelValue let-label="label" let-value="value" let-class="class" let-valueClass="valueClass">
+    <div class="row" [class]="class">
+        <div class="col-sm-4">
+            {{ label }}
+        </div>
+        <div class="col-sm-8 fw-bold" [class]="valueClass">
+            {{ value ? value : COMMON_CONSTANT.HYPHEN }}
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #listView let-label="label" let-class="class" let-values="value">
+    <div class="row" [class]="class" *ngIf="tabType == ProductServiceTabTypeEnum.PRODUCT">
+        <div class="col-sm-4">
+            {{ label }}
+        </div>
+        <div class="col-sm-8 fw-bold">
+            <div *ngFor="let value of values">
+                <li>
+                    {{ value ? value : COMMON_CONSTANT.HYPHEN }}
+                </li>
+            </div>
+        </div>
+    </div>
+</ng-template>

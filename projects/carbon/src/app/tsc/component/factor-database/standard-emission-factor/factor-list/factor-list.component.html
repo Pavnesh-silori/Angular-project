@@ -1,0 +1,76 @@
+<div class="headerContainer pt-0">
+    <div class="headerLeftContainer">
+        <div class="pageTitle"> Emission factors </div>
+        <div class="pageSubtitle">View the standard emission factors that are used in calculation as per your
+            calculation preferences.</div>
+    </div>
+    <div class="headerRightContainer">
+        <div class="headerRightContainerInner">
+            <lib-search-bar-one *ngIf="activityKeyID != ActivityKeyIDEnum.PURCHASED_HEAT_STEAM" #searchBar
+                class="float-end" [searchBy]="activity[activityKeyID]['searchBy']"
+                (emitSearch)="searchFn($event)"></lib-search-bar-one>
+        </div>
+    </div>
+    <button #refreshBtn class="d-none"></button>
+</div>
+<div class="overflowX customScrollBar">
+    <table class="w-100" mat-table [dataSource]="dataSource" #sort matSort
+        [matSortActive]="activity[activityKeyID]['sortBy']" matSortDirection="desc" matSortDisableClear>
+
+        <ng-container *ngFor="let activities of activity[activityKeyID]['data']">
+            <ng-container [matColumnDef]="activities['column']">
+                <th class="px-3 standard-factor" mat-header-cell *matHeaderCellDef mat-sort-header
+                    [disabled]="activities['sort-disabled']">
+                    <div>
+                        <strong> {{ activities['heading'] }} </strong>
+                        <br>
+                        <div *ngIf="activities?.unit" class="float-start">({{ activities?.unit }})</div>
+                    </div>
+                </th>
+                <td class="px-3 standard-factor" mat-cell *matCellDef="let row"
+                    [ngClass]="{'text-center': row[activities['column']] == null }">
+                    <ng-container>
+                        <span *ngIf="activities?.unit; else unitColumn;">
+                            <ng-container *ngIf="activityKeyID == US_EEIO_KEY_ID; else fraction;">
+                                {{ row[activities['column']] == null?
+                                COMMON_CONSTANT.HYPHEN : row[activities['column']]}}
+                            </ng-container>
+                            <ng-template #fraction>
+                                {{ row[activities['column']] == null?
+                                COMMON_CONSTANT.HYPHEN : row[activities['column']] | number: '1.2-2'}}
+                            </ng-template>
+                        </span>
+                    </ng-container>
+                    <ng-template #unitColumn>
+                        <span *ngIf="row[activities?.['column'] + 'Unit']; else stringBlock;" #tooltip="matTooltip"
+                            matTooltipPosition="above" [matTooltip]="(row?.activities?.column + ' ' + row[activities?.['column'] + 'Unit'])?.length > 12 ? 
+                        (row[activities['column']] + ' ' + row[activities?.['column'] + 'Unit']) : ''"
+                            matTooltipClass="nameTooltip">
+                            {{ row[activities['column']] == null? COMMON_CONSTANT.HYPHEN :
+                            (row[activities['column']] + ' ' +row[activities?.['column'] + 'Unit']) | dotdotdot: 12 }}
+                        </span>
+                        <ng-template #stringBlock>
+                            <span style="width: 180px" #tooltip="matTooltip" matTooltipPosition="above" [matTooltip]="((row[activities['column']])?.length > 10) ? 
+                                row[activities['column']] : ''" matTooltipClass="nameTooltip">
+                                {{ row[activities['column']] == null? COMMON_CONSTANT.HYPHEN :
+                                row[activities['column']]+ '' | dotdotdot: 10 }}
+                            </span>
+                        </ng-template>
+                    </ng-template>
+                </td>
+            </ng-container>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+            </td>
+        </tr>
+    </table>
+</div>
+<mat-paginator class="roundedBorder" showFirstLastButtons [length]="resultLength"
+[pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE" [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION">
+</mat-paginator>

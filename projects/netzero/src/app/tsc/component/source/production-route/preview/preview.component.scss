@@ -1,0 +1,186 @@
+$connection-color: #000000DE; 
+$connection-opacity: 0.3; 
+
+.process {
+    font-size: 16px !important;
+}
+
+.connectionColor {
+    background: $connection-color;
+    opacity: $connection-opacity;
+}
+
+.previewContainer {
+    min-height: 500px;
+    max-height: 500px;
+    overflow: auto;
+}
+
+.processContainer {
+    width: 100% !important;
+}
+
+.processBox {
+    cursor: pointer;
+
+    border: 2px #00000038 solid !important;
+
+    width: 60%; 
+    z-index: 999;
+
+    &:hover {
+        border: none;
+        box-shadow: 0 0 5px black !important;
+    }
+}
+
+.centerAlign {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+.curveContainer {
+    z-index: 9999;
+    background-color: white;
+    overflow: hidden;
+    position: relative;
+    display: inline-block;
+}
+
+.downCurveContainer {
+    @extend .curveContainer;
+    width: 78px;
+    height: 100px;
+}
+
+.downCurve {
+    position: absolute;
+    right: 40px;
+    top: 0;
+}
+
+.upCurveContainer {
+    @extend .curveContainer;
+    width: 72px;
+    height: 100px;
+    bottom: 69px;
+    z-index: 99;
+}
+
+.upCurve {
+    position: absolute;
+    left: 34px;
+    bottom: 26px;
+}
+
+.nextBoxCurveContainer {
+    @extend .curveContainer;
+    width: 75px;
+    height: 100px;
+    bottom: 70px;
+    top: -34px;
+    right: 22px
+}
+
+.nextBoxCurve {
+    position: absolute;
+    left: 49px;
+    bottom: 22px;
+}
+
+.point {
+    width: 10px;
+    height: 0;
+    margin-top: 4px;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    border-left: 10px solid $connection-color;
+    opacity: $connection-opacity;
+    float: right;
+}
+
+.newLinePoint {
+    @extend .point;
+    margin-top: 8px;
+}
+
+.ball {
+    width: 10px;
+    height: 10px;
+    margin-top: 3px;
+    aspect-ratio: 1/1 !important;
+    border: 1px solid $connection-color;
+    border-radius: 50%;
+    float: left;
+}
+
+.nextConnect {
+    @extend .connectionColor;
+    margin-top: 4px;
+    width: 100%;
+    height: 1.5px;
+    float: right;
+}
+
+.arrow {
+    width: 20%;
+}
+
+.line {
+    @extend .connectionColor;
+    margin-top: 8px;
+    width: calc(100% - 10px);
+    height: 1.5px !important;
+    float: left;
+}
+
+.h-0 {
+    height: 0 !important;
+}
+
+.upCurveWrapper {
+    @extend .h-0;
+}
+
+.upCurveLine {
+    border: 2px $connection-color solid;
+    opacity: $connection-opacity;
+    height: 61px;
+    width: 70px;
+}
+
+.downCurveWrapper {
+    @extend .h-0;
+    z-index: 99;
+}
+
+.downCurveLine {
+    border: 2px $connection-color solid;
+    opacity: $connection-opacity;
+    height: 63.5px;
+    width: 75px;
+}
+
+.nextBoxCurveWrapper {
+    @extend .h-0;
+    width: 65px;
+}
+
+.createButtonCurveLine {
+    border: 2px #dee2e6 solid;
+    height: 61px;
+    width: 40px;
+}
+
+.processCard {
+    height: 67px;
+}
+
+.w-20 {
+    width: 20%
+}
+
+.newButtonContainer {
+    min-height: 75px;
+}

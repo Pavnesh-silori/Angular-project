@@ -1,0 +1,34 @@
+.borderDotted {
+    border: 1.2px dashed;
+    height: 100% !important;
+    display: flex;
+}
+
+.plusIcon {
+    font-size: 7vw;
+    opacity: 0.7;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+}
+
+.container .float-end {
+    margin-left: auto;
+}
+
+.logoImg {
+    position: relative;
+	border-color: rgb(203, 201, 201) !important;
+    width: 25px;
+    height: 25px;
+    border-radius: 50% !important;
+    margin-left: -10px;
+    transition: transform .25s;
+
+    &:hover {
+		z-index: 100 !important;
+		transform: scale(1.2);
+	}
+}

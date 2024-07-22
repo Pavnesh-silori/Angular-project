@@ -1,0 +1,13 @@
+<form [formGroup]="form" *ngIf="form">
+    <ng-container *ngFor="let item of preference">
+        <app-uk-defra-metadata [emssionFactorSourceKeyID]="item.emissionFactorSourceKeyID"
+            *ngIf="item.emissionFactorSourceKeyID == EMISSION_SOURCE_KEY_ENUM.UK_GOVERNMENT_GHG_CONVERSION_FACTORS_FOR_COMPANY_REPORTING"
+            [emssionFactorSourceName]="item.emissionFactorSourceName" [emfMetadataForm]="ukDefraMetadata">
+        </app-uk-defra-metadata>
+
+        <app-us-eeio-metadata [emssionFactorSourceKeyID]="item.emissionFactorSourceKeyID"
+            *ngIf="item.emissionFactorSourceKeyID == EMISSION_SOURCE_KEY_ENUM.US_EEIO"
+            [emssionFactorSourceName]="item.emissionFactorSourceName" [emfMetadataForm]="usEeioMetadata">
+        </app-us-eeio-metadata>
+    </ng-container>
+</form>

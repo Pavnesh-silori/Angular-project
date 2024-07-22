@@ -1,0 +1,173 @@
+<svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+    </symbol>
+</svg>
+<div class="card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Refrigeration and Fire suppression Equipments</div>
+            <div class="pageSubtitle">Create refrigeration, air conditioning or fire suppression equipment groups.</div>
+        </div>
+
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <lib-search-bar-one class="me-3" #searchBar searchBy="name"
+                    (emitSearch)="searchFn($event)"></lib-search-bar-one>
+
+                <button class="btn btn-sm btn-light refreshBtn centerAlign me-3 py-1" #refreshBtn matRipple
+                    [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                    [matTooltip]="ButtonTooltipEnum.REFRESH">
+                    <span class="material-symbols-outlined text-secondary">
+                        refresh
+                    </span>
+                </button>
+
+                <button type="button" class="btn btn-sm btn-success"
+                    (click)="createUpdateEquipmentGroup(FormAction.CREATE,'')" matRipple
+                    [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                    [matTooltip]="ButtonTooltipEnum.CREATE">
+                    <fa-icon [icon]="faPlus" class="me-1"></fa-icon>Equipment group
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="me-3">
+        <button class="btn btn-link float-end" matRipple [matRippleCentered]="true" (click)="resetFilter()"
+            [disabled]="(gasFlag == false && equipmentFlag == false)">
+            <span class="material-symbols-outlined fs-6">
+                filter_list_off
+            </span>
+            Reset Filters
+        </button>
+    </div>
+
+    <div class="ms-4 mt-1 roundedBorder" *ngIf="showInfo">
+        <div class="alert alert-primary centerAlignVertical roundedBorder d-inline-flex p-2">
+            <svg class="extraInfoCardIcon">
+                <use xlink:href="#info-fill" />
+            </svg>
+            <div class="extraInfoCardText ps-3">
+                Creating Equipment groups is only mandatory when fugitive emissions from refrigeration are accounted
+                using the screening method.
+            </div>
+            <span class="material-symbols-outlined ms-4 cursorPointer" (click)="closeInfo()">
+                close
+            </span>
+        </div>
+    </div>
+
+    <button #filterBtn type="button" class="d-none"></button>
+
+    <table mat-table [dataSource]="dataSource" #sort matSort matSortActive="name" matSortDirection="desc"
+        matSortDisableClear>
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Group Name</th>
+            <td mat-cell *matCellDef="let row" [matTooltip]="row.name?.length >= 30? row.name: ''"
+                matTooltipClass="infoTooltip" matTooltipPosition="above">
+                {{ row?.name? (row.name | dotdotdot: 30) : COMMON_CONSTANT.HYPHEN }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+            <th mat-header-cell class="" *matHeaderCellDef>Description</th>
+            <td mat-cell *matCellDef="let row" [matTooltip]="row.description?.length >= 30? row.description: ''"
+                matTooltipClass="infoTooltip" matTooltipPosition="above">
+                {{ row?.description? (row.description | dotdotdot: 30) : COMMON_CONSTANT.HYPHEN }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="equipmentType">
+            <th mat-header-cell class="width" *matHeaderCellDef>
+                <funnel-filter #equipmentSelect header="IPCC Equipment type" type="mono" value="id"
+                    [entityList]="equipmentList" [selectFC]="equipmentFC" [active]="equipmentFlag"
+                    (mono)="equipmentFlag = true;"></funnel-filter>
+            </th>
+            <td mat-cell *matCellDef="let row"
+                [matTooltip]="row.equipmentTypeName?.length >= 30? row.equipmentTypeName: ''"
+                matTooltipClass="infoTooltip" matTooltipPosition="above">
+                {{ row?.equipmentTypeName? (row.equipmentTypeName | dotdotdot: 30) : COMMON_CONSTANT.HYPHEN }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="gas">
+            <th mat-header-cell *matHeaderCellDef>
+                <funnel-filter #gasSelect header="Gas" type="mono" [entityList]="gasList" value="id" view="name"
+                    [selectFC]="gasFC" [active]="gasFlag" (mono)="gasFlag = true;">
+                </funnel-filter>
+            </th>
+            <td mat-cell *matCellDef="let row" [matTooltip]="row.gasName?.length >= 30? row.gasName: ''"
+                matTooltipClass="infoTooltip" matTooltipPosition="above">
+                {{ row?.gasName? (row.gasName | dotdotdot: 30) : COMMON_CONSTANT.HYPHEN }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="initialDate">
+            <th mat-header-cell *matHeaderCellDef>Initial date</th>
+            <td mat-cell *matCellDef="let row" #tooltip="matTooltip" matTooltipPosition="left" matTooltipHideDelay="0"
+                matTooltip="{{row.initialDate}}" matTooltipClass="nameTooltip">
+                {{ row.initialDate != null ? row.initialDate : COMMON_CONSTANT.HYPHEN }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="initialTotalCapacity">
+            <th mat-header-cell *matHeaderCellDef>Initial total capacity</th>
+            <td mat-cell *matCellDef="let row" #tooltip="matTooltip" matTooltipPosition="left" matTooltipHideDelay="0"
+                matTooltip="{{row.totalCapacity}} {{row.totalCapacityUnitName}}" matTooltipClass="nameTooltip">
+                {{ row.totalCapacity }} {{ row.totalCapacityUnitName }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="option">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let row">
+                <div class="centerAlignVertical">
+                    <ng-container *ngTemplateOutlet="icon; 
+                    context: {
+                        icon: 'edit',
+                        tooltip: ButtonTooltipEnum.UPDATE,
+                        iconClass: 'text-primary updateIconHover',
+                        function: createUpdateEquipmentGroup,
+                        functionParameter: [FormAction.UPDATE, row.id]
+                    }">
+                    </ng-container>
+                    <ng-container *ngTemplateOutlet="icon; 
+                    context: {
+                        icon: 'delete',
+                        tooltip: ButtonTooltipEnum.DELETE,
+                        iconClass: 'text-danger deleteIconHover',
+                        function: deleteRecord,
+                        functionParameter: [row.id]
+                    }">
+                    </ng-container>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumn"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumn;" class="dataRow"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumn.length">
+                {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+            </td>
+        </tr>
+    </table>
+
+    <mat-paginator class="roundedBorder" showFirstLastButtons #paginator [length]="dataSourceLength"
+        [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE" [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION">
+    </mat-paginator>
+</div>
+
+<ng-template #icon let-icon="icon" let-tooltip="tooltip" let-iconClass="iconClass" let-function="function"
+    let-functionParameter="functionParameter">
+    <button class="iconBtn centerAlign" [class]="iconClass" matTooltipPosition="below" [matTooltip]="tooltip" matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" (click)="handleClick(function, functionParameter)">
+        <span class="material-symbols-outlined icon">
+            {{ icon }}
+        </span>
+    </button>
+</ng-template>

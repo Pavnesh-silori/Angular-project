@@ -1,0 +1,59 @@
+<ol class="timeline">
+    <ng-container *ngFor="let timeline of timeline">
+        <li class="timeline-item">
+            <span class="timeline-item-icon faded-icon">
+                <span class="material-icons">
+                    {{ icon(timeline.trigger) }}
+                </span>
+            </span>
+            <div class="timeline-item-description centerAlign">
+                <img class="avatar small border d-block profileImageHeaderView" [src]="timeline?.['profileImgUrl'] ||
+                defaultImage(timeline?.['userName'])" alt="profile-image" />
+                <span class="focus">{{ timeline?.['userName'] }} </span>
+                <span class="lowFocus">has {{ action(timeline.trigger) }} </span>
+                <span class="focus">{{ entity(timeline) }}</span>
+                <span class="lowFocus"> on <time datetime="timeline.date">{{ timeline.date }}</time></span>
+                <!-- <span class="focus fw-bold fs-6">
+                    {{ timeline.emission | number: '1.2-2'}} tCO2e
+                </span> -->
+                <ng-container *ngIf="timeline.emissionDiffPct < 0; else increasedPct;">
+                    <span class="text-success fs-6">
+                        {{ timeline.emissionDiffPct | number: '1.0-2'}}%
+                        <span class="material-symbols-outlined fs-6">
+                            trending_down
+                        </span>
+                    </span>
+                </ng-container>
+                <ng-template #increasedPct>
+                    <ng-container *ngIf="timeline.emissionDiffPct > 0; else noChangePct;">
+                        <span class="text-danger fs-6">
+                            +{{ timeline.emissionDiffPct | number: '1.0-2'}}%
+                            <span class="material-symbols-outlined fw-bold fs-6">
+                                trending_up
+                            </span>
+                        </span>
+                    </ng-container>
+                    <ng-template #noChangePct>
+                        <span class="text-primary fs-6">
+                            {{ timeline.emissionDiffPct | number: '1.0-2'}}%
+                        </span>
+                    </ng-template>
+                </ng-template>
+            </div>
+
+            <ng-container
+                *ngIf="timeline.dataType != 'STRUCTURAL_CHANGE_EMISSION'">
+                <button class="btn btn-link ms-auto viewBtn" (click)="viewChange(timeline)">
+                    View changes
+                </button>
+            </ng-container>
+
+            <ng-container
+                *ngIf="false && timeline.dataType != 'STRUCTURAL_CHANGE_EMISSION' && timeline?.activityStdKeyID != 'other-fugitive-emission'">
+                <button class="btn btn-link btn-sm viewBtn" (click)="viewChange(timeline)">
+                    {{ ButtonLabelEnum.VIEW_BTN_LABEL }}
+                </button>
+            </ng-container>
+        </li>
+    </ng-container>
+</ol>

@@ -1,0 +1,365 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Greenhouse Gas Reporting (GHG)</div>
+            <div class="pageSubtitle">This report helps companies understand how their everyday activities contribute to
+                climate change, and identify areas to improve. </div>
+        </div>
+    </div>
+
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <form [formGroup]="reportFG">
+                <mat-form-field class="ms-3 cursorPointer" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE"
+                    (click)="openDatepickerOnClick(yearly)" (keydown.arrowdown)="openDatepickerOnClick(yearly)"
+                    (keydown.enter)="openDatepickerOnClick(yearly)">
+                    <mat-label> Select year</mat-label>
+                    <input matInput class="noFocus" [matDatepicker]="yearly" formControlName="durationPeriod"
+                        appYearFormat readonly required />
+                    <mat-datepicker-toggle matSuffix class="fs-5" [for]="yearly"></mat-datepicker-toggle>
+                    <mat-datepicker panelClass="yearPicker" #yearly startView="multi-year"
+                        (yearSelected)="yearSelectedHandler($event, yearly)">
+                    </mat-datepicker>
+                </mat-form-field>
+
+                <mat-form-field class="ms-4 cursorPointer" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel"> Select consolidation approach </mat-label>
+                    <mat-select formControlName="consolidationApproach" required>
+                        <mat-option disabled>Select consolidation approach</mat-option>
+                        <mat-option *ngFor="let consolidationApproach of consolidationApproachList"
+                            [value]="consolidationApproach.keyID">
+                            <span class="d-flex justify-content-between">
+                                {{ consolidationApproach.name }}
+                            </span>
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <button class="btn btn-success ms-4" (click)="viewGHGReport()" [disabled]="reportFG.invalid">
+                    View
+                </button>
+            </form>
+
+        </div>
+
+        <div class=" headerRightContainer">
+            <button class="btn btn-success" (click)="openAuditDialog()" [disabled]="reportFG.invalid">
+                Audit
+            </button>
+            <button class="btn btn-primary ms-2" (click)="downloadReport()" [disabled]="reportFG.invalid">
+                Download
+            </button>
+        </div>
+    </div>
+
+    <mat-card class="border cardOverwrite mt-3 ms-4 me-4 mb-3" *ngIf="showReport">
+        <div class="headerContainer">
+            <div class="headerLeftContainer">
+                <div class="pageTitle text-center">Greenhouse Gas Emissions Inventory</div>
+                <div class="pageTitle text-center mt-4">
+                    {{ orgName }}
+                </div>
+                <div class="pageTitle text-center"> [ {{ reportYear }} ]</div>
+            </div>
+        </div>
+
+        <div class="text-center mt-4" *ngIf="orgLogoUrl != null">
+            <img class="pageHeaderLogo" [src]="orgLogoUrl" alt="profile img">
+        </div>
+
+        <div class="padding mt-5">
+            <table class="table table-bordered w-100 mt-2">
+                <thead>
+                    <tr class="headingColor">
+                        <th> Has this inventory been verified by an accredited third party? </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th class="ps-5">
+                            <input type="radio" [checked]="!isAudited" [disabled]="isAudited" />
+                            <label class="ms-2"> No </label>
+                            <br>
+                            <input type="radio" [checked]="isAudited" [disabled]="!isAudited" />
+                            <label class="ms-2"> Yes (if yes, fill in verifier contact information below and attach
+                                verification statement) </label>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th> Date of verification: <span class="pageSubtitle ms-2">
+                                {{ ghgAuditDetailM?.date | date: 'MM/dd/YYYY' }}
+                            </span>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th> Verifier: <span class="pageSubtitle ms-2">
+                                {{ ghgAuditDetailM?.name }}
+                            </span> </th>
+                    </tr>
+                    <tr>
+                        <th> Email: <span class="pageSubtitle ms-2">
+                                {{ ghgAuditDetailM?.email}}
+                            </span> </th>
+                    </tr>
+                    <tr>
+                        <th> Phone: <span class="pageSubtitle ms-2">
+                                {{ ghgAuditDetailM?.phone }}
+                            </span> </th>
+                    </tr>
+                    <tr>
+                        <th> Address: <span class="pageSubtitle ms-2">
+                                {{ ghgAuditDetailM?.address }}
+                            </span> </th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class=" headerContainer">
+            <div class="headerLeftContainer">
+                <div class="pageTitle text-center mt-3"> REQUIRED INFORMATION </div>
+            </div>
+        </div>
+
+        <div class="padding">
+            <table class="table table-bordered w-100 mt-2">
+                <thead>
+                    <tr class="headingColor">
+                        <th> Have any facilities, operations and/or emissions sources been excluded
+                            from this inventory?
+                            If yes, please specify.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="minHeight">
+                        <td> No facilities, operations and/or emissions sources been excluded
+                            from this inventory.</td>
+                    </tr>
+                    <tr class="headingColor">
+                        <th> Reporting period covered by this inventory</th>
+                    </tr>
+                    <tr>
+                        <td> From {{ reportStartDate }} to {{ reportEndDate }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="padding">
+            <div class="headerLeftContainer mt-4">
+                <div class="pageTitle fs-5"> ORGANIZATIONAL BOUNDARIES </div>
+            </div>
+            <table class="table table-bordered w-100 mt-2">
+                <thead>
+                    <tr class="headingColor">
+                        <th colspan="3">Which consolidation approach was chosen (check each
+                            consolidation approach for which your company is reporting emissions.) If your company
+                            is reporting according to more than one consolidation approach, please complete and attach
+                            an
+                            additional completed reporting template that provides your company's emissions data
+                            following the other
+                            consolidation approach(es).</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" [checked]="isEquityShare" [disabled]="!isEquityShare">
+                                <label class="ms-2"> Equity Share </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" [checked]="isFinancialShare" [disabled]="!isFinancialShare">
+                                <label class="ms-2"> Financial Share </label>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" [checked]="isOperationalShare" [disabled]="!isOperationalShare">
+                                <label class="ms-2"> Operational Share </label>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="padding">
+            <div class="headerLeftContainer  mt-4">
+                <div class="pageTitle fs-5"> OPERATIONAL BOUNDARIES </div>
+            </div>
+            <table class="table table-bordered w-100 mt-2">
+                <thead>
+                    <tr class="headingColor">
+                        <th>Are Scope 3 emissions included in this inventory?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <input type="radio" [checked]="isScope3EmissionsIncluded"
+                                [disabled]="!isScope3EmissionsIncluded" />
+                            <label class="ms-2 fs-6"> Yes </label>
+                            <br>
+                            <input type="radio" [checked]="!isScope3EmissionsIncluded"
+                                [disabled]="isScope3EmissionsIncluded" />
+                            <label class="ms-2 fs-6"> No </label>
+                        </td>
+                    </tr>
+                    <tr scope="row" class="headingColor">
+                        <th> If yes, which types of activities are included in Scope 3
+                            emissions?</th>
+                    </tr>
+                    <tr *ngIf="isScope3EmissionsIncluded">
+                        <td>
+                            <ul *ngFor="let activity of activityList">
+                                <li> {{ activity.name }} </li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr class="minHeight" *ngIf="!isScope3EmissionsIncluded">
+                        <td> </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="padding">
+            <div class="headerLeftContainer mt-4">
+                <div class="pageTitle fs-5"> INFORMATION ON EMISSIONS </div>
+                <div class="pageTitle fs-6 "> The table below refers to emissions independent of any
+                    GHG trades
+                    such as sales, purchases, transfers, or banking of allowances </div>
+            </div>
+            <table class="table table-bordered w-100 mt-2">
+                <thead>
+                    <tr class="headingColor text-center">
+                        <th *ngFor="let emissionHeader of emissionHeaders">
+                            {{ emissionHeader }}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row" class="headingColor"> Scope 1 </th>
+                        <td *ngFor="let emissionValue of emissionValues">
+                            {{ reportYearScope1Emissions?.[emissionValue] | number: '1.2-3'}}
+                        </td>
+                    <tr>
+                        <th scope="row" class="headingColor"> Scope 2 </th>
+                        <td *ngFor="let emissionValue of emissionValues">
+                            {{ reportYearScope2Emissions?.[emissionValue] | number: '1.2-3'}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="table-info"> Scope 3 (OPTIONAL) </th>
+                        <td *ngFor="let emissionValue of emissionValues">
+                            {{ reportYearScope3Emissions?.[emissionValue] | number: '1.2-3'}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="padding">
+            <table class="table table-bordered w-100 mt-4">
+                <thead>
+                    <tr class="headingColor">
+                        <th>Direct CO2 emissions from Biogenic combustion (mtC02 )</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="minHeight">
+                        <td *ngIf="biogenicEmissions != null">
+                            {{ biogenicEmissions | number: '1.2-3'}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="padding">
+            <div class="headerLeftContainer mt-4">
+                <div class="pageTitle fs-5"> BASE YEAR </div>
+            </div>
+            <table class="table table-bordered w-100 mt-2">
+                <thead>
+                    <tr class="headingColor">
+                        <th colspan="8"> Year chosen as base year </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="minHeight">
+                        <td colspan="8"> {{ baseYearDetails?.baseYear }} </td>
+                    </tr>
+                    <tr scope="row" class="headingColor">
+                        <th colspan="8"> Clarification of company-determined policy for making base
+                            year emissions recalculations </th>
+                    </tr>
+                    <tr class="minHeight">
+                        <td colspan="8"> {{ baseYearDetails?.recalculationPolicy }} </td>
+                    </tr>
+                    <tr scope="row" class="headingColor">
+                        <th colspan="8"> Context for any significant emissions changes that trigger
+                            base year emissions recalculations
+                        </th>
+                    </tr>
+                    <tr class="minHeight">
+                        <td colspan="8"> {{ baseYearDetails?.significanceThreshold }} </td>
+                    </tr>
+                    <tr scope="row" class="headingColor">
+                        <th colspan="8"> Base year emissions </th>
+                    </tr>
+                    <tr class="headingColor text-center" colspan="1">
+                        <th *ngFor="let emissionHeader of emissionHeaders">
+                            {{ emissionHeader }}
+                        </th>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="headingColor"> Scope 1 </th>
+                        <td *ngFor="let emissionValue of emissionValues">
+                            {{ baseYearScope1Emissions?.[emissionValue] | number: '1.2-3'}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="headingColor"> Scope 2 </th>
+                        <td *ngFor="let emissionValue of emissionValues">
+                            {{ baseYearScope2Emissions?.[emissionValue] | number: '1.2-3'}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row" class="table-info"> Scope 3 (OPTIONAL) </th>
+                        <td *ngFor="let emissionValue of emissionValues">
+                            {{ baseYearScope3Emissions?.[emissionValue] | number: '1.2-3'}}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="padding">
+            <div class="headerLeftContainer mt-4">
+                <div class="pageTitle fs-5"> METHODOLOGIES AND EMISSION FACTORS </div>
+            </div>
+            <table class="table table-bordered w-100 mt-2">
+                <thead>
+                    <tr class="headingColor">
+                        <th> Methodologies used to calculate or measure emissions other than those
+                            provided by the GHG Protocol. (Provide a reference or link to any non-GHG Protocol
+                            calculation tools used)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="minHeight">
+                        <td> No other methodologies or calculations have been used other than provided by the GHG
+                            Protocol. </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </mat-card>
+</div>

@@ -1,0 +1,21 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="headerRightContainerInner">
+                <div class="pageTitle">
+                    Update process
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <app-process #process [delete]="false" [processFG]="processFG" [products]="products" [processes]="processes" 
+        [input]=input [output]="output" [fuel]=fuel [standardFuel]="standardFuel" (entitiyCreated)="getProducts()">
+    </app-process>
+
+    <div class="centerAlign justify-content-end m-3">
+        <button type="submit" class="btn btn-success ms-2" (click)="updateProcess()" [disabled]="isEqual">
+            Update Process
+        </button>
+    </div>
+</div>

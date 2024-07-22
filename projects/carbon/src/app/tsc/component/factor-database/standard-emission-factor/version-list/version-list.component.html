@@ -1,0 +1,59 @@
+<div class="overflowX customScrollBar">
+    <div class="headerContainer pt-0">
+        <div class="headerLeftContainer">
+            <div class="pageTitle"> Versions </div>
+            <div class="pageSubtitle">
+                Every database updates published emission factors on a regular basis to improve accuracy. Access various
+                versions published by each database.
+            </div>
+        </div>
+    </div>
+
+    <table class="w-100" mat-table [dataSource]="dataSource" #sort matSort matSortActive="name" matSortDirection="desc"
+        matSortDisableClear>
+
+        <ng-container matColumnDef="name">
+            <th class="px-3" mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+            <td class="px-3 cursorPointer" mat-cell *matCellDef="let row"
+                [routerLink]="[decodeUrl(router.url), row?.['name'], row?.['id'], 'activity']" [queryParams]="{}">
+                {{row['name']}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="validFrom">
+            <th class="px-3" mat-header-cell *matHeaderCellDef> Valid from </th>
+            <td class="px-3 cursorPointer" mat-cell *matCellDef="let row"
+                [routerLink]="[decodeUrl(router.url), row?.['name'], row?.['id'], 'activity']" [queryParams]="{}"> {{
+                row['validFrom']}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="validTill">
+            <th class="px-3" mat-header-cell *matHeaderCellDef> Valid till </th>
+            <td class="px-3 cursorPointer" mat-cell *matCellDef="let row "
+                [routerLink]="[decodeUrl(router.url), row?.['name'], row?.['id'], 'activity']" [queryParams]="{}"> {{
+                row['validTill']}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="source">
+            <th class="px-3" mat-header-cell *matHeaderCellDef> Verison source </th>
+            <td class="px-3" mat-cell *matCellDef="let row" [ngClass]="{'text-center': !row['sourceVersionName']}">
+                <a [href]="[row.sourceVersionDocPath]" target="_blank" matTooltip="Download factor source file"
+                    matTooltipPosition="above">
+                    {{ row['sourceVersionName']? row['sourceVersionName'] : COMMON_CONSTANT.HYPHEN }}
+                </a>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let record; columns: displayedColumns"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+            </td>
+        </tr>
+    </table>
+</div>
+<mat-paginator class="roundedBorder" showFirstLastButtons [length]="resultLength"
+    [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE" [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION">
+</mat-paginator>

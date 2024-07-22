@@ -1,0 +1,42 @@
+.code {
+    width: 300px;
+}
+
+.name {
+    width: 200px;
+}
+
+.description {
+    max-width: 150px;
+    padding-left: 50px;
+}
+
+.current-org {
+    border-left: 5px solid #3ac47d;
+    background: whitesmoke;
+}
+
+.cursor {
+    cursor: none;
+}
+
+.serviceStatus {
+    min-width: 200px;
+}
+
+.product-list {
+    padding: 20px 0;
+    max-height: 600px;
+    border-radius: 4px;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 60px;
+}
+
+.product-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}

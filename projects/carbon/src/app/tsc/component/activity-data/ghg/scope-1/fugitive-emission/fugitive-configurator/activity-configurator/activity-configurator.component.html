@@ -1,0 +1,64 @@
+<div class="card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">
+                Activity Configurator
+            </div>
+            <div class="pageSubtitle">Answer a few simple questions to configure the best calculation approach for Scope
+                1 :
+                Fugitive emissions from Refrigeration, air conditioning and fire suppression.
+            </div>
+        </div>
+    </div>
+
+    <div class="headerLeftContainer mt-3">
+        <div class="pageTitle ms-4">
+            Scope 1
+        </div>
+        <div class="card-body ms-3 cardWidth">
+            <mat-card class="border cardOverwrite cardHeight">
+                <div class="mt-2" *ngIf="isConfigured">
+                    <span class="ms-1 badge bg-primary">
+                        Configured
+                    </span>
+
+                    <span class="material-symbols-outlined float-end cursorPointer" *ngIf="isConfigured"
+                        routerLink="/carbon-setting/activity-configurator/fugitive-configurator">
+                        edit_square
+                    </span>
+                </div>
+
+                <div class="mt-5">
+                    <div class="row mt-2">
+                        <div class="col-sm-3">
+                            <span class="material-symbols-outlined iconSize">
+                                kitchen
+                            </span>
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="cardTitle">
+                                Fugitive - Refrigeration
+                            </div>
+                            <div class="cardSubtitle">
+                                Emissions from use or manufacture of Refrigeration, air conditioning and fire
+                                suppression equipments.
+                            </div>
+                            <div>
+                                <br>Select between three calculation approaches used to calculate these emissions based
+                                on whether transactions are available at gas or equipment level.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row buttonHeight">
+                        <div class="d-flex justify-content-end align-items-end">
+                            <button type="button" class="btn btn-success btnBase mt-4" *ngIf="!isConfigured"
+                                routerLink="/carbon-setting/activity-configurator/fugitive-configurator">
+                                Configure
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+    </div>
+</div>

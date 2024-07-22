@@ -1,0 +1,429 @@
+<ng-container *ngIf="runStatus == RunStatusKeyIDEnum.ALLOCATE_REVIEW">
+    <mat-card class="border cardOverwrite">
+        <div class="cardTitle pb-3">
+            5. Allocate, review and run
+        </div>
+
+        <form [formGroup]="allocationFG" *ngIf="allocationFG">
+            <mat-accordion multi="true">
+                <mat-expansion-panel class="cardOverwrite matAccordion mb-2"
+                    *ngFor="let process of allocationFG.get('processFA').controls; let i = index" expanded="false">
+                    <mat-expansion-panel-header>
+                        <div class="row w-100">
+                            <div class="col-sm-8"><strong>Process Name - {{ process.get('processName').value }}</strong>
+                            </div>
+                            <!-- <div class="col-sm-2">{{ process.get('recordsCollected').value }} forms Selected</div> -->
+                        </div>
+                    </mat-expansion-panel-header>
+                    <div class="cardOverwrite border card-body bg-light">
+                        <div class="text-secondary fs-5 pb-3"><strong>Input</strong></div>
+                        <mat-accordion multi="true">
+                            <mat-expansion-panel class="cardOverwrite mb-2"
+                                *ngFor="let input of process.get('inputFA').controls" expanded="false">
+                                <mat-expansion-panel-header *ngIf="input.get('inputName').value">
+                                    {{ input.get('inputName').value }}
+                                </mat-expansion-panel-header>
+
+                                <ng-container
+                                    *ngIf="input.get('sourceFG').controls.length > 0; else noAllocationMessage">
+                                    <ng-container *ngFor="let source of input.get('sourceFG').controls; let k = index">
+                                        <div *ngIf="source.get('sourceName').value"
+                                            class="text-secondary bg-light p-2 rounded">
+                                            <strong>{{ source.get('sourceName').value }}</strong>
+                                        </div>
+                                        <div>
+                                            <div class="pt-2">
+                                                <div>
+                                                    <div *ngIf="source.get('entityName').value " class="pb-3">
+                                                        <label>{{getLabelText(input.get('inputKeyID').value)}}</label>
+                                                        <span class="fw-normal ps-2">{{
+                                                            source.get('entityName').value }}</span>
+                                                    </div>
+                                                    <span *ngIf="input.get('inputKeyID').value == 'fuel'"
+                                                        style="max-width: 550px; display: inline-block; padding-bottom: 20px;">
+                                                        Total {{ input.get('inputName').value }} consumed in these
+                                                        process
+                                                    </span>
+                                                    <span *ngIf="input.get('inputKeyID').value !== 'fuel'"
+                                                        style="max-width: 550px; display: inline-block; padding-bottom: 20px;">
+                                                        Total {{ input.get('inputName').value }} generated in these
+                                                        process
+                                                    </span>
+                                                    <span class="ps-5">
+                                                        <strong>
+                                                            {{source.get('amount').value}}
+                                                            {{source.get('uomCode').value
+                                                            }}<span
+                                                                class="ps-1">({{source.get('unitName').value}})</span>
+                                                        </strong></span>
+
+                                                    <span class="float-end me-3">
+                                                        <label style="font-size: 1.2em; cursor: pointer;">
+                                                            <input type="checkbox" class="checkbox-lg textInline"
+                                                                [formControl]="source.get('markAsReviewed')">
+                                                            <span class="ps-2">Mark as reviewed</span>
+                                                        </label>
+                                                    </span>
+
+
+                                                </div>
+                                                <div
+                                                    *ngIf="source.get('isAllocation').value || source.get('isCommonSubMeter').value">
+                                                    <div class="allocationInfo col-sm-10">
+                                                        <lib-message-alert
+                                                            [messageAlertTypeInp]="messageAlertTypeEnum.INFO"
+                                                            [messageAlertIconInp]="messageAlertIconEnum.INFO_ICON"
+                                                            contentInp="Enter the percentage of {{ input.get('inputName').value }}  that has been used in this process.">
+                                                        </lib-message-alert>
+                                                    </div>
+                                                    <div class="pt-3">
+                                                        <mat-form-field class="col-sm-3"
+                                                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                            <mat-label class="formLabel">Allocation
+                                                                percentage</mat-label>
+                                                            <input class="formPlaceholder" matInput type="number"
+                                                                min="0" max="100" placeholder="Allocation percentage"
+                                                                [formControl]="source.get('allocationPct')" />
+                                                            <span matSuffix>%</span>
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div class="pt-3">
+                                                        <mat-form-field class="col-sm-3"
+                                                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                            <mat-label class="formLabel">Brief description of allocation
+                                                                methodology used</mat-label>
+                                                            <input class="formPlaceholder" matInput type="text"
+                                                                placeholder="Brief description"
+                                                                [formControl]="source.get('description')" />
+                                                        </mat-form-field>
+                                                    </div>
+
+                                                    <div class="row col-sm-10">
+                                                        <div class="pb-3 pt-3">
+                                                            <span>
+                                                                Total {{ input.get('inputName').value }} consumed
+                                                                <strong class="ps-5">{{
+                                                                    getConsumedPercentage(source.get('allocationPct').value,
+                                                                    source.get('amount').value,
+                                                                    source.get('unitName').value,
+                                                                    source.get('uomCode').value) }}</strong>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex flex-wrap gap-3">
+                                                <div *ngFor="let activity of source.get('activityData').value"
+                                                    class="me-3 mb-3">
+                                                    <span class="link-primary cursorPointer"
+                                                        (click)="routeToActivity(activity)">{{activity.activityName}}</span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </ng-container>
+                                </ng-container>
+
+                                <ng-template #noAllocationMessage>
+                                    <div class="text-secondary bg-light p-2 rounded">
+                                        <strong>No allocation required</strong>
+                                    </div>
+                                </ng-template>
+
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                        <div class="text-secondary fs-5 pb-3 pt-3"><strong>Output</strong></div>
+                        <mat-accordion multi="true">
+                            <mat-expansion-panel class="cardOverwrite mb-2"
+                                *ngFor="let input of process.get('outputFA').controls" expanded="false">
+                                <mat-expansion-panel-header>{{ input.get('outputName').value
+                                    }}</mat-expansion-panel-header>
+                                <ng-container
+                                    *ngIf="input.get('outputSourceFG').controls.length > 0; else noAllocationMessage">
+                                    <ng-container class="pt-2"
+                                        *ngFor="let source of input.get('outputSourceFG').controls; let k = index">
+
+                                        <div *ngIf="input.get('outputKeyID').value !== 'finished-product'; else coProduct">
+                                            <div class="text-secondary bg-light p-2 rounded"
+                                                *ngIf="source.get('sourceName').value">
+                                                <strong>{{
+                                                    source.get('sourceName').value
+                                                    }}</strong>
+                                            </div>
+                                            <div *ngIf="source.get('entityName').value " class="pb-3 pt-3">
+                                                <label>{{getLabelText(input.get('outputKeyID').value)}}</label>
+                                                <span class="fw-normal ps-2">{{ source.get('entityName').value }}</span>
+                                            </div>
+                                            <div>
+                                                <div class="pt-3">
+                                                    <div>
+                                                        <span *ngIf="input.get('outputKeyID').value == 'fuel'"
+                                                            style="max-width: 550px; display: inline-block; padding-bottom: 20px;">
+                                                            Total {{ input.get('outputName').value }} consumed in these
+                                                            process
+                                                        </span>
+                                                        <span *ngIf="input.get('outputKeyID').value !== 'fuel'"
+                                                            style="max-width: 550px; display: inline-block; padding-bottom: 20px;">
+                                                            Total {{ input.get('outputName').value }} generated in these
+                                                            process
+                                                        </span>
+
+
+                                                        <span class="ps-5">
+                                                            <strong>
+                                                                {{source.get('amount').value}}
+                                                                {{source.get('uomCode').value }}
+                                                                <span
+                                                                    class="ps-1">({{source.get('unitName').value}})</span>
+                                                            </strong></span>
+                                                        <span class="float-end me-3">
+                                                            <label style="font-size: 1.2em;">
+                                                                <input type="checkbox" class="checkbox-lg textInline"
+                                                                    [formControl]="source.get('markAsReviewed')">
+                                                                <span class="ps-2">Mark as reviewed</span>
+                                                            </label>
+                                                        </span>
+                                                    </div>
+
+                                                    <div *ngIf="source.get('exportedQuantity').value != null">
+                                                        <span *ngIf="input.get('outputKeyID').value !== 'fuel'"
+                                                            style="max-width: 550px; display: inline-block; padding-bottom: 20px;">
+                                                            Total {{ input.get('outputName').value }} exported in these
+                                                            process
+                                                        </span>
+
+                                                        <span class="ps-5">
+                                                            <strong>
+                                                                {{source.get('exportedQuantity').value}}
+                                                                {{source.get('exportUomCode').value }}
+                                                                <span
+                                                                    class="ps-1">({{source.get('exportedUnitName').value}})</span>
+                                                            </strong>
+                                                        </span>
+                                                    </div>
+
+                                                    <div>
+                                                        <!-- <div class="info" *ngIf="source.get('dataIndex').value == 0">
+                                                            <lib-message-alert
+                                                                [messageAlertTypeInp]="messageAlertTypeEnum.INFO"
+                                                                [messageAlertIconInp]="messageAlertIconEnum.INFO_ICON"
+                                                                contentInp="Enter the percentage of {{ source.get('sourceName').value }} that has been used in this process.">
+                                                            </lib-message-alert>
+                                                        </div> -->
+
+                                                        <!-- <div class="col-sm-3 pt-3"
+                                                            *ngIf="source.get('isMassBasedAllocationRequired').value && source.get('dataIndex').value == 0 && input.get('outputKeyID').value !== 'intermediate-product' && source.get('singleSource').value != 'singleSource'">
+                                                            <mat-form-field class="matFieldWidth100"
+                                                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                                <mat-label class="formLabel">Select allocation
+                                                                    method</mat-label>
+                                                                <mat-select
+                                                                    (selectionChange)="allocationMethodCheck($event.value, source.get('index').value)"
+                                                                    [formControl]="source.get('allocationMethod')">
+                                                                    <mat-option *ngFor="let method of allocationMethod"
+                                                                        [value]="method.keyID">
+                                                                        {{ method.name }}
+                                                                    </mat-option>
+                                                                </mat-select>
+                                                            </mat-form-field>
+                                                        </div> -->
+
+                                                        <!-- <div *ngIf="source.get('singleSource').value != 'singleSource' && (massOrVolume[source.get('index').value]=='percentage' || !source.get('isMassBasedAllocationRequired').value)"
+                                                            class="pt-3">
+                                                            {{source.get('singleSource').value}}
+                                                            <div>
+                                                                <mat-form-field class="col-sm-3"
+                                                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                                    <mat-label class="formLabel">Allocation
+                                                                        percentage</mat-label>
+                                                                    <input class="formPlaceholder" matInput
+                                                                        type="number" min="0" max="100"
+                                                                        placeholder="Allocation percentage"
+                                                                        [formControl]="source.get('allocationPct')" />
+                                                                    <span matSuffix>%</span>
+                                                                </mat-form-field>
+                                                            </div>
+                                                            <div>
+                                                                <mat-form-field class="col-sm-3"
+                                                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                                    <mat-label class="formLabel">Brief description of
+                                                                        allocation
+                                                                        methodology used</mat-label>
+                                                                    <input class="formPlaceholder" matInput type="text"
+                                                                        placeholder="Brief description"
+                                                                        [formControl]="source.get('description')" />
+                                                                </mat-form-field>
+                                                            </div>
+                                                        </div> -->
+
+                                                        <!-- <div
+                                                            *ngIf="massOrVolume.length >= k && source.get('keyID').value !== 'finished-product'">
+                                                            <div *ngIf="massOrVolume[k] == 'massAllocation'">
+                                                                <mat-form-field class="col-sm-3"
+                                                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                                    <mat-label class="formLabel"> Mass </mat-label>
+                                                                    <input class="formPlaceholder" matInput type="number"
+                                                                        min="0" placeholder="Mass/Volume"
+                                                                        [formControl]="source.get('massOrVolume')" />
+                                                                </mat-form-field>
+                                                            </div>
+                                                        </div> -->
+
+                                                        <!-- <div >
+                                                            <div>
+                                                                <mat-form-field class="col-sm-3"
+                                                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                                    <mat-label class="formLabel"> Mass </mat-label>
+                                                                    <input class="formPlaceholder" matInput type="number"
+                                                                        min="0" placeholder="Mass/Volume"
+                                                                        [formControl]="source.get('massOrVolume')" />
+                                                                </mat-form-field>
+                                                            </div>
+                                                        </div>  -->
+
+                                                        <!-- <div class="pb-3 pt-3" *ngIf="percentage">
+                                                            <span style="max-width: 550px; display: inline-block;">
+                                                                Total {{ input.get('outputName').value }} consumed
+                                                                <strong>{{
+                                                                    getConsumedPercentage(source.get('allocationPct').value,
+                                                                    source.get('amount').value,
+                                                                    source.get('unitName').value,
+                                                                    source.get('uomCode').value)
+                                                                    }}</strong>
+                                                            </span>
+                                                            <span class="ps-5 pb-4"></span>
+                                                        </div> -->
+                                                    </div>
+                                                </div>
+
+                                                <div class="d-flex flex-wrap gap-3">
+                                                    <div *ngFor="let activity of source.get('activityData').value"
+                                                        class="me-3 mb-3">
+                                                        <span class="link-primary cursorPointer"
+                                                            (click)="routeToActivity(activity)">{{activity.activityName}}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <ng-template #coProduct>
+                                            <span class="float-end me-3" *ngIf="k == 0">
+                                                <label style="font-size: 1.2em; cursor: pointer;">
+                                                    <input type="checkbox" class="checkbox-lg textInline"
+                                                        [formControl]="source.get('markAsReviewed')">
+                                                    <span class="ps-2">Mark as reviewed</span>
+                                                </label>
+                                            </span>
+                                            <div class="col-sm-3 pt-1"
+                                                *ngIf="k == 0 && input.get('outputKeyID').value !== 'intermediate-product' && input.get('outputSourceFG').controls.length == 2">
+                                                <mat-form-field class="matFieldWidth100"
+                                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                    <mat-label class="formLabel">Select allocation
+                                                        method</mat-label>
+                                                    <mat-select
+                                                        (selectionChange)="allocationMethodCheck($event.value, source.get('index').value)"
+                                                        [formControl]="source.get('allocationMethod')">
+                                                        <mat-option *ngFor="let method of allocationMethod"
+                                                            [value]="method.keyID">
+                                                            {{ method.name }}
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </div>
+
+                                            <div class="col-sm-3 pt-1">
+                                                <div
+                                                    *ngIf="massOrVolume[source.get('index').value]=='percentage' && k == 0">
+                                                    <div>
+                                                        <mat-form-field class="matFieldWidth100"
+                                                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                            <mat-label class="formLabel">Brief description of
+                                                                allocation
+                                                                methodology used</mat-label>
+                                                            <input class="formPlaceholder" matInput type="text"
+                                                                placeholder="Brief description"
+                                                                [formControl]="source.get('description')" />
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row col-sm-12 d-flex align-items-center">
+                                                <div class="col-sm-5">
+                                                    <span>Total quantity of {{ source.get('entityName').value }}
+                                                        produced in this process
+                                                        <strong class="ps-5">
+                                                            {{source.get('amount').value}}
+                                                            {{source.get('uomCode').value }}
+                                                            <span class="ps-1">({{source.get('unitName').value}})</span>
+                                                        </strong>
+                                                    </span>
+                                                </div>
+                                                <div class="col-sm-3 pt-2"
+                                                    *ngIf="massOrVolume[source.get('index').value]=='percentage'">
+                                                    <mat-form-field class="matFieldWidth100 d-inline-block"
+                                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                        <mat-label class="formLabel ps-3">Allocation
+                                                            percentage</mat-label>
+                                                        <input class="formPlaceholder" matInput type="number" min="0"
+                                                            max="100" placeholder="Allocation percentage"
+                                                            [formControl]="source.get('allocationPct')" />
+                                                        <span matSuffix>%</span>
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex flex-wrap gap-3">
+                                                <div *ngFor="let activity of source.get('activityData').value"
+                                                    class="me-3 mb-3">
+                                                    <span class="link-primary cursorPointer"
+                                                        (click)="routeToActivity(activity)">{{activity.activityName}}</span>
+                                                </div>
+                                            </div>
+                                        </ng-template>
+
+                                    </ng-container>
+                                </ng-container>
+
+                                <ng-template #noAllocationMessage>
+                                    <div class="text-secondary bg-light p-2 rounded">
+                                        <strong>No allocation required</strong>
+                                    </div>
+                                </ng-template>
+
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </form>
+        <!-- <div class="btn" (click)="checkForm()">save</div>-->
+
+
+
+        <!-- <form [formGroup]="formGroup">
+      <div formArrayName="items">
+        <div *ngFor="let item of formArrayControls; let i = index">
+          <div [formGroupName]="i">
+            <label>Name:</label>
+            <input type="text" formControlName="name">
+          </div>
+        </div>
+      </div>
+    </form> -->
+        <!-- 
+      <div (click)="checkForm()">
+        save
+      </div> -->
+    </mat-card>
+</ng-container>
+
+<ng-container
+    *ngIf="runStatus == RunStatusKeyIDEnum.CALCULATION_PENDING || runStatus == RunStatusKeyIDEnum.DONE || runStatus == RunStatusKeyIDEnum.RUN_ERROR">
+    <app-show-result [runStatusInp]="runStatus" (runStatusChange)="runStatusChangeFnc($event)"></app-show-result>
+</ng-container>
+
+<ng-container *ngIf="false">
+    <app-failed-run></app-failed-run>
+</ng-container>

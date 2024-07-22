@@ -1,0 +1,153 @@
+<mat-card class="cardOverwrite border">
+    <div class="cardTitle pb-2">Activity Data</div>
+    <form [formGroup]="activityDataFG">
+        
+        <div class="row">
+            <div class="col-sm-8">
+                <lib-date-input class="cursorPointer" #customDateInput (emitFilter)="dateInpChange(activityDataFG)"
+                    [materialFieldWidthInp]="true"
+                    [materialFormFieldAppearanceInp]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE"
+                    [isMandatoryFieldInp]="true" [dateInputTypeInp]="DateInputTypeEnum.CUSTOM_INPUT"
+                    [labelInp]="'Accounting Period'" [cdrFormatInp]="DateFormatEnum.DD_MMM_YYYY">
+                </lib-date-input>
+            </div>
+        </div>
+
+        <div class="col-sm-8">
+            <mat-form-field class="col-sm-4" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                <mat-label class="formLabel">Amount of consumption</mat-label>
+                <input matInput type="number" formControlName="energyConsumption" placeholder="0.00" min="0"
+                    (blur)="UpdateRenewableValue($event,'energyConsumption', haveContractualInstrument)"
+                    [readonly]="isReadOnly" required />
+                <mat-error *ngIf="errorHandling('energyConsumption', 'min')">
+                    Amount of consumption can't be negative.
+                </mat-error>
+                <mat-error *ngIf="errorHandling('energyConsumption', 'required')">
+                    {{ FormErrorEnum.REQUIRED }}
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="col-sm-4 ms-3" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                <mat-label class="formLabel">Select unit</mat-label>
+                <mat-select formControlName="energyUnitID"
+                    (selectionChange)="UpdateRenewableValue($event.value,'energyUnitID', haveContractualInstrument)"
+                    required>
+                    <mat-option>
+                        <ngx-mat-select-search [formControl]="unitSearch.filterFC"
+                            placeholderLabel="Search by unit name" noEntriesFoundLabel="No matching found.">
+                        </ngx-mat-select-search>
+                    </mat-option>
+                    <mat-option *ngFor="let units of unitSearch.filteredEntities | async" [value]="units.id">
+                        <span class="d-flex justify-content-between">
+                            {{ units.name }} -
+                            <span>{{ units.uomCode }}</span>
+                        </span>
+                    </mat-option>
+                </mat-select>
+                <mat-error>
+                    {{ FormErrorEnum.REQUIRED }}
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div *ngIf="haveContractualInstrument == 'YES'" class="col-sm-8">
+            <mat-form-field class="col-sm-4" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                <mat-label class="formLabel">Amount of renewable</mat-label>
+                <input matInput type="number" formControlName="renewableAmount" placeholder="100%" min="0" required />
+                <mat-error *ngIf="errorHandling('renewableAmount', 'min')">
+                    Amount of renewable value can't be negative.
+                </mat-error>
+                <mat-error *ngIf="errorHandling('renewableAmount', 'max')">
+                    Amount of renewable can't be more than consumption.
+                </mat-error>
+                <mat-error *ngIf="errorHandling('renewableAmount', 'required')">
+                    {{ FormErrorEnum.REQUIRED }}
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <ng-container *ngIf="activityDataFG.get('docPath').value == null">
+            <div class="row">
+                <div class="col-sm-8 fileInput">
+                    <input class="form-control" type="file" accept="application/pdf" #fileInput
+                        (change)="fileUpload($event, activityDataFG, 0)">
+                </div>
+            </div>
+
+            <div class="row pt-2">
+                <div class="col-sm-8">
+                    <div class="border rounded d-flex" [ngClass]="{'d-none': (docFileList[0] == null)}">
+
+                        <div class="p-1">
+                            <ng-container *ngTemplateOutlet="docImg"></ng-container>
+                        </div>
+
+                        <div class="p-1">
+                            <div class="centerAlignVertical p-1">
+                                {{ activityDataFG.get('docName').value }} <br>
+                                {{ activityDataFG.get('docSize').value }}
+                            </div>
+                        </div>
+
+                        <div class="ms-auto p-1">
+                            <button type="button" class="btn p-1" mat-icon-button
+                                (click)="removeFile(activityDataFG, 0)">
+                                <span class="material-symbols-outlined text-danger">
+                                    delete
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+
+        <ng-container *ngIf="activityDataFG.get('docPath').value != null">
+            <div class="row pt-2">
+                <div class="col-sm-8">
+                    <div class="border rounded d-flex">
+
+                        <ng-container *ngTemplateOutlet="docImg"></ng-container>
+
+                        <div class="p-1">
+                            <div class="centerAlignVertical p-3">
+                                <a href="{{activityDataFG.get('docPath').value}}" target="_blank"
+                                    [ngClass]="{'d-none': !activityDataFG.get('docPath').value}">
+                                    {{activityDataFG.get('docName').value}}
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="ms-auto centerAlignVertical p-2">
+                            <button type="button" class="btn p-1" mat-icon-button matTooltip="Edit"
+                                matTooltipClass="nameTooltip" matTooltipPosition="below"
+                                (click)="fileInput.click()">
+                                <span class="material-symbols-outlined text-primary updateIconHover fs-5">
+                                    edit
+                                </span>
+                            </button>
+                            <input class="form-control" type="file" accept="application/pdf" #fileInput
+                                (change)="fileUpload($event, activityDataFG, 0)" style="display: none;">
+
+                            <button type="button" class="btn p-1" mat-icon-button matTooltip="Delete"
+                                matTooltipClass="nameTooltip" matTooltipPosition="below"
+                                (click)="deleteConfirmation(activityDataFG, 0)">
+                                <span class="material-symbols-outlined text-danger">
+                                    delete
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </form>
+</mat-card>
+
+<ng-template #docImg>
+    <div class="p-1">
+        <div class="docIcon p-1" matSuffix mat-icon-button mat-raised-button [matTooltip]="billFileName"
+            matTooltipPosition="below">
+            <img height="40px" src="assets/images/default-doc.ico" alt="bill document preview">
+        </div>
+    </div>
+</ng-template>

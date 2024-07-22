@@ -1,0 +1,73 @@
+<div class="headerContainer p-0" #header>
+    <div class="headerLeftContainer">
+        <div class="pageTitle">{{ pageTitle }}</div>
+        <!-- <div class="pageSubtitle">{{ pageSubtitle }}</div> -->
+    </div>
+
+    <div class="headerRightContainer">
+        <div class="headerRightContainerInner">
+            <button class="btn btn-sm centerAlign py-1 iconBtn" matRipple
+                [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                [matTooltip]="ButtonTooltipEnum.CLOSE" mat-dialog-close>
+                <span class="material-symbols-outlined">
+                    close
+                </span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<mat-dialog-content class="mat-typography customScrollBar pt-2" #body>
+    <form [formGroup]="sourceFG" (ngSubmit)="onSubmit(action)">
+        <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel">Source name</mat-label>
+            <input class="formPlaceholder" type="text" placeholder="Source name" matInput formControlName="name"
+                required />
+            <mat-error *ngIf="errorHandling(sourceFG, 'name', 'required')">
+                {{ FormErrorEnum.REQUIRED }}
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel">Select one or more gases released</mat-label>
+            <mat-select formControlName="gasID" multiple required>
+                <mat-option>
+                    <ngx-mat-select-search [formControl]="gasSelectSearch.filterFC"
+                        placeholderLabel="Search by gas name"
+                        [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                    </ngx-mat-select-search>
+                </mat-option>
+
+                <mat-option *ngFor="let gas of gasSelectSearch.filteredEntities | async"
+                    [value]="gas.id">
+                    {{ gas.name }}
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="errorHandling(sourceFG, 'gasID', 'required')">
+                {{ FormErrorEnum.REQUIRED }}
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel">Description</mat-label>
+            <textarea matInput matTextareaAutosize matAutosizeMinRows="2" matAutosizeMaxRows="10"
+                [maxlength]="maxLength" formControlName="description"></textarea>
+            <mat-hint>Total number of character remaining: <span
+                    [class]="(charactersRemainingFn(sourceFG) < 20)? 'text-danger': '' ">{{
+                    charactersRemainingFn(sourceFG) }}</span>
+                /{{maxLength}}
+            </mat-hint>
+        </mat-form-field>
+
+        <button class="d-none" type="submit" #formSubmitBtn></button>
+    </form>
+</mat-dialog-content>
+
+<div class="tscDialogFooter" #footer>
+    <button class="btn btn-sm btn-success" [ngClass]="{'disabled': isEqual && action == FormAction.UPDATE}"
+        (click)="formSubmitBtn.click()" matRipple [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER"
+        matTooltipPosition="below" [matTooltip]="ButtonTooltipEnum.NO_CHANGE"> {{
+        tSCCommonService.getButtonLabel(action) }}</button>
+    <button class="btn btn-sm btn-secondary me-2" mat-dialog-close matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">Cancel</button>
+</div>

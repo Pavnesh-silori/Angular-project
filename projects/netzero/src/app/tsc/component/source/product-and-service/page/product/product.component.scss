@@ -1,0 +1,36 @@
+.columnWidth {
+    min-width: 190px;
+}
+
+.circleBtn {
+    background-color: lightgray;
+    height: 29px;
+    width: 29px;
+    font-size: 9px;
+    font-weight: bold;
+}
+
+.current-org {
+    border-left: 5px solid #3ac47d;
+    background: whitesmoke;
+}
+
+.desc {
+    max-width: 200px;
+}
+
+.product-list {
+    max-height: 600px;
+    border-radius: 4px;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-height: 60px;
+}
+
+.product-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}

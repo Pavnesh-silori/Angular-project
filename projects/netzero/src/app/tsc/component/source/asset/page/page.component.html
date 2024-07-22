@@ -1,0 +1,145 @@
+<div class="card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Combustion Equipments</div>
+            <div class="pageSubtitle">
+                Create combustion equipments like boilers, furnaces etc. that are used for fuel combustion in your
+                organization.
+            </div>
+        </div>
+
+        <div class="headerRightContainerInner">
+            <button type="button" class="btn btn-sm btn-success btnRightRadiusZero"
+                (click)="createUpdateAsset('create', '')" matRipple
+                [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                [matTooltip]="ButtonTooltipEnum.CREATE">
+                <fa-icon [icon]="faPlus" class="me-1"></fa-icon>Combustion Equipment
+            </button>
+
+            <div class="btn-group" ngbDropdown placement="bottom-right" matTooltipPosition="below"
+                [matTooltip]="ButtonTooltipEnum.MORE">
+                <button type="button" ngbDropdownToggle class="btn btn-sm btn-success btnLeftRadiusZero">
+                </button>
+                <div ngbDropdownMenu>
+                    <button class="dropdown-item" (click)="bulkUpload();" matRipple
+                        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">
+                        Import
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button type="button" class="d-none" #refreshBtn>refresh</button>
+    <button type="button" class="d-none" #AllSourceBtn>refresh</button>
+
+    <div class="card-header pageHeader mt-1 bottomBorderNone">
+        <div class="col-sm-12">
+            <div class="float-end">
+                <mat-form-field>
+                    <mat-label class="formLabel">Search by name</mat-label>
+                    <input class="formPlaceholder" matInput type="text" (keydown.enter)='searchFn()'
+                        placeholder="Eg. Boiler" [formControl]="searchFC" />
+
+                    <button type="button" class="btn" *ngIf="searchFC.value" matSuffix mat-icon-button
+                        (click)="searchFC.reset('');">
+                        <span class="material-symbols-outlined fs-5">
+                            close
+                        </span>
+                    </button>
+
+                    <button #searchBtn type="submit" class="button btn btn-light searchBtn" *ngIf="searchFC.value == ''"
+                        matSuffix (click)="searchFn()">
+                        <fa-icon [icon]="faSearch"></fa-icon>
+                    </button>
+                </mat-form-field>
+            </div>
+        </div>
+    </div>
+    <table mat-table [dataSource]="dataSource" #sort matSort matSortActive="assetName" matSortDirection="desc"
+        matSortDisableClear>
+
+        <ng-container matColumnDef="assetID">
+            <th mat-header-cell *matHeaderCellDef> Code </th>
+            <td mat-cell *matCellDef="let row"> {{ row.assetAssetID == null ? '--': row.assetAssetID }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="assetName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Name </th>
+            <td mat-cell *matCellDef="let row"> {{row.assetName}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef> Description </th>
+            <td class="cursorPointer" mat-cell *matCellDef="let row" #tooltip="matTooltip" matTooltipPosition="left"
+                matTooltipHideDelay="0" matTooltip="{{row.description}}" matTooltipClass="nameTooltip">
+                {{ row.description != null ? columnDisplay(row.description, 'description') : COMMON_CONSTANT.HYPHEN }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="assetKeyID">
+            <th mat-header-cell *matHeaderCellDef> API Key ID </th>
+            <td mat-cell *matCellDef="let row;">
+                <button class="mx-auto" mat-icon-button type="button" #tooltip="matTooltip" matTooltipPosition="above"
+                    matTooltipHideDelay="0" [matTooltip]="COMMON_CONSTANT.VIEW_API_KEY_ID" [popover]="myPopover"
+                    popoverPlacement="top" [popoverOnHover]="false" [popoverAnimation]="true">
+                    <span type="button" class="material-symbols-outlined fs-5">
+                        visibility
+                    </span>
+                </button>
+
+                <popover-content #myPopover [animation]="true" [closeOnClickOutside]="true">
+                    <span>{{ row.assetKeyID }}</span>
+                    <button class="float-end" [cdkCopyToClipboard]="row.assetKeyID" mat-icon-button type="button">
+                        <span class="material-symbols-outlined fs-5" #tooltip="matTooltip" matTooltipPosition="above"
+                            matTooltipHideDelay="0" matTooltipClass="nameTooltip" matTooltip="Copy">
+                            content_copy
+                        </span>
+                    </button>
+                </popover-content>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="option">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let row">
+                <div class="centerAlignVertical">
+                    <ng-container *ngTemplateOutlet="icon; 
+                    context: {
+                        icon: 'edit',
+                        tooltip: ButtonTooltipEnum.UPDATE,
+                        class: 'text-primary',
+                        function: createUpdateAsset,
+                        functionParameter: ['update', row]
+                    }">
+                    </ng-container>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="dataRow"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+            </td>
+        </tr>
+
+    </table>
+
+    <mat-paginator class="roundedBorder" #paginator [length]="resultLength"
+        [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION" [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE"
+        showFirstLastButtons>
+    </mat-paginator>
+
+</div>
+
+<ng-template #icon let-icon="icon" let-tooltip="tooltip" let-class="class" let-function="function"
+    let-functionParameter="functionParameter">
+    <button class="iconBtn centerAlign" [class]="class" matTooltipPosition="below" [matTooltip]="tooltip" matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" (click)="handleClick(function, functionParameter)">
+        <span class="material-symbols-outlined icon">
+            {{ icon }}
+        </span>
+    </button>
+</ng-template>

@@ -1,0 +1,182 @@
+<div mat-dialog-title>
+    <strong class="dialogTitle">
+        New science based target
+    </strong>
+    <button mat-icon-button mat-dialog-close cdkFocusInitial class="float-end matDialogClose" matTooltip="Close"
+        matTooltipPosition="before">
+        <span class="material-symbols-outlined">
+            close
+        </span>
+    </button>
+</div>
+
+<div class="matDialogContent" mat-dialog-content>
+    <div class="cardTitle">Set a near term target</div>
+    <div class="cardSubtitle pt-1">
+        Near-term science-based targets are absolute scope 1, 2 and 3 GHG emissions reduction, engagement or renewable
+        electricity targets
+        that should be achieved within 5-10 years from the date of submission to the SBTi
+    </div>
+
+    <div class="row pt-4">
+        <div class="col-sm-4">
+            <div class="cardOverwrite cardHeight bg-light border">
+                <div class="card-body">
+                    <div class="cardTitle">Reduction target</div>
+                    <p class="cardSubtitle pt-2">Set a reduction target for scope 1, 2 and 3 emissions
+                        based on your base year emissions.
+                    </p>
+                    <p class="fw-bold">Minimum Ambition - 1.5C for Scope 1 and 2 Well below 2C for Scope 3
+                    </p>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="card-1">
+                                <button class="btn centerAlign mt-1"
+                                    [ngClass]="isNearTermReductionTargetSet ? 'btn-success' : 'btn-secondary disableButton'" type="button"
+                                    matTooltipPosition="above" matTooltipClass="infoTooltip"
+                                    [matTooltip]="isNearTermReductionTargetSet ? '' : nearTermReductionTargetMsg"
+                                    (click)="isNearTermReductionTargetSet? setNearTermTarget() : ''">
+                                    Set custom target
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="cardOverwrite cardHeight bg-light border">
+                <div class="card-body">
+                    <div class="iconStyle">
+                        <span class="material-symbols-outlined cursorPointer" #myTooltip="matTooltip"
+                            matTooltipPosition="above" matTooltipClass="infoTooltip"
+                            [matTooltip]="'Targets to actively source renewable electricity at a rate that is consistent with 1.5°C scenarios are an acceptable alternative to scope 2 emission reduction targets. The SBTi has identified 80% renewable electricity procurement by 2025 and 100% by 2030 as thresholds (portion of renewable electricity over 
+                            total electricity use) for this approach in line with the recommendations of RE100. Companies that already source electricity at or above these thresholds shall maintain or increase their use of renewable electricity to qualify.'"
+                            [matTooltipHideDelay]="1000">info</span>
+                    </div>
+                    <div>
+                        <div class="cardTitle row ps-3">Renewable <br> electricity target </div>
+                        <p class="cardSubtitle pt-2 me-3">Set a renewable electricity target for
+                            scope 2 emissions to source 80%
+                            RE by 2025 and 100% RE by 2030.
+                        </p>
+                        <p class="fw-bold">Minimum Ambition -1.5C Aligned with RE100 </p>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="btnPadding">
+                                    <button class="btn centerAlign mt-1 disableButton" type="button" matTooltipPosition="above"
+                                        matTooltipClass="infoTooltip" [matTooltip]="'Renewable electricity target coming soon'">
+                                        Set target
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="cardOverwrite cardHeight bg-light border">
+                <div class="card-body">
+                    <div class="iconStyle">
+                        <span class="material-symbols-outlined cursorPointer" #myTooltip="matTooltip"
+                            matTooltipPosition="above" matTooltipClass="infoTooltip"
+                            [matTooltip]="'Companies can set an engagement target that specifies percentage of suppliers or customers by emissions that will set a science based target within 5 years from the date of submission of your target. Information on the
+                            percentage of emissions and the relevant
+                            categories the target covers has to be disclosed. Eg. 80% of suppliers by emissions by 2025.'" [matTooltipHideDelay]="1000">info</span>
+                    </div>
+                    <div>
+                        <div class="cardTitle row ps-3">Engagement target</div>
+                        <p class="cardSubtitle pt-2 me-3">Set a supplier/ customer engagement
+                            target for upstream and downstream scope 3 emissions.
+                        </p>
+                        <p class="fw-bold">Minimum Ambition -1.5C
+                        </p>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="card-3">
+                                    <button class="btn centerAlign mt-1 disableButton" type="button"
+                                    matTooltipPosition="above" matTooltipClass="infoTooltip"
+                                    [matTooltip]="'Engagement target coming soon'">
+                                        Set target
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pt-3">
+            <div class="cardTitle pt-3">Set a long term target</div>
+            <div class="cardSubtitle pt-1">
+                Long-term science-based targets are absolute scope 1, 2 and 3 GHG emissions reduction targets that
+                should be achieved by 2050 at the latest,
+                from a predefined base year. They also include a commitment to neutralize any unabated emissions when
+                the long-term science-based target is achieved.
+            </div>
+        </div>
+
+        <div class="col-sm-4 pt-4">
+            <div class="cardOverwrite cardHeight bg-light border">
+                <div class="card-body">
+                    <div>
+                        <div class="cardTitle">Netzero target</div>
+                        <p class="cardSubtitle pt-1">Set a netzero target for scope 1, 2 and 3 based on your base year
+                            emissions.</p>
+                        <p class="fw-bold">Minimum Ambition- 1.5C</p>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="card-4">
+                                    <button class="btn centerAlign mt-1"
+                                        [ngClass]="isLongTermNetzeroTargetSet ? 'btn-success' : 'btn-secondary disableButton'" type="button"
+                                        matTooltipPosition="above" matTooltipClass="infoTooltip"
+                                        [matTooltip]="isLongTermNetzeroTargetSet ? '' : longTermNetzeroTargetMsg"
+                                        (click)="isLongTermNetzeroTargetSet ? setLongTermTarget() : ''">
+                                        Set target
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-4 pt-4">
+            <div class="cardOverwrite cardHeight bg-light border">
+                <div class="card-body">
+                    <div class="iconStyle">
+                        <span class="material-symbols-outlined cursorPointer" #myTooltip="matTooltip"
+                            matTooltipPosition="above" matTooltipClass="infoTooltip" [matTooltip]="'Targets to actively source renewable electricity at a rate that is consistent with 1.5°C scenarios are an acceptable 
+                            alternative to scope 2 emission reduction targets. The SBTi has identified 80% renewable electricity procurement by 2025 and 100% by 2030 as thresholds 
+                            (portion of renewable electricity over total electricity use) for this approach in line with the recommendations of RE100. Companies that already source electricity at or above 
+                            these thresholds shall maintain or increase their use of renewable electricity to qualify'"
+                            [matTooltipHideDelay]="1000">info</span>
+                    </div>
+                    <div>
+                        <div class="cardTitle row ps-3">Renewable <br> electricity target</div>
+                        <p class="cardSubtitle pt-2 me-3">Set a renewable electricity target for
+                            scope 2 emissions to source 100% renewable electricity.
+                        </p>
+                        <p class="fw-bold">Minimum Ambition -1.5C Aligned with RE100 </p>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="btnPadding">
+                                    <button class="btn centerAlign disableButton mt-1" type="button"
+                                    matTooltipPosition="above" matTooltipClass="infoTooltip"
+                                    [matTooltip]="'Renewable electricity target coming soon'">
+                                        Set target
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

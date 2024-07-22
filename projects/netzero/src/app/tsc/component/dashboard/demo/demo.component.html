@@ -1,0 +1,37 @@
+<div class="card main-card cardOverwrite bgWhite">
+    <span class="pageTitle headerTitle pl5">Netzero Dashboard</span>
+    <div class="mainDiv">
+        <ng-container *ngFor="let item of chartContent">
+            <div class="chartDiv">
+                <div class="headerPart">
+                    <div class="title">
+                        <h1 *ngIf="item?.type !== 'list'">{{item?.title}}</h1>
+                        <h1 *ngIf="item?.type === 'list'">{{item?.title}}</h1>
+                        <h5>{{item?.subTitle}}</h5>
+                    </div>
+                    <h4>{{item?.name}}</h4>
+                </div>
+                <ng-container *ngIf="item?.type !== 'list'">
+                    <echarts [initOpts]="initOpts" [options]="item.chartData"></echarts>
+                </ng-container>
+
+                <ng-container *ngIf="item?.type === 'list'">
+                    <div class="listDiv">
+
+                        <ol *ngIf="item?.chartData?.length">
+                            <ng-container *ngFor="let c of item?.chartData">
+                                <li>
+                                    <div class="content">
+                                        <h5>{{c.name}}</h5>
+                                        <span>{{c.label}}</span>
+                                    </div>
+                                </li>
+                            </ng-container>
+                        </ol>
+
+                    </div>
+                </ng-container>
+            </div>
+        </ng-container>
+    </div>
+</div>

@@ -1,0 +1,68 @@
+<div #header>
+    <div class="headerContainer p-0">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Select an activity type</div>
+            <div class="pageSubtitle"></div>
+        </div>
+
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <button class="btn btn-sm centerAlign py-1 iconBtn" mat-dialog-close>
+                    <span class="material-symbols-outlined">
+                        close
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="headerContainer p-0 mt-3">
+        <div class="headerLeftContainer" [ngClass]="{'d-none': isSelectActivity}">
+            <button *ngFor="let button of allForms; let i = index" type="button" class="btn me-2 btn-secondary btn-sm"
+                [ngClass]="{'btn-primary': selectedButtonIndex === button.keyID, 'btn-secondary': selectedButtonIndex !== button.keyID}"
+                (click)="onClickFunction(button.keyID)">
+                {{ button.name }}
+            </button>
+        </div>
+
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <lib-search-bar-one #searchBar cdkFocusInitial [searchBy]="'activity name'" [emitValueOnChange]="emitValueOnChange"
+                    class="float-end" (emitSearch)="searchFn($event)">
+                </lib-search-bar-one>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<mat-dialog-content class="mat-typography customScrollBar pt-2" #body>
+    <div *ngFor="let item of allActivity" class="activity-container">
+        <div class="row activity-row pt-3">
+            <div class="col-sm-8 ps-0">
+                <span class="activityTitle">{{ item.name }}</span>
+                <span *ngFor="let formType of item.types">
+                    <span class="badge rounded-pill ms-2"
+                        [ngClass]="{'cbamBadge': formType.keyID.includes(ACTIVITY_FORM_TYPE_KEYID_ENUM.CBAM_FORM), 'ghgBadge': formType.keyID.includes(ACTIVITY_FORM_TYPE_KEYID_ENUM.GHG_FORM),
+                                    'blueBadge': formType.keyID.includes(ACTIVITY_FORM_TYPE_KEYID_ENUM.ESG_FORM)}">
+                        {{ formType.name }}
+                    </span>
+                </span>
+                <div class="text-secondary  mt-2" *ngIf="item.scope">
+                    {{ item.scope.name }}
+                </div>
+                <div class="activitySubtitle mt-2" *ngIf="item.description">
+                    {{ item.description }}
+                </div>
+            </div>
+            <div class="col-sm-4 pe-0">
+                <div class="float-end">
+                    <button class="btn btn-primary" (click)="selectActivity(item)">Select</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</mat-dialog-content>
+
+<div class="tscDialogFooter" #footer>
+</div>

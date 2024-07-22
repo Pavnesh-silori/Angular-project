@@ -1,0 +1,182 @@
+<div class="cardOverwrite card">
+    <div class="headerContainer">
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <lib-search-bar-one class="me-3" #searchBar [searchBy]="searchByPlaceHolder"
+                    (emitSearch)="searchFn($event)"></lib-search-bar-one>
+
+                <button class="btn btn-sm btn-light refreshBtn centerAlign me-3 py-1" #refreshBtn matRipple
+                    [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                    [matTooltip]="ButtonTooltipEnum.REFRESH">
+                    <span class="material-symbols-outlined text-secondary">
+                        refresh
+                    </span>
+                </button>
+
+                <button type="button" class="btn btn-sm btn-success btnRightRadiusZero" matRipple
+                    [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                    [matTooltip]="ButtonTooltipEnum.CREATE" (click)="openDialog()">
+                    <fa-icon [icon]="faPlus" class="me-1"></fa-icon>Generate Report
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <table class="w-100" mat-table [dataSource]="dataSource" #sort matSort matSortActive="id" matSortDirection="desc"
+        matSortDisableClear>
+
+        <ng-container matColumnDef="id">
+            <th class="small-width" mat-header-cell *matHeaderCellDef>
+                <div class="d-flex align-items-center">
+                    <span mat-sort-header disableClear>
+                        Report ID
+                    </span>
+                </div>
+            </th>
+            <td mat-cell *matCellDef="let row" class="ps-5">
+                {{ row.id ? row.id: COMMON_CONSTANT.HYPHEN }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="runID">
+            <th class="small-width" mat-header-cell *matHeaderCellDef>
+                <div class="d-flex align-items-center">
+                    <span mat-sort-header disableClear>
+                        Run ID
+                    </span>
+                </div>
+            </th>
+            <td mat-cell *matCellDef="let row" class="ps-5">
+                {{ row.runID ? row.runID: COMMON_CONSTANT.HYPHEN }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="customerName">
+            <th class="small-width" mat-header-cell *matHeaderCellDef>
+                <div class="d-flex align-items-center">
+                    <span mat-sort-header disableClear>
+                        Customer Name
+                    </span>
+                </div>
+            </th>
+            <td mat-cell *matCellDef="let row">
+                {{ row.customerName ? row.customerName: COMMON_CONSTANT.HYPHEN }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="productCnCode">
+            <th class="small-width" mat-header-cell *matHeaderCellDef>
+                <div class="d-flex align-items-center">
+                    <span mat-sort-header disableClear>
+                        CN Code
+                    </span>
+                </div>
+            </th>
+            <td mat-cell *matCellDef="let row">
+                {{ row.productCnCode ? row.productCnCode: COMMON_CONSTANT.HYPHEN }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="productName">
+            <th class="small-width" mat-header-cell *matHeaderCellDef>Product Name</th>
+            <td mat-cell *matCellDef="let row" [matTooltip]="row.productName?.length >= 15? row.productName: ''"
+                matTooltipClass="infoTooltip" matTooltipPosition="above">
+                {{ row.productName? (row.productName | dotdotdot: 15) : COMMON_CONSTANT.HYPHEN }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="reportingPeriod">
+            <th class="reportingPeriod" mat-header-cell *matHeaderCellDef>Reporting Period</th>
+            <td mat-cell *matCellDef="let row">
+                {{ row.startDate ? (row.startDate | date: 'dd-MMM-yyyy') + ' to ' + (row.endDate | date: 'dd-MMM-yyyy')
+                : COMMON_CONSTANT.HYPHEN }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="productExport">
+            <th class="small-width" mat-header-cell *matHeaderCellDef>
+                <div class="d-flex align-items-center">
+                    <span mat-sort-header disableClear>
+                        Quantity of product exported
+                    </span>
+                </div>
+            </th>
+            <td mat-cell *matCellDef="let row" class="ps-5">
+                {{ row.productExported ? (row.productExported | number:'1.0-2') : COMMON_CONSTANT.HYPHEN }}
+                {{ row.productExportedUnit?.uomCode }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="embeddedEmission">
+            <th class="fixed-header-cell" mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+                <!-- <span mat-sort-header disableClear> -->
+                    Specific embedded emissions<span class="ps-1">(tCO<sub>2</sub>e / t)</span>
+                <!-- </span> -->
+            </th>
+            <td mat-cell *matCellDef="let row" class="ps-5">
+                {{ row.embeddedEmission ? (row.embeddedEmission | number:'1.0-2') : COMMON_CONSTANT.HYPHEN }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="defaultEmbeddedEmission">
+            <th class="fixed-header-cell" mat-header-cell *matHeaderCellDef>
+                <!-- <span mat-sort-header disableClear> -->
+                     Default specific embedded emissions<span class="ps-1">(tCO<sub>2</sub>e / t)</span>
+                <!-- </span> -->
+            </th>
+            <td mat-cell *matCellDef="let row" class="ps-5">
+                {{ row.defaultEmbeddedEmission ? (row.defaultEmbeddedEmission | number:'1.0-2') : COMMON_CONSTANT.HYPHEN }}
+            </td>
+        </ng-container>
+
+        <!-- <ng-container matColumnDef="delete">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let row">
+                <div class="text-danger cursorPointer" matTooltip="Delete" matTooltipPosition="above"
+                    (click)="deleteRows(row,'')">
+                    <span class="material-symbols-outlined">
+                        delete
+                    </span>
+                </div>
+            </td>
+        </ng-container> -->
+
+        <ng-container matColumnDef="action">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let row">
+                <div class="btn-group" ngbDropdown placement="left-top">
+                    <button type="button" ngbDropdownToggle class="dropdown-after dropdownAfter btn">
+                        <fa-icon [icon]="faEllipsisV"></fa-icon>
+                    </button>
+                    <div ngbDropdownMenu>
+                        <ng-container *ngIf="row.auditID == null;">
+                            <button class="dropdown-item" (click)="openAuditDetailsDialog(row.id)">
+                                Add audit details
+                            </button>
+                        </ng-container>
+                        <!-- <ng-template #elseBlock> -->
+                            <button class="dropdown-item" (click)="downloadReport(row)">
+                                Download report
+                            </button>
+                            <!-- <button class="dropdown-item" *ngIf="row.file" (click)="openSendEmailDialog(row.id)">
+                                Send email
+                            </button> -->
+                        <!-- </ng-template> -->
+                    </div>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="dataRow"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+            </td>
+        </tr>
+    </table>
+    <mat-paginator class="roundedBorder" #paginator [length]="resultLength"
+        [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION" [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE"
+        showFirstLastButtons>
+    </mat-paginator>
+</div>

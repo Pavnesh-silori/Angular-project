@@ -1,0 +1,106 @@
+<div class="card main-card centerAlignHorizontal cardOverwrite h100">
+    <ng-container *ngIf="showLandingPage">
+        <div class="row">
+            <div class="col-sm-6 p-5 centerAlign">
+                <img class="pageOneDefaultImage img-width" [src]="image" alt="Selected image">
+            </div>
+
+            <div class="col-sm-6 p-5 centerAlign">
+                <div class="card-body">
+                    <div class="fs-4 fw-bold mb-2">Get started with EU CBAM compliance:</div>
+
+                    <div class="mb-2">
+                        <ng-container *ngTemplateOutlet="check;
+                            context: { class: cbamEnabled ? 'verifiedIcon' : 'text-secondary' }">
+                        </ng-container>
+                        <ng-container *ngIf="cbamEnabled; else cbamEnabledSetup;">
+                            CBAM has been enabled.
+                        </ng-container>
+                        <ng-template #cbamEnabledSetup>
+                            Enable CBAM accounting in
+                            <a routerLink="/carbon-setting/preference/accounting">
+                                Carbon Preferences.
+                            </a>
+                        </ng-template>
+                    </div>
+
+                    <div class="mb-2">
+                        <ng-container *ngTemplateOutlet="check; 
+                            context: { class: createProduct ? 'verifiedIcon' : 'text-secondary' }">
+                        </ng-container>
+                        <ng-container *ngIf="createProduct; else createProductSetup;">
+                            CBAM product is created.
+                        </ng-container>
+                        <ng-template #createProductSetup>
+                            <span>Create CBAM products that you export and all related raw materials, precursors,
+                                by-products
+                                and intermediate products that are used or released in the process in
+                                <a [routerLink]="cbamEnabled ? '/source/product-service/product/page' : null"
+                                    [ngClass]="{'disabled-link' : !cbamEnabled}">
+                                    Products and Services.
+                                </a>
+                            </span>
+                        </ng-template>
+                    </div>
+
+                    <div class="mb-2">
+                        <ng-container *ngTemplateOutlet="check; 
+                            context: { class: createProcess ? 'verifiedIcon' : 'text-secondary' }">
+                        </ng-container>
+                        <ng-container *ngIf="createProcess; else createProcessSetup;">
+                            CBAM process is created.
+                        </ng-container>
+                        <ng-template #createProcessSetup>
+                            Create CBAM process
+                            <a [routerLink]="createProduct ? '/source/process/page' : null"
+                                [ngClass]="{'disabled-link': !createProduct}">
+                                by clicking here.
+                            </a>
+                        </ng-template>
+                    </div>
+
+                    <div class="mb-2">
+                        <ng-container *ngTemplateOutlet="check; 
+                            context: { class: createProductionRoute ? 'verifiedIcon' : 'text-secondary' }">
+                        </ng-container>
+                        <ng-container *ngIf="createProductionRoute; else createProductionRouteSetup;">
+                            Production route is created.
+                        </ng-container>
+                        <ng-template #createProductionRouteSetup>
+                            Create production route
+                            <a [routerLink]="createProcess ? '/source/production-route/page' : null"
+                                [ngClass]="{'disabled-link': !createProcess}">
+                                by clicking here.
+                            </a>
+                        </ng-template>
+                    </div>
+
+                    <div>
+                        <ng-container *ngTemplateOutlet="check; 
+                            context: { class: createRun ? 'verifiedIcon' : 'text-secondary' }">
+                        </ng-container>
+                        <ng-container *ngIf="createRun; else createRunSetup;">
+                            CBAM run is created.
+                        </ng-container>
+                        <ng-template #createRunSetup>
+                            Create CBAM run
+                            <a [routerLink]="createProductionRoute ? '/cbam/run/page' : null"
+                                [ngClass]="{'disabled-link': !createProductionRoute}">
+                                by clicking here.
+                            </a>
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</div>
+
+<ng-template #check let-class="class">
+    <svg fill="currentColor" class="check-circle-fill flex-shrink-0 iconSize me-2" [ngClass]="class"
+        viewBox="0 0 16 16">
+        <path
+            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 
+                                7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+    </svg>
+</ng-template>

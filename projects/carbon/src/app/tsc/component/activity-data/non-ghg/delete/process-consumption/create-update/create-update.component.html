@@ -1,0 +1,7 @@
+<app-meter-reading *ngIf="(dataInputMethodKeyID == DataInputMethodKeyIDEnum.METER_READING)"
+    (formGroupChange)="onChildFormGroupChange($event)" [activityConfig]="activityConfig"
+    [getAllSource]="getAllSource"></app-meter-reading>
+
+<app-total-amount *ngIf="(dataInputMethodKeyID == DataInputMethodKeyIDEnum.TOTAL_AMOUNT)"
+    (formGroupChange)="onChildFormGroupChange($event)" [activityConfig]="activityConfig"
+    [getAllSource]="getAllSource"></app-total-amount>

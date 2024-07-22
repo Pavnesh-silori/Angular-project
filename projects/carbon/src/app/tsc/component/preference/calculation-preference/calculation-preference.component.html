@@ -1,0 +1,383 @@
+<div class="card main-card cardOverwrite">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">
+                Calculation Preferences
+            </div>
+            <div class="pageSubtitle">
+                Select the standard emission factors and GWP dataset you want to use for emission calculations.
+            </div>
+        </div>
+    </div>
+
+    <div class="extraInfoCard pt-2 px-3">
+        <div *ngIf="hasPreference" class="alert alert-success mb-0 centerAlignVertical roundedBorder">
+            <svg class="bi flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                <use xlink:href="#check-circle-fill" />
+            </svg>
+            <div>
+                <span class="mb-1 extraInfoCardHeading fw-bold">Preferences saved successfully!</span>
+                <div class="extraInfoCardText">
+                    Your calculation preferences have been saved successfully. These settings will be used to pick
+                    standard emission factors for all calculations in your organization and facilities.
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="!hasPreference" class="alert alert-primary m-0 centerAlignVertical roundedBorder">
+            <svg class="bi flex-shrink-0 me-3 extraInfoCardHeaderIcon">
+                <use xlink:href="#info-fill" />
+            </svg>
+            <div>
+                These settings once saved will apply to all facilities within this organization.
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <form [formGroup]="preferenceFG" (ngSubmit)="updateOrgPreference()">
+            <div class="row">
+                <div class="col-sm-12">
+                    <mat-card class="border cardOverwrite">
+                        <div class="card-title">
+                            <div class="cardTitle">
+                                Select consolidation approach
+                            </div>
+                            <small class="cardSubtitle">
+                                Consolidation approach is used to define your organizational boundaries for the purpose
+                                of accounting and reporting carbon emissions. It consistently applies to define those
+                                businesses and operations that constitute the company.
+                            </small>
+                        </div>
+
+                        <div *ngFor="let consolidationApproaches of consolidationApproach; let i = index;">
+                            <mat-checkbox [checked]="consApps.isSelected(consolidationApproaches['id'])"
+                                [value]="consolidationApproaches['id']"
+                                (change)="consApps.toggle(consolidationApproaches.id)">
+                                {{ consolidationApproaches['name'] }}
+                            </mat-checkbox>
+                        </div>
+
+                        <mat-error class="textMatError ms-2" *ngIf="consApps.isEmpty()">
+                            <br />Please select atleast one consolidation approach
+                        </mat-error>
+
+                    </mat-card>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <mat-card class="border mt-3 cardOverwrite">
+                        <div class="card-title">
+                            <div class="cardTitle">
+                                Select GWP dataset (IPCC Assessment Report)
+                            </div>
+                            <small class="cardSubtitle">
+                                A GWP dataset is a set of values that indicate the global warming potential of each
+                                gas as compared to CO<sub>2</sub>. This is used to convert emissions from various gases
+                                to their carbon dioxide
+                                equivalents (CO<sub>2</sub>e).
+                            </small>
+                        </div>
+                        <mat-radio-group class="radioButtonGroup" formControlName="gwpDatasetID" required>
+                            <mat-radio-button class="radioButton" *ngFor="let gwpDatasetsM of gwpDatasetM"
+                                [value]="gwpDatasetsM.gwpDatasetID">
+                                {{gwpDatasetsM.gwpDatasetName}}
+                            </mat-radio-button>
+                            <mat-error class="textMatError ms-2" *ngIf="errorHandling('gwpDatasetID', 'required')">
+                                <br />Please select one GWP dataset
+                            </mat-error>
+                        </mat-radio-group>
+                    </mat-card>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <mat-card class="border mt-3 cardOverwrite">
+                        <div class="card-title">
+                            <div class="cardTitle">
+                                Select scope 2 reporting preference
+                            </div>
+                            <small class="cardSubtitle">
+                                Reporting preference depends on type of supplier you are purchasing energy from.
+                                If your supplier is private and provides you emission factor then it is market based
+                                else location based.
+                            </small>
+                        </div>
+                        <mat-radio-group class="radioButtonGroup" formControlName="scope2CalculationApproachID"
+                            required>
+                            <mat-radio-button class="radioButton" *ngFor="let calApproach of scope2CalculationApproach"
+                                [value]="calApproach.id">
+                                {{calApproach.name}}
+                            </mat-radio-button>
+                            <mat-error class="textMatError ms-2"
+                                *ngIf="errorHandling('scope2CalculationApproachID', 'required')">
+                                <br />Please select one calculation approach
+                            </mat-error>
+                        </mat-radio-group>
+                    </mat-card>
+                </div>
+            </div>
+
+            <mat-card class="border mt-3 cardOverwrite">
+                <div class="card-title">
+                    <div class="cardTitle">
+                        Select standard emission factor source
+                    </div>
+                    <small class="cardSubtitle">
+                        Standard emission factors are released by various agencies like US EPA, UK DEFRA etc. Select
+                        which emission factors you want to use from our standard emission factor database.
+                    </small>
+                </div>
+
+                <div class="card main-card cardOverwrite">
+                    <nav mat-tab-nav-bar>
+                        <a mat-tab-link *ngFor="let tab of tabs;" (click)="changeScopeLabel(tab['key'])"
+                            [active]="activeLabelKey == tab['key']">
+                            {{ tab['label'] }}
+                        </a>
+                    </nav>
+                </div>
+
+                <div class="mt-3" *ngIf="activeLabelKey != 'SCOPE3'">
+                    <div class="alert alert-primary centerAlignVertical roundedBorder">
+                        <svg class="bi flex-shrink-0 me-3 extraInfoCardIcon">
+                            <use xlink:href="#info-fill" />
+                        </svg>
+                        <div class="extraInfoCardText">
+                            <ng-container *ngIf="activeLabelKey != 'SCOPE2'; else scope2;">
+                                Calculation for activity types that are not mentioned below do not require emission
+                                factors.
+                            </ng-container>
+
+                            <ng-template #scope2>
+                                Calculation for scope 2 activity types do not require emission factors.
+                            </ng-template>
+                            Such calculations are done directly by our calculation engine once activity data is
+                            provided.
+                            You can input data for any activity type from the
+                            <a routerLink="/sustainability-accounting/carbon" target="_blank">
+                                carbon ledger
+                            </a>.
+                        </div>
+                    </div>
+                </div>
+
+                <ng-container *ngIf="activeLabelKey != 'SCOPE2'">
+                    <mat-card class="border-0 cardOverwrite">
+                        <div class="row tableHeader p-1 rounded cardOverwrite centerAlignVertical"
+                            style="height: 40px;">
+                            <!-- <div class="col-sm-3">Activity type</div> -->
+
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-2">Activity type</div>
+                                    <div class="col-sm-2">Calculation approach</div>
+                                    <div class="col-sm-8">
+                                        <div class="row">
+                                            <div class="col-sm-4">Emission factor database</div>
+                                            <div class="col-sm-3"></div>
+                                            <div class="col-sm-3"></div>
+                                            <div class="col-sm-2"></div>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="col-sm-2 centerAlignHorizontal">
+                                    via &nbsp;<a routerLink="/carbon-setting/boundary-question" target="_blank">
+                                        Boundary Questions
+                                    </a>
+                                </div> -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div formGroupName="orgEFSourcePriority">
+                            <div [formArrayName]="activeLabelKey === 'SCOPE1' ? 'scope1' : activeLabelKey === 'SCOPE2' ? 'scope2' : 'scope3'"
+                                *ngFor="let scope of (activeLabelKey == 'SCOPE1' ? scope1Array.controls : (activeLabelKey == 'SCOPE2' ? scope2Array.controls : scope3Array.controls)); let i = index;">
+                                <div [formGroupName]="i">
+                                    <div formArrayName="calculationApproachID"
+                                        *ngFor="let approachID of scope.get('calculationApproachID').controls; let j=index;">
+                                        <div class="row mb-3 pb-2">
+                                            <div class="col-sm-12">
+                                                <div [formGroupName]="j">
+                                                    <div class="row">
+                                                        <ng-container *ngIf="j == 0">
+                                                            <div class="col-sm-2 pt-4 cardTitle">
+                                                                {{ scope.get('activityName').value }}
+                                                            </div>
+                                                        </ng-container>
+
+                                                        <ng-container *ngIf="j !== 0">
+                                                            <div class="col-sm-2 pt-4">
+                                                            </div>
+                                                        </ng-container>
+
+                                                        <div class="col-sm-2 pt-4">
+                                                            {{ approachID.get('calculationApproachName').value }}
+                                                        </div>
+
+                                                        <div class="col-sm-8">
+                                                            <div formArrayName="emissionFactorSource">
+                                                                <ng-container
+                                                                    *ngFor="let factorSourceID of approachID.get('emissionFactorSource').controls; let k=index;">
+                                                                    <ng-container [formGroupName]="k">
+                                                                        <div class="row">
+
+                                                                            <div class="col-sm-4">
+                                                                                <mat-form-field class="matFieldWidth100"
+                                                                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                                                    <mat-label> Source </mat-label>
+                                                                                    <mat-select
+                                                                                        (selectionChange)="scope.get('scopeKeyID').value !== 'SCOPE3'? factorSourceChange(scope, factorSourceID, i, j, k): null"
+                                                                                        formControlName="emissionFactorSourceID">
+                                                                                        <mat-option disabled>Select
+                                                                                            Emission
+                                                                                            Factor Source
+                                                                                        </mat-option>
+                                                                                        <mat-option
+                                                                                            *ngFor="let emissionFactorSources of getEmissionFactorSource(i,j)"
+                                                                                            [value]="emissionFactorSources.id"
+                                                                                            [disabled]="!emissionFactorSources.isActive">
+                                                                                            {{
+                                                                                            emissionFactorSources.name
+                                                                                            }}
+                                                                                        </mat-option>
+                                                                                    </mat-select>
+                                                                                </mat-form-field>
+                                                                            </div>
+
+                                                                            <div class="col-sm-3">
+                                                                                <mat-form-field class="matFieldWidth100"
+                                                                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                                                    <mat-label> Version </mat-label>
+                                                                                    <mat-select
+                                                                                        formControlName="emissionFactorSourceVersion">
+                                                                                        <mat-option disabled>Select
+                                                                                            Version
+                                                                                            Source</mat-option>
+                                                                                        <mat-option
+                                                                                            *ngFor="let version of getEmissionFactorSourceVersion(i,j,k)"
+                                                                                            [value]="version.id">
+                                                                                            {{ version.name }}
+                                                                                        </mat-option>
+                                                                                    </mat-select>
+                                                                                </mat-form-field>
+                                                                            </div>
+
+                                                                            <div class="col-sm-3"
+                                                                                [class.centerAlign]="!isSectorAvailabe(scope, factorSourceID, i, j, k)"
+                                                                                *ngIf="isSectorAvailabe(scope, factorSourceID, i, j, k);">
+                                                                                <ng-container>
+                                                                                    <mat-form-field
+                                                                                        class="matFieldWidth100"
+                                                                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                                                        <mat-label> Sector </mat-label>
+                                                                                        <mat-select
+                                                                                            formControlName="sectorID">
+                                                                                            <mat-option disabled> Select
+                                                                                                Sector</mat-option>
+                                                                                            <mat-option
+                                                                                                *ngFor="let version of getEmissionFactorSourceSector(factorSourceID)"
+                                                                                                [value]="version.id">
+                                                                                                {{ version.name }}
+                                                                                            </mat-option>
+                                                                                        </mat-select>
+                                                                                    </mat-form-field>
+                                                                                </ng-container>
+                                                                            </div>
+
+                                                                            <div class="col-sm-2 pb-3 centerAlignVertical"
+                                                                                *ngIf="activeLabelKey === 'SCOPE3'">
+
+                                                                                <div class="row">
+                                                                                    <ng-container
+                                                                                        *ngIf="showAddEFD(approachID)">
+                                                                                        <button
+                                                                                            (click)="addEFD(approachID)"
+                                                                                            class="btn btn-sm centerAlign py-1 me-2 iconBtn addBtnBorder"
+                                                                                            matRipple
+                                                                                            [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER"
+                                                                                            matTooltipPosition="below"
+                                                                                            [matTooltip]="ButtonTooltipEnum.REMOVE">
+                                                                                            <span
+                                                                                                class="material-symbols-outlined text-success">
+                                                                                                add
+                                                                                            </span>
+                                                                                        </button>
+                                                                                    </ng-container>
+
+                                                                                    <ng-container
+                                                                                        *ngIf="showRemoveEFD(approachID)">
+                                                                                        <button
+                                                                                            (click)="removeEFD(approachID, k)"
+                                                                                            class="btn btn-sm centerAlign py-1 me-2 iconBtn removeBtnBorder"
+                                                                                            matRipple
+                                                                                            [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER"
+                                                                                            matTooltipPosition="below"
+                                                                                            [matTooltip]="ButtonTooltipEnum.REMOVE">
+                                                                                            <span
+                                                                                                class="material-symbols-outlined text-danger">
+                                                                                                remove
+                                                                                            </span>
+                                                                                        </button>
+                                                                                    </ng-container>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </ng-container>
+                                                                </ng-container>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- <ng-container *ngIf="j == 0">
+                                                        <div class="col-sm-2 centerAlign pb-3 centerAlignVertical">
+                                                            <div *ngIf="scope.get('bq').value == 'YES'"
+                                                                class="text-success">Yes</div>
+                                                            <div *ngIf="scope.get('bq').value == 'NO'"
+                                                                class="text-danger">No</div>
+                                                        </div>
+                                                    </ng-container>
+
+                                                    <ng-container *ngIf="j !== 0">
+                                                        <div class="col-sm-1 pb-3">
+                                                        </div>
+                                                    </ng-container> -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-card>
+                </ng-container>
+
+            </mat-card>
+
+            <div class="float-end mt-3 mb-1">
+                <button class="button btn btn-success" type="submit">
+                    {{ ButtonLabelEnum.SAVE_BTN_LABEL }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+    <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+    </symbol>
+    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+    </symbol>
+</svg>
+
+<ng-template #noSector>
+    {{ COMMON_CONSTANT.HYPHEN }}
+</ng-template>

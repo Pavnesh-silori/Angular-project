@@ -1,0 +1,141 @@
+<div class="headerContainer p-0" #header>
+    <div class="pageTitle">
+        {{ action == FormAction.CREATE ? PageTitleEnum.CREATE : PageTitleEnum.UPDATE }} vehicle
+    </div>
+
+    <div class="headerRightContainer">
+        <div class="headerRightContainerInner">
+            <button class="btn btn-sm centerAlign py-1 iconBtn" matRipple
+                [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                [matTooltip]="ButtonTooltipEnum.CLOSE" mat-dialog-close>
+                <span class="material-symbols-outlined">
+                    close
+                </span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<mat-dialog-content class="mat-typography customScrollBar pt-2" #body>
+    <form [formGroup]="vehicleFG">
+
+        <div class="row">
+            <div class="col-sm-6">
+                <mat-form-field class="matFieldWidth100"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Vehicle number</mat-label>
+                    <input class="formPlaceholder" matInput type="text" placeholder="Vehicle number"
+                        formControlName="vehicleNumber" required />
+                    <mat-error *ngIf="errorHandling('vehicleNumber', 'required')">
+                        {{ FormErrorEnum.REQUIRED }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="col-sm-6">
+                <mat-form-field class="matFieldWidth100"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Vehicle name</mat-label>
+                    <input class="formPlaceholder" matInput type="text" placeholder="Vehicle name"
+                        formControlName="vehicleName" required />
+                    <mat-error *ngIf="errorHandling('vehicleName', 'required')">
+                        {{ FormErrorEnum.REQUIRED }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="radioBtnGroupLabel">Select a vehicle type</div>
+                <mat-radio-group formControlName="vehicleTypeID">
+                    <div class="row mt-1">
+                        <div class="col-sm-6" *ngFor="let data of vehicleTypeM">
+                            <mat-radio-button class="radioBtnLabel" [value]="data.id"
+                                (change)="onVehicleTypeChange(data)">
+                                {{ data.name }}
+                            </mat-radio-button>
+                        </div>
+                        <mat-error class="mt-2"
+                                    *ngIf="errorHandlingForRadio('vehicleTypeID', 'required')">
+                                    {{ FormErrorEnum.REQUIRED }}
+                                </mat-error>
+                    </div>
+                </mat-radio-group>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-sm-6">
+                <mat-form-field class="matFieldWidth100"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Select vehicle category
+                    </mat-label>
+                    <mat-select formControlName="vehicleCategoryID" required>
+                        <mat-option *ngFor="let method of vehicleCategory" [value]="method.id">
+                            {{ method.name }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="errorHandling('vehicleCategoryID', 'required')">
+                        {{ FormErrorEnum.REQUIRED }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="col-sm-6">
+                <mat-form-field *ngIf="isEngineStroke" class="matFieldWidth100"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Select engine stroke</mat-label>
+                    <mat-select formControlName="engineStrokeId" required>
+                        <mat-option *ngFor="let data of engineStrokeM" [value]="data.id">
+                            <span class="d-flex justify-content-between">{{ data.name }}
+                            </span>
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="errorHandling('engineStrokeId', 'required')">
+                        {{ FormErrorEnum.REQUIRED }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <lib-date-input #yearInput (emitFilter)="dateInpChange()" [materialFieldWidthInp]="true"
+                    [materialFormFieldAppearanceInp]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE"
+                    [isMandatoryFieldInp]="true" [dateInputTypeInp]="DateInputTypeEnum.YEAR_INPUT"
+                    [labelInp]="'Vehicle year'"></lib-date-input>
+            </div>
+
+            <div class="col-sm-6">
+                <mat-form-field class="matFieldWidth100"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Select odometer unit</mat-label>
+                    <mat-select formControlName="odoMeterUnitID" required>
+                        <mat-option *ngFor="let units of unitM" [value]="units.id">
+                            <span class="d-flex justify-content-between">{{ units.name }}
+                                <span>{{ units.uomCode }} </span></span>
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="errorHandling('odoMeterUnitID', 'required')">
+                        {{ FormErrorEnum.REQUIRED }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+
+<div class="tscDialogFooter" #footer>
+    <div [ngSwitch]="action" class="d-inline">
+        <button class="btn btn-sm btn-success" [ngClass]="{
+            'btn-success' : action == FormAction.CREATE,
+            'btn-primary' : action == FormAction.UPDATE,
+            'disabled' : action == FormAction.UPDATE && isEqual}" type="submit" (click)="vechileSubmit()">
+            {{ action == FormAction.CREATE ? ButtonLabelEnum.CREATE_BTN_LABEL : ButtonLabelEnum.UPDATE_BTN_LABEL }}
+        </button>
+        <button *ngSwitchDefault class="d-none"></button>
+    </div>
+    <button class="btn btn-sm btn-secondary me-2" mat-dialog-close matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">Cancel</button>
+</div>

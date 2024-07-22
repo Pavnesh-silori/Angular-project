@@ -1,0 +1,72 @@
+<div class="card main-card cardOverwrite">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">
+                Accounting Preference
+            </div>
+            <div class="pageSubtitle">
+                Select the standard emission factors and GWP dataset you want to use for emission calculations.
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="col-sm-7">
+            <mat-card class="border cardOverwrite">
+                <div class="cardTitle">
+                    Select carbon preference
+                </div>
+
+                <form [formGroup]="accountingPrefFG">
+                    <div class="d-flex mt-2">
+                        <mat-checkbox class="me-2" formControlName="isProductIntensity" disabled>
+                            <span class="me-2">
+                                Product intensity
+                            </span>
+                        </mat-checkbox>
+                        <span class="material-symbols-outlined cursorPointer" matTooltip="Product intensity"
+                            matTooltipPosition="above">
+                            info
+                        </span>
+                    </div>
+
+                    <div class="d-flex mt-2">
+                        <mat-checkbox class="me-2" formControlName="isProductEmbeddedEmission">
+                            <span class="me-2">
+                                Product embedded emissions-CBAM
+                            </span>
+                        </mat-checkbox>
+                        <span class="material-symbols-outlined cursorPointer"
+                            matTooltip="Product embedded emissions-CBAM" matTooltipPosition="above">
+                            info
+                        </span>
+                    </div>
+                    <!-- <mat-error class="textMatError ms-4" *ngIf="!isProductEmbeddedEmissionValid">
+                        Please select the checkbox
+                    </mat-error> -->
+
+                    <div class="d-flex mt-2">
+                        <mat-checkbox class="me-2" formControlName="isProductCarbonFootPrint" disabled>
+                            <span class="me-2">
+                                Product carbon footprint
+                            </span>
+                        </mat-checkbox>
+                        <span class="material-symbols-outlined cursorPointer" matTooltip="Product carbon footprint"
+                            matTooltipPosition="above">
+                            info
+                        </span>
+                    </div>
+                </form>
+            </mat-card>
+        </div>
+
+        <div class="col-sm-7">
+            <div class="float-end mt-4">
+                <button class="button btn btn-success" type="submit" (click)="onSubmit()"
+                    [ngClass]="{'disabled': isEqual}">
+                    {{ ButtonLabelEnum.SAVE_BTN_LABEL }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

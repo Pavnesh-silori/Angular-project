@@ -1,0 +1,200 @@
+<mat-card class="cardOverwrite border">
+    <div class="content">
+        <div class="cardTitle pb-2"> Workflow and Reminder </div>
+
+        <div class="row">
+            <div class="col-sm-7">
+                <mat-slide-toggle [formControl]="enableWorkflowFC" (change)="toggleWorkflowStatus($event.checked)"
+                    [checked]="enableWorkflowFC.value">
+                    <div class="cardTitle">
+                        Set a workflow
+                    </div>
+                </mat-slide-toggle>
+            </div>
+
+            <div class="col-sm-7 my-2">
+                <lib-message-alert [messageAlertTypeInp]="messageAlertTypeEnum.INFO"
+                    [messageAlertIconInp]="messageAlertIconEnum.INFO_ICON"
+                    contentInp="Establishing a workflow is mandatory, while setting a reminder is optional.">
+                </lib-message-alert>
+            </div>
+        </div>
+
+        <div class="mt-2">
+            <form [formGroup]="schedulerFG">
+                <ng-container formGroupName="workflow">
+                    <ng-container formGroupName="activityConfigAssignee">
+                        <div class="row">
+                            <div class="col-sm-7">
+                                <div class="row">
+                                    <div class="col-sm-7 my-1">
+                                        <span class="radioBtnGroupLabel ps-1">
+                                            Who will enter this data?
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <mat-form-field class="matFieldWidth100"
+                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <mat-label class="formLabel">Select assignee</mat-label>
+                                        <mat-select formControlName="assigneeID" multiple>
+                                            <mat-option *ngFor="let assignee of assignee" [value]="assignee.id">
+                                                {{ assignee.firstName }} {{assignee.lastName}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+
+                    <div class="row">
+                        <div class="col-sm-7">
+                            <div class="row">
+                                <div class="col-sm-7 my-1">
+                                    <span class="radioBtnGroupLabel ps-1">
+                                        Who will approve this data?
+                                    </span>
+                                </div>
+                                <div class="col-sm-5">
+                                    <ng-container formGroupName="activityConfigWorkflow">
+                                        <mat-slide-toggle class="float-end" formControlName="autoApprove">
+                                            Auto approve
+                                        </mat-slide-toggle>
+                                    </ng-container>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <ng-container formGroupName="activityConfigApprover">
+                                    <mat-form-field class="matFieldWidth100"
+                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <mat-label class="formLabel">Select approver</mat-label>
+                                        <mat-select formControlName="approverID" [disabled]="isSlideToggleChecked"
+                                            multiple>
+                                            <mat-option *ngFor="let approver of approver" [value]="approver.id">
+                                                {{ approver.firstName }} {{approver.lastName}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </div>
+
+                    <mat-checkbox formControlName="isReminderSet">
+                        <div class="cardTitle">
+                            Schedule reminders for assignee
+                        </div>
+                    </mat-checkbox>
+                </ng-container>
+
+                <ng-container formGroupName="scheduler">
+                    <div [class.disabled]="isReminderChecked" class="pt-2 24">
+                        <div class="row">
+                            <mat-form-field class="col-sm-4"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel"> Enter data for every</mat-label>
+                                <input class="formPlaceholder" matInput type="number"
+                                    placeholder="Send a reminder every" formControlName="frequencyOffset" />
+                                <mat-error *ngIf="errorHandling('scheduler.frequencyOffset', 'required')">
+                                    Enter how frequently you want this data to be filled
+                                </mat-error>
+                                <mat-error *ngIf="errorHandling('scheduler.frequencyOffset', 'max')">
+                                    This field can not be more than {{ maxFrequencyValue }} {{ frequencyType }}
+                                </mat-error>
+                                <mat-error *ngIf="errorHandling('scheduler.frequencyOffset', 'min')">
+                                    This field can not be negative
+                                </mat-error>
+                            </mat-form-field>
+
+                            <mat-form-field class="col-sm-3"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-select formControlName="frequencyID">
+                                    <mat-option *ngFor="let frequencies of frequency"
+                                        (click)="setMaxFrequency(frequencies['frequencyKeyID'])"
+                                        [value]="frequencies['frequencyID']">
+                                        {{ frequencies['frequencyLabel'] | titlecase }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-7">
+                                <div class="row">
+                                    <div class="col-sm-7">
+                                        <span class="radioBtnGroupLabel ps-1" [ngClass]="{'text-secondary': disabled}">
+                                            Starts on
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <mat-form-field id="startDateFF"
+                                        (click)="dateService.openDatepickerOnClick(startDate)"
+                                        (keydown.enter)="dateService.openDatepickerOnClick(startDate)"
+                                        (keydown.arrowdown)="dateService.openDatepickerOnClick(startDate)"
+                                        class="matFieldWidth100 cursorPointer"
+                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <mat-label class="formLabel">Start date</mat-label>
+                                        <input matInput (dateInput)="formatDate($event.value, 'startDate')"
+                                            class="noFocus" [matDatepicker]="startDate" formControlName="startDate"
+                                            [max]="endDateAC.value" readonly required
+                                            [disabled]="isControlDisabled('startDate')" />
+                                        <mat-datepicker-toggle matSuffix [for]="startDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #startDate [disabled]="isControlDisabled('startDate')"
+                                            (closed)="dateService.takeFocusAway('startDateFF')"></mat-datepicker>
+
+                                        <mat-error *ngIf="errorHandling('scheduler.startDate', 'required')">
+                                            Select a start date
+                                        </mat-error>
+                                        <mat-error *ngIf="errorHandling('scheduler.startDate', 'matDatepickerMax')">
+                                            Start date cannot be after the end date
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-7">
+                                <div class="row">
+                                    <div class="col-sm-7">
+                                        <span class="radioBtnGroupLabel ps-1" [ngClass]="{'text-secondary': disabled}">
+                                            Ends on
+                                        </span>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <mat-slide-toggle class="float-end" [formControl]="endScheduleFC">
+                                            Never
+                                        </mat-slide-toggle>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <mat-form-field id="endDateFF" (click)="dateService.openDatepickerOnClick(endDate)"
+                                        (keydown.enter)="dateService.openDatepickerOnClick(endDate)"
+                                        (keydown.arrowdown)="dateService.openDatepickerOnClick(endDate)"
+                                        class="matFieldWidth100 cursorPointer"
+                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <mat-label class="formLabel">End date</mat-label>
+                                        <input matInput (dateInput)="formatDate($event.value, 'endDate')"
+                                            class="noFocus" [matDatepicker]="endDate" formControlName="endDate"
+                                            [min]="startDateAC.value" readonly
+                                            [disabled]="isControlDisabled('endDate')" />
+                                        <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
+                                        <mat-datepicker #endDate [disabled]="isControlDisabled('endDate')"
+                                            (closed)="dateService.takeFocusAway('endDateFF')"></mat-datepicker>
+                                        <mat-error *ngIf="errorHandling('scheduler.endDate', 'required')">
+                                            Select an end date
+                                        </mat-error>
+                                        <mat-error *ngIf="errorHandling('scheduler.endDate', 'matDatepickerMin')">
+                                            End date can not be before the start date
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </form>
+        </div>
+
+    </div>
+</mat-card>

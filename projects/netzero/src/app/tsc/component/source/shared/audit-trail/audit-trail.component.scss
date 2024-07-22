@@ -1,0 +1,20 @@
+.line-container {
+    margin-left: 50px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 0 20px 32px;
+    border-left: 2px solid #e3e3e3;
+}
+
+.container-item {
+    display: flex;
+    align-items: center;
+}
+
+.container-item-image {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    margin-left: -52px;
+}

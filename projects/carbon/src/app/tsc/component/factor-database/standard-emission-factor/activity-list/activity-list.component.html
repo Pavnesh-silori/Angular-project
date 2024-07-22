@@ -1,0 +1,45 @@
+<div class="overflowX customScrollBar">
+    <div class="headerContainer pt-0">
+        <div class="headerLeftContainer">
+            <div class="pageTitle"> Activity types </div>
+            <div class="pageSubtitle">
+                Global databases can provide emission factors for one or more activity types. Identify the activity
+                types for which emission factors are provided by your preferred database.
+            </div>
+        </div>
+    </div>
+
+    <table class="w-100" mat-table [dataSource]="dataSource" #sort matSort matSortActive="name" matSortDirection="desc"
+        matSortDisableClear>
+
+        <ng-container matColumnDef="name">
+            <th class="px-3" mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+            <td class="px-3 cursorPointer" mat-cell *matCellDef="let row"
+                [routerLink]="[decodeUrl(router.url), row?.keyID, 'factor']" [queryParams]="{activity: row?.name}">
+                <span #tooltip="matTooltip" matTooltipPosition="above" [matTooltip]="((row['name'])?.length > 80) ? 
+                row['name'] : ''" matTooltipClass="nameTooltip">
+                    {{row['name'] | dotdotdot: 80 }}
+                </span>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="scope">
+            <th class="px-3" mat-header-cell *matHeaderCellDef> Scope </th>
+            <td class="px-3 cursorPointer" mat-cell *matCellDef="let row"
+                [routerLink]="[decodeUrl(router.url), row?.keyID, 'factor']" [queryParams]="{activity: row?.name}"> {{
+                row['scope']}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let record; columns: displayedColumns"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+            </td>
+        </tr>
+    </table>
+</div>
+<mat-paginator class="roundedBorder" showFirstLastButtons [length]="resultLength"
+    [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE" [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION">
+</mat-paginator>

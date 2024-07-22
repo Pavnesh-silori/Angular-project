@@ -1,0 +1,164 @@
+<mat-card class="border cardOverwrite">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="cardTitle pb-2"> Reference data </div>
+            <form [formGroup]="referenceDataFG">
+                <ng-container *ngIf="isFactor; else elseBlock;">
+                   
+                    <!-- all facilities -->
+                    <div class="row">
+                        <div class="col-sm-12" [ngClass]="{'d-none': currentOrgType == OrgType.SITE}">
+                            <mat-form-field class="matFieldWidth100"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel"> Select Current Org/ facility</mat-label>
+                                <mat-select formControlName="orgID" (selectionChange)="facilityChanged()">
+                                    <mat-option>
+                                        <ngx-mat-select-search
+                                            [formControl]="getSearchUtil('facilitySearchUtil')['filterFC']"
+                                            placeholderLabel="Search by facility name"
+                                            noEntriesFoundLabel="No matching facility found.">
+                                        </ngx-mat-select-search>
+                                    </mat-option>
+                                    <mat-option *ngFor="let facility of 
+                                getSearchUtil('facilitySearchUtil')['filteredEntities'] | async"
+                                        [value]="facility['id']">
+                                        {{ facility['name'] }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <ng-container *ngIf="!haveFacilities">
+                            <div class="col-sm-6">
+                                <div class="alert alert-primary centerAlignVertical roundedBorder">
+                                    <svg class="extraInfoCardIcon">
+                                        <use xlink:href="#info-fill" />
+                                    </svg>
+                                    <div class="extraInfoCardText ps-3 fs-6">
+                                        You have not created any facility. Please create one
+                                        <a [href]="environment.ADMIN_URL + 'facility/create'" target="_blank">here</a>.
+                                        <!-- <a target="_blank">here</a>. -->
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+
+                     <!-- product n service -->
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <mat-form-field class="matFieldWidth100"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel"> Select Product/Service </mat-label>
+                                <mat-select formControlName="sourceID" (selectionChange)="sourceChanged($event)" required>
+                                    <mat-option>
+                                        <ngx-mat-select-search
+                                            [formControl]="getSearchUtil('sourceTypeSearchUtil')['filterFC']"
+                                            placeholderLabel="Search by product/service name"
+                                            noEntriesFoundLabel="No matching product/service found.">
+                                        </ngx-mat-select-search>
+                                    </mat-option>
+                                    <mat-option *ngFor="let item of 
+                                getSearchUtil('sourceTypeSearchUtil')['filteredEntities'] | async"
+                                        [value]="item['id']">
+                                        {{ item['name'] }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="errorHandling('sourceID', 'required')">
+                                    Product/service is required
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <!-- supplier -->
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <mat-form-field class="matFieldWidth100"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel"> Select supplier </mat-label>
+                                <mat-select formControlName="supplierID">
+                                    <mat-option>
+                                        <ngx-mat-select-search
+                                            [formControl]="getSearchUtil('supplierSearchUtil')['filterFC']"
+                                            placeholderLabel="Search by supplier name"
+                                            noEntriesFoundLabel="No matching supplier found.">
+                                        </ngx-mat-select-search>
+                                    </mat-option>
+                                    <mat-option *ngFor="let supplier of 
+                                getSearchUtil('supplierSearchUtil')['filteredEntities'] | async"
+                                        [value]="supplier['supplierID']">
+                                        {{ supplier['supplierName'] }}
+                                    </mat-option>
+                                </mat-select>
+                                <!-- <mat-error *ngIf="errorHandling('supplierID', 'required')">
+                                    Supplier is required
+                                </mat-error> -->
+                            </mat-form-field>
+                        </div>
+                        <ng-container *ngIf="!haveSuppliers">
+                            <div class="col-sm-6">
+                                <div class="alert alert-primary centerAlignVertical roundedBorder">
+                                    <svg class="extraInfoCardIcon">
+                                        <use xlink:href="#info-fill" />
+                                    </svg>
+                                    <div class="extraInfoCardText ps-3 fs-6">
+                                        You have not created any supplier. Please create one
+                                        <a [routerLink]="['/source/supplier/page']" target="_blank">here</a>.
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-container>
+                    </div>
+
+
+                </ng-container>
+                <ng-template #elseBlock>
+                    <ng-container *ngFor="let viewField of viewFields">
+                        <div class="row pb-3 w-100">
+                            <div class="col-sm-5 centerAlignVertical">
+                                <div class="col-form-label ms-1">
+                                    {{ viewField['title'] }}
+                                </div>
+                            </div>
+                            <div class="col-sm-7 centerAlignVertical">
+                                <div class="form-control-plaintext fw-bold">
+                                    <span matTooltipPosition="above"
+                                        [matTooltip]="(viewField['value']?.length) > 12 ? viewField['value'] : ''"
+                                        matTooltipClass="nameTooltip">
+                                        {{ (viewField?.['value'] && (viewField['value'] != null ||
+                                        viewField['value']?.length))
+                                        ? viewField['value'] : COMMON_CONSTANT.HYPHEN }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </ng-template>
+            </form>
+        </div>
+        <div class="col-sm-6 mt-4 pt-2">
+            <div class="alert alert-primary roundedBorder">
+                <div class="info-container d-flex align-items-start">
+                    <span>
+                        <svg class="extraInfoCardIcon mt-1">
+                            <use xlink:href="#info-fill" />
+                        </svg>
+                    </span>
+                    <span class="extraInfoCardText ps-3 lh-lg">
+                        Tell us where you want to use this custom emission factor. Your response in this section will
+                        govern where this custom emission factor will be shown while creating new Scope 3 records for
+                        ‘Purchased goods and services’.
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</mat-card>
+
+<svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+    </symbol>
+</svg>

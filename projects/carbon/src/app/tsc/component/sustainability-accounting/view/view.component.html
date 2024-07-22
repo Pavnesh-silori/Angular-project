@@ -1,0 +1,29 @@
+<div class="card main-card cardOverwrite">
+    <view-header [recordData]="recordData" [calAppInEmployComm]="calAppInEmployComm"></view-header>
+
+    <hr class="mt-0">
+
+    <div class="row pb-2">
+        <div class="col-sm-4">
+            <factor-details [activityKeyID]="activityKeyID" [factorData]="factorData" [gasGwp]="gasGwp"
+                [emissionsData]="emissionData" [calAppInEmployComm]="calAppInEmployComm">
+            </factor-details>
+        </div>
+
+        <div class="col-sm-8" style="border-left: 1px rgba(75, 82, 90, 0.185) solid;">
+            <record-details [recordData]="recordData" [calAppInEmployComm]="calAppInEmployComm">
+            </record-details>
+
+            <activity-data [recordData]="recordData" [calAppInEmployComm]="calAppInEmployComm" [tableData]="tableData">
+            </activity-data>
+
+            <emission-details [recordData]="recordData" [emissionData]="emissionData"
+                [calAppInEmployComm]="calAppInEmployComm">
+            </emission-details>
+
+            <calculation-details [emissionData]="emissionData">
+            </calculation-details>
+
+        </div>
+    </div>
+</div>

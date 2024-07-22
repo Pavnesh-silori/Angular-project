@@ -1,0 +1,57 @@
+<form [formGroup]="emfMetadataForm" *ngIf="emfMetadataForm">
+    <div class="row mb-1">
+        <div class="col-sm-12">
+            {{ emssionFactorSourceName }}
+        </div>
+        <!-- <div class="col-sm-12">
+            <small class="text-muted">
+                {{ calculationApproachName }}
+            </small>
+        </div> -->
+    </div>
+
+    <div class="row">
+        <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel">Select material type</mat-label>
+            <mat-select formControlName="materialTypeID" (selectionChange)="materialTypeChanged($event)">
+                <mat-option>
+                    <ngx-mat-select-search [formControl]="materialTypeSearchUtil.filterFC"
+                        placeholderLabel="Search by material type name"
+                        [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                    </ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let item of materialTypeSearchUtil.filteredEntities | async" [value]="item.id">
+                    <span class="d-flex justify-content-between">
+                        {{ item.name }}
+                    </span>
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="errorHandling('materialTypeID', 'required')">
+                {{ FormErrorEnum.REQUIRED }}
+            </mat-error>
+        </mat-form-field>
+    </div>
+
+    <div class="row">
+        <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel">Select material origin type</mat-label>
+            <mat-select formControlName="materialOriginTypeID">
+                <mat-option>
+                    <ngx-mat-select-search [formControl]="materialOriginTypeSearchUtil.filterFC"
+                        placeholderLabel="Search by material origin type name"
+                        [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                    </ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let item of materialOriginTypeSearchUtil.filteredEntities | async"
+                    [value]="item.id">
+                    <span class="d-flex justify-content-between">
+                        {{ item.name }}
+                    </span>
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="errorHandling('materialOriginTypeID', 'required')">
+                {{ FormErrorEnum.REQUIRED }}
+            </mat-error>
+        </mat-form-field>
+    </div>
+</form>

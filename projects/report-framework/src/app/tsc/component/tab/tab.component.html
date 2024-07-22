@@ -1,0 +1,56 @@
+<div class="card main-card cardOverwrite h100">
+    <ng-container *ngIf="preferenceFlag; else noPreference;">
+
+        <div class="headerContainer">
+            <div class="headerLeftContainer">
+                <div class="pageTitle">Global frameworks</div>
+                <div class="pageSubtitle">
+                    Track reports progress and manage questions
+                </div>
+            </div>
+            <div class="headerRightContainerInner">
+                <button type="button" class="btn btn-sm btn-success btnBase" routerLink="/reporting-framework/detail">
+                    <fa-icon [icon]="faPlus"></fa-icon> New Report
+                </button>
+            </div>
+        </div>
+
+        <nav mat-tab-nav-bar>
+            <ng-container *ngFor="let tabs of tab; let i = index;">
+                <a mat-tab-link [routerLink]="tabs['routerLink']" (click)="activeLink = tabs['routerLink']"
+                    [active]="activeLink == tabs['routerLink']">
+                    {{ tabs['label'] }}
+                </a>
+            </ng-container>
+        </nav>
+
+        <ng-container *ngFor="let tab of tab; let i = index;">
+            <ng-container *ngIf="reportType == tab['reportType']">
+                <app-active-page-pill [type]="pill(i)['type']" [initFolderName]="pill(i)['initFolderName']"
+                    [initFolderRoute]="pill(i)['initFolderRoute']">
+                </app-active-page-pill>
+            </ng-container>
+        </ng-container>
+        <router-outlet></router-outlet>
+    </ng-container>
+
+
+    <ng-template #noPreference>
+        <div class="centerAlign">
+            <img class="noBaseYear imgWidth" src="/assets/images/reporting-preference-not-found.jpg" alt="">
+        </div>
+        <div class="col-sm-12 px-5 py-2">
+            <div class="card-body">
+                <div class="fs-4 fw-bold centerAlign">
+                    Reporting preference not found.
+                </div>
+                <br />
+                <p class="d-flex align-items-center centerAlign">
+                    The reporting preference is not set for your organization. <a
+                        href="reporting/tab/preference"> Click here to set
+                        preference</a>
+                </p>
+            </div>
+        </div>
+    </ng-template>
+</div>

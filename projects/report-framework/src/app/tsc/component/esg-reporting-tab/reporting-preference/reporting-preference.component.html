@@ -1,0 +1,174 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">
+                Enable applicable reporting framework
+            </div>
+            <div class="pageSubtitle">
+                Select the reports that are applicable to your company and specify the corresponding sector and
+                reporting frequency.
+            </div>
+        </div>
+    </div>
+
+    <div class="extraInfoCard pt-2 px-3" *ngIf="isUpdate">
+        <div class="col-sm-10">
+            <lib-message-alert [messageAlertTypeInp]="messageAlertTypeEnum.SUCCESS"
+                [messageAlertIconInp]="messageAlertIconEnum.SUCCESS_ICON" labelInp="Preferences saved successfully!"
+                contentInp="Your selections for the reporting framework, their corresponding sectors, and reporting frequency have been successfully saved.">
+            </lib-message-alert>
+        </div>
+    </div>
+
+    <div *ngIf="formDataFG.get('reportingPreference').value.length > 0" class="card-body">
+        <div class="row">
+            <div class="col-sm-11">
+                <form [formGroup]="formDataFG">
+                    <div formArrayName="reportingPreference">
+                        <div *ngFor="let category of categoryList">
+                            <div class="row fs-5 fw-bold pageSubCardTitle m-3">
+                                {{category.name}}
+                            </div>
+                            <div class="row">
+                                <ng-container
+                                    *ngFor="let preferenceData of preferenceDataArray.controls; let i = index">
+                                    <div class="col-sm-4"
+                                        *ngIf="preferenceData.get('reportingFrameworkCategoryKeyID').value == category.keyID">
+                                        <div id="card1" #card1 class="mt-2" [formGroupName]="i">
+                                            <mat-card class="border cardOverwrite">
+                                                <mat-card-content>
+
+                                                    <div class="container ps-0">
+                                                        <img class="logoImg rounded-circle border ms-2"
+                                                            [src]="preferenceData.get('reportingFrameworkLogoUrl').value != null ? preferenceData.get('reportingFrameworkLogoUrl').value : './assets/images/corporate_fare.png'"
+                                                            alt="logo" />
+                                                        <span class="pageSubCardTitle ms-2"
+                                                            [matTooltip]="preferenceData.get('reportingFrameworkName').value?.length >= 10 ? preferenceData.get('reportingFrameworkName').value: ''"
+                                                            matTooltipClass="infoTooltip" matTooltipPosition="above">
+                                                            {{ (preferenceData.get('reportingFrameworkName').value |
+                                                            dotdotdot: 10) }}
+                                                        </span>
+                                                        <span class="material-symbols-outlined cursorPointer ms-2"
+                                                            matTooltipClass="infoTooltip"
+                                                            [matTooltip]="showInfo(preferenceData.get('reportingFrameworkKeyID').value)"
+                                                            matTooltipPosition="above">
+                                                            info
+                                                        </span>
+                                                        <div class="float-end">
+                                                            <mat-checkbox formControlName="isEnabled"
+                                                                (change)="enableDisableRowControl($event, i)"
+                                                                matTooltipClass="infoTooltip"
+                                                                matTooltip="Enable/Disable framework from preference"
+                                                                matTooltipPosition="above">
+                                                            </mat-checkbox>
+                                                            <div *ngIf="category.keyID == ReportingFrameworkCategoryEnum.CUSTOM_ESG_REPORTING"
+                                                                class="mt-1 btn-group" ngbDropdown placement="right">
+                                                                <button type="button" ngbDropdownToggle
+                                                                    class="dropdown-after dropdownAfter btn">
+                                                                    <fa-icon [icon]="faEllipsisV"></fa-icon>
+                                                                </button>
+                                                                <div ngbDropdownMenu>
+                                                                    <button class="dropdown-item"
+                                                                        (click)="createUpdatepdateCustomFramework(FormAction.UPDATE, preferenceData.get('reportingFrameworkID').value, category.id)">
+                                                                        {{ ButtonLabelEnum.UPDATE_BTN_LABEL }}
+                                                                    </button>
+                                                                    <button
+                                                                        class="btn btn-outline-danger rounded-0 dropdown-item"
+                                                                        (click)="deleteConfirmation(preferenceData.get('reportingFrameworkID').value, category.id)">
+                                                                        {{ ButtonLabelEnum.DELETE_BTN_LABEL }}
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </mat-card-content>
+
+                                                <div class="row">
+                                                    <mat-form-field
+                                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                        <mat-label class="formLabel">Select sector</mat-label>
+                                                        <mat-select formControlName="sectorID"
+                                                            [matTooltip]="!showSectorField(preferenceData.get('reportingFrameworkKeyID').value) ? 'This is a generic report that applies to all sectors, no need to choose a sector.' : ''"
+                                                            [disabled]="!showSectorField(preferenceData.get('reportingFrameworkKeyID').value)">
+                                                            <mat-option>
+                                                                <ngx-mat-select-search
+                                                                    [formControl]="searchList[i]['filterFC']"
+                                                                    placeholderLabel="Search by sector name"
+                                                                    noEntriesFoundLabel="No matching found.">
+                                                                </ngx-mat-select-search>
+                                                            </mat-option>
+                                                            <mat-option
+                                                                *ngFor="let sector of searchList[i]['filteredEntities'] | async"
+                                                                [value]="sector.id">
+                                                                <span class="d-flex justify-content-between">
+                                                                    {{ sector.name }}
+                                                                </span>
+                                                            </mat-option>
+                                                        </mat-select>
+                                                        <mat-error>
+                                                            Reporting sector is required field
+                                                        </mat-error>
+                                                    </mat-form-field>
+                                                </div>
+
+
+                                                <div class="row">
+                                                    <mat-form-field
+                                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                        <mat-label class="formLabel">Select interval</mat-label>
+                                                        <mat-select formControlName="reportingIntervalKeyID">
+                                                            <mat-option
+                                                                *ngFor="let interval of preferenceData.get('intervalList').value"
+                                                                [value]="interval.keyID">
+                                                                <span class="d-flex justify-content-between">
+                                                                    {{ interval.name }}
+                                                                </span>
+                                                            </mat-option>
+                                                        </mat-select>
+                                                        <mat-error>
+                                                            Reporting interval is required field
+                                                        </mat-error>
+                                                    </mat-form-field>
+                                                </div>
+
+                                                <div class="row pageSubtitle">
+                                                    <p>This framework has {{ preferenceData.get('esgMetricCount').value
+                                                        }} metrics associated with it.
+                                                        <a class="cursorPointer"
+                                                            (click)="routeESGMetricPage(preferenceData.get('type').value,preferenceData.get('reportingFrameworkID').value)">
+                                                            Click here to {{category.keyID == ReportingFrameworkCategoryEnum.CUSTOM_ESG_REPORTING ? 'add' : 'view'}} ESG metrics.
+                                                        </a>
+                                                    </p>
+                                                </div>
+                                            </mat-card>
+                                        </div>
+                                    </div>
+                                </ng-container>
+
+                                <div id="card2" *ngIf="formDataFG.get('reportingPreference').value.length > 0 && category.keyID == ReportingFrameworkCategoryEnum.CUSTOM_ESG_REPORTING"
+                                    class="col-sm-4 mt-2" #card2>
+                                    <mat-card
+                                        class="borderDotted cardOverwrite cursorPointer centerAlign cardBackgroundColor"
+                                        (click)="createUpdatepdateCustomFramework(FormAction.CREATE,null, category.id)">
+                                        <span class="material-symbols-outlined text-primary centerAlign plusIcon">
+                                            add_circle
+                                        </span>
+                                    </mat-card>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="float-end mt-4">
+            <button class="button btn btn-sm btn-success" type="submit" (click)="onSubmit()" *ngIf="!isUpdate">
+                {{ ButtonLabelEnum.SAVE_BTN_LABEL }}
+            </button>
+            <button class="button btn btn-sm btn-success" type="submit" (click)="onSubmit()" *ngIf="isUpdate">
+                {{ ButtonLabelEnum.UPDATE_BTN_LABEL }}
+            </button>
+        </div>
+    </div>
+</div>

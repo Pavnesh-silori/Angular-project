@@ -1,0 +1,79 @@
+<style>
+    .header {
+        height: 40px;
+    }
+</style>
+<div class="cardHeaderBlock">
+    <div class="row centerAlignVertical mb-2 header">
+        <div class="col-sm-10">
+            <div class="cardTitle">
+                <ng-container *ngIf="isUpdate; else newRecord;">
+                    {{ title }}
+                </ng-container>
+                <ng-template #newRecord>
+                    {{ activityData?.activityName? activityData['activityName'] : 'Activity' }} record
+                </ng-template>
+                <button #refreshBtn type="button" class="d-none"></button>
+            </div>
+        </div>
+        <ng-container *ngIf="view">
+            <div class="col-sm-2 pe-0">
+                <a class="float-end btn btn-link" mat-icon-button matTooltip="open in new window" matTooltipClass="infoTooltip"
+                    matTooltipPosition="below" target="_blank"
+                    [routerLink]="['/sustainability-accounting/carbon/view', activityKeyID, activityData?.activityDataID, cedID]">
+                    <span class="material-symbols-outlined">
+                        open_in_new
+                    </span>
+                </a>
+            </div>
+        </ng-container>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 centerAlignVertical justify-content-between">
+            <div class="col-form-label ms-1">Record ID:
+            </div>
+            <span class=" fw-bold"> {{ activityData?.recordID }} </span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 centerAlignVertical justify-content-between">
+            <div class="col-form-label ms-1">Accounting period:</div>
+            <span class="fw-bold">
+                {{ activityData?.accountingPeriod? activityData.accountingPeriod
+                : COMMON_CONSTANT.HYPHEN }}
+            </span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 centerAlignVertical justify-content-between">
+            <ng-container *ngIf="isWasteTreatmentActivity">
+                <div class="col-form-label ms-1">
+                    {{ activityData?.sourceTypeName? activityData.sourceTypeName : 'Source type' }}:
+                </div>
+                <span class="fw-bold" [matTooltip]="(activityData?.sourceName && activityData.sourceName.length > 26)? 
+                    activityData.sourceName : ''" matTooltipPosition="above" matTooltipClass="nameTooltip">
+                    {{ activityData?.sourceName? (activityData.sourceName | dotdotdot: 26) :
+                    COMMON_CONSTANT.HYPHEN }}
+                </span>
+            </ng-container>
+            <ng-container *ngIf="!isWasteTreatmentActivity">
+                <div class="col-form-label ms-1">
+                    {{ activityConfigSource?.sourceTypeName? activityConfigSource.sourceTypeName : 'Source type' }}:
+                </div>
+                <span class="fw-bold" [matTooltip]="(activityConfigSource?.sourceName && activityConfigSource.sourceName.length > 26)? 
+                    activityConfigSource.sourceName : ''" matTooltipPosition="above" matTooltipClass="nameTooltip">
+                    {{ activityConfigSource?.sourceName? (activityConfigSource.sourceName | dotdotdot: 26) :
+                    COMMON_CONSTANT.HYPHEN }}
+                </span>
+            </ng-container>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 centerAlignVertical justify-content-between">
+            <div class="col-form-label ms-1">Data source:</div>
+            <span class="fw-bold">
+                {{ activityData?.recordType? activityData?.recordType : COMMON_CONSTANT.HYPHEN }}
+            </span>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,65 @@
+.calenderToggle {
+    display: flex;
+    justify-content: right;
+    padding-right: 10px;
+}
+
+.recordID {
+    width: 130px;
+}
+
+.calculationErrorReason {
+    width: 130px;
+}
+
+.date {
+    width: 200px;
+    padding-right: 50px;
+}
+
+.calender {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 0px;
+}
+
+.supplier {
+    width: 135px;
+    padding-right: 10px;
+}
+
+.energyConsumed {
+    width: 125px;
+    text-align: end;
+    padding-right: 30px;
+}
+
+.emission {
+    text-align: end;
+    padding-right: 30px;
+    width: 125px
+}
+
+.dataInputMethod {
+    padding-left: 30px;
+    width: 155px;
+}
+
+.dataCollectionMethod {
+    width: 125px;
+}
+
+.option {
+    width: 40px;
+    align-items: center;
+}
+
+.img {
+    width: 25px;
+}
+.noError{
+    padding-left:28px;
+}
+::ng-deep .energyConsumed.mat-header-cell {
+    text-align: end;
+  }

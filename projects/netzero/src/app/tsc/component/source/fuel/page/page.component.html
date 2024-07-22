@@ -1,0 +1,150 @@
+<div class="card cardOverwrite overFlowX customScrollBar h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">{{source}}</div>
+            <div class="pageSubtitle"> Create fuel to track your emissions of your custom fuel</div>
+        </div>
+
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <lib-search-bar-one class="me-3" #searchBar searchBy="Fuel name"
+                    (emitSearch)="searchFn($event)"></lib-search-bar-one>
+                <button class="btn btn-sm btn-light refreshBtn centerAlign me-3 py-1"  #refreshBtn matRipple
+                    [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                    [matTooltip]="refreshBtnTooltip">
+                    <span class="material-symbols-outlined">
+                        refresh
+                    </span>
+                </button>
+
+                <button type="button" class=" btn btn-sm btn-success btnRightRadiusZero"
+                    (click)="createUpdateFuel('', FormAction.CREATE)" matRipple
+                    [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                    [matTooltip]="ButtonTooltipEnum.CREATE">
+                    <fa-icon [icon]="faPlus" class="me-1"></fa-icon>Fuel
+                </button>
+
+                <div class="btn-group" ngbDropdown placement="bottom-right" matTooltipPosition="below"
+                    [matTooltip]="ButtonTooltipEnum.MORE">
+                    <button type="button" ngbDropdownToggle class="btn btn-sm btn-success btnLeftRadiusZero">
+                    </button>
+                    <div ngbDropdownMenu>
+                        <button class="dropdown-item" matRipple
+                            [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" (click)="bulkUpload()">
+                            Import
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <table mat-table [dataSource]="dataSource" matSort matSortActive="name" matSortDisableClear matSortDirection="desc">
+
+        <!-- <ng-container matColumnDef="id">
+            <th mat-header-cell class="id" *matHeaderCellDef mat-sort-header disableClear> ID </th>
+            <td mat-cell class="id" (click)="navigateTo(row)" *matCellDef="let row">{{ row.id?row.id: COMMON_CONSTANT.HYPHEN}}</td>
+        </ng-container> -->
+
+        <ng-container matColumnDef="code">
+            <th mat-header-cell class="rowWidth matTableSortRightAlign" *matHeaderCellDef mat-sort-header disableClear>
+                Fuel
+                Code </th>
+            <td mat-cell class="cursorPointer rowWidth pe-5" (click)="navigateTo(row)" *matCellDef="let row">{{
+                row.code?row.code: COMMON_CONSTANT.HYPHEN}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+            <th mat-header-cell class="rowWidth" *matHeaderCellDef mat-sort-header disableClear> Fuel Name </th>
+            <td mat-cell class="cursorPointer rowWidth" (click)="navigateTo(row)" *matCellDef="let row">{{
+                row.name?row.name: COMMON_CONSTANT.HYPHEN }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+            <th mat-header-cell class="description" *matHeaderCellDef> Description </th>
+            <td mat-cell class="description cursorPointer" (click)="navigateTo(row);" *matCellDef="let row"
+                [matTooltip]="row.description?.length > 12 ? row.description : ''" matTooltip>{{
+                row.description?(row.description?.length > 12 ? row.description.slice(0, 20) + '...' :
+                row.description): COMMON_CONSTANT.HYPHEN}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="netCalorificValue">
+            <th mat-header-cell class=" ps-3 matTableSortRightAlign netCalorificValue" *matHeaderCellDef mat-sort-header
+                disableClear> Net
+                Calorific Value </th>
+            <td mat-cell class="netCalorificValue cursorPointer text-center pe-5" (click)="navigateTo(row)"
+                *matCellDef="let row">{{
+                row.netCalorificValue?(row.netCalorificValue|
+                number:'1.0-2') : COMMON_CONSTANT.HYPHEN}} {{ row.ncvNumeratorUnitCode }}/{{row.ncvDenominatorUnitCode}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="biomassPct">
+            <th mat-header-cell class="ps-3 matTableSortRightAlign rowWidth" *matHeaderCellDef mat-sort-header
+                disableClear> Biomass
+                Percentage </th>
+            <td mat-cell class="rowWidth cursorPointer text-center pe-5" (click)="navigateTo(row)"
+                *matCellDef="let row">{{ row.biomassPct?(row.biomassPct|
+                number:'1.0-2') + '%': COMMON_CONSTANT.HYPHEN }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="oxidationFactor">
+            <th mat-header-cell class="ps-4 matTableSortRightAlign rowWidth" *matHeaderCellDef mat-sort-header
+                disableClear> Oxidation
+                Factor </th>
+            <td mat-cell class="cursorPointer rowWidth text-center pe-5" (click)="navigateTo(row)"
+                *matCellDef="let row">{{
+                row.oxidationFactor?(row.oxidationFactor|
+                number:'1.0-2'): COMMON_CONSTANT.HYPHEN }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="options">
+            <th class="options" mat-header-cell *matHeaderCellDef disableClear> </th>
+            <td mat-cell *matCellDef="let row">
+                <div class="centerAlignVertical">
+                    <ng-container *ngTemplateOutlet="icon; 
+                    context: {
+                        icon: 'edit',
+                        tooltip: ButtonTooltipEnum.UPDATE,
+                        iconClass: 'text-primary updateIconHover',
+                        function: createUpdateFuel,
+                        functionParameter: [row, FormAction.UPDATE]
+                    }">
+                    </ng-container>
+                    <ng-container *ngTemplateOutlet="icon; 
+                    context: {
+                        icon: 'delete',
+                        tooltip: ButtonTooltipEnum.DELETE,
+                        iconClass: 'text-danger deleteIconHover',
+                        function: deleteFuelDialog,
+                        functionParameter: [row]
+                    }">
+                    </ng-container>
+                </div>
+            </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+            </td>
+        </tr>
+    </table>
+
+    <mat-paginator class="roundedBorder" #paginator [length]="resultLength"
+        [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION" [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE"
+        showFirstLastButtons>
+    </mat-paginator>
+</div>
+
+<ng-template #icon let-icon="icon" let-tooltip="tooltip" let-iconClass="iconClass" let-function="function"
+    let-functionParameter="functionParameter">
+    <button class="iconBtn centerAlign" [class]="iconClass" matTooltipPosition="below" [matTooltip]="tooltip" matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" (click)="handleClick(function, functionParameter)">
+        <span class="material-symbols-outlined icon">
+            {{ icon }}
+        </span>
+    </button>
+</ng-template>

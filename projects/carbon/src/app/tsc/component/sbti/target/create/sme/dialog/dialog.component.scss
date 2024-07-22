@@ -1,0 +1,35 @@
+.cardOverwrite {
+    position: relative;
+}
+
+.disabledCard {
+    opacity: 0.5;
+    /* Reduce the opacity to make it appear faded */
+    pointer-events: none;
+    /* Disable pointer events to make it non-interactive */
+    cursor: none;
+}
+
+.iconStyle {
+    position: absolute;
+    top: 16px;
+    right: 10px;
+    z-index: 1;
+    color: white;
+}
+
+.cardHeight {
+    height: 230px;
+    width: 363px;
+}
+
+.material-symbols-outlined {
+    color: #6C757D;
+}
+
+.disableButton {
+    cursor: not-allowed;
+    background-color: rgb(181, 178, 178);
+    border-color: rgb(181, 178, 178);
+    color: white;
+}

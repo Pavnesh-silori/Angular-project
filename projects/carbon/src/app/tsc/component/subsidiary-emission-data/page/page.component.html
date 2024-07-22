@@ -1,0 +1,136 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="mb-2">
+                <lib-message-alert [messageAlertTypeInp]="messageAlertTypeEnum.INFO"
+                    [messageAlertIconInp]="messageAlertIconEnum.INFO_ICON" contentInp="Create emission records yourself for subsidiaries/joint ventures that do not use The Sustainability
+                Cloud to keep your emission accounting updated.">
+                </lib-message-alert>
+            </div>
+        </div>
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <lib-search-bar-one #searchBar searchBy="name" (emitSearch)="searchFn($event)"></lib-search-bar-one>
+            </div>
+            <button type="button" class="btn btn-sm btn-success btnBase ms-3"
+                (click)="createUpdateEmissionData('CREATE', '')">
+                <fa-icon [icon]="faPlus"></fa-icon> Emission Record
+            </button>
+        </div>
+    </div>
+
+    <button #refreshBtn class="d-none"></button>
+
+    <!-- chips_view -->
+    <div class="row mx-2 h-auto" [ngClass]="{'d-none': chips?.length == 0}">
+        <div class="col-sm-10 py-1 chipListContainer">
+            <mat-chip-list #chipList>
+                <mat-chip *ngFor="let chip of chips" (removed)="removeChip(chip)">
+                    <span class="fw-normal">{{ chip['filter'] }}</span>
+                    <button matChipRemove>
+                        <mat-icon>cancel</mat-icon>
+                    </button>
+                </mat-chip>
+            </mat-chip-list>
+        </div>
+        <div class="col-sm-2 centerAlignVertical justify-content-end">
+            <button matRipple [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" class="btn btn-link float-end"
+                (click)="clearAllChips()">
+                <span class="material-symbols-outlined fs-6">
+                    filter_list_off
+                </span>
+                Reset Filters
+            </button>
+        </div>
+    </div>
+
+    <table mat-table [dataSource]="dataSource" #sort="matSort" matSort matSortActive="recordID" matSortDirection="desc"
+        matSortDisableClear>
+
+        <ng-container matColumnDef="recordID">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header matSortDisableClear> Record ID </th>
+            <td mat-cell *matCellDef="let row">
+                <a routerLink="../../../../view" [queryParams]="{id: row.id}">
+                    {{ row.recordID != 0 ? row.recordID : COMMON_CONSTANT.HYPHEN}}
+                </a>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> Subsidiary/JV Name </th>
+            <td mat-cell *matCellDef="let row"> {{ row.name }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+            <th class="type" mat-header-cell *matHeaderCellDef>
+                <funnel-filter #typeSelect header="Type" headerWidth="4" type="mono" [entityList]="type" value="key"
+                    view="name" [selectFC]="typeFC" [active]="typeFlag" (mono)="typeFlag = true; typeChange();"
+                    (selected)="typeChip($event)">
+                </funnel-filter>
+            </th>
+            <td mat-cell *matCellDef="let row">
+                <ng-container [ngSwitch]="row['type']">
+                    <span *ngSwitchCase="SubsidiaryTypeEnum.SUBSIDIARY">
+                        Subsidiary
+                    </span>
+                    <span *ngSwitchCase="SubsidiaryTypeEnum.JOINT_VENTURE">
+                        Joint venture
+                    </span>
+                    <span *ngSwitchDefault>
+                        {{ row.type }}
+                    </span>
+                </ng-container>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="accountingPeriod">
+            <th mat-header-cell *matHeaderCellDef> Accounting Period </th>
+            <td mat-cell *matCellDef="let row"> {{ row.accountingPeriod }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="emissions">
+            <th mat-header-cell *matHeaderCellDef> Emissions (tCO<sub>2</sub>e) </th>
+            <td mat-cell *matCellDef="let row" [matTooltip]="formatEmissionsTooltip(row.emissions)"
+                matTooltipClass="nameTooltip" matTooltipPosition="above">
+                {{ row.emissions[0].consolidationApproachName }} {{':'}} {{row.emissions[0].emission | number:'1.0-2'}}
+                <button *ngIf="emissionsDisplayCount(row.emissions) != 0" class="btn btn-sm rounded-circle circleBtn">
+                    {{emissionsDisplayCount(row.emissions)}}
+                </button>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td class="text-center" mat-cell *matCellDef="let row">
+                <div class="mt-2 btn-group" ngbDropdown placement="left">
+                    <button type="button" ngbDropdownToggle class="dropdown-after dropdownAfter btn">
+                        <fa-icon [icon]="faEllipsisV"></fa-icon>
+                    </button>
+                    <div ngbDropdownMenu>
+                        <button class="dropdown-item" (click)="createUpdateEmissionData('UPDATE', row.id)">
+                            {{ ButtonLabelEnum.UPDATE_BTN_LABEL }}
+                        </button>
+                        <!-- <button class="btn btn-outline-danger rounded-0 dropdown-item" (click)="confirmDelete(row)">
+                                {{ ButtonLabelEnum.DELETE_BTN_LABEL }}
+                        </button> -->
+                    </div>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+            </td>
+        </tr>
+
+    </table>
+
+    <mat-paginator #paginator class="roundedBorder" showFirstLastButtons [length]="resultLength"
+        [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION" [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE">
+    </mat-paginator>
+
+</div>

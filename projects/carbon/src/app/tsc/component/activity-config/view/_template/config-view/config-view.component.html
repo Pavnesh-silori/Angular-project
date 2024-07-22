@@ -1,0 +1,52 @@
+<ng-container *ngIf="config">
+    <mat-card class="border cardOverwrite">
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'Form ID',
+            value: config.activityConfigID,
+            class: 'pt-1'
+        }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'Form Name',
+            value: config.configName,
+            class: 'pt-3'
+        }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'Workflow',
+            value: this.statusService.getEnableByBoolean(config.workflowEnabled),
+            class: 'pt-3',
+            valueClass: this.statusService.getYesActiveClassByBoolean(config.workflowEnabled)
+        }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'Reminder',
+            value: this.statusService.getEnableByBoolean(config.reminderEnabled),
+            class: 'pt-3',
+            valueClass: this.statusService.getYesActiveClassByBoolean(config.reminderEnabled)
+        }">
+        </ng-container>
+
+        <!-- <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'API',
+            value: this.statusService.getEnableByBoolean(config.apiEnabled),
+            class: 'pt-3',
+            valueClass: this.statusService.getYesActiveClassByBoolean(config.apiEnabled)
+        }">
+        </ng-container> -->
+    </mat-card>
+</ng-container>
+
+<ng-template #labelValue let-label="label" let-value="value" let-class="class" let-valueClass="valueClass">
+    <div class="row" [class]="class">
+        <div class="col-sm-4">
+            {{ label }}
+        </div>
+        <div class="col-sm-8 fw-bold" [class]="valueClass">
+            {{ value ? value : COMMON_CONSTANT.HYPHEN }}
+        </div>
+    </div>
+</ng-template>

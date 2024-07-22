@@ -1,0 +1,101 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="endAlignVertical">
+                <span class="fw-bold fs-5"> {{ structuralChangeRes.entityName }} </span>
+                <div class="py-1">{{ tabType }} ID: {{ structuralChangeRes.recordID }}</div>
+            </div>
+        </div>
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <a class="text-secondary" [routerLink]="['../../../../../update']" matTooltip="Update" matTooltipPosition="below">
+                    <span class="material-symbols-outlined text-primary updateIconHover fs-5">
+                        edit
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <hr class="hrDivider">
+
+    <div class="card-body">
+        <div class="row pt-1">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-sm-6">
+                        Business entity start year
+                    </div>
+                    <div class="col-sm-6 fw-bold">
+                        {{ structuralChangeRes.entityStartYear }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row pt-3">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-sm-6">
+                        Event Date
+                    </div>
+                    <div class="col-sm-6 fw-bold">
+                        {{ structuralChangeRes.eventDate | date: 'dd-MM-yyyy'}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row pt-3">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-sm-6">
+                        Record created by
+                    </div>
+                    <div class="col-sm-6 fw-bold">
+                        {{ structuralChangeRes.createdBy }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row pt-3">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-sm-6">
+                        Record created on
+                    </div>
+                    <div class="col-sm-6 fw-bold">
+                        {{ structuralChangeRes.creationDate | date: 'dd-MM-yyyy' }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row pt-3">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-sm-6">
+                        Last updated by
+                    </div>
+                    <div class="col-sm-6 fw-bold">
+                        {{ structuralChangeRes.lastUpdatedBy }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row pt-3">
+            <div class="col-sm-12">
+                <div class="row">
+                    <div class="col-sm-6">
+                        Description
+                    </div>
+                    <div class="col-sm-6 fw-bold">
+                        {{ structuralChangeRes.description ? structuralChangeRes.description : COMMON_CONSTANT.HYPHEN}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

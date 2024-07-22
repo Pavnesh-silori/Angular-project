@@ -1,0 +1,71 @@
+<div class="card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Fuel</div>
+        </div>
+
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <button class="btn btn-sm btn-light centerAlign me-3 py-1"
+                    (click)="getFuelByID()" matRipple
+                    [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                    [matTooltip]="ButtonTooltipEnum.REFRESH">
+                    <span class="material-symbols-outlined">
+                        refresh
+                    </span>
+                </button>
+                <button class="btn btn-sm btn-light centerAlign me-3 py-1 text-primary" (click)="updateFuel(fuelData,FormAction.UPDATE)" matRipple
+                    [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                    [matTooltip]="ButtonTooltipEnum.UPDATE">
+                    <span class="material-symbols-outlined">
+                        edit
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-12">
+                <mat-card class="border cardOverwrite">
+                    <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Fuel code',
+                        value: fuelData.code
+                    }"></ng-container>
+                        <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Fuel Name',
+                        value: fuelData.name
+                    }"></ng-container>
+                        <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Netcalorific value',
+                        value: fuelData?.netCalorificValue +' '+fuelData.ncvNumeratorUnitCode + '/' + fuelData.ncvDenominatorUnitCode
+                    }"></ng-container>
+                        <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Biomass ',
+                        value: fuelData.biomassPct+ '%'
+                    }"></ng-container>
+                        <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'OxidationFactor',
+                        value: fuelData.oxidationFactor
+                    }"></ng-container>
+                        <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Description',
+                        value: fuelData.description
+                    }"></ng-container>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #labelValue let-label="label" let-value="value" class="border">
+    <div class="row m-3">
+        <div class="col-sm-4 ps-3">
+            <strong>{{ label }}:</strong>
+        </div>
+        <div class="col-sm-4  px-4">
+            {{ value?value: COMMON_CONSTANT.HYPHEN}}
+        </div>
+    </div>
+</ng-template>

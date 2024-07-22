@@ -1,0 +1,81 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle"></div>
+            <div class="pt-3">
+                <mat-card class="border cardOverwrite">
+                    <div *ngIf="configData"  class="row">
+                        <div class="col-sm-6">
+                            <p>Report name:<strong class="ms-3">{{configData.name || COMMON_CONSTANT.HYPHEN}}</strong></p>
+                            <p>Reporting framework name:<strong class="ms-3">
+                                {{configData.reportingFrameworkName}}</strong>
+                        </div>
+                        <div class="col-sm-6">
+                            <p>Reporting year:<strong class="ms-3"> {{configData.reportingYear}} </strong></p>
+                            <p>Reporting interval:<strong class="ms-3"> {{configData.reportingIntervalName}} </strong></p>
+                        </div>
+                        <div class="col-sm-6">
+                            <p>Reporting sector:<strong class="ms-3"> {{configData.frameworkSector != null ?
+                                configData.frameworkSector : COMMON_CONSTANT.HYPHEN}} </strong></p>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-sm-4" *ngFor="let item of reportData; let i = index;">
+            <div class="cursorStyle"
+                *ngIf="item.status === IntervalStatus.SCHEDULED || item.status === IntervalStatus.DELETED || item.status == IntervalStatus.LOCKED; else showOnGoingData">
+                <mat-card class="border cardOverwrite ms-4 mb-3 me-2" style="display: flex;"
+                    [matTooltip]="getTooltipMessage(item)" [ngClass]="{'disabled': item.status === 'SCHEDULED'}">
+                    <div class="displayFlex">
+                        <mat-card-content>
+                            <h4>{{ item.name }}</h4>
+                            <p>{{ item.reportingPeriod }}</p>
+                            <p>Progress</p>
+                        </mat-card-content>
+                    </div>
+
+                    <div class="progressStyle">
+                        <mat-card-content>
+                            <span class="btn-sm btn-secondary">{{ item.status}}</span>
+                            <div class="spinner-container mt-2">
+                                <span class="spinner-label">{{ item.progressPct }}%</span>
+                                <circle-progress [options]="circleB" [renderOnClick]="false"
+                                    [percent]="item.progressPct">
+                                </circle-progress>
+                            </div>
+                        </mat-card-content>
+                    </div>
+                </mat-card>
+            </div>
+            <ng-template #showOnGoingData>
+                <mat-card class="border cardOverwrite ms-4 mb-3 me-3 cursorPointer" style="display: flex;"
+                    (click)="navigateToTrackingData(item)">
+                    <div class="displayFlex">
+                        <mat-card-content>
+                            <h4>{{ item.name }}</h4>
+                            <p>{{ item.reportingPeriod }}</p>
+                            <p>Progress</p>
+                        </mat-card-content>
+                    </div>
+
+                    <div class="progressStyle">
+                        <mat-card-content>
+                            <span class="btn-sm btn-primary">{{ item.status }}</span>
+                            <div class="spinner-container mt-2">
+                                <span class="spinner-label">{{item.progressPct}}%</span>
+                                <circle-progress [options]="circleB" [renderOnClick]="false"
+                                    [percent]="item.progressPct">
+                                </circle-progress>
+                            </div>
+                            
+                        </mat-card-content>
+                    </div>
+                </mat-card>
+            </ng-template>
+        </div>
+    </div>
+</div>

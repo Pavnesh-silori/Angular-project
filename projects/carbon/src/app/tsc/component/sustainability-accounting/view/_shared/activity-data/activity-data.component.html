@@ -1,0 +1,626 @@
+<div class="ms-1 me-3 mt-2">
+    <div class="sectionHeader">
+        <span class="header"> Activity data </span>
+    </div>
+
+    <ng-container *ngIf="isSpendBased">
+        <ng-container *ngTemplateOutlet="scope3SpendBased; context: { enteredData: activityData}"></ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="isScope2">
+        <ng-container *ngTemplateOutlet="scope2Data; context: { activityData: activityData}"></ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="isStationaryCombustion">
+        <ng-container
+            *ngTemplateOutlet="enteredData; context: { activityData: activityData, config: activityConfigData}"></ng-container>
+        <!-- <ng-container *ngIf="dataInputMethod == DataInputMethodKeyIDEnum.METER_READING 
+                || dataInputMethod == DataInputMethodKeyIDEnum.PRICE_BASED_METHOD 
+                || dataInputMethod == DataInputMethodKeyIDEnum.AREA_BASED_METHOD">
+            <ng-container *ngTemplateOutlet="calculatedData; context: { activityData: activityData}"></ng-container>
+        </ng-container> -->
+    </ng-container>
+
+    <ng-container *ngIf="isMobileCombustion">
+        <ng-container
+            *ngTemplateOutlet="enteredData; context: { activityData: activityData, config: activityConfigData}"></ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="isWasteTreatmentActivity">
+        <ng-container *ngTemplateOutlet="wasteTreatment; context: { activityData: activityData }"></ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="isEmployeeCommutingDistanceFuelMethod">
+        <ng-container *ngTemplateOutlet="employeeCommuting, context: { activityData: activityData }">
+        </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="isEmployeeCommutingAverageMethod">
+        <ng-container *ngTemplateOutlet="surveyDetails, context: { activityData: activityData }">
+        </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="otherFugutiveActivity">
+        <ng-container *ngTemplateOutlet="otherFugutive">
+        </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="purchasedGoodsAndServicesActivity">
+        <ng-container *ngTemplateOutlet="purchasedGoodsAndServices, context { activityData: activityData }">
+        </ng-container>
+    </ng-container>
+
+</div>
+
+<ng-template #purchasedGoodsAndServices>
+    <ng-container *ngFor="let item of activityData?.activityMetadata">
+        <div class="ps-3">
+            <ng-container *ngTemplateOutlet="value; 
+            context: {
+                title: item?.name,
+                value: item?.value
+            }">
+        </ng-container>
+        </div>
+    </ng-container>
+</ng-template>
+
+<ng-template #otherFugutive>
+    <ng-container *ngFor="let gas of releaseGases">
+        <div class="ps-3">
+            <ng-container *ngTemplateOutlet="valueAndUnit; 
+            context: {
+                title: gas?.gasName,
+                value: gas?.gasQuantity,
+                unit: gas?.gasUnitName
+            }">
+            </ng-container>
+        </div>
+    </ng-container>
+</ng-template>
+
+<ng-template #surveyDetails let-activityData="activityData">
+    <div class="row ms-2">
+        <div class="sectionSubHeader fs-5">
+            Most vehicle used by employee
+        </div>
+    </div>
+    <ng-container>
+        <div class="d-flex justify-content-end pe-4"><button (click)="toggleTableView()"><span
+                    class="material-symbols-outlined">
+                    table_rows
+                </span></button>
+            <button (click)="toggleGraphicalView()"><span class="material-symbols-outlined">
+                    show_chart
+                </span></button>
+        </div>
+
+        <div *ngIf="isTableView">
+            <div class="ps-4 pe-3 pt-2 pb-2">
+                <table class="tableClass">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th *ngFor="let columnHeader of columnHeaders">{{ columnHeader }} km</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let rowHeader of rowHeaders; let i = index">
+                            <th>{{ rowHeader }}</th>
+                            <td *ngFor="let cell of tableContent[i]">{{ cell }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div *ngIf="!isTableView">
+            <div class="border ms-3 mt-2 me-2">
+                <app-survey-summary [surveyID]="surveyID" [graphHeader]=""></app-survey-summary>
+            </div>
+        </div>
+    </ng-container>
+</ng-template>
+
+<ng-template #employeeCommuting let-activityData="activityData">
+    <div class="row">
+        <div class="sectionSubHeader fs-5 ps-3">
+            Entered data
+        </div>
+    </div>
+
+    <ng-container *ngIf="dataInputMethod == 'globalConstant.SCOPE_3_EMPLOYEE_COMMUTING'">
+        <ng-container *ngFor="let transportData of activityData?.distanceDetails; let i = index">
+            <div class="card-body pt-2">
+                <mat-card class="border cardOverwrite">
+                    <div [ngClass]="{'d-none': transportData.modeOfTransport == null}" class="row">
+                        <div class="d-flex justify-content-between">
+                            <div class="col-form-label ms-1"> Mode of transport</div>
+                            <div class="col-form-value fw-bold">
+                                <!-- Display the value here -->
+                                {{ transportData.modeOfTransport }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div [ngClass]="{'d-none': transportData.modeOfTransportLevel1 == null}" class="row">
+                        <div class="d-flex justify-content-between">
+                            <div class="col-form-label ms-1"> Mode of transport level 1</div>
+                            <div class="col-form-value fw-bold">
+                                <!-- Display the value here -->
+                                {{ transportData.modeOfTransportLevel1 }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div [ngClass]="{'d-none': transportData.modeOfTransportLevel2 == null}" class="row">
+                        <div class="d-flex justify-content-between">
+                            <div class="col-form-label ms-1"> Mode of transport level 2</div>
+                            <div class="col-form-value fw-bold">
+                                <!-- Display the value here -->
+                                {{ transportData.modeOfTransportLevel2 }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div [ngClass]="{'d-none': transportData.modeOfTransportLevel3 == null}" class="row">
+                        <div class="d-flex justify-content-between">
+                            <div class="col-form-label ms-1"> Mode of transport level 3</div>
+                            <div class="col-form-value fw-bold">
+                                <!-- Display the value here -->
+                                {{ transportData.modeOfTransportLevel3 }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div [ngClass]="{'d-none': transportData.distance == null}" class="row">
+                        <div class="d-flex justify-content-between">
+                            <div class="col-form-label ms-1"> Distance </div>
+                            <div class="col-form-value fw-bold">
+                                <!-- Display the value here -->
+                                {{ transportData.distance }} {{ transportData.distanceUnit }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- <div [ngClass]="{'d-none': transportData.unit == null}" class="row">
+                        <div class="d-flex justify-content-between">
+                            <div class="col-form-label ms-1"> Unit </div>
+                            <div class="col-form-value fw-bold">
+                                {{ transportData.unit }}
+                            </div>
+                        </div>
+                    </div> -->
+
+                    <div [ngClass]="{'d-none': transportData.emission == null}" class="row">
+                        <div class="d-flex justify-content-between">
+                            <div class="col-form-label ms-1"> Emission </div>
+                            <div class="col-form-value fw-bold">
+                                <!-- Display the value here -->
+                                {{ transportData.emission }}
+                            </div>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+        </ng-container>
+        <ng-container *ngFor="let transportData of activityData?.fuelDetails; let i = index">
+            <div class="card-body pt-2">
+                <mat-card class="border cardOverwrite">
+                    <div [ngClass]="{'d-none': transportData.vechile == null}" class="row">
+                        <div class="d-flex justify-content-between">
+                            <div class="col-form-label ms-1"> Vehicle type</div>
+                            <div class="col-form-value fw-bold">
+                                <!-- Display the value here -->
+                                {{ transportData.vechile }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div [ngClass]="{'d-none': transportData.fuelType == null}" class="row">
+                        <div class="d-flex justify-content-between">
+                            <div class="col-form-label ms-1"> Fuel type </div>
+                            <div class="col-form-value fw-bold">
+                                <!-- Display the value here -->
+                                {{ transportData.fuelType }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div [ngClass]="{'d-none': transportData.amountOfFuel == null}" class="row">
+                        <div class="d-flex justify-content-between">
+                            <div class="col-form-label ms-1"> Amount of fuel</div>
+                            <div class="col-form-value fw-bold">
+                                <!-- Display the value here -->
+                                {{ transportData.amountOfFuel }} {{ transportData.fuelUnit }}
+                            </div>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+        </ng-container>
+
+    </ng-container>
+</ng-template>
+
+<ng-template #wasteTreatment let-activityData="activityData">
+    <div class="row ms-2 mt-2">
+        <ng-container *ngTemplateOutlet="value; 
+            context: { 
+                title: 'Waste type', 
+                value: activityData?.wasteTypeName 
+            }">
+        </ng-container>
+        <ng-container *ngTemplateOutlet="value; 
+            context: {
+                title: 'Waste treatment method',
+                value: activityData?.wasteTreatmentMethodName
+            }">
+        </ng-container>
+        <ng-container *ngTemplateOutlet="valueAndUnit; 
+            context: {
+                title: 'Amount of waste treated',
+                value: activityData?.wasteTreated,
+                unit: activityData?.wasteTreatedUomCode
+            }">
+        </ng-container>
+    </div>
+</ng-template>
+
+<ng-template #enteredData let-activityData="activityData" let-config="config">
+    <div class="row ms-2">
+        <div class="row">
+            <div class="sectionSubHeader fs-5">
+                Entered data
+            </div>
+        </div>
+        <ng-container *ngIf="isStationaryCombustion">
+            <ng-template
+                *ngTemplateOutlet="stationaryCombustion; context: { activityData: activityData, config: config}"></ng-template>
+        </ng-container>
+        <ng-container *ngIf="isMobileCombustion">
+            <ng-template
+                *ngTemplateOutlet="mobileCombustion; context: { activityData: activityData, config: config}"></ng-template>
+        </ng-container>
+    </div>
+</ng-template>
+
+<ng-template #mobileCombustion let-activityData="activityData" let-config="config">
+    <ng-container *ngTemplateOutlet="value; 
+        context: {
+            title: 'Fuel used',
+            value: activityData?.fuelTypeName
+        }">
+    </ng-container>
+
+    <ng-container *ngIf="config?.fuelDataInputMethodIDKeyID == DataInputMethodKeyIDEnum.FUEL_AMOUNT">
+        <ng-container *ngTemplateOutlet="valueAndUnit; 
+        context: {
+            title: 'Fuel consumed',
+            value: activityData?.fuelAmount,
+            unit: activityData?.fuelAmountUomCode
+        }">
+        </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="config?.fuelDataInputMethodIDKeyID == DataInputMethodKeyIDEnum.PRICE_BASED_METHOD">
+        <ng-container *ngTemplateOutlet="valueAndUnit; 
+        context: {
+            title: 'Fuel bill amount',
+            value: activityData?.billAmount,
+            unit: activityData?.billCurrencyCode
+        }">
+        </ng-container>
+        <ng-container *ngTemplateOutlet="valueAndUnit; 
+        context: {
+            title: 'Fuel rate',
+            value: activityData?.fuelRate,
+            unit: activityData?.fuelRateNumeratorUomCode +'/'+ activityData?.fuelRateDenominatorUomCode
+        }">
+        </ng-container>
+    </ng-container>
+    <ng-container *ngIf="config?.distanceDataInputMethodKeyID ==  DataInputMethodKeyIDEnum.DISTANCE_TRAVELLED">
+        <ng-container *ngTemplateOutlet="valueAndUnit; 
+        context: {
+            title: 'Distance travelled',
+            value: activityData?.distanceTravelled,
+            unit: activityData?.distanceTravelledUomCode
+        }">
+        </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="config?.distanceDataInputMethodKeyID == DataInputMethodKeyIDEnum.ODOMETER_READING">
+        <ng-container *ngTemplateOutlet="valueAndUnit; 
+        context: {
+            title: 'Odometer opening reading',
+            value: activityData?.openingOdometerReading,
+            unit: activityData?.odometerReadingUomCode
+        }">
+        </ng-container>
+        <ng-container *ngTemplateOutlet="valueAndUnit; 
+        context: {
+            title: 'Odometer closing reading',
+            value: activityData?.closingOdometerReading,
+            unit: activityData?.odometerReadingUomCode
+        }">
+        </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="activityData?.mileage">
+        <ng-container *ngTemplateOutlet="valueAndUnit; 
+            context: {
+                title: 'Mileage',
+                value: activityData?.mileage,
+                unit: activityData?.mileageNumeratorUomCode +'/'+ activityData?.mileageDenominatorUomCode
+            }">
+        </ng-container>
+    </ng-container>
+
+    <ng-container *ngTemplateOutlet="bill;
+        context: {
+            billName: activityData?.file?.name,
+            path: activityData?.file?.path
+        }">
+    </ng-container>
+</ng-template>
+
+<ng-template #stationaryCombustion let-activityData="activityData" let-config="config">
+    <ng-container *ngTemplateOutlet="value; 
+        context: {
+            title: 'Fuel used',
+            value: activityData?.fuelSourceName
+        }">
+    </ng-container>
+    <ng-container *ngIf="config?.fuelMonitorDataInputMethodKeyID == DataInputMethodKeyIDEnum.FUEL_CONSUMPTION">
+        <ng-container *ngTemplateOutlet="valueAndUnit; 
+            context: {
+                title: 'HHV',
+                value: activityData?.hhv,
+                unit: activityData?.hhvNumeratorUomCode + '/' + activityData?.hhvDenominatorUomCode
+            }">
+        </ng-container>
+    </ng-container>
+    <ng-container *ngIf="dataInputMethod == DataInputMethodKeyIDEnum.TOTAL_AMOUNT">
+        <ng-container *ngIf="config?.fuelMonitorDataInputMethodKeyID == DataInputMethodKeyIDEnum.FUEL_CONSUMPTION">
+            <ng-container *ngTemplateOutlet="valueAndUnit; 
+                context: {
+                    title: 'Amount of fuel consumed',
+                    value: activityData?.amountOfFuel,
+                    unit: activityData?.amountOfFuelUomCode
+                }">
+            </ng-container>
+        </ng-container>
+        <ng-container *ngIf="config?.fuelMonitorDataInputMethodKeyID == DataInputMethodKeyIDEnum.ENERGY_GENERATED">
+            <ng-container *ngTemplateOutlet="valueAndUnit; 
+                context: {
+                    title: 'Energy generated',
+                    value: activityData?.amountOfEnergy,
+                    unit: activityData?.amountOfEnergyUomCode
+                }">
+            </ng-container>
+        </ng-container>
+    </ng-container>
+    <ng-container *ngIf="dataInputMethod == DataInputMethodKeyIDEnum.METER_READING">
+        <ng-container *ngTemplateOutlet="valueAndUnit; 
+            context: {
+                title: 'Meter opening reading',
+                value: activityData?.openingMeterReading,
+                unit: activityData?.meterReadingUomCode
+            }">
+        </ng-container>
+        <ng-container *ngTemplateOutlet="valueAndUnit; 
+            context: {
+                title: 'Meter closing reading',
+                value: activityData?.closingMeterReading,
+                unit: activityData?.meterReadingUomCode
+            }">
+        </ng-container>
+    </ng-container>
+    <ng-container *ngIf="config?.fuelMonitorDataInputMethodKeyID == DataInputMethodKeyIDEnum.FUEL_CONSUMPTION">
+        <ng-container *ngIf="dataInputMethod == DataInputMethodKeyIDEnum.TOTAL_AMOUNT">
+            <ng-container *ngTemplateOutlet="bill;
+                context: {
+                    billName: activityData?.docName,
+                    path: activityData?.docPath
+                }">
+            </ng-container>
+        </ng-container>
+    </ng-container>
+</ng-template>
+
+<ng-template #calculatedData let-activityData="activityData">
+    <div class="row ms-2">
+        <div class="row">
+            <div class="sectionSubHeader fs-5">
+                Calculated data
+            </div>
+        </div>
+        <ng-container *ngTemplateOutlet="valueAndUnit; 
+            context: { 
+                title: 'Electricity consumed',
+                value: activityData?.energyConsumption,
+                unit: activityData?.energyConsumptionUomCode
+            }">
+        </ng-container>
+    </div>
+</ng-template>
+
+<ng-template #scope2Data let-activityData="activityData">
+    <div class="row ms-2">
+        <div class="row">
+            <div class="sectionSubHeader fs-5">
+                Entered data
+            </div>
+        </div>
+        <ng-container *ngIf="dataInputMethod == DataInputMethodKeyIDEnum.ENERGY_CONSUMED">
+            <div class="row">
+                <div class="d-flex justify-content-between">
+                    <div class="col-form-label ms-1"> Electricity consumed </div>
+                    <div class="col-form-value fw-bold">
+                        <span> {{ viewUtil.haveValue(activityData?.energyConsumption)?
+                            activityData?.energyConsumption + " " + activityData?.energyConsumptionUomCode
+                            : COMMON_CONSTANT.HYPHEN }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="dataInputMethod == DataInputMethodKeyIDEnum.METER_READING">
+            <div class="row">
+                <div class="d-flex justify-content-between">
+                    <div class="col-form-label ms-1"> Meter opening reading </div>
+                    <div class="col-form-value fw-bold">
+                        <span> {{ viewUtil.haveValue(activityData?.meterOpeningReading)?
+                            activityData.meterOpeningReading + " "+
+                            activityData.meterUomCode: COMMON_CONSTANT.HYPHEN }} </span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="d-flex justify-content-between">
+                    <div class="col-form-label ms-1"> Meter closing reading </div>
+                    <div class="col-form-value fw-bold">
+                        <span> {{ viewUtil.haveValue(activityData?.meterClosingReading)?
+                            activityData.meterClosingReading + " "+
+                            activityData.meterUomCode : COMMON_CONSTANT.HYPHEN }} </span>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="dataInputMethod == DataInputMethodKeyIDEnum.AREA_BASED_METHOD">
+            <div class="row">
+                <div class="d-flex justify-content-between">
+                    <div class="col-form-label ms-1"> Used area </div>
+                    <div class="col-form-value fw-bold">
+                        <span> {{ viewUtil.haveValue(activityData?.areaUsed)? activityData.areaUsed + " "+
+                            activityData.areaUomCode : COMMON_CONSTANT.HYPHEN }} </span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="d-flex justify-content-between">
+                    <div class="col-form-label ms-1"> Electricity consumed by total area </div>
+                    <div class="col-form-value fw-bold">
+                        <span> {{ viewUtil.haveValue(activityData?.energyConsumption)?
+                            activityData?.energyConsumption + " " + activityData?.energyConsumptionUomCode
+                            : COMMON_CONSTANT.HYPHEN }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="dataInputMethod == DataInputMethodKeyIDEnum.PRICE_BASED_METHOD">
+            <ng-container *ngTemplateOutlet="valueAndUnit; 
+            context: {
+                title: 'Bill amount',
+                value: activityData?.billAmount,
+                unit: activityData?.currencyUomCode
+            }">
+            </ng-container>
+        </ng-container>
+        <ng-container *ngIf="dataInputMethod == DataInputMethodKeyIDEnum.METER_READING 
+            || dataInputMethod == DataInputMethodKeyIDEnum.PRICE_BASED_METHOD 
+            || dataInputMethod == DataInputMethodKeyIDEnum.AREA_BASED_METHOD">
+            <div class="row">
+                <div class="d-flex justify-content-between">
+                    <div class="col-form-label ms-1"> Attached bill </div>
+                    <div class="col-form-value fw-bold">
+                        <ng-container *ngIf="activityData?.docName; else noBill">
+                            <a [href]="activityData?.docPath" target="_blank" download>
+                                {{ activityData['docName'] }}
+                            </a>
+                        </ng-container>
+                        <ng-template #noBill>
+                            {{ COMMON_CONSTANT.HYPHEN }}
+                        </ng-template>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+    <ng-container *ngIf="dataInputMethod == DataInputMethodKeyIDEnum.METER_READING 
+        || dataInputMethod == DataInputMethodKeyIDEnum.PRICE_BASED_METHOD">
+        <ng-container *ngTemplateOutlet="calculatedData; context: { activityData: activityData}"></ng-container>
+    </ng-container>
+</ng-template>
+
+<ng-template #scope3SpendBased let-enteredData="activityData">
+    <div class="row ms-2">
+        <div class="row">
+            <div class="d-flex justify-content-between">
+                <div class="col-form-label ms-1"> Amount </div>
+                <div class="col-form-value fw-bold">
+                    <span> {{ viewUtil.haveValue(activityData?.amount)?
+                        activityData.amount + " " + activityData.currencyCode
+                        : COMMON_CONSTANT.HYPHEN }}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="d-flex justify-content-between">
+                <div class="col-form-label ms-1"> Category </div>
+                <div class="col-form-value fw-bold">
+                    <span> {{ activityData?.categoryName?
+                        activityData.categoryName : COMMON_CONSTANT.HYPHEN }}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="d-flex justify-content-between">
+                <div class="col-form-label ms-1"> Activity type </div>
+                <div class="col-form-value fw-bold">
+                    <span> {{ activityData?.activityName?
+                        activityData.activityName : COMMON_CONSTANT.HYPHEN }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #value let-title="title" let-value="value">
+    <div class="row">
+        <div class="d-flex justify-content-between">
+            <div class="col-form-label ms-1"> {{ title }} </div>
+            <div class="col-form-value fw-bold" *ngIf="value; else hyphen;">
+                {{ value }}
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #valueAndUnit let-title="title" let-value="value" let-unit="unit">
+    <div class="row">
+        <div class="d-flex justify-content-between">
+            <div class="col-form-label ms-1" [matTooltip]="title.length > title_length? title : ''"
+                matTooltipPosition="above" matTooltipClass="nameTooltip">
+                {{ title }}
+            </div>
+            <div class="col-form-value fw-bold" *ngIf="viewUtil.haveValue(value); else hyphen;">
+                <span [matTooltip]="value + ' ' + unit" matTooltipPosition="above" matTooltipClass="nameTooltip">
+                    {{ (value | number: '1.2-2') + " " + unit}}
+                </span>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #bill let-billName="billName" let-path="path">
+    <div class="row">
+        <div class="d-flex justify-content-between">
+            <div class="col-form-label ms-1"> Attached file </div>
+            <div class="col-form-value fw-bold">
+                <ng-container *ngIf="billName; else hyphen">
+                    <a [href]="path" target="_blank" download> {{ billName }} </a>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #hyphen>
+    <span class="fw-bold">
+        {{ COMMON_CONSTANT.HYPHEN }}
+    </span>
+</ng-template>

@@ -1,0 +1,103 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Peers in your sector are taking action</div>
+            <div class="pageSubtitle">Based on SBTi data on companies taking action as of {{reportGenerateDate}}
+            </div>
+        </div>
+        <div class="headerRightContainer">
+            <lib-search-bar-one #searchBar searchBy="Company name" (emitSearch)="searchFn($event)"></lib-search-bar-one>
+        </div>
+    </div>
+
+    <button #refreshBtn class="d-none"></button>
+
+    <!-- chips_view -->
+    <div class="row mx-2 h-auto" [ngClass]="{'d-none': chips?.length == 0}">
+        <div class="col-sm-10 py-1 chipListContainer">
+            <mat-chip-list #chipList>
+                <mat-chip *ngFor="let chip of chips" (removed)="removeChip(chip)">
+                    <span class="fw-normal">{{ chip['filter'] }}</span>
+                    <button matChipRemove>
+                        <mat-icon>cancel</mat-icon>
+                    </button>
+                </mat-chip>
+            </mat-chip-list>
+        </div>
+        <div class="col-sm-2 centerAlignVertical justify-content-end">
+            <button matRipple [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" class="btn btn-link float-end"
+                (click)="clearAllChips()">
+                <span class="material-symbols-outlined fs-6">
+                    filter_list_off
+                </span>
+                Reset Filters
+            </button>
+        </div>
+    </div>
+
+    <table mat-table [dataSource]="dataSource" #sort="matSort" matSort matSortActive="name" matSortDirection="asc"
+        matSortDisableClear>
+
+        <ng-container matColumnDef="name">
+            <th class="px-3 id" mat-header-cell *matHeaderCellDef mat-sort-header matSortDisableClear> Company </th>
+            <td mat-cell *matCellDef="let row">
+                {{ row.name }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="location">
+            <th class="location" mat-header-cell *matHeaderCellDef>
+                <funnel-filter #locationSelect header="Location" type="mono" [entityList]="locationList" value="name"
+                    view="name" [selectFC]="locationFC" [active]="locationFlag"
+                    (mono)="locationFlag = true;" (selected)="locationChip($event)" headerWidth="4">
+                </funnel-filter>
+            </th>
+            <td mat-cell *matCellDef="let row"> {{ row.location }} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+            <th class="px-3 status" mat-header-cell *matHeaderCellDef>
+                <funnel-filter #statusSelect header="Science based target status" type="mono" [entityList]="status" value="name" view="name"
+                    [selectFC]="statusFC" [active]="statusFlag" (mono)="statusFlag = true;"
+                    (selected)="statusChip($event)" headerWidth="4">
+                </funnel-filter>
+            </th>
+            <td class="px-3" mat-cell *matCellDef="let row">
+                <ng-container [ngSwitch]="row['status']">
+                    <span class="textActiveStatus" *ngSwitchCase="'Committed'">Committed</span>
+                    <span class="textRequestedStatus" *ngSwitchCase="'Targets Set'">Targets Set</span>
+                    <span class="textInActiveStatus" *ngSwitchCase="'Removed'">Removed</span>
+                    <span *ngSwitchDefault>
+                        {{ row['status'] }}
+                    </span>
+                </ng-container>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+            </td>
+        </tr>
+
+    </table>
+
+    <mat-paginator #paginator class="roundedBorder" showFirstLastButtons [length]="resultLength"
+    [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION" [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE">
+    </mat-paginator>
+
+    <div class="card main-card cardOverwrite">
+        <div class="headerContainer">
+            <div class="headerLeftContainer">
+                <div class="pageTitle">And so are companies across the globe
+                </div>
+                <div class="pageSubtitle">Based on SBTi progress report 2022
+                </div>
+            </div>
+        </div>
+        <app-view [viewMore]="viewMore" class="m-3"></app-view>
+    </div>
+</div>

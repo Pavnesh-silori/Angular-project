@@ -1,0 +1,75 @@
+<ng-container *ngIf="vehicle">
+    <mat-card class="cardOverwrite">
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Vehicle Number',
+                        value: vehicle.vehicleNumber,
+                        class: ''
+                    }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Vehicle Name',
+                        value: vehicle.vehicleName,
+                        class: 'pt-3'
+                    }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Vehicle Type',
+                        value: vehicle.vehicleType.name,
+                        class: 'pt-3'
+                    }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Vehicle Category',
+                        value: vehicle.vehicleCategory.name,
+                        class: 'pt-3'
+                    }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Engine Stroke',
+                        value: vehicle.engineStroke?.name,
+                        class: 'pt-3'
+                    }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Year',
+                        value: vehicle.year,
+                        class: 'pt-3'
+                    }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Odometer',
+                        value: vehicle.odoMeterUnit.uomName + ' (' + vehicle.odoMeterUnit.uomCode + ')',
+                        class: 'pt-3'
+                    }">
+        </ng-container>
+
+        <div class="row pt-3">
+            <div class="col-sm-4">
+                Status
+            </div>
+            <div class="col-sm-8 fw-bold">
+                <span [ngClass]="vehicle.status ? 'text-success' : 'text-danger'">
+                    {{ vehicle.status }}
+                </span>
+            </div>
+        </div>
+
+    </mat-card>
+</ng-container>
+
+<ng-template #labelValue let-label="label" let-value="value" let-class="class" let-valueClass="valueClass">
+    <div class="row" [class]="class">
+        <div class="col-sm-4">
+            {{ label }}
+        </div>
+        <div class="col-sm-8 fw-bold" [class]="valueClass">
+            {{ value ? value : COMMON_CONSTANT.HYPHEN }}
+        </div>
+    </div>
+</ng-template>

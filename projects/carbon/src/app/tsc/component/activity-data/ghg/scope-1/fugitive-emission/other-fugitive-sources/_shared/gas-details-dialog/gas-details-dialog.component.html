@@ -1,0 +1,28 @@
+<div mat-dialog-title>
+    <strong class="dialogHeader">
+        Quantity of gases released
+    </strong>
+</div>
+
+<div mat-dialog-content>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Gas</th>
+                <th class="ms-5">Quantity released </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let gas of gases">
+                <td>{{gas.gasName}}</td>
+                <td class="ms-2">{{gas.gasQuantity}} {{gas.gasQuantityUnit}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div align="end" class="py-5">
+    <button type="button" class="button btn btn-secondary me-2" mat-dialog-close>
+        Close
+    </button>
+</div>

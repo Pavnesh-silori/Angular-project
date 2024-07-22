@@ -1,0 +1,73 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="cardHeaderBlock d-flex align-items-center">
+        <div class="col-sm-6 pageTitle">
+            Import Records
+        </div>
+    </div>
+    <div class="card-body h-fill">
+        <div class="row">
+            <div class="col-sm-12" *ngFor="let method of calculationEmissionMethod">
+                <mat-card class="border cardOverwrite">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <span class="card-title sectionTitle">
+                                {{ method.methodName }}
+                            </span>
+                        </div>
+                        <div class="col-sm-6 centerAlignVertical justify-content-end">
+                            <a [routerLink]="['/activity-data/spend-based-method/import-history']">View all imports</a>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row mt-4">
+                        <div class="col-sm-12">
+                            {{ methodDefination }}
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-sm-12">
+                            Include 5 Scope 3 activity types
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-sm-12">
+                            <div class="d-flex align-items-center mt-2" *ngFor="let activity of activityList">
+                                <span class="material-symbols-outlined me-3" *ngIf="activity.id === 10">
+                                    add_shopping_cart
+                                </span>
+                                <span class="material-symbols-outlined me-3" *ngIf="activity.id === 11">
+                                    shelves
+                                </span>
+                                <span class="material-symbols-outlined me-3" *ngIf="activity.id === 12">
+                                    directions_bus
+                                </span>
+                                <span class="material-symbols-outlined me-3" *ngIf="activity.id === 13">
+                                    departure_board
+                                </span>
+                                <span class="material-symbols-outlined me-3" *ngIf="activity.id === 14">
+                                    electric_car
+                                </span>
+                                <span class="text-dark">
+                                    {{ activity.name }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-sm-12 d-flex justify-content-end centerAlignVertical">
+                            <button type="button" class="btn btn-sm btn-success me-2"
+                                (click)="createImportRequestDialog(method.methodID)">
+                                Create import request
+                            </button>
+                            <a type="button" class="btn btn-sm btn-success me-2"
+                                [routerLink]="['/activity-data/spend-based-method/import-data']"
+                                [queryParams]="{methodID: method.methodID}">
+                                New import
+                            </a>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>

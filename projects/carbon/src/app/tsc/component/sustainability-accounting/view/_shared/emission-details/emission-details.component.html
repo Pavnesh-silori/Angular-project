@@ -1,0 +1,169 @@
+<div class="ms-1 me-3 mt-2">
+    <div class="sectionHeader">
+        <span class="header"> Emissions </span>
+    </div>
+
+    <div class="row ms-2 mt-2">
+
+        <ng-container *ngIf="isEmployeeCommutingAverageMethod">
+            <ng-container *ngTemplateOutlet="employeeCommuting">
+            </ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="isEmployeeCommutingDistanceFuelMethod">
+            <ng-container *ngTemplateOutlet="employeeCommutingDistanceFuelMethod2">
+            </ng-container>
+        </ng-container>
+
+        <ng-container *ngIf="isEmployeeCommutingDistanceFuelMethod">
+            <ng-container *ngTemplateOutlet="employeeCommutingDistanceFuelMethod">
+            </ng-container>
+        </ng-container>
+
+
+        <ng-container *ngIf="isScope2 ; else elseBlock">
+            <ng-container
+                *ngTemplateOutlet="scope2; context: { emissionData: emission, activityConfigData: activityConfigData }"></ng-container>
+        </ng-container>
+
+        <ng-template #elseBlock>
+            <ng-container *ngTemplateOutlet="emissionData; context: { emissionData: emission }"></ng-container>
+        </ng-template>
+
+        <ng-template *ngTemplateOutlet="valueAndUnit; 
+        context: {
+            title: 'Biogenic emissions',
+            value: emission?.biogenicEmission,
+            unit: emission?.biogenicEmissionUomCode
+        }">
+        </ng-template>
+    </div>
+
+    <ng-template #scope2 let-emissionData="emissionData" let-activityConfigData="activityConfigData">
+        <ng-container>
+            <ng-template *ngTemplateOutlet="valueAndUnit;
+            context: {
+                title: 'Location based emissions',
+                value: emissionData?.co2e,
+                unit: emissionData?.co2eUomCode
+            }">
+            </ng-template>
+        </ng-container>
+        <!-- TODO_PN check if we can update this to boolean -->
+        <ng-container *ngIf="activityConfigData?.haveContractualInstrument == 'YES'">
+            <ng-template *ngTemplateOutlet="valueAndUnit; 
+            context: {
+                title: 'Market based emissions',
+                value: emissionData?.co2e,
+                unit: emissionData?.co2eUomCode
+            }">
+            </ng-template>
+        </ng-container>
+    </ng-template>
+
+    <ng-template #emissionData let-emissionData="emissionData">
+        <ng-template *ngTemplateOutlet="valueAndUnit; 
+        context: {
+            title: 'Emissions',
+            value: emissionData?.co2e,
+            unit: emissionData?.co2eUomCode
+        }">
+        </ng-template>
+    </ng-template>
+
+    <ng-template #valueAndUnit let-title="title" let-value="value" let-unit="unit">
+        <div class="row">
+            <div class="d-flex justify-content-between">
+                <div class="col-form-label ms-1"> {{ title }} </div>
+                <div class="col-form-value fw-bold">
+                    <span *ngIf="value != null && unit == 'tCO2e'" [matTooltip]="value + ' ' + unit"
+                        matTooltipPosition="above" matTooltipClass="nameTooltip">
+                        {{value | number: '1.2-2'}} tCO<sub>2</sub>e
+                    </span>
+                    <span *ngIf="value != null && unit != 'tCO2e'" [matTooltip]="value + ' ' + unit"
+                        matTooltipPosition="above" matTooltipClass="nameTooltip">
+                        {{value | number: '1.2-2'}}{{unit}}
+                    </span>
+                    <span *ngIf="value == null">
+                        {{ COMMON_CONSTANT.HYPHEN }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #employeeCommuting let-emissionData="emissionData">
+        <ng-container *ngFor="let data of getEmissionForTransport"> 
+            <ng-template *ngTemplateOutlet="valueAndUnit; 
+                context: {
+                  title: data?.modeOfTransportName,
+                  value: data?.emission,
+                  unit:  data?.emissionUnitName
+                }">
+            </ng-template>
+        </ng-container>
+    </ng-template>
+
+    <ng-template #employeeCommutingDistanceFuelMethod2>
+        <div class="card-body pt-2" *ngIf="getEmissionForVehicle">
+            <mat-card class="border cardOverwrite">
+                <span class="fw-bold">
+                    Vehicle
+                </span>
+                <ng-container *ngFor="let data of getEmissionForVehicle">
+                    <ng-template *ngTemplateOutlet="valueAndUnit; 
+            context: {
+              title: data.vehicleName,
+              value: data.emission,
+              unit:  data.unit
+            }">
+                    </ng-template>
+                </ng-container>
+            </mat-card>
+        </div>
+    </ng-template>
+
+    <ng-template #employeeCommutingDistanceFuelMethod>
+        <div class="card-body pt-2" *ngIf="getAllEmission">
+            <mat-card class="border cardOverwrite">
+                <span class="fw-bold">
+                    Transport
+                </span>
+                <table class="table">
+                    <thead>
+                        <!-- <tr>
+                <th>Mode of Transport</th>
+                <th>Level One</th>
+                <th>Level Two</th>
+                <th>Level Three</th>
+                <th>Emission Factor</th>
+              </tr> -->
+                    </thead>
+                    <tbody>
+                        <ng-container *ngFor="let transport of getEmissionForTransport">
+                            <tr>
+                                <td class="pt-3">{{ transport.modeOfTransportName !== null ?
+                                    transport.modeOfTransportName : COMMON_CONSTANT.HYPHEN }}</td>
+                                <td class="ps-3 pt-3">{{ transport.modeOfTransportLevelOneName !== null ?
+                                    transport.modeOfTransportLevelOneName : COMMON_CONSTANT.HYPHEN }}</td>
+                                <td class="ps-3 pt-3">{{ transport.modeOfTransportLevelTwoName !== null ?
+                                    transport.modeOfTransportLevelTwoName : COMMON_CONSTANT.HYPHEN }}</td>
+                                <td class="ps-3 pt-3">{{ transport.modeOfTransportLevelThreeName !== null ?
+                                    transport.modeOfTransportLevelThreeName : COMMON_CONSTANT.HYPHEN }}</td>
+                                <td class="pt-3 fw-bold ps-5 text-end">
+                                    <span [matTooltip]="transport.emissionFactor + ' ' + transport.emissionUnitName"
+                                        matTooltipPosition="above" matTooltipClass="nameTooltip">
+                                        {{ transport.emissionFactor !== null ? (transport.emissionFactor | number:
+                                        '1.2-2')
+                                        + ' ' + transport.emissionUnitName :
+                                        COMMON_CONSTANT.HYPHEN }}
+                                    </span>
+                                </td>
+                            </tr>
+                        </ng-container>
+
+                    </tbody>
+                </table>
+            </mat-card>
+        </div>
+    </ng-template>

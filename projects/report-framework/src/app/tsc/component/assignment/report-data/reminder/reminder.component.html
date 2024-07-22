@@ -1,0 +1,35 @@
+<div *ngIf="assigneeApproverList.length > 0" mat-dialog-content>
+    <ng-container *ngTemplateOutlet="msg;"></ng-container>
+    <div *ngFor="let user of data.assigneeApproverList" class="row mt-2 mb-2 ms-4">
+        <div class="col-sm-1">
+            <img class="rounded-circle border profileImageHeaderView" [src]=" user.profileImgUrl
+            || defaultImage(user)" alt="Profile image">
+        </div>
+        <div class="col-sm-11 ">
+            {{ user.firstName }} {{ user.lastName }}
+        </div>
+    </div>
+</div>
+
+<div *ngIf="assigneeApproverList.length == 0" mat-dialog-content>
+    <ng-container *ngTemplateOutlet="msg;"></ng-container>
+</div>
+<div class="mt-4">Please confirm to proceed with sending reminders.</div>
+
+<div mat-dialog-actions align="end">
+    <button class="btn btn-sm btn-danger" type="button" (click)="close()">
+        Cancel
+    </button>
+    <button class="btn btn-sm btn-success ms-2" type="button" (click)="sendReminder()">
+        Proceed
+    </button>
+</div>
+
+<ng-template #msg let-index="index">
+    <div *ngIf="type == 'assignees'" class="mb-4 fw-bold">A mail will be sent to following assignees for reminder to fill their respective
+        questions.
+    </div>
+    <div *ngIf="type == 'approvers'" class="mb-4 fw-bold">A mail will be sent to all approvers requesting them to approve the data for the assigned
+        questions.
+    </div>
+</ng-template>

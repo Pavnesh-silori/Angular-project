@@ -1,0 +1,218 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle" *ngIf="activity?.name">{{ activity.name }}</div>
+            <div class="pageSubtitle">Records of combustion of fuels in stationary equipment owned or controlled by your
+                organization.</div>
+        </div>
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+
+                <lib-search-bar-one #searchBar searchBy="Combustion equipment"
+                    (emitSearch)="searchFn($event)"></lib-search-bar-one>
+
+                <button class="btn btn-sm btn-light refreshBtn centerAlign ms-3 py-1" #refreshBtn matRipple
+                    [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                    [matTooltip]="ButtonTooltipEnum.REFRESH">
+                    <span class="material-symbols-outlined text-secondary">
+                        refresh
+                    </span>
+                </button>
+
+                <button class="btn btn-sm btn-success ms-3" type="button" (click)="routeToAdHoc()">
+                    <fa-icon [icon]="faplus"></fa-icon> &nbsp; Record
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="ms-3 me-3">
+        <lib-date-filter [ngClass]="{'d-none': !dateFlag}" #filterChild></lib-date-filter>
+    </div>
+
+    <div class="ms-3 mb-4">
+
+        <button matRipple [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" class="btn btn-link float-end"
+            (click)="clearAllChips()" [disabled]="chips?.length == 0">
+            <span class="material-symbols-outlined fs-6">
+                filter_list_off
+            </span>
+            Reset Filters
+        </button>
+    </div>
+
+    <!-- Filters Section -->
+    <div class="row mx-2 h-auto" [ngClass]="{'d-none': chips?.length == 0}">
+        <div class="col-sm-10 py-1 chipListContainer">
+            <!-- Chip List -->
+            <mat-chip-list #chipList>
+                <mat-chip *ngFor="let chipItem of chips" (removed)="removeChip(chipItem)">
+                    <span class="fw-normal">{{ chipItem['filter'] }}</span>
+                    <button matChipRemove>
+                        <mat-icon>cancel</mat-icon>
+                    </button>
+                </mat-chip>
+            </mat-chip-list>
+        </div>
+    </div>
+
+    <!-- Data Table Section -->
+    <div class="overflowX customScrollBar h100">
+        <table mat-table [dataSource]="dataSource" matSort matSortActive="recordID" matSortDirection="desc"
+            matSortDisableClear>
+            <!-- Activity Data ID Column -->
+            <ng-container matColumnDef="recordID">
+                <th class="recordID" mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Record ID</th>
+                <td mat-cell *matCellDef="let row"><ng-container
+                        *ngIf="row.calculationErrorReason && row.calculationErrorReason.length !== 0; else noError">
+                        <img matTooltipPosition="above" matTooltip="{{ row.calculationErrorReason }}" class="ps-2 img"
+                            src="/assets/images/icons8-calculation-error-100.png" />
+                        {{row.recordID}}
+                    </ng-container>
+                    <ng-template #noError>
+                        <span class="noError">
+                            {{row.recordID}}
+                        </span>
+                    </ng-template>
+                </td>
+            </ng-container>
+
+            <!-- Accounting Period Column -->
+            <ng-container matColumnDef="startDate">
+                <th mat-header-cell class="accountingPeriod fixed-header-cell ps-3" *matHeaderCellDef mat-sort-header
+                    disableClear>Accounting Period</th>
+                <td class="ps-3" mat-cell *matCellDef="let row">
+                    {{ row.startDate | date:'dd-MMM-yyyy'}} - {{ row.endDate | date:'dd-MMM-yyyy'}}
+                </td>
+            </ng-container>
+
+            <!-- Asset Name Column -->
+            <ng-container matColumnDef="assetName">
+                <th class="ps-3 asset" mat-header-cell *matHeaderCellDef>Combustion equipment</th>
+                <td class="ps-3" mat-cell *matCellDef="let row">
+                    <ng-container *ngIf="row.assetName !== null; else noDataTemplate">{{ row.assetName }}</ng-container>
+                    <ng-template #noDataTemplate>{{ COMMON_CONSTANT.HYPHEN }}</ng-template>
+                </td>
+            </ng-container>
+
+
+            <!-- Fuel Name Column -->
+            <ng-container matColumnDef="fuelName">
+                <th class="ps-3 fuelName" mat-header-cell *matHeaderCellDef>Fuel Name</th>
+                <td class="ps-3" mat-cell *matCellDef="let row" [matTooltip]="row.fuelName">
+                    <span class="lineClamp1">
+                        {{ row.fuelName }}
+                    </span>
+                </td>
+            </ng-container>
+
+            <!-- Fuel Consumed Column -->
+            <ng-container matColumnDef="fuelConsumed">
+                <th class="ps-2 fuelConsumed" mat-header-cell *matHeaderCellDef>Fuel Consumed</th>
+                <td class="ps-2" mat-cell *matCellDef="let row" [matTooltip]="row.fuelConsumed"
+                    matTooltipPosition="above">
+                    <ng-container *ngIf="row.fuelConsumed !== null; else noDataTemplate">{{ row.fuelConsumed }} ({{
+                        row.fuelUnitName }})</ng-container>
+                    <ng-template #noDataTemplate>{{ COMMON_CONSTANT.HYPHEN }}</ng-template>
+                </td>
+            </ng-container>
+
+            <!-- Energy Consumed Column -->
+            <ng-container matColumnDef="energyGenerated">
+                <th class="ps-3 energyConsumed" mat-header-cell *matHeaderCellDef>Energy Consumed</th>
+                <td class="ps-3" mat-cell *matCellDef="let row" [matTooltip]="row.energyGenerated"
+                    matTooltipPosition="above">
+                    <ng-container *ngIf="row.energyGenerated !== null; else noDataTemplate">{{ row.energyGenerated |
+                        number:'1.0-2' }}
+                        ({{row.energyUnitName }})</ng-container>
+                    <ng-template #noDataTemplate>{{ COMMON_CONSTANT.HYPHEN }}</ng-template>
+                </td>
+            </ng-container>
+
+            <!-- Activity Input Method Column -->
+            <ng-container matColumnDef="activityInputMethod">
+                <th class="ps-3 activityInputMethod" mat-header-cell *matHeaderCellDef>
+                    <div class="row d-flex align-items-center">
+                        <funnel-filter #scopeSelect header="Activity Input Method" type="mono" value="keyID" view="name"
+                            [entityList]="stationaryScreeningTypeList" [selectFC]="stationaryFC"
+                            [active]="stationaryFlag" (mono)="stationaryFlag = true;"
+                            (selected)="toggleScopeChip($event)">
+                        </funnel-filter>
+                    </div>
+                </th>
+                <td class="ps-3" mat-cell *matCellDef="let row">{{ row.activityInputMethod }}</td>
+            </ng-container>
+
+
+            <!-- Emission Column -->
+            <ng-container matColumnDef="emission">
+                <th class="ps-5 emission" mat-header-cell *matHeaderCellDef mat-sort-header="Emission">Emission<span
+                        class="ps-1">(tCO<sub>2</sub>e)</span>
+                </th>
+                <td class="ps-5 text-align-left" mat-cell *matCellDef="let row" [matTooltip]="row.emission"
+                    matTooltipPosition="above">
+                    <ng-container *ngIf="row.emission !== null; else noDataTemplate">{{ row.emission | number: '1.0-2'
+                        }}</ng-container>
+                    <span>{{ row.emissionUnitName }}</span>
+                    <ng-template #noDataTemplate>{{ COMMON_CONSTANT.HYPHEN }}</ng-template>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="doc">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let row">
+                    <a href="{{row.docPath}}" target="_blank" [ngClass]="{'d-none': !row.docPath}"
+                        [matTooltip]="row.docName" matTooltipPosition="above" matTooltipClass="infoTooltip">
+                        <span class="material-symbols-outlined cursorPointer centerAlign"> description </span>
+                    </a>
+                </td>
+            </ng-container>
+
+            <!-- Action Column -->
+            <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let row">
+                    <div class="centerAlignVertical">
+                        <ng-container *ngTemplateOutlet="icon; 
+                        context: {
+                            icon: 'edit',
+                            tooltip: ButtonTooltipEnum.UPDATE,
+                            iconClass: 'text-primary updateIconHover',
+                            function: routeToADUpdate,
+                            functionParameter: [row]
+                        }">
+                        </ng-container>
+                    </div>
+                </td>
+            </ng-container>
+
+            <!-- Header row -->
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <!-- Data rows -->
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            <!-- No Data Placeholder -->
+            <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                    {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Paginator -->
+    <mat-paginator class="roundedBorder" #paginator [length]="resultLength"
+        [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION" [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE"
+        showFirstLastButtons>
+    </mat-paginator>
+</div>
+
+<ng-template #icon let-icon="icon" let-tooltip="tooltip" let-iconClass="iconClass" let-function="function"
+    let-functionParameter="functionParameter">
+    <button class="iconBtn centerAlign" [class]="iconClass" matTooltipPosition="below" [matTooltip]="tooltip" matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" (click)="handleClick(function, functionParameter)">
+        <span class="material-symbols-outlined icon">
+            {{ icon }}
+        </span>
+    </button>
+</ng-template>

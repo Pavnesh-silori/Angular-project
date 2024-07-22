@@ -1,0 +1,13 @@
+<div class="content">
+    <div class="side-bar" [ngClass]="{
+        'closed-sidebar': themeOptions.toggleCbamToolsSidebar
+    }">
+        <cbam-records-sidebar></cbam-records-sidebar>
+    </div>
+
+    <div class="main-content customScrollBar" [ngClass]="{
+        'full-width': themeOptions.toggleCbamToolsSidebar
+    }">
+        <router-outlet></router-outlet>
+    </div>
+</div>

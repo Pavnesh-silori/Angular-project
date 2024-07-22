@@ -1,0 +1,9 @@
+<div class="card cardOverwrite height">
+    <div class="pageTitle pt-3 ps-4"> {{graphHeader}}</div>
+    <div *ngIf="!graphData || graphData.length == 0" class="noData">
+        {{ TABLE_CONSTANT.TABLE_NO_DATA }} 
+    </div>
+    <ng-container *ngIf="graphData && graphData.length > 0">
+        <div echarts [options]="option" class="echarts"></div>
+    </ng-container>
+</div>

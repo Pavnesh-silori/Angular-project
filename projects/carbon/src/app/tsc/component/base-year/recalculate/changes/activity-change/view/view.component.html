@@ -1,0 +1,33 @@
+<ng-conatainer *ngIf="sentData != null; else noData;">
+    <div class="card main-card cardOverwrite bg-light">
+        <ng-container
+            *ngIf="activityKeyID == ActivityKeyIDEnum.REFRIGERATION_AC_AND_FIRE_SUPPRESSION_KEY_ID; else header;">
+            <fugitive-header [gwpResponse]="gwpResponse" [isUpdate]="isUpdate" [recordData]="recordData"></fugitive-header>
+        </ng-container>
+        <ng-template #header>
+            <view-header [isUpdate]="isUpdate" [recordData]="recordData" [cedID]="cedID" [view]="view"
+                [title]="title">
+            </view-header>
+        </ng-template>
+
+        
+        <hr class="mt-0">
+        <div class="row pb-2">
+            <!-- <activity-data [diff]="diff" [up_diff]="up_diff" [down_diff]="down_diff" [recordData]="recordData"></activity-data> -->
+            <ng-container
+                *ngIf="activityKeyID == ActivityKeyIDEnum.REFRIGERATION_AC_AND_FIRE_SUPPRESSION_KEY_ID; else activityData;">
+                <app-details [recordData]="recordData"></app-details>
+            </ng-container>
+            <ng-template #activityData>
+                <activity-data [recordData]="recordData"></activity-data>
+            </ng-template>
+        </div>
+    </div>
+</ng-conatainer>
+<ng-template #noData>
+    <div class="card main-card border cardOverwrite noDataCard centerAlign bg-light">
+        <span class="noData">
+            NO DATA
+        </span>
+    </div>
+</ng-template>

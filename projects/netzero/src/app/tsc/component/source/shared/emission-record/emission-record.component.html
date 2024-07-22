@@ -1,0 +1,64 @@
+<div class="card main-card cardOverwrite">
+    <div class="card-body pt-2">
+        <div class="row">
+            <div class="col-sm-12">
+                <ng-container *ngFor="let record of emissionRecords; let i = index">
+                    <div class="fw-bold pb-1 pt-1">
+                        {{ record?.name }}
+                    </div>
+                    <div *ngIf="record" class="container d-flex">
+                        <div class="row pt-2">
+                            <div class="col-sm-3 mb-3 flex-fill" *ngIf="i === 0">
+                                <ng-container
+                                    *ngTemplateOutlet="cardTemplate; context: { details: record, isEmission: true }"></ng-container>
+                            </div>
+                            <div class="col-sm-3 mb-3 flex-fill" *ngIf="i === 0">
+                                <ng-container
+                                    *ngTemplateOutlet="cardTemplate1; context: { details: { emission: record.count }, isEmission: false }"></ng-container>
+                            </div>
+                            <div class="col-sm-3 mb-3 flex-fill" *ngIf="i !== 0">
+                                <ng-container
+                                    *ngTemplateOutlet="cardTemplate; context: { details: { emission: record.count }, isEmission: false }"></ng-container>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #cardTemplate let-details="details" let-isEmission="isEmission">
+        <mat-card class="cardOverwrite border"
+            style="min-width: 250px; max-width: 250px; min-height: 130px; max-height: 130px;">
+            <mat-card-content class="d-flex flex-column align-items-center justify-content-center">
+                <div style="display: flex; align-items: center;">
+                    <span class="text-secondary fs-2" [class]="details?.emission != null ? 'fw-bold' : 'fw-light'"
+                        [matTooltip]="details?.emission">
+                        {{ details?.emission != null ? (details.emission | number: '1.2-2') : 'No Data'}}
+                    </span>
+                    <span class="fw-bold ps-2" *ngIf="details?.emission != null">
+                        {{ details?.unitName }}
+                    </span>
+                    <span *ngIf="details?.emission == null">&nbsp;</span>
+                </div>
+                <div class="text-secondary">{{ isEmission ? 'Total emissions' : 'Total records' }}</div>
+            </mat-card-content>
+        </mat-card>
+    </ng-template>
+
+
+    <ng-template #cardTemplate1 let-details="details" let-isEmission="isEmission">
+        <mat-card class="cardOverwrite border"
+            style="min-width: 250px; max-width: 250px; min-height: 130px; max-height: 130px;">
+            <mat-card-content class="d-flex flex-column align-items-center justify-content-center">
+                <div style="display: flex; align-items: center;">
+                    <span class="text-secondary fs-2" [class]="details?.emission != null ? 'fw-bold' : 'fw-light'">
+                        {{ details?.emission != null ? (details.emission) : 'No Data'}}
+                    </span>
+                    <span *ngIf="details?.emission == null">&nbsp;</span>
+                </div>
+                <div class="text-secondary">{{ isEmission ? 'Total emissions' : 'Total records' }}</div>
+            </mat-card-content>
+        </mat-card>
+    </ng-template>
+</div>

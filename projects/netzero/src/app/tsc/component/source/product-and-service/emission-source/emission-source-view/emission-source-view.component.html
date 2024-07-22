@@ -1,0 +1,93 @@
+<!-- <div class="card cardOverwrite">
+    <div class="card-body">
+        <mat-card class="mb-4 cardOverwrite border">
+            <span class="card-header dataBaseHeader">UK Government GHG Conversion Factors for Company Reporting</span>
+            <mat-card-content>
+                <ng-container *ngTemplateOutlet="labelValue; context: {
+                    label: 'Material type',
+                    value: ukedefraDataBase?.materialTypeName,
+                    class: 'pt-3'
+                }">
+                </ng-container>
+
+                <ng-container *ngTemplateOutlet="labelValue; context: {
+                    label: 'Material origin',
+                    value: ukedefraDataBase?.materialOriginTypeName,
+                    class: 'pt-3'
+                }">
+                </ng-container>
+
+            </mat-card-content>
+        </mat-card>
+
+        <mat-card class="mb-4 cardOverwrite border">
+            <span class="card-header dataBaseHeader">US EEIO</span>
+            <mat-card-content>
+                <ng-container *ngTemplateOutlet="labelValue; context: {
+                    label: 'Category',
+                    value: useeioDataBase?.categoryStdName,
+                    class: 'pt-3'
+                }">
+                </ng-container>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div> -->
+
+<div class="py-4">
+    <mat-accordion>
+        <mat-expansion-panel class="cardOverwrite border" expanded="true">
+            <mat-expansion-panel-header>
+                <mat-panel-title class="cardTitle">
+                    UK Government GHG Conversion Factors for Company Reporting
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="border-bottom w-100"></div>
+
+            <ng-container *ngTemplateOutlet="labelValue; context: {
+                label: 'Material Type',
+                value: ukedefraDataBase?.materialTypeName,
+                class: 'pt-3'
+            }">
+            </ng-container>
+
+            <ng-container *ngTemplateOutlet="labelValue; context: {
+                label: 'Material Origin Type',
+                value: ukedefraDataBase?.materialOriginTypeName,
+                class: 'pt-3'
+            }">
+            </ng-container>
+
+        </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-accordion>
+        <mat-expansion-panel class="cardOverwrite mt-4 border" expanded="true">
+            <mat-expansion-panel-header>
+                <mat-panel-title class="cardTitle">
+                    US EEIO
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="border-bottom w-100"></div>
+
+            <ng-container *ngTemplateOutlet="labelValue; context: {
+                label: 'Category',
+                value: useeioDataBase?.categoryStdName,
+                class: 'pt-3'
+            }">
+            </ng-container>
+
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>
+
+<ng-template #labelValue let-label="label" let-value="value" let-class="class">
+    <div class="row" [ngClass]="class">
+        <div class="col-sm-4">
+            {{ label }}
+        </div>
+        <div class="col-sm-8 fw-bold">
+            {{ value ? value : COMMON_CONSTANT.HYPHEN }}
+        </div>
+    </div>
+</ng-template>

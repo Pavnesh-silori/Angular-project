@@ -1,0 +1,73 @@
+<mat-card class="border cardOverwrite">
+    <div class="cardTitle pb-2"> Factor values
+        <div class="pageSubtitle">Price based</div>
+    </div>
+
+    <form [formGroup]="valueFG">
+        <div class="row">
+            <div class="row">
+                <ng-container *ngFor="let field of formFields">
+                    <div [class]="field['width']">
+                        <ng-container [ngSwitch]="field['input']">
+                            <ng-container *ngSwitchCase="'input'">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">{{ field['label'] }}</mat-label>
+                                    <input class="formPlaceholder" matInput [type]="field['type']"
+                                        [formControlName]="field['control']" [placeholder]="field['placeholder']">
+                                    <mat-error *ngFor="let validators of field['validators']">
+                                        <ng-container *ngIf="errorHandling(field['control'], validators['validator'])">
+                                            {{ validators['error'] }}
+                                        </ng-container>
+                                    </mat-error>
+                                </mat-form-field>
+                            </ng-container>
+
+                            <ng-container *ngSwitchCase="'select'">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">{{ field['label'] }}</mat-label>
+                                    <mat-select [formControlName]="field['control']" [mulitple]="field['multiple']">
+                                        <mat-option *ngIf="field['search']">
+                                            <ngx-mat-select-search
+                                                [formControl]="getSearchUtil(field['searchUtil']['name'])['filterFC']"
+                                                [placeholderLabel]="field['searchUtil']['placeholderLabel']"
+                                                [noEntriesFoundLabel]="field['searchUtil']['noEntriesFoundLabel']">
+                                            </ngx-mat-select-search>
+                                        </mat-option>
+                                        <mat-option
+                                            *ngFor="let entity of 
+                                                (field['search']? (getSearchUtil(field['searchUtil']['name'])['filteredEntities'] | async) : field['entityList'])"
+                                            [value]="entity[field['option']['value']]">
+                                            {{ entity[field['option']['view']] }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngFor="let validators of field['validators']">
+                                        <ng-container *ngIf="errorHandling(field['control'], validators['validator'])">
+                                            {{ validators['error'] }}
+                                        </ng-container>
+                                    </mat-error>
+                                </mat-form-field>
+                            </ng-container>
+
+                            <ng-container *ngSwitchDefault>
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <div class="col-form-label fs-5 fw-bold">
+                                            {{ field['title'] }}
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <div class="form-control-plaintext fw-bold">
+                                            {{ field['value'] }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </form>
+</mat-card>

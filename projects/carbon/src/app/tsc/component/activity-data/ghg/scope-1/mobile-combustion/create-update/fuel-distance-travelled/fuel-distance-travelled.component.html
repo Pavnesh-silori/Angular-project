@@ -1,0 +1,491 @@
+<mat-card class="cardOverwrite border">
+    <div class="cardTitle pb-2">Activity Data</div>
+    <form class="overflowX" [formGroup]="activityDataFG">
+        <!-- <div *ngIf="noOfVeh > 1">
+            <mat-card class="border cardOverwrite mt-3">
+                <div class="row">
+                    <div class="col-sm-3">
+                        Select distance travelled unit <mat-slide-toggle class="ps-2"
+                            (change)="toggleFlag($event.checked, 'distanceFlag')">
+                        </mat-slide-toggle>
+                        <div *ngIf="distanceFlag" class="ps-2 pt-3">
+                            <mat-form-field class="col-sm-12"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Select unit</mat-label>
+                                <mat-select (selectionChange)="selectedValue($event.value, 'distanceUnit')">
+                                    <mat-option *ngFor="let unit of distanceUnitlist" [value]="unit.id">
+                                        <span class="d-flex justify-content-between">
+                                            {{ unit.name }} -
+                                            {{unit.uomCode}}
+                                        </span>
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error>
+                                    {{ FormErrorEnum.REQUIRED }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3">
+                        Select numerator for mileage <mat-slide-toggle class="ps-2"
+                            (change)="toggleFlag($event.checked, 'milageNumFlag')"></mat-slide-toggle>
+                        <div *ngIf="milageNumFlag" class="ps-2 pt-3">
+                            <mat-form-field class="col-sm-12"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Select numerator</mat-label>
+                                <mat-select (selectionChange)="selectedValue($event.value, 'milageNumerator')">
+                                    <mat-option *ngFor="let unit of distanceUnitlist" [value]="unit.id">
+                                        <span class="d-flex justify-content-between">
+                                            {{ unit.name }} -
+                                            {{unit.uomCode}}
+                                        </span>
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error>
+                                    {{ FormErrorEnum.REQUIRED }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+
+                    </div>
+                    <div class="col-sm-3">
+                        Select denominator for mileage
+                        <mat-slide-toggle (change)="toggleFlag($event.checked, 'milagedenumFlag')"></mat-slide-toggle>
+                        <div *ngIf="milagedenumFlag" class="ps-2 pt-3">
+                            <mat-form-field class="col-sm-12"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Select deomenator</mat-label>
+                                <mat-select (selectionChange)="selectedValue($event.value,'milageDenumerator')">
+                                    <mat-option *ngFor="let unit of volumnUnitList" [value]="unit.id">
+                                        <span class="d-flex justify-content-between">
+                                            {{ unit.name }} -
+                                            {{unit.uomCode}}
+                                        </span>
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error>
+                                    {{ FormErrorEnum.REQUIRED }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+            </mat-card>
+        </div> -->
+
+        <div formArrayName="activityDataDetails">
+            <div *ngFor="let formGroup of activityDataDetailsFA.controls; let i = index" [formGroupName]="i">
+                <mat-card class="border cardOverwrite mt-3">
+
+                    <div class="row">
+                        <div class="col-sm-4 mb-3" *ngIf="isSource">
+                            Vehicle Name:
+                            <span class="cardTitle pb-2"> {{dataSource.length > 0 ? dataSource[i].name : vehicleName}}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <mat-form-field class="matFieldWidth100 cursorPointer"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Accounting period</mat-label>
+                                <input type="text" matInput ngxDaterangepickerMd
+                                    [locale]="{direction: 'ltr', applyLabel: 'Apply', format: 'DD-MMM-YYYY'}"
+                                    [drops]="'down'" [opens]="'right'" [alwaysShowCalendars]="true"
+                                    [keepCalendarOpeningWithRange]="true" [showDropdowns]="true" [showCancel]="true"
+                                    autocomplete="off" name="dateRange" formControlName="dateRange"
+                                    (ngModelChange)="formatDate(i)" readonly />
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <mat-form-field class="matFieldWidth100"
+                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <mat-label>Fuel used</mat-label>
+                                        <mat-select formControlName="fuelTypeID"
+                                            (selectionChange)="getTechnology($event.value, formGroup)">
+                                            <mat-option>
+                                                <ngx-mat-select-search [formControl]="fuelTypeSearchUtil.filterFC"
+                                                    placeholderLabel="Search by name"
+                                                    noEntriesFoundLabel="No matching name found.">
+                                                </ngx-mat-select-search>
+                                            </mat-option>
+                                            <mat-option *ngFor="let fuel of fuelTypeSearchUtil.filteredEntities | async"
+                                                [value]="fuel.fuelSourceID">
+                                                {{ fuel.fuelSourceName }}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error>
+                                            {{ FormErrorEnum.REQUIRED }}
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div *ngIf="emissionFactorDatabaseKeyID == EmissionFactorSourecKeyIDEnum.IPCC_GUIDELINES_FOR_NATIONAL_GREENHOUSE_GAS_INVENTORIES && 
+                        formGroup.get('fuelTypeID').value != null && technologyList != null" class="col-sm-4">
+                                    <mat-form-field class="matFieldWidth100"
+                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <mat-label class="formLabel">Select IPCC category/technology</mat-label>
+                                        <mat-select formControlName="technologyID">
+                                            <mat-option>
+                                                <ngx-mat-select-search [formControl]="technologySearchUtil.filterFC"
+                                                    placeholderLabel="Search by category/technology name"
+                                                    noEntriesFoundLabel="No matching found.">
+                                                </ngx-mat-select-search>
+                                            </mat-option>
+                                            <mat-option
+                                                *ngFor="let technology of technologySearchUtil.filteredEntities | async"
+                                                [value]="technology.id">
+                                                <span class="d-flex justify-content-between">
+                                                    {{ technology.name }}
+                                                </span>
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error>
+                                            {{ FormErrorEnum.REQUIRED }}
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div *ngIf="emissionFactorDatabaseKeyID == EmissionFactorSourecKeyIDEnum.IPCC_GUIDELINES_FOR_NATIONAL_GREENHOUSE_GAS_INVENTORIES" class="col-sm-3 mt-1">
+                                    <div class="ps-5 hhv customContainer" [ngClass]="{
+                            'centerAlign': !getNcvValue(i), 
+                            'centerAlignVertical': getNcvValue(i)
+                        }">
+                                        <label class="customLabel">NCV</label>
+
+                                        <div class="w-100 justify-content-space-between contentContainer"
+                                            [matTooltip]="haveFuel(i) ? '' : 'Select a fuel'" matTooltipPosition="above"
+                                            matTooltipClass="nameTooltip">
+                                            <span *ngIf="getNcvValue(i); else hyphen;">
+                                                <span
+                                                    [matTooltip]="getNcvValue(i) + ' ' + getNcvNumerator(i) + '/' + getNcvDenominator(i)"
+                                                    matTooltipPosition="above" matTooltipClass="nameTooltip">
+                                                    {{ (getNcvValue(i) != null ? (getNcvValue(i) | number: '1.2-2') :
+                                                    getNcvValue(i)) + ' ' +
+                                                    getNcvNumerator(i) + '/' + getNcvDenominator(i) }}
+                                                </span>
+                                            </span>
+                                            <ng-template #hyphen>
+                                                <span class="hypen fw-bold"> {{ COMMON_CONSTANT.HYPHEN }} </span>
+                                            </ng-template>
+                                        </div>
+                                        <button type="button" class="float-end" [disabled]="!haveFuel(i)"
+                                            mat-icon-button [matTooltip]="getNcvValue(i) ? 'Update NCV' : 'Input NCV'"
+                                            matTooltipPosition="above" matTooltipClass="nameTooltip"
+                                            (click)="editHhvValue(i)">
+                                            <span class="material-symbols-outlined fs-5">
+                                                edit
+                                            </span>
+                                        </button>
+                                    </div>
+                                    <mat-error class="required mt-1 ms-2" *ngIf="showNcvErrorFlag">
+                                        {{ FormErrorEnum.REQUIRED }}
+                                    </mat-error>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div *ngIf="densityFlag" class="row">
+                        <div class="col-sm-8">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <mat-form-field class="matFieldWidth100"
+                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <mat-label class="formLabel">Amount of density</mat-label>
+                                        <input matInput type="number" formControlName="density"
+                                            placeholder="0.00" min="0">
+
+                                            <mat-error *ngIf="formGroup.get('density').hasError('min')">
+                                                Amount of density can't be negative.
+                                            </mat-error>
+            
+                                            <mat-error *ngIf="formGroup.get('density').hasError('required')">
+                                                {{ FormErrorEnum.REQUIRED }}
+                                            </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <mat-form-field class="matFieldWidth100"
+                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <mat-label class="formLabel">Select numerator</mat-label>
+                                        <mat-select formControlName="densityNumeratorUnitID">
+                                            <mat-option>
+                                                <ngx-mat-select-search [formControl]="massUnitSearchUtil.filterFC"
+                                                    placeholderLabel="Search by unit name"
+                                                    noEntriesFoundLabel="No matching found.">
+                                                </ngx-mat-select-search>
+                                            </mat-option>
+                                            <mat-option
+                                                *ngFor="let unit of massUnitSearchUtil.filteredEntities | async"
+                                                [value]="unit.id">
+                                                <span class="d-flex justify-content-between">
+                                                    {{ unit.name }} -
+                                                    {{unit.uomCode}}
+                                                </span>
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error>
+                                            {{ FormErrorEnum.REQUIRED }}
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <mat-form-field class="matFieldWidth100"
+                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <mat-label class="formLabel">Select denominator</mat-label>
+                                        <mat-select formControlName="densityDenominatorUnitID">
+                                            <mat-option>
+                                                <ngx-mat-select-search [formControl]="volumnUnitSearchUtil.filterFC"
+                                                    placeholderLabel="Search by unit name"
+                                                    noEntriesFoundLabel="No matching found.">
+                                                </ngx-mat-select-search>
+                                            </mat-option>
+                                            <mat-option
+                                                *ngFor="let unit of volumnUnitSearchUtil.filteredEntities | async"
+                                                [value]="unit.id">
+                                                <span class="d-flex justify-content-between">
+                                                    {{ unit.name }} -
+                                                    {{unit.uomCode}}
+                                                </span>
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error>
+                                            {{ FormErrorEnum.REQUIRED }}
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <mat-form-field class="matFieldWidth100 col-sm-4"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Amount of fuel used</mat-label>
+                                <input matInput type="number" formControlName="fuelAmount" placeholder="0.00" min="0">
+
+                                <mat-error *ngIf="formGroup.get('fuelAmount').hasError('min')">
+                                    Amount of consumption can't be negative.
+                                </mat-error>
+
+                                <mat-error *ngIf="formGroup.get('fuelAmount').hasError('required')">
+                                    {{ FormErrorEnum.REQUIRED }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <mat-form-field class="matFieldWidth100 col-sm-4"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Select unit</mat-label>
+                                <mat-select formControlName="fuelAmountUnitID">
+                                    <mat-option *ngFor="let unit of volumnUnitList" [value]="unit.id">
+                                        <span class="d-flex justify-content-between">
+                                            {{ unit.name }} -
+                                            {{unit.uomCode}}
+                                        </span>
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error>
+                                    {{ FormErrorEnum.REQUIRED }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <mat-form-field class="matFieldWidth100 col-sm-4"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Distance travelled</mat-label>
+                                <input matInput type="number" formControlName="distanceTravelled" placeholder="0.00"
+                                    min="0">
+
+                                <mat-error *ngIf="formGroup.get('distanceTravelled').hasError('min')">
+                                    Distance can't be negative.
+                                </mat-error>
+
+                                <mat-error *ngIf="formGroup.get('distanceTravelled').hasError('required')">
+                                    {{ FormErrorEnum.REQUIRED }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <mat-form-field class="matFieldWidth100 col-sm-4"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Select unit</mat-label>
+                                <mat-select formControlName="distanceTravelledUnitID">
+                                    <mat-option *ngFor="let unit of distanceUnitlist" [value]="unit.id">
+                                        <span class="d-flex justify-content-between">
+                                            {{ unit.name }} -
+                                            {{unit.uomCode}}
+                                        </span>
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error>
+                                    {{ FormErrorEnum.REQUIRED }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <mat-form-field class="matFieldWidth100 col-sm-4"
+                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <mat-label class="formLabel">Mileage</mat-label>
+                                        <input matInput type="number" formControlName="mileage" placeholder="0.00"
+                                            min="0">
+
+                                        <mat-error *ngIf="formGroup.get('mileage').hasError('min')">
+                                            Mileage can't be negative.
+                                        </mat-error>
+
+                                        <mat-error *ngIf="formGroup.get('mileage').hasError('required')">
+                                            {{ FormErrorEnum.REQUIRED }}
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <mat-form-field class="matFieldWidth100 col-sm-4"
+                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <mat-label class="formLabel">Select numerator</mat-label>
+                                        <mat-select formControlName="mileageNumeratorUnitID">
+                                            <mat-option *ngFor="let unit of distanceUnitlist" [value]="unit.id">
+                                                <span class="d-flex justify-content-between">
+                                                    {{ unit.name }} -
+                                                    {{unit.uomCode}}
+                                                </span>
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-hint>Select a numerator for mileage</mat-hint>
+                                        <mat-error>
+                                            {{ FormErrorEnum.REQUIRED }}
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-sm-4">
+                                    <mat-form-field class="matFieldWidth100 col-sm-4"
+                                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <mat-label class="formLabel">Select denominator</mat-label>
+                                        <mat-select formControlName="mileageDenominatorUnitID">
+                                            <mat-option *ngFor="let unit of volumnUnitList" [value]="unit.id">
+                                                <span class="d-flex justify-content-between">
+                                                    {{ unit.name }} -
+                                                    {{unit.uomCode}}
+                                                </span>
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-hint>Select a denominator for mileage</mat-hint>
+                                        <mat-error>
+                                            {{ FormErrorEnum.REQUIRED }}
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <ng-container *ngIf="formGroup.get('docPath').value == null">
+                        <div class="row">
+                            <div class="col-sm-8 fileInput">
+                                <input class="form-control" type="file" accept="application/pdf" #fileInput
+                                    (change)="fileUpload($event, formGroup, i)">
+                            </div>
+                        </div>
+                        <div class="row pt-2">
+                            <div class="col-sm-8">
+                                <div class="border rounded d-flex" [ngClass]="{'d-none': (docFileList[i] == null)}">
+
+                                    <div class="p-1">
+                                        <ng-container *ngTemplateOutlet="docImg"></ng-container>
+                                    </div>
+
+                                    <div class="p-1">
+                                        <div class="centerAlignVertical p-1">
+                                            {{ formGroup.get('docName').value }} <br>
+                                            {{ formGroup.get('docSize').value }}
+                                        </div>
+                                    </div>
+
+                                    <div class="ms-auto p-1">
+                                        <button type="button" class="btn p-1" mat-icon-button
+                                            (click)="removeFile(formGroup, i)">
+                                            <span class="material-symbols-outlined text-danger">
+                                                delete
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="formGroup.get('docPath').value != null">
+                        <div class="row pt-2">
+                            <div class="col-sm-8">
+                                <div class="border rounded d-flex">
+                                    <ng-container *ngTemplateOutlet="docImg"></ng-container>
+                                    <div class="p-1">
+                                        <div class="centerAlignVertical p-3">
+                                            <a href="{{formGroup.get('docPath').value}}" target="_blank"
+                                                [ngClass]="{'d-none': !formGroup.get('docPath').value}">
+                                                {{formGroup.get('docName').value}}
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="ms-auto p-1">
+                                        <button type="button" class="btn p-1" mat-icon-button matTooltip="Edit"
+                                            matTooltipClass="nameTooltip" matTooltipPosition="below"
+                                            (click)="fileInput.click()">
+                                            <span class="material-symbols-outlined text-primary updateIconHover fs-5">
+                                                edit
+                                            </span>
+                                        </button>
+                                        <input class="form-control" type="file" accept="application/pdf" #fileInput
+                                            (change)="fileUpload($event, formGroup, i)" style="display: none;">
+
+                                        <button type="button" class="btn p-1" mat-icon-button matTooltip="Delete"
+                                            matTooltipClass="nameTooltip" matTooltipPosition="below"
+                                            (click)="deleteConfirmation(formGroup, i)">
+                                            <span class="material-symbols-outlined text-danger">
+                                                delete
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </mat-card>
+            </div>
+        </div>
+    </form>
+</mat-card>
+
+<ng-template #docImg>
+    <div class="p-1">
+        <div class="docIcon p-1" matSuffix mat-icon-button mat-raised-button [matTooltip]="billFileName"
+            matTooltipPosition="below">
+            <img height="40px" src="assets/images/default-doc.ico" alt="bill document preview">
+        </div>
+    </div>
+</ng-template>

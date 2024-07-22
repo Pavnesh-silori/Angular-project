@@ -1,0 +1,11 @@
+<app-total-amount *ngIf="dataInputMethoutStdKeyID == DataInputMethodKeyIDEnum.TOTAL_AMOUNT"
+    [activityConfig]="activityConfig" [activityDataFG]="activityDataFG"
+    [defaultDataCollectionMethodID]="defaultDataCollectionMethodID" [docFileList]="docFileList"
+    (formGroupChange)="onChildFormGroupChange($event)">
+</app-total-amount>
+
+<app-meter-reading *ngIf="dataInputMethoutStdKeyID == DataInputMethodKeyIDEnum.METER_READING"
+    [activityConfig]="activityConfig" [activityDataFG]="activityDataFG"
+    [defaultDataCollectionMethodID]="defaultDataCollectionMethodID" [docFileList]="docFileList"
+    (formGroupChange)="onChildFormGroupChange($event)">
+</app-meter-reading>

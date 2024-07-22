@@ -1,0 +1,22 @@
+.cbamBadge {
+    // background-color: $cbamColor;
+    background-color: rgba($cbamColor, 0.2);
+    // border: 1px solid $cbamColor;
+    color: $cbamColor;
+    text-transform: none !important;
+    text-align: center;
+    min-width: 80px;
+}
+
+.ghgBadge {
+    // background-color: $ghgColor;
+    background-color: rgba($ghgColor, 0.2);
+    // border: 1px solid $ghgColor;
+    color: $ghgColor;
+    text-transform: none !important;
+    min-width: 80px;
+}
+
+.activityFormTypeLabel {
+    font-size: 12px;
+}

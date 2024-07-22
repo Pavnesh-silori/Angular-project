@@ -1,0 +1,22 @@
+<div mat-dialog-title>
+    <strong class="dialogTitle">
+        Recalculation {{ recalculatedOn }} timeline
+    </strong>
+    <button mat-icon-button mat-dialog-close cdkFocusInitial class="float-end matDialogClose" matTooltip="Close"
+        matTooltipPosition="before">
+        <span class="material-symbols-outlined">close</span>
+    </button>
+</div>
+<div class="matDialogContent" mat-dialog-content>
+    <app-timeline 
+        [timeline]="timeline" [recalculationID]="recalculationID"
+        [baseYearKeyID]="baseYearKeyID" [rootOrgID]="rootOrgID">
+    </app-timeline>
+</div>
+<div class="" mat-dialog-footer>
+    <div align="end" class="w-100 maxFooterHeight">
+        <mat-paginator [length]="totalCount" [pageSize]="50" [pageSizeOptions]="[100, 500, 1000, 2500]"
+            showFirstLastButtons>
+        </mat-paginator>
+    </div>
+</div>

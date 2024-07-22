@@ -1,0 +1,23 @@
+<h6 mat-dialog-title class="dialogTitle mb-0">
+    <div class="row">
+        <div class="col-sm-10 d-flex align-items-center">
+            <strong *ngIf="userName!=null">
+                {{ userName }} wrote:
+            </strong>
+        </div>
+        <div class="col-sm-2">
+            <button type="button" class="btn float-end" mat-icon-button mat-dialog-close matTooltipPosition="above"
+                matTooltip="Close">
+                <span class="material-symbols-outlined">
+                    close
+                </span>
+            </button>
+        </div>
+    </div>
+</h6>
+
+<mat-dialog-content class="mat-typography ps-5 pt-0 pb-0">
+    <div class="card-body breakLine">
+        {{ note }}
+    </div>
+</mat-dialog-content>

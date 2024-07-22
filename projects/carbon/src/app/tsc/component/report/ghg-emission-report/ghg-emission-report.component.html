@@ -1,0 +1,142 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Reports</div>
+        </div>
+    </div>
+    <div class="card-body">
+        <form [formGroup]="filterFG" (ngSubmit)="getReport()">
+            <div class="row">
+                <div class="col-sm-3">
+                    <mat-form-field id="customDateRange" class="matFieldWidth100"
+                        (click)="openDatepicker(dateRangePicker)" (keydown.enter)="openDatepicker(dateRangePicker)"
+                        (keydown.arrowdown)="openDatepicker(dateRangePicker)"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label>Date range</mat-label>
+                        <mat-date-range-input class="noFocus" [rangePicker]="dateRangePicker">
+                            <input matStartDate (dateInput)="formatDate('startDate')" formControlName="startDate"
+                                readonly>
+                            <input matEndDate (dateInput)="formatDate('endDate')" formControlName="endDate" readonly>
+                        </mat-date-range-input>
+                        <mat-hint>Start and end date both are required</mat-hint>
+                        <mat-datepicker-toggle matSuffix class="fs-5" [for]="dateRangePicker"></mat-datepicker-toggle>
+                        <mat-date-range-picker #dateRangePicker (closed)="takeFocusAway('customDateRange')"
+                            disabled="false">
+                        </mat-date-range-picker>
+                        <mat-error
+                            *ngIf="errorHandling('endDate', 'required') || errorHandling('startDate', 'required')">
+                            Select the date range
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-sm-6 mt-2">
+                    <mat-checkbox class="ms-2" [(ngModel)]="includeFacilityValue" formControlName="includeFacility">Include facility</mat-checkbox>
+
+                    <mat-checkbox class="ms-2" [(ngModel)]="includeSubsidiaryValue" formControlName="includeSubsidiary">Include subsidary</mat-checkbox>
+            
+                    <mat-form-field *ngIf="includeSubsidiaryValue" class="ms-2" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Select consolidation approach</mat-label>
+                        <mat-select formControlName="consolidationApproachID">
+                            <mat-option *ngFor="let consolidationApproaches of consolidationApproach"
+                                [value]="consolidationApproaches['keyID']">
+                                {{consolidationApproaches.name}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-3 mt-3">
+                    <button type="submit" class="btn btn-success">
+                        Submit
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div [ngClass]="{'d-none' : reportView != 'YES'}">
+    
+        <div class="row reportHeader">
+            <div class="col-sm-6">
+                <div class="pageTitle">GHG Emission Report</div>
+            </div>
+            <div class="col-sm-6">
+                <div class="float-end">
+                    <a class="btn btn-sm btn-light" type="button" (click)="exportReport()">Export as PDF</a>
+                </div>
+            </div>
+        </div>
+    
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-2">
+                    Organization:
+                </div>
+                <div class="col-sm-10">
+                    <span class="fw-bold">{{ reportData?.orgName }}</span>
+                </div>
+            </div>
+    
+            <div class="row">
+                <div class="col-sm-2">
+                    Date:
+                </div>
+                <div class="col-sm-10">
+                    <span class="fw-bold">{{ reportData?.startDate }} - {{ reportData?.endDate }}</span>
+                </div>
+            </div>
+    
+            <br />
+    
+            <table class="table reportTable">
+                <tbody>
+                    <!-- <ng-container *ngFor="let reportDatas of reportData?.scope; let i = index;">
+                        <tr *ngIf="reportDatas.emission">
+                            <td class="fw-bold">{{ reportDatas.name }}</td>
+                            <td class="fw-bold" align="right" *ngIf="i == 0">Emissions ({{ reportData['emissionUomName'] }})
+                            </td>
+                            <td *ngIf="i > 0"> </td>
+                        </tr>
+                        <tr *ngFor="let activity of reportDatas.activity">
+                            <td>{{ activity.name }}</td>
+                            <td align="right">{{ activity.value | number: '1.2-2' }}</td>
+                        </tr>
+                        <tr *ngIf="reportDatas.emission">
+                            <td class="fw-bold">{{ reportDatas.name }} total</td>
+                            <td class="fw-bold" align="right">{{ reportDatas.emission | number: '1.2-2' }}</td>
+                        </tr>
+                    </ng-container>
+                    <tr class="table-secondary">
+                        <td class="fw-bold">Total emissions</td>
+                        <td class="fw-bold" align="right">{{ reportData?.totalEmission | number: '1.2-2' }}</td>
+                    </tr> -->
+    
+                    <ng-container *ngFor="let reportDatas of reportData?.scope;">
+                        <tr class="table-info" *ngIf="reportDatas.emission">
+                            <td class="fw-bold">{{ reportDatas.name }}</td>
+                            <td class="fw-bold">Activity</td>
+                            <td class="fw-bold" align="right">Emissions ({{ reportData['emissionUomName'] }})
+                            </td>
+                        </tr>
+                        <tr *ngFor="let activity of reportDatas.activity">
+                            <td></td>
+                            <td>{{ activity.name }}</td>
+                            <td align="right">{{ activity.value | number: '1.2-2' }}</td>
+                        </tr>
+                        <tr *ngIf="reportDatas.emission">
+                            <td></td>
+                            <td class="fw-bold">{{ reportDatas.name }} total</td>
+                            <td class="fw-bold" align="right">{{ reportDatas.emission | number: '1.2-2' }}</td>
+                        </tr>
+                    </ng-container>
+                    <tr class="table-info" *ngIf="reportData?.totalEmission">
+                        <td></td>
+                        <td class="fw-bold">Total emissions</td>
+                        <td class="fw-bold" align="right">{{ reportData?.totalEmission | number: '1.2-2' }} {{
+                            reportData['emissionUomName'] }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,176 @@
+<div class="headerContainer p-0" #header>
+    <div class="headerLeftContainer">
+        <div class="pageTitle">New CBAM report</div>
+    </div>
+
+    <div class="headerRightContainer">
+        <div class="headerRightContainerInner">
+            <button class="btn btn-sm centerAlign py-1 iconBtn" matRipple
+                [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                [matTooltip]="ButtonTooltipEnum.CLOSE" mat-dialog-close>
+                <span class="material-symbols-outlined">
+                    close
+                </span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<mat-dialog-content class="mat-typography customScrollBar pt-2" #body>
+    <form [formGroup]="newReportFG">
+        <div class="row">
+            <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                <mat-label class="formLabel">Select CBAM Product</mat-label>
+                <mat-select formControlName="productID" required (selectionChange)="onProductSelect($event.value)">
+                    <mat-option>
+                        <ngx-mat-select-search [formControl]="productSearchUtil.filterFC"
+                            placeholderLabel="Search by product name"
+                            [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                        </ngx-mat-select-search>
+                    </mat-option>
+                    <mat-option *ngFor="let product of productSearchUtil.filteredEntities | async"
+                        [value]="product.productID">
+                        <span class="d-flex justify-content-between">{{ product.productName }}</span>
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="errorHandling('productID', 'required')">
+                    {{ formErrorEnum.REQUIRED }}
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+
+        <div *ngIf="newReportFG.get('productID').value">
+            <div class="row">
+                <mat-form-field class="matFieldWidth100"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Select Reporting Period</mat-label>
+                    <mat-select formControlName="reportingPeriod" required (selectionChange)="onReportingPeriodChange($event.value)">
+                        <mat-option *ngFor="let period of reportingPeriod"
+                            [value]="{ startDate: period.startDate, endDate: period.endDate }">
+                            {{ period.name }}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="errorHandling('reportingPeriod', 'required')">
+                        {{ formErrorEnum.REQUIRED }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="row">
+                <mat-form-field class="matFieldWidth100"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Select Reporting Quarter</mat-label>
+                    <mat-select formControlName="quarter" required>
+                        <mat-option *ngFor="let quarter of reportingQuarter" [value]="quarter.key">
+                            <span class="d-flex justify-content-between">{{quarter.value}}</span>
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="errorHandling('quarter', 'required')">
+                        {{ formErrorEnum.REQUIRED }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-8">
+                <mat-form-field class="matFieldWidth100"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Quantity of Product exported duing the above Quarter</mat-label>
+                    <input type="number" matInput placeholder="0.00" min="0" formControlName="productExported" required>
+                    <mat-error *ngIf="errorHandling('productExported', 'min')">
+                        {{ formErrorEnum.NEGATIVE }}
+                    </mat-error>
+                    <mat-error *ngIf="errorHandling('productExported', 'required')">
+                        {{ formErrorEnum.REQUIRED }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="col-sm-4">
+                <mat-form-field class="matFieldWidth100"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Select Unit</mat-label>
+                    <mat-select formControlName="productExportedUnitID" required>
+                        <mat-option>
+                            <ngx-mat-select-search [formControl]="massVolumeUnitSearchUtil.filterFC"
+                                placeholderLabel="Search by unit name"
+                                [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option *ngFor="let unit of massVolumeUnitSearchUtil.filteredEntities | async"
+                            [value]="unit.id">
+                            <span class="d-flex justify-content-between">{{ unit.name }} - {{ unit.uomCode }}</span>
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="errorHandling('productExportedUnitID', 'required')">
+                        {{ formErrorEnum.REQUIRED }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row">
+            <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                <mat-label class="formLabel">General information on data quality</mat-label>
+                <mat-select formControlName="dataQualityID" required>
+                    <mat-option *ngFor="let quality of dataQuality" [value]="quality.id">
+                        <span class="d-flex justify-content-between">{{ quality.name }}</span>
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="errorHandling('dataQualityID', 'required')">
+                    {{ formErrorEnum.REQUIRED }}
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="row">
+            <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                <mat-label class="formLabel">CBAM data quality assurance</mat-label>
+                <mat-select formControlName="assuranceID" required>
+                    <mat-option *ngFor="let assurance of assuranceList" [value]="assurance.id">
+                        <span class="d-flex justify-content-between">{{ assurance.name }}</span>
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="errorHandling('assuranceID', 'required')">
+                    {{ formErrorEnum.REQUIRED }}
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="row">
+            <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                <mat-label class="formLabel">Customer Name</mat-label>
+                <input matInput formControlName="customerName" type="text" required>
+                <mat-error *ngIf="errorHandling('customerName', 'required')">
+                    {{ formErrorEnum.REQUIRED }}
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="row">
+            <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                <mat-label class="formLabel">Customer Email's</mat-label>
+                <mat-chip-list #chipList formControlName="customerEmail">
+                    <mat-chip *ngFor="let email of customerEmails.value" [removable]="removable"
+                        (removed)="removeEmail(email)">
+                        {{ email }}
+                        <button matChipRemove *ngIf="removable">
+                            <mat-icon>cancel</mat-icon>
+                        </button>
+                    </mat-chip>
+                    <input [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                        [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event)" (input)="onInput()">
+                </mat-chip-list>
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+
+<div class="tscDialogFooter" #footer>
+    <button class="btn btn-sm btn-success" type="button" (click)="onSubmit()" matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">Generate Report</button>
+    <button class="btn btn-sm btn-secondary me-2" mat-dialog-close matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">Cancel</button>
+</div>

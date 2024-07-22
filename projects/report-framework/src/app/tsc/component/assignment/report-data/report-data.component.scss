@@ -1,0 +1,172 @@
+.matAccordion {
+	box-shadow: none !important;
+	background: whitesmoke;
+	border-radius: 16px !important;
+	// border: 1px solid #ccc;
+}
+
+.mat-expansion-panel .mat-expansion-indicator::after {
+	border-style: none !important;
+	display: none !important;
+}
+
+
+.unassignedBtn {
+	background-color: lightgray;
+}
+
+.mat-panel-description {
+	max-height: 200px;
+	overflow: auto;
+}
+
+.headerContainerFlex {
+	flex: 0.5
+}
+
+.header {
+	border-bottom-style: solid;
+	border-color: rgb(149, 148, 148);
+}
+
+$mat-header-row-height: 56px;
+$mat-row-height: 48px;
+$mat-row-horizontal-padding: 24px;
+
+.mat-table {
+	display: block;
+}
+
+.mat-header-row {
+	min-height: $mat-header-row-height;
+}
+
+.mat-row {
+	min-height: $mat-row-height;
+}
+
+.mat-row,
+.mat-header-row {
+	display: flex;
+	border-bottom-width: 0.5px;
+	align-items: center;
+	padding: 0 $mat-row-horizontal-padding;
+	box-sizing: border-box;
+
+	&::after {
+		display: inline-block;
+		min-height: inherit;
+		content: '';
+	}
+}
+
+.mat-cell,
+.mat-header-cell {
+	flex: 1;
+	word-wrap: break-word;
+	min-width: 13vw !important;
+	max-width: 13vw !important;
+}
+
+.sectionWidth {
+	min-width: 20vw !important;
+	max-width: 20vw !important;
+}
+
+.metricWidth {
+	min-width: 8vw !important;
+	max-width: 8vw !important;
+}
+
+.curdWidth {
+    min-width: 2vw !important;
+	max-width: 2vw !important;
+}
+
+.profileImgContainer {
+	width: 60px;
+	min-height: 60px;
+	max-height: auto;
+	float: left;
+	margin: 3px;
+	padding: 3px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.profileImg {
+	position: relative;
+	border-color: rgb(102, 101, 101) !important;
+	width: 25px;
+	margin-left: -10px;
+	transition: transform .25s;
+
+	&:hover {
+		z-index: 100 !important;
+		transform: scale(1.2);
+	}
+}
+
+.users {
+	.profileImg:first-child {
+		margin-left: 0;
+	}
+}
+
+.circleBtn {
+	background-color: lightgray;
+	height: 29px;
+	width: 29px;
+	font-size: 9px;
+	font-weight: bold;
+}
+
+.funnelStyle {
+	width: 0;
+	height: 0;
+	overflow: hidden;
+}
+
+.valueLess33 {
+	color: #FF3636;
+}
+
+.valueLess66 {
+	color: #0E60FF;
+}
+
+.valueGreater66 {
+	color: #467000;
+}
+
+
+.width {
+	width: 50px;
+}
+
+.custom-cursor {
+	cursor: pointer;
+}
+
+.custom-not-allowed {
+	cursor: not-allowed;
+	background-color: rgb(181, 178, 178);
+    border-color: rgb(181, 178, 178);
+    color: white;
+}
+
+.alertCard {
+    background-color: #E1D0FF;
+    color: black;
+    max-height: 100px;
+}
+
+.textColor {
+    color: #9068D4;
+}
+
+.btnColor {
+    background-color: #9068D4;
+    color: white;
+}

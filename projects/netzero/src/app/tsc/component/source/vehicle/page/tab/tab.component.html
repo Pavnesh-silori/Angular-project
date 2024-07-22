@@ -1,0 +1,23 @@
+<div class="card main-card cardOverwrite">
+    <div class="headerContainer">
+        <div class="headerRightContainer">
+            <button class="btn btn-sm centerAlign py-1 iconBtn" (click)="close()">
+                <span class="material-symbols-outlined">
+                    close
+                </span>
+            </button>
+        </div>
+    </div>
+
+    <nav mat-tab-nav-bar>
+        <ng-container *ngFor="let tab of tabs; let i = index;">
+            <a mat-tab-link (click)="changeRoute(tab)" 
+                [active]="activeLink == tab['routerLink']">
+                {{ tab['label'] }}
+            </a>
+        </ng-container>
+    </nav>
+
+    <router-outlet></router-outlet>
+
+</div>

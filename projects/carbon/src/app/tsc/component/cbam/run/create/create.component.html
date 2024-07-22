@@ -1,0 +1,96 @@
+<div class="headerContainer p-0">
+    <div class="headerLeftContainer">
+        <div class="pageTitle">New CBAM Run</div>
+    </div>
+
+    <div class="headerRightContainer">
+        <div class="headerRightContainerInner">
+            <button class="btn btn-sm centerAlign py-1 iconBtn" matRipple
+                [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                [matTooltip]="ButtonTooltipEnum.CLOSE" mat-dialog-close>
+                <span class="material-symbols-outlined">
+                    close
+                </span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<mat-dialog-content class="mat-typography pt-2">
+    <form [formGroup]="newRunFG">
+        <div class="row">
+            <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                <mat-label class="formLabel">Select CBAM Product</mat-label>
+                <mat-select formControlName="productID">
+                    <mat-option>
+                        <ngx-mat-select-search [formControl]="productSearchUtil.filterFC"
+                            placeholderLabel="Search by product name"
+                            [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                        </ngx-mat-select-search>
+                    </mat-option>
+                    <mat-option *ngFor="let product of productSearchUtil.filteredEntities | async" [value]="product.id">
+                        <span class="d-flex justify-content-between">
+                            {{ product.name }}
+                        </span>
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="errorHandling('productID', 'required')">
+                    {{ formErrorEnum.REQUIRED }}
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <ng-container *ngIf="newRunFG.get('productID').value">
+            <ng-container *ngIf="productionRoute.length > 0; else noRoutes">
+                <div class="row">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Select Production Route</mat-label>
+                        <mat-select formControlName="productionRouteID">
+                            <mat-option>
+                                <ngx-mat-select-search [formControl]="productionRouteSearchUtil.filterFC"
+                                    placeholderLabel="Search by production route name"
+                                    [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                </ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option *ngFor="let route of productionRouteSearchUtil.filteredEntities | async"
+                                [value]="route.id">
+                                {{ route.name }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="errorHandling('productionRouteID', 'required')">
+                            {{ formErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </ng-container>
+            <ng-template #noRoutes>
+                <div [value]="null">No production route available for this product. </div>
+                <div class="mb-3"> <a href="/source/production-route/create">Click here to create a production route</a>
+                </div>
+            </ng-template>
+        </ng-container>
+
+        <div class="row">
+            <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                <mat-label class="formLabel">Select Reporting Period</mat-label>
+                <mat-select formControlName="reportingPeriod">
+                    <mat-option *ngFor="let period of reportingPeriod"
+                        [value]="{ startDate: period.startDate, endDate: period.endDate }">
+                        {{ period.name }}
+                    </mat-option>
+                </mat-select>
+                <mat-error *ngIf="errorHandling('reportingPeriod', 'required')">
+                    {{ formErrorEnum.REQUIRED }}
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+
+<div class="tscDialogFooter" #footer>
+    <button class="btn btn-sm btn-success" type="button" (click)="getValidation()" matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">Start Configuring</button>
+    <button class="btn btn-sm btn-secondary me-2" mat-dialog-close matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">Cancel</button>
+</div>

@@ -1,0 +1,57 @@
+<div class="col-sm-12">
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="container">
+                <div class="row centerAlign">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <circle-progress [options]="circle" [percent]="yearlyGrowthPercentage"
+                            [renderOnClick]="false" class="copy"></circle-progress>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <p class="centerAlign">Year-on-year increase in targets validated since {{ yearlyGrowthSince }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="container">
+                <div class="row centerAlign">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <circle-progress [options]="circleB" [renderOnClick]="false"
+                            class="copy"></circle-progress>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <p class="centerAlign">In {{ validatedYear }}, {{ validatedCompanies }} companies had their targets
+                        validated,
+                        a number greater than the total of the previous seven years combined.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="container">
+                <div class="row centerAlign">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <circle-progress [options]="circle" [percent]="smeGrowthPercentage"
+                            [renderOnClick]="false" class="copy"></circle-progress>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <p class="centerAlign">There was significant growth in the number of small and medium-sized
+                        enterprises (SMEs)
+                        setting targets
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="viewMore" class="col-sm-12 d-flex justify-content-center mt-5">
+    <button class="btn btn-secondary" routerLink="../../list">
+        View more
+    </button>
+</div>

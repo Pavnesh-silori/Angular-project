@@ -1,0 +1,70 @@
+<div mat-dialog-title>
+    <strong class="dialogHeader">
+        Update NCV
+    </strong>
+</div>
+<div mat-dialog-content>
+    <form [formGroup]="hhvFG">
+        <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel"> NCV value </mat-label>
+            <input class="formPlaceholder" matInput type="number" min="0" placeholder="NCV value" formControlName="hhv"
+                required />
+            <mat-error *ngIf="errorHandling('hhv', 'required')">
+                Value is required
+            </mat-error>
+            <mat-error *ngIf="errorHandling('hhv', 'min')">
+                Value cannot be negative!
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label>Select NCV numerator</mat-label>
+            <mat-select formControlName="hhvNumeratorUnitID" (selectionChange)="unitSelected($event.value, NUMERATOR)">
+                <mat-option>
+                    <ngx-mat-select-search [formControl]="numeratorSearchUtility.filterFC"
+                        placeholderLabel="Search by unit name" noEntriesFoundLabel="No matching unit found.">
+                    </ngx-mat-select-search>
+                </mat-option>
+
+                <mat-option *ngFor="let unit of numeratorSearchUtility.filteredEntities | async"
+                    [value]="unit.id">
+                    {{ unit.name }}
+                </mat-option>
+            </mat-select>
+
+            <mat-error *ngIf="errorHandling('hhvNumeratorUnitID', 'required')">
+                NCV numerator is required
+            </mat-error>
+
+        </mat-form-field>
+
+        <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label>Select NCV denominator</mat-label>
+            <mat-select formControlName="hhvDenominatorUnitID"
+                (selectionChange)="unitSelected($event.value, DENOMINATOR)">
+                <mat-option>
+                    <ngx-mat-select-search [formControl]="denominatorSearchUtility.filterFC"
+                        placeholderLabel="Search by unit name" noEntriesFoundLabel="No matching unit found.">
+                    </ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let unit of denominatorSearchUtility.filteredEntities | async"
+                    [value]="unit.id">
+                    {{ unit.name }}
+                </mat-option>
+            </mat-select>
+
+            <mat-error *ngIf="errorHandling('hhvDenominatorUnitID', 'required')">
+                NCV denominator is required
+            </mat-error>
+            
+        </mat-form-field>
+        <div mat-dialog-footer align="end">
+            <button type="button" class="button btn btn-secondary me-2" mat-dialog-close>
+                Cancel
+            </button>
+            <button type="submit" class="button btn btn-primary" (click)="setHhvValue()">
+                {{ ButtonLabelEnum.SAVE_BTN_LABEL }}
+            </button>
+        </div>
+    </form>
+</div>

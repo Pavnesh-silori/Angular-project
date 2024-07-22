@@ -1,0 +1,49 @@
+.sectionHeader {
+    font-size: 20px;
+    font-weight: 500;
+    color: black;
+    border: 1px;
+    height: 35px;
+    border-radius: 8px;
+    background-color: #0000000f;
+    background-color: rgba(224, 229, 240, 0.965);
+    display: flex;
+    align-items: center;
+
+    .header {
+        margin-left: 15px;
+    }
+}
+
+.section {
+    background-color: rgba(224, 229, 240, 0.301);
+}
+
+.sectionSubHeader {
+    font-weight: 500;
+    color: black;
+    border: 1px;
+    font-size: 15px !important;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+::ng-deep a {
+    cursor: pointer;
+}
+
+.borderLeft {
+    border-left: 2px solid #4950573e;
+}
+
+.col-form-value {
+    padding-top: 0.5rem;
+}
+
+.linkColor {
+    color: #3f6ad8;
+}
+
+.recordData {
+    border-left: 1px rgba(75, 82, 90, 0.185) solid;
+}

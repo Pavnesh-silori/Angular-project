@@ -1,0 +1,30 @@
+.textFont {
+  font-size: 12px;
+}
+
+.iconFont {
+  font-size: 35px;
+  position: absolute;
+  top: 35%;
+}
+
+.backgroundColor {
+    background-color: whitesmoke;
+}
+
+// .arrow {
+//   width:100px;
+//   height:22px;
+//   display: flex;
+// }
+// .arrow:before {
+//   content: "";
+//   background: rgb(110, 109, 109);
+//     ;
+//   width:10px;
+//   clip-path: polygon(0 10px,calc(100% - 10px) 10px,calc(100% - 15px) 0,100% 50%,calc(100% - 15px) 100%,calc(100% - 10px) calc(100% - 10px),0 calc(100% - 10px));
+//   animation: a1 1.5s infinite linear;
+// }
+// @keyframes a1 {
+//   90%,100%{flex-grow: 1}
+// }

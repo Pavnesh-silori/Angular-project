@@ -1,0 +1,145 @@
+.recordID {
+    min-width: 120px;
+}
+
+.scope {
+    min-width: 180px;
+    padding-right: 20px;
+}
+
+.source {
+  width: 200px;
+}
+
+.accountingPeriod {
+    width: 190px;
+    text-align: left;
+}
+.emisson{
+    width: 160px;
+}
+
+.recordType {
+    width: 175px;
+    min-width: 175px;
+}
+
+.activity {
+    min-width: 190px;
+}
+
+/* DD: dropdown */
+.funnelFilterDD {
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+// .activity {
+//     min-width: 165px;
+//     width: 165px;
+// }
+
+
+.applyBtn {
+    height: 25px;
+    width: 100px;
+    padding: 0 10px;
+    position: sticky;
+    right: 7px;
+    bottom: 10px;
+}
+
+.scope {
+    width: 125px;
+    min-width: 125px;
+}
+
+.record-api {
+    color: white;
+    background-color: #516470;
+}
+
+.record-sde {
+    color: white;
+    background-color: #223347;
+}
+
+.record-adhoc {
+    color: white;
+    background-color: #778899;
+}
+
+.record-integration {
+    color: white;
+    background-color: #352b22;
+}
+
+.lastUpdatedOn {
+    min-width: 145px;
+    width: 145px;
+}
+
+.lastUpdatedBy {
+    min-width: 155px;
+    width: 155px;
+}
+
+/* TODO_PN move to custom.scss */
+
+::ng-deep .thinnerFF .mat-form-field-wrapper {
+    padding-bottom: 10px !important;
+}
+
+::ng-deep .thinnerFF {
+    .mat-form-field-appearance-outline {
+        .mat-form-field-infix {
+            padding: 0.2em 0 0.6em 0 !important;
+
+            .mat-form-field-label {
+                top: 16px !important;
+            }
+
+            .mat-form-field-label {
+                font-size: 13px !important;
+            }
+        }
+
+        .mat-form-field-subscript-wrapper .mat-error {
+            margin-top: 0.5em !important;
+        }
+
+    }
+
+    .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
+        will-change: auto;
+        transition: 250ms !important;
+        transform: translateY(-1em) scale(0.75) !important;
+    }
+}
+
+::ng-deep .alignSuffix .mat-form-field-appearance-outline {
+    .mat-form-field-suffix {
+        top: 0;
+    }
+}
+
+::ng-deep .accountingPeriod .md-drppicker {
+    left: auto !important;
+}
+
+.matTableSortRightAlign {
+    .mat-sort-header-container {
+        justify-content: right !important;
+    }
+}
+
+.dropdownFooter {
+    position: sticky;
+    bottom: 0;
+    background-color: white; 
+    padding: 8px;
+    z-index: 1000;
+}
+
+/* TODO_PN move to custom.scss */

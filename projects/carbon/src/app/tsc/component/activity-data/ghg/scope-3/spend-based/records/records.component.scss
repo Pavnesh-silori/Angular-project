@@ -1,0 +1,49 @@
+.recordID {
+    min-width: 125px;
+    text-align: center;
+}
+
+.transactionDate {
+    min-width: 155px;
+}
+
+.account {
+    min-width: 175px;
+}
+
+.supplier {
+    min-width: 175px;
+}
+
+.amount {
+    min-width: 155px;
+    
+}
+.emissions{
+    min-width: 125px;  
+    text-align: right;
+    
+}
+
+.category {
+    min-width: 175px;
+}
+
+.activity {
+    min-width: 185px;
+}
+
+.applyBtn {
+    height: 25px;
+    width: 100px;
+    padding: 0 10px;
+    position: sticky;
+    right: 7px;
+    bottom: 10px;
+}
+.img {
+    width: 25px;
+}
+.noError{
+    padding-left:28px;
+}

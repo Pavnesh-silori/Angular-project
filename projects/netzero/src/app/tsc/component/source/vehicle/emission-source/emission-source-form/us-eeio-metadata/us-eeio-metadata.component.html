@@ -1,0 +1,35 @@
+<form [formGroup]="emfMetadataForm" *ngIf="emfMetadataForm">
+    <div class="row mb-1">
+        <div class="col-sm-12">
+            {{ emssionFactorSourceName }}
+        </div>
+        <!-- <div class="col-sm-12">
+            <small class="text-muted">
+                {{ calculationApproachName }}
+            </small>
+        </div> -->
+    </div>
+
+    <div class="row">
+        <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel">Select category</mat-label>
+            <mat-select formControlName="categoryStdID">
+                <mat-option>
+                    <ngx-mat-select-search [formControl]="categoryTypeSearchUtil.filterFC"
+                        placeholderLabel="Search by category type name"
+                        [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                    </ngx-mat-select-search>
+                </mat-option>
+
+                <mat-option *ngFor="let item of categoryTypeSearchUtil.filteredEntities | async" [value]="item.id">
+                    <span class="d-flex justify-content-between">
+                        {{ item.categoryName }}
+                    </span>
+                </mat-option>
+            </mat-select>
+            <mat-error *ngIf="errorHandling('categoryStdID', 'required')">
+                {{ FormErrorEnum.REQUIRED }}
+            </mat-error>
+        </mat-form-field>
+    </div>
+</form>

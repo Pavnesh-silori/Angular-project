@@ -1,0 +1,108 @@
+.data-row:hover {
+    background-color: #F2F3F5;
+    cursor: pointer;
+}
+
+.data-row {
+    vertical-align: top;
+}
+
+.content {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    max-width: 600px;
+}
+
+.subContent {
+    color: grey;
+    padding-left: 12px;
+}
+
+.badge {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    max-width: 160px;
+    max-height: 20px;
+    text-transform: none;
+    margin-left: -10px;
+}
+
+.text {
+    font-size: 11px;
+}
+
+.subText {
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.name {
+    font-size: 15px;
+}
+
+.targetName {
+    white-space: nowrap;
+}
+
+.targetSearch {
+    display: flex;
+    justify-content: right;
+}
+
+.progressData {
+    max-width: none;
+}
+
+.grey {
+    color: rgb(70, 69, 69);
+}
+
+.charts {
+    margin-top: -40px;
+    margin-bottom: -50px;
+}
+
+.echart {
+    margin: 0 auto; 
+    max-height: 250px;
+}
+
+.actionIcon {
+    font-size: 15px;
+}
+
+.targetNameHeader {
+    min-width: 350px;
+}
+
+.targetDomainHeader {
+    min-width: 100px;
+}
+
+.targetTypeHeader {
+    min-width: 150px;
+}
+
+.targetYearHeader {
+    min-width: 100px;
+}
+
+.targetProgressHeader {
+    min-width: 500px;
+}
+
+.targetActionsHeader {
+    min-width: 5px;
+}
+
+.mat-column-domain,
+.mat-column-type,
+.mat-column-targetYear,
+.mat-column-progress,
+.mat-column-actions {
+  white-space: nowrap;
+}
+
+.mat-cell-wrap {
+    white-space: normal;
+}  

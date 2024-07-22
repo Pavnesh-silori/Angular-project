@@ -1,0 +1,193 @@
+<div class="cardTitle pb-2"> Activity Data </div>
+<form [formGroup]="activityDataFG">
+    <ng-container formArrayName="activityDataDetails">
+        <ng-container *ngFor="let activityData of activityDataFA.controls; let i = index;">
+            <mat-card class="cardOverwrite border mt-3">
+                <ng-container [formGroupName]="i">
+                    <div class="row">
+                        <div class="col-sm-4 mb-3">
+                            Product name:
+                            <span class="cardTitle pb-2"> {{dataSource[i].id.name}} </span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <lib-date-input class="cursorPointer" #customDateInput (emitFilter)="dateInpChange(i)"
+                                [materialFieldWidthInp]="true"
+                                [materialFormFieldAppearanceInp]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE"
+                                [isMandatoryFieldInp]="true" [dateInputTypeInp]="dateInputTypeEnum.CUSTOM_INPUT"
+                                [cdrFormatInp]="DateFomratEnum.DD_MMM_YYYY"
+                                [labelInp]="'Accounting Period'"></lib-date-input>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <mat-form-field class="matFieldWidth100"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Product produced opening meter reading</mat-label>
+                                <input matInput type="number" formControlName="openingMeterReading" placeholder="0.00"
+                                    min="0">
+                                <mat-error
+                                    *ngIf="errorHandlingForFormArrayData('openingMeterReading', 'min', i) || errorHandlingForFormArrayData('openingMeterReading', 'required', i)">
+                                    {{ errorHandlingForFormArrayData('openingMeterReading', 'min', i) ? 'Reading cannot
+                                    be negative' : formErrorEnum.REQUIRED }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-sm-2">
+                            <mat-form-field class="matFieldWidth100"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Product produced closing meter reading</mat-label>
+                                <input matInput type="number" formControlName="closingMeterReading" placeholder="0.00"
+                                    min="0">
+                                <mat-error
+                                    *ngIf="errorHandlingForFormArrayData('closingMeterReading', 'required', i) || errorHandlingForFormArrayData('closingMeterReading', 'min', i)">
+                                    {{ errorHandlingForFormArrayData('closingMeterReading', 'min', i) ? 'Reading cannot
+                                    be negative' : formErrorEnum.REQUIRED }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-sm-2">
+                            <mat-form-field class="matFieldWidth100 "
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Select unit</mat-label>
+                                <mat-select formControlName="meterUnitID" [disabled]="true">
+                                    <mat-option *ngFor="let unit of unitMassVolume" [value]="unit.id">
+                                        <span class="d-flex justify-content-between">
+                                            {{ unit.name }} - {{unit.uomCode}}
+                                        </span>
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row" *ngIf="isExportActivity()">
+                        <div class="col-sm-2">
+                            <mat-form-field class="matFieldWidth100"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Product exported opening meter reading</mat-label>
+                                <input matInput type="number" formControlName="productExportedOpeningMeterReading"
+                                    placeholder="0.00" min="0">
+                                <mat-error
+                                    *ngIf="errorHandlingForFormArrayData('productExportedOpeningMeterReading', 'min', i) || errorHandlingForFormArrayData('productExportedOpeningMeterReading', 'required', i)">
+                                    {{ errorHandlingForFormArrayData('productExportedOpeningMeterReading', 'min', i) ?
+                                    'Reading cannot
+                                    be negative' : formErrorEnum.REQUIRED }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-sm-2">
+                            <mat-form-field class="matFieldWidth100"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Product exported closing meter reading</mat-label>
+                                <input matInput type="number" formControlName="productExportedClosingMeterReading"
+                                    placeholder="0.00" min="0">
+                                <mat-error
+                                    *ngIf="errorHandlingForFormArrayData('productExportedClosingMeterReading', 'required', i) || errorHandlingForFormArrayData('productExportedClosingMeterReading', 'min', i)">
+                                    {{ errorHandlingForFormArrayData('productExportedClosingMeterReading', 'min', i) ?
+                                    'Reading cannot
+                                    be negative' : formErrorEnum.REQUIRED }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-sm-2">
+                            <mat-form-field class="matFieldWidth100 "
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Select unit</mat-label>
+                                <mat-select formControlName="productExportedMeterUnitID" [disabled]="true">
+                                    <mat-option *ngFor="let unit of unitMassVolume" [value]="unit.id">
+                                        <span class="d-flex justify-content-between">
+                                            {{ unit.name }} - {{unit.uomCode}}
+                                        </span>
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <ng-container *ngIf="activityData.get('docPath').value == null">
+                        <div class="row">
+                            <div class="col-sm-8 fileInput">
+                                <input class="form-control" type="file" accept="application/pdf" #fileInput
+                                    (change)="fileUpload($event, activityData, i)">
+                            </div>
+                        </div>
+                        <div class="row pt-2">
+                            <div class="col-sm-8">
+                                <div class="border rounded d-flex" [ngClass]="{'d-none': (docFileList[i] == null)}">
+                                    <div class="p-1">
+                                        <ng-container *ngTemplateOutlet="docImg"></ng-container>
+                                    </div>
+                                    <div class="p-1">
+                                        <div class="centerAlignVertical p-1">
+                                            {{ activityData.get('docName').value }} <br>
+                                            {{ activityData.get('docSize').value }}
+                                        </div>
+                                    </div>
+                                    <div class="ms-auto p-1">
+                                        <button type="button" class="btn p-1" mat-icon-button
+                                            (click)="removeFile(activityData, i)">
+                                            <span class="material-symbols-outlined text-danger">
+                                                delete
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="activityData.get('docPath').value != null">
+                        <div class="row pt-2">
+                            <div class="col-sm-8">
+                                <div class="border rounded d-flex">
+                                    <ng-container *ngTemplateOutlet="docImg"></ng-container>
+                                    <div class="p-1">
+                                        <div class="centerAlignVertical p-3">
+                                            <a href="{{activityData.get('docPath').value}}" target="_blank"
+                                                [ngClass]="{'d-none': !activityData.get('docPath').value}">
+                                                {{activityData.get('docName').value}}
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="ms-auto centerAlignVertical p-2">
+                                        <button type="button" class="btn p-1" mat-icon-button matTooltip="Edit"
+                                            matTooltipClass="nameTooltip" matTooltipPosition="below"
+                                            (click)="fileInput.click()">
+                                            <span class="material-symbols-outlined text-primary updateIconHover fs-5">
+                                                edit
+                                            </span>
+                                        </button>
+                                        <input class="form-control" type="file" accept="application/pdf" #fileInput
+                                            (change)="fileUpload($event, activityData, i)" style="display: none;">
+
+                                        <button type="button" class="btn p-1" mat-icon-button matTooltip="Delete"
+                                            matTooltipClass="nameTooltip" matTooltipPosition="below"
+                                            (click)="deleteConfirmation(activityData, i)">
+                                            <span class="material-symbols-outlined text-danger">
+                                                delete
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </mat-card>
+        </ng-container>
+    </ng-container>
+</form>
+
+<ng-template #docImg>
+    <div class="p-1">
+        <div class="docIcon p-1" matSuffix mat-icon-button mat-raised-button [matTooltip]="billFileName"
+            matTooltipPosition="below">
+            <img height="40px" src="assets/images/default-doc.ico" alt="bill document preview">
+        </div>
+    </div>
+</ng-template>

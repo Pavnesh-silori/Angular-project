@@ -1,0 +1,118 @@
+<div class="headerContainer p-0" #header>
+    <div class="pageTitle">
+        {{ title }} Employee
+    </div>
+
+    <div class="headerRightContainer">
+        <div class="headerRightContainerInner">
+            <button class="btn btn-sm centerAlign py-1 iconBtn" matRipple
+                [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                [matTooltip]="ButtonTooltipEnum.CLOSE" mat-dialog-close>
+                <span class="material-symbols-outlined">
+                    close
+                </span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<mat-dialog-content class="mat-typography customScrollBar pt-2" #body>
+    <form [formGroup]="employeeFG">
+        <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel">Employee Code</mat-label>
+            <input class="formPlaceholder" matInput type="text" required formControlName="employeeCode" />
+            <mat-error *ngIf="errorHandling('employeeCode', 'required')">
+                {{ FormErrorEnum.REQUIRED }}
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel">Email ID</mat-label>
+            <input class="formPlaceholder" matInput type="email" formControlName="emailID" required />
+            <mat-error *ngIf="errorHandling('emailID', 'required')">
+                {{ FormErrorEnum.REQUIRED }}
+            </mat-error>
+            <mat-error *ngIf="errorHandling('emailID', 'email')">
+                Please input a valid email
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel">Employee First Name</mat-label>
+            <input class="formPlaceholder" matInput type="text" required formControlName="firstName" />
+            <mat-error *ngIf="errorHandling('firstName', 'required')">
+                {{ FormErrorEnum.REQUIRED }}
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel">Employee Last Name</mat-label>
+            <input class="formPlaceholder" matInput type="text" formControlName="lastName" />
+        </mat-form-field>
+
+        <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel">Department</mat-label>
+            <input class="formPlaceholder" matInput type="text" formControlName="department" />
+        </mat-form-field>
+
+        <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel">Designation</mat-label>
+            <input class="formPlaceholder" matInput type="text" formControlName="designation" />
+        </mat-form-field>
+
+        <div>
+            <label>Phone Number</label>
+            <ngx-intl-tel-input id="phone-number" [preferredCountries]="preferredCountries"
+                [enableAutoCountrySelect]="true" [enablePlaceholder]="true" [searchCountryFlag]="true"
+                [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]" [selectFirstCountry]="false"
+                [maxLength]="15" [phoneValidation]="true" [separateDialCode]="separateDialCode"
+                [numberFormat]="PhoneNumberFormat.National" [formControl]="phoneFC">
+            </ngx-intl-tel-input>
+            <mat-error *ngIf="phoneFC.invalid && !phoneFC.hasError('required')">
+                Please input a valid mobile number
+            </mat-error>
+        </div>
+
+        <div class="row pt-3">
+            <mat-form-field (click)="dateService.openDatepickerOnClick(date)"
+                (keydown.enter)="dateService.openDatepickerOnClick(date)"
+                (keydown.arrowdown)="dateService.openDatepickerOnClick(date)" class="col-sm-6 cursorPointer"
+                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE" appDateMonthYearFormat>
+                <mat-label class="formLabel">Joining Date</mat-label>
+                <input matInput class="noFocus" (dateInput)="formatDate('joiningDate')" [matDatepicker]="date"
+                    formControlName="joiningDate" [readonly]="true" required />
+                <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+                <mat-datepicker #date disabled="false"></mat-datepicker>
+                <mat-error *ngIf="errorHandling('joiningDate', 'required')">
+                    {{ FormErrorEnum.REQUIRED }}
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field (click)="dateService.openDatepickerOnClick(endDate)"
+                (keydown.enter)="dateService.openDatepickerOnClick(endDate)"
+                (keydown.arrowdown)="dateService.openDatepickerOnClick(endDate)" class="col-sm-6 cursorPointer"
+                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE" appDateMonthYearFormat>
+                <mat-label class="formLabel">Leaving Date</mat-label>
+                <input matInput class="noFocus" (dateInput)="formatDate('leavingDate')" [matDatepicker]="endDate"
+                    formControlName="leavingDate" [readonly]="true" />
+                <mat-datepicker-toggle matSuffix [for]="endDate"></mat-datepicker-toggle>
+                <mat-datepicker #endDate disabled="false"></mat-datepicker>
+            </mat-form-field>
+        </div>
+    </form>
+</mat-dialog-content>
+
+<div class="tscDialogFooter" #footer>
+    <div [ngSwitch]="action" class="d-inline">
+        <button *ngSwitchCase="FormAction.CREATE" type="submit" class="button btn btn-success"
+            (click)="createEmployee()">
+            Create
+        </button>
+        <button *ngSwitchCase="FormAction.UPDATE" type="submit" class="button btn btn-primary"
+            [ngClass]="{'disabled': isEqual}" (click)="updateEmployee()">
+            Update
+        </button>
+    </div>
+    <button class="btn btn-sm btn-secondary me-2" mat-dialog-close matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">Cancel</button>
+</div>

@@ -1,0 +1,58 @@
+.sectionHeader {
+    font-size: 20px;
+    font-weight: 500;
+    color: black;
+    border: 1px;
+    height: 35px;
+    border-radius: 8px;
+    background-color: #0000000f;
+    background-color: rgba(224, 229, 240, 0.965);
+    display: flex;
+    align-items: center;
+
+    .header {
+        margin-left: 15px;
+    }
+}
+
+.section {
+    background-color: rgba(224, 229, 240, 0.301);
+}
+
+.sectionSubHeader {
+    font-weight: 500;
+    color: black;
+    border: 1px;
+    font-size: 15px !important;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+.borderLeft {
+    border-left: 2px solid #4950573e;
+}
+
+.col-form-value {
+    padding-top: 0.5rem;
+}
+
+.loading {
+    background-color: #e4ccff;
+}
+
+.currentData {
+    background-color: rgb(223, 244, 223);
+}
+
+.previousData {
+    background-color: #ffa7a7;
+}
+
+.noDataCard {
+    height: 100%;
+    width: 100%;
+}
+
+.noData {
+    font-size: 40px;
+}

@@ -1,0 +1,163 @@
+<mat-card class="border cardOverwrite">
+    <div class="cardTitle pb-2"> Reference data </div>
+    <form [formGroup]="referenceDataFG">
+        <ng-container *ngIf="isFactor; else elseBlock;">
+            <div class="row">
+                <div class="col-sm-6">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Select fuel</mat-label>
+                        <mat-select [formControl]="fuelUId" required (selectionChange)="setFuelType($event.value)">
+                            <mat-option>
+                                <ngx-mat-select-search [formControl]="getSearchUtil('fuelType').filterFC"
+                                    placeholderLabel="Search by fuel name"
+                                    [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                </ngx-mat-select-search>
+                            </mat-option>
+
+                            <ng-container *ngIf="(getSearchUtil('fuelType').filteredEntities | async)?.length">
+                                <mat-optgroup label="Standard fuels">
+                                    <ng-container
+                                        *ngFor="let fuel of getSearchUtil('fuelType').filteredEntities | async">
+                                        <mat-option *ngIf="fuel.isStandard" [value]="fuel.uID">
+                                            {{ fuel.name }}
+                                        </mat-option>
+                                    </ng-container>
+                                </mat-optgroup>
+
+                                <mat-optgroup label="Custom fuels">
+                                    <ng-container
+                                        *ngFor="let fuel of getSearchUtil('fuelType').filteredEntities | async">
+                                        <mat-option *ngIf="!fuel.isStandard" [value]="fuel.uID">
+                                            {{ fuel.name }}
+                                        </mat-option>
+                                    </ng-container>
+                                </mat-optgroup>
+                            </ng-container>
+                        </mat-select>
+                        <mat-error *ngIf="errorHandling('fuelTypeID', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel"> Combustion equipment </mat-label>
+                        <mat-select formControlName="assetID">
+                            <mat-option>
+                                <ngx-mat-select-search [formControl]="getSearchUtil('asset').filterFC"
+                                    placeholderLabel="Search by fuel name"
+                                    [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                </ngx-mat-select-search>
+                            </mat-option>
+
+                            <mat-option *ngFor="let asset of getSearchUtil('asset').filteredEntities | async"
+                                [value]="asset.id">
+                                {{ asset.name }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="errorHandling('assetID', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <ng-container *ngIf="!hideFacility">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <mat-form-field class="matFieldWidth100"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel"> Facility </mat-label>
+                            <mat-select formControlName="orgID">
+                                <mat-option>
+                                    <ngx-mat-select-search [formControl]="getSearchUtil('facility').filterFC"
+                                        placeholderLabel="Search by fuel name"
+                                        [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                    </ngx-mat-select-search>
+                                </mat-option>
+
+                                <mat-option *ngFor="let facility of getSearchUtil('facility').filteredEntities | async"
+                                    [value]="facility.id">
+                                    {{ facility.name }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="errorHandling('orgID', 'required')">
+                                {{ FormErrorEnum.REQUIRED }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </ng-container>
+
+        </ng-container>
+        <ng-template #elseBlock>
+            <ng-container>
+                <div class="row pb-3">
+                    <ng-container *ngFor="let viewField of viewFields">
+                        <div [ngClass]="viewField['width']">
+                            <div class="row">
+                                <div class="col-sm-5 centerAlignVertical">
+                                    <div class="col-form-label ms-1">
+                                        {{ viewField['title'] }}
+                                    </div>
+                                </div>
+                                <div class="col-sm-7 centerAlignVertical">
+                                    <div class="form-control-plaintext fw-bold">
+                                        <span matTooltipPosition="above"
+                                            [matTooltip]="(viewField['value']?.length) > 12 ? viewField['value'] : ''"
+                                            matTooltipClass="nameTooltip">
+                                            {{ (viewField?.['value'] && (viewField['value'] != null ||
+                                            viewField['value']?.length)) ? viewField['value'] : COMMON_CONSTANT.HYPHEN
+                                            }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </ng-container>
+        </ng-template>
+    </form>
+</mat-card>
+
+<svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+    </symbol>
+</svg>
+
+<ng-template #noAsset>
+    <div class="col-sm-6">
+        <div class="alert alert-primary centerAlignVertical roundedBorder">
+            <svg class="extraInfoCardIcon">
+                <use xlink:href="#info-fill" />
+            </svg>
+            <div class="extraInfoCardText ps-3 fs-6">
+                You have not created any combustion equipment. Please create one
+                <a routerLink="/source/asset/page" target="_blank">here</a>.
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #noFacilities>
+    <div class="col-sm-6">
+        <div class="alert alert-primary centerAlignVertical roundedBorder">
+            <svg class="extraInfoCardIcon">
+                <use xlink:href="#info-fill" />
+            </svg>
+            <div class="extraInfoCardText ps-3 fs-6">
+                You have not created any facility. Please create one
+                <a [href]="environment.ADMIN_URL + 'facility/create'" target="_blank">here</a>.
+                <!-- <a target="_blank">here</a>. -->
+            </div>
+        </div>
+    </div>
+</ng-template>

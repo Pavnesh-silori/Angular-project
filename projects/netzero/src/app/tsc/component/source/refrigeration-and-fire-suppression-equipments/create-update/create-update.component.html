@@ -1,0 +1,145 @@
+<div class="headerContainer p-0" #header>
+    <div class="headerLeftContainer">
+        <div class="pageTitle">{{ title }} equipment group</div>
+    </div>
+
+    <div class="headerRightContainer">
+        <div class="headerRightContainerInner">
+            <button class="btn btn-sm centerAlign py-1 iconBtn" matRipple
+                [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                [matTooltip]="ButtonTooltipEnum.CLOSE" mat-dialog-close>
+                <span class="material-symbols-outlined">
+                    close
+                </span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<mat-dialog-content class="mat-typography customScrollBar pt-2" #body>
+    <form [formGroup]="equipmentFG">
+        <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel"> Group name </mat-label>
+            <input class="formPlaceholder" matInput type="text" placeholder="Eg. R-22 gas air conditioners"
+                formControlName="name" required />
+            <mat-error *ngIf="errorHandling('name', 'required')">
+                Enter an equipment group name.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel"> Description </mat-label>
+            <textarea matInput matTextareaAutosize matAutosizeMinRows="2" matAutosizeMaxRows="10"
+                [maxlength]="maxLength" formControlName="description"></textarea>
+            <mat-hint>Total number of character remaining: <span
+                    [class]="(charactersRemainingFn(equipmentFG) < 20)? 'text-danger': '' ">{{
+                    charactersRemainingFn(equipmentFG) }}</span>
+                /{{maxLength}}
+            </mat-hint>
+        </mat-form-field>
+
+        <div class="row">
+            <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                <mat-label class="formLabel">IPCC equipment type</mat-label>
+                <mat-select formControlName="equipmentTypeID" [disabled]="isReadOnly" required>
+                    <mat-option disabled>Select equipment</mat-option>
+                    <mat-option *ngFor="let equipment of equipmentList" [value]="equipment.id">
+                        <span class="d-flex justify-content-between">
+                            {{ equipment.name }}
+                        </span>
+                    </mat-option>
+                </mat-select>
+
+                <mat-error>
+                    Select an IPCC equipment type.
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel">Gas</mat-label>
+            <mat-select formControlName="gasID" [disabled]="isReadOnly" required>
+                <mat-option>
+                    <ngx-mat-select-search [formControl]="gasSearchUtil.filterFC" placeholderLabel="Search by gas name"
+                    [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                    </ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let gas of gasSearchUtil.filteredEntities | async" [value]="gas.id">
+                    <span class="d-flex justify-content-between">
+                        {{ gas.name }}
+                    </span>
+                </mat-option>
+            </mat-select>
+            <mat-error>
+                Select a gas that is used across all equipments in this equipment group.
+            </mat-error>
+        </mat-form-field>
+
+        <div class="row">
+            <div class="col-sm-10">
+                <mat-form-field (click)="openDatepicker(date)" (keydown.enter)="openDatepicker(date)"
+                    (keydown.arrowdown)="openDatepicker(date)" class="matFieldWidth100"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Initial Date </mat-label>
+                    <input matInput class="noFocus" (dateInput)="formatDate('initialDate')" [matDatepicker]="date"
+                        formControlName="initialDate" required />
+                    <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+                    <mat-datepicker #date disabled="false"></mat-datepicker>
+
+                    <mat-error *ngIf="errorHandling('initialDate', 'required')">
+                        Date is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-sm-2 pt-3">
+                <span matsuffix class="material-symbols-outlined fs-4 cursorPointer" matTooltipPosition="above"
+                    matTooltip="Date from which you want to account emissions for this equipment group">
+                    info
+                </span>
+            </div>
+        </div>
+
+        <mat-form-field [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel"> Total quantity of gas </mat-label>
+            <input class="formPlaceholder" matInput type="number" min="0" placeholder="Total gas capacity"
+                formControlName="totalCapacity" required />
+
+            <mat-error *ngIf="errorHandling('totalCapacity', 'required')">
+                Enter total quantity of gas in this equipment group
+            </mat-error>
+
+            <mat-error *ngIf="errorHandling('totalCapacity', 'min')">
+                Total quantity can not be negative
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="ms-2" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel">Unit</mat-label>
+            <mat-select formControlName="totalCapacityUnitID" required>
+                <mat-option>
+                    <ngx-mat-select-search [formControl]="unitSearchUtil.filterFC"
+                        placeholderLabel="Search by unit name" [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                    </ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let unit of unitSearchUtil.filteredEntities | async" [value]="unit.id">
+                    <span class="d-flex justify-content-between">
+                        {{ unit.name }} --
+                        <span>{{ unit.uomCode }}</span>
+                    </span>
+                </mat-option>
+            </mat-select>
+            <mat-error>
+                Select unit
+            </mat-error>
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+
+<div class="tscDialogFooter" #footer>
+    <button class="btn btn-sm btn-success" [ngClass]="{'disabled': isEqual && action == FormAction.UPDATE}"
+        (click)="createUpdate()" matRipple [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER"
+        matTooltipPosition="below"> {{
+        tSCCommonService.getButtonLabel(action) }}</button>
+    <button class="btn btn-sm btn-secondary me-2" mat-dialog-close matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">Cancel</button>
+</div>

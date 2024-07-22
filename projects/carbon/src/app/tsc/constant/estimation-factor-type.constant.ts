@@ -1,0 +1,4 @@
+export const ESTIMATION_FACTOR_TYPE = {
+    CUSTOM: 'CUSTOM',
+    STANDARD: 'STANDARD'
+}

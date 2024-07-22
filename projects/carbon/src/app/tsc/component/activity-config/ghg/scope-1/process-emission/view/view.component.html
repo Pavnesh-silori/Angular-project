@@ -1,0 +1,49 @@
+<ng-container *ngIf="activityConfig">
+    <mat-card class="border cardOverwrite">
+        <div class="cardTitle pb-2">
+            Process
+        </div>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'Name',
+            value: activityConfig.activityConfigData.name,
+            class: 'pt-1'
+        }">
+        </ng-container>
+
+        <ng-container *ngTemplateOutlet="labelValue; context: {
+            label: 'Type',
+            value: getProcessTypeName(activityConfig.activityConfigData.type),
+            class: 'pt-3'
+        }">
+        </ng-container>
+
+        <ng-container
+            *ngIf="activityConfig.activityConfigData.type == ProcessEmissionActivityTypeKeyIDEnum.STANDARD">
+            <ng-container *ngTemplateOutlet="labelValue; context: {
+                label: 'Parameter',
+                value: activityConfig.activityConfigData.parameter,
+                class: 'pt-3'
+            }">
+            </ng-container>
+
+            <ng-container *ngTemplateOutlet="labelValue; context: {
+                label: 'Technology',
+                value: activityConfig.activityConfigData.technology,
+                class: 'pt-3'
+            }">
+            </ng-container>
+        </ng-container>
+    </mat-card>
+</ng-container>
+
+<ng-template #labelValue let-label="label" let-value="value" let-class="class" let-valueClass="valueClass">
+    <div class="row" [class]="class">
+        <div class="col-sm-4">
+            {{ label }}
+        </div>
+        <div class="col-sm-8 fw-bold" [class]="valueClass">
+            {{ value ? value : COMMON_CONSTANT.HYPHEN }}
+        </div>
+    </div>
+</ng-template>

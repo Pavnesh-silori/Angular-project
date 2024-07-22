@@ -1,0 +1,84 @@
+<style>
+
+</style>
+
+<div mat-dialog-title>
+    <strong class="dialogTitle">
+        {{ dialogTitle }} Impact
+    </strong>
+    <button mat-icon-button mat-dialog-close cdkFocusInitial class="float-end matDialogClose" matTooltip="Close"
+        matTooltipPosition="before">
+        <span class="material-symbols-outlined">close</span>
+    </button>
+</div>
+
+<div class="matDialogContent" mat-dialog-content>
+    <div class="emissionDiffContainer mt-2">
+        <table>
+            <tr>
+                <th>Activity</th>
+                <th class="text-end">Before </th>
+                <th class="text-end">After </th>
+                <th>Unit</th>
+            </tr>
+            <ng-container *ngFor="let diff of emissionDiff">
+                <tr>
+                    <td>{{diff['activityName']}}</td>
+                    <td class="text-end">{{diff['preEmission'] | number: '1.0-2' }}</td>
+                    <td class="text-end">{{diff['postEmission'] | number: '1.0-2' }}</td>
+                    <td>{{ diff['unit'] }}</td>
+                </tr>
+            </ng-container>
+        </table>
+    </div>
+
+    <!-- <div class="row header">
+        <div class="col-sm-5">
+            Activity
+        </div>
+        <div class="col-sm-7">
+            <div class="row">
+                <div class="col-sm-6">
+                    Before Setting change
+                </div>
+                <div class="col-sm-6">
+                    After Setting change
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card border cardOverwrite">
+        <ng-container *ngFor="let diff of emissionDiff">
+            <ng-container *ngTemplateOutlet="view;
+            context: {
+                title: diff['activityName'],
+                prev: diff['preEmission'],
+                current: diff['postEmission'],
+                unit: diff['unit']
+            }">
+            </ng-container>
+        </ng-container>
+    </div> -->
+</div>
+
+<ng-template #view let-title="title" let-prev="prev" let-current="current" let-unit="unit">
+    <div class="row">
+        <div class="col-sm-5">
+            <div class="d-flex justify-content-between">
+                <div class="col-form-label ms-1 activity">
+                    {{ title }}
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-7">
+            <div class="row emission d-flex justify-content-between">
+                <div class="col-sm-6 col-form-value fw-bold">
+                    {{ (prev | number: '1.2-2') + " " + unit}}
+                </div>
+                <div class="col-sm-6 col-form-value fw-bold">
+                    {{ (current | number: '1.2-2') + " " + unit}}
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

@@ -1,0 +1,49 @@
+<mat-card class="cardOverwrite border">
+    <div class="cardTitle text-danger">Failed run!</div>
+    <div class="cardTitle">Errors found {{noOfErrors}} </div>
+
+    <table class="w-100" mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="errorNumber">
+            <th mat-header-cell *matHeaderCellDef>Error Number</th>
+            <td mat-cell *matCellDef="let row">
+                {{ row.errorNumber ? row.errorNumber: COMMON_CONSTANT.HYPHEN}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="recordID">
+            <th mat-header-cell *matHeaderCellDef>Record ID</th>
+            <td mat-cell *matCellDef="let row">
+                {{ row.recordID ? row.recordID: COMMON_CONSTANT.HYPHEN }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="activityType">
+            <th mat-header-cell *matHeaderCellDef>Activity Type</th>
+            <td mat-cell *matCellDef="let row">
+                {{ row.activityType ? row.activityType: COMMON_CONSTANT.HYPHEN}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="error">
+            <th mat-header-cell *matHeaderCellDef>Error</th>
+            <td mat-cell *matCellDef="let row">
+                {{ row.errorName ? row.errorName: COMMON_CONSTANT.HYPHEN}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="correctiveAction">
+            <th mat-header-cell *matHeaderCellDef>Corrective Action</th>
+            <td mat-cell *matCellDef="let row">
+                {{ row.correctiveAction ? row.correctiveAction: COMMON_CONSTANT.HYPHEN }}
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+            </td>
+        </tr>
+    </table>
+</mat-card>

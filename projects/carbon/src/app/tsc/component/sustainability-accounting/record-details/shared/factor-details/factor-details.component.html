@@ -1,0 +1,51 @@
+<div class="ms-3 me-1">
+    <div class="sectionHeader">
+        <span class="header"> Factor details </span>
+    </div>
+
+    <div *ngIf="factorDetails">
+        <ng-container *ngTemplateOutlet="data; context: {factorDetails: factorDetails}">
+        </ng-container>
+    </div>
+
+    <div class="pe-3">
+        <div class="sectionSubHeader fs-5 d-flex justify-content-between mt-3">
+            GWP dataset
+        </div>
+        <div class="row fw-bold mb-3">
+            <div class="col-sm-6"> Gas </div>
+            <div class="col-sm-3 float-end">
+                <span class="float-end"> GWP </span>
+            </div>
+            <div class="col-sm-3">
+                <span class="float-end"> Dataset </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                {{ gasResponse.gasName }}
+            </div>
+            <div class="col-sm-3 fw-bold pe-3">
+                <span class="float-end">
+                    {{ gasResponse.gwpValue }}
+                </span>
+            </div>
+            <div class="col-sm-3 fw-bold">
+                <span class="float-end"> {{ gasResponse.gwpDatasetkeyID }} </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #data let-factorDetails="factorDetails">
+    <ng-container *ngFor="let factor of factorDetails">
+        <div class="row mt-3 pe-3">
+            <div class="col-sm-8">
+                {{ factor.name }}
+            </div>
+            <div class="col-sm-4 fw-bold text-end">
+                {{ factor.value != null ? factor.value : COMMON_CONSTANT.HYPHEN }}
+            </div>
+        </div>
+    </ng-container>
+</ng-template>

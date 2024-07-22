@@ -1,0 +1,137 @@
+<div class="card-body">
+    <mat-card class="border cardOverwrite">
+        <div class="row pb-1">
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="row">
+                        <div class="col-sm-12 centerAlignVertical">
+                            <div class="col-form-label ms-2">
+                                <span class="fw-bold fs-3">
+                                    {{ configIntervalRes.configIntervalName != null ? configIntervalRes.configIntervalName :
+                                    COMMON_CONSTANT.HYPHEN }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 centerAlignVertical">
+                    <div class="col-form-value ms-2">
+                        <ng-container [ngSwitch]="configIntervalRes.status">
+                            <span *ngSwitchCase="ReportStatusEnum.ONGOING" class="badge rounded-pill bg-primary">
+                                Ongoing
+                            </span>
+                            <span *ngSwitchCase="ReportStatusEnum.SCHEDULED" class="badge rounded-pill bg-warning">
+                                Scheduled
+                            </span>
+                            <span *ngSwitchCase="ReportStatusEnum.COMPLETE" class="badge rounded-pill bg-success">
+                                Complete
+                            </span>
+                            <span *ngSwitchDefault>
+                                {{ configIntervalRes.status }}
+                            </span>
+                        </ng-container>
+    
+                        <button type="button" class="btn btn-sm btn-success ms-3" #tooltip="matTooltip"
+                            matTooltipPosition="above" [matTooltip]="configIntervalRes.progressPct != 100 ? 'Lock report get activated when progress reaches 100%' : ''"
+                            [ngClass]="{'btn-success': configIntervalRes.progressPct == 100, 
+                            'custom-cursor': configIntervalRes.progressPct == 100, 
+                            'custom-not-allowed': configIntervalRes.progressPct != 100}"
+                            (click)="lockReport(configIntervalRes.configIntervalID,configIntervalRes.progressPct)">
+                            <fa-icon [icon]="faLock"></fa-icon> Lock report
+                        </button>
+                    </div>
+                </div>
+            </div>
+      
+            <div class="row">
+                <ng-container *ngTemplateOutlet="value; 
+                    context:{ 
+                        title: 'Reporting framework:', 
+                        value: configIntervalRes.reportingFrameworkName
+                    }">
+                </ng-container>
+    
+                <ng-container *ngTemplateOutlet="value; 
+                context:{ 
+                    title: 'Reporting interval:', 
+                    value: configIntervalRes.intervalName
+                }">
+                </ng-container>
+    
+                <div class="col-sm-4">
+                    <div class="row">
+                        <div class="col-sm-12 centerAlignVertical">
+                            <div class="col-sm-5 col-form-label ms-2">
+                                Progress:
+                            </div>
+                            <div class="col-sm-4">
+                                <span class="fw-bold">
+                                    {{configIntervalRes.progressPct}}%
+                                    <circle-progress [options]="circleA" [renderOnClick]="false"
+                                        [percent]="configIntervalRes.progressPct">
+                                    </circle-progress>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="row">
+                <ng-container *ngTemplateOutlet="value; 
+                context:{ 
+                    title: 'Reporting year:', 
+                    value: configIntervalRes.reportingPeriod
+                }">
+                </ng-container>
+    
+                <ng-container *ngTemplateOutlet="value; 
+                context:{ 
+                    title: 'Reporting sector:', 
+                    value: configIntervalRes.frameworkSector
+                }">
+                </ng-container>
+    
+                <div class="col-sm-4">
+                    <div class="row">
+                        <div class="col-sm-12 centerAlignVertical">
+                            <div class="col-sm-5 col-form-label ms-2">
+                                Unassigned metrics:
+                            </div>
+                            <div class="col-sm-4">
+                                <span class="fw-bold">
+                                    <span
+                                        [ngClass]="textColor(configIntervalRes.unassignedMetric,configIntervalRes.totalMetric)">
+                                        {{ configIntervalRes.unassignedMetric != null ? configIntervalRes.unassignedMetric :
+                                        COMMON_CONSTANT.HYPHEN }} </span> / {{
+                                    configIntervalRes.totalMetric != null ? configIntervalRes.totalMetric :
+                                    COMMON_CONSTANT.HYPHEN }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </mat-card>
+
+</div>
+
+<ng-template #value let-title="title" let-value="value">
+    <div class="col-sm-4">
+        <div class="row">
+            <div class="col-sm-12 centerAlignVertical">
+                <div class="col-form-label ms-2">
+                    {{ title }}
+                    <span class="fw-bold ms-3" *ngIf="value; else hyphen;">
+                        {{ value }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #hyphen>
+    <span class="fw-bold ms-3"> {{ COMMON_CONSTANT.HYPHEN }} </span>
+</ng-template>

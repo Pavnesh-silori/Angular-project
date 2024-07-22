@@ -1,0 +1,22 @@
+<div mat-dialog-title>
+    <strong class="dialogTitle">
+        {{ dialogTitle }}
+    </strong>
+    <button mat-icon-button cdkFocusInitial class="float-end" matTooltip="Close" matTooltipPosition="before">
+        <span class="material-symbols-outlined" mat-dialog-close>
+            close
+        </span>
+    </button>
+</div>
+
+<div class="matDialogContent" mat-dialog-content>
+    <div class="row mt-2">
+        <app-emission-data #emissionDataComp [consolidationApproachKeyIDList]="consolidationApproachKeyIDList"
+            [year]="year" [emissionData]="emissionData" [action]="action"></app-emission-data>
+    </div>
+</div>
+<div mat-dialog-footer align="end">
+    <button type="button" class="btn btn-sm btn-success mt-2" (click)="saveEmission()">
+        {{ ButtonLabelEnum.SAVE_BTN_LABEL }}
+    </button>
+</div>

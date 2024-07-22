@@ -1,0 +1,83 @@
+<div mat-dialog-title>
+    <strong class="dialogTitle">
+        Fill audit details
+    </strong>
+
+    <button mat-icon-button mat-dialog-close cdkFocusInitial class="float-end matDialogClose" matTooltip="Close"
+        matTooltipPosition="before">
+        <span class="material-symbols-outlined">close</span>
+    </button>
+</div>
+
+<div class="matDialogContent" mat-dialog-content>
+    <form [formGroup]="auditFG">
+        <mat-form-field (click)="openDatepicker(date)" (keydown.enter)="openDatepicker(date)"
+            (keydown.arrowdown)="openDatepicker(date)" class="matFieldWidth100 cursorPointer"
+            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE" appDateMonthYearFormat>
+            <mat-label class="formLabel"> Date of verification</mat-label>
+            <input matInput class="noFocus" (dateInput)="formatDate('date')" [matDatepicker]="date"
+                formControlName="date" [readonly]="true" required />
+            <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+            <mat-datepicker #date disabled="false"></mat-datepicker>
+
+            <mat-error *ngIf="errorHandling('date', 'required')">
+                Date is required
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE" class="matFieldWidth100">
+            <mat-label class="formLabel"> Verifier name </mat-label>
+            <input class="formPlaceholder" matInput formControlName="name" required />
+
+            <mat-error *ngIf="errorHandling('name', 'required')">
+                Name is required
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE" class="matFieldWidth100">
+            <mat-label class="formLabel"> Email </mat-label>
+            <input class="formPlaceholder" matInput formControlName="email" required />
+
+            <mat-error *ngIf="errorHandling('email', 'required')">
+                Email is required
+            </mat-error>
+            <mat-error *ngIf="auditFG.get('email').hasError('email') && auditFG.get('email').touched">
+                Enter a valid email.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE" class="matFieldWidth100">
+            <mat-label class="formLabel"> Phone </mat-label>
+            <input class="formPlaceholder" matInput type="number" formControlName="phone" required />
+
+            <mat-error *ngIf="auditFG.get('phone').hasError('pattern') && auditFG.get('phone').touched">
+                Phone number must be 10 digits.
+            </mat-error>
+            <mat-error *ngIf="errorHandling('phone', 'required')">
+                Phone is required
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE" class="matFieldWidth100">
+            <mat-label class="formLabel"> Address </mat-label>
+            <input class="formPlaceholder" matInput formControlName="address" required />
+
+            <mat-error *ngIf="errorHandling('address', 'required')">
+                Address is required
+            </mat-error>
+        </mat-form-field>
+
+    </form>
+</div>
+
+<div mat-dialog-footer align="end">
+    <div class="d-inline">
+        <button type="submit" class="button btn btn-success" (click)="saveAuditDetails()" *ngIf="!isAudited">
+            {{ ButtonLabelEnum.CREATE_BTN_LABEL }}
+        </button>
+        <button type="submit" class="button btn btn-success" (click)="updateAuditDetails()" *ngIf="isAudited"
+            [ngClass]="{'disabled': isEqual}">
+            {{ ButtonLabelEnum.SAVE_BTN_LABEL }}
+        </button>
+    </div>
+</div>
