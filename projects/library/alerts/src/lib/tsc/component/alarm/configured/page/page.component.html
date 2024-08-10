@@ -1,0 +1,92 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Configured Alarms</div>
+        </div>
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <lib-search-bar-one class="me-3" #searchBar searchBy="name" (emitSearch)="searchFn($event)">
+                </lib-search-bar-one>
+            </div>
+        </div>
+    </div>
+
+    <button #refreshBtn class="d-none"></button>
+
+    <div class="overflowX customScrollBar">
+        <table class="w-100" mat-table [dataSource]="dataSource" #sort="matSort" matSort matSortActive="id"
+            matSortDirection="asc" matSortDisableClear>
+
+            <ng-container matColumnDef="id">
+                <th class="px-3 columnWidth1" mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+                    ID
+                </th>
+                <td class="px-3 columnWidth1" mat-cell *matCellDef="let row">
+                    {{ row.id ? row.id : COMMON_CONSTANT.HYPHEN }}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+                <th class="px-3 columnWidth2" mat-header-cell *matHeaderCellDef> Name </th>
+                <td class="px-3 columnWidth2" mat-cell *matCellDef="let row" [matTooltip]="row?.name?.length>25? row.name: ''"
+                    matTooltipPosition="above" matTooltipClass="nameTooltip">
+                    {{ (row.name ? row.name : COMMON_CONSTANT.HYPHEN) | dotdotdot:25 }}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="associatedWith">
+                <th class="px-3 columnWidth3" mat-header-cell *matHeaderCellDef> Associated with </th>
+                <td class="px-3 columnWidth3" mat-cell *matCellDef="let row"
+                    [matTooltip]="row?.associatedWith?.length>30? row.associatedWith: ''" matTooltipPosition="above"
+                    matTooltipClass="nameTooltip">
+                    {{ (row.associatedWith ? row.associatedWith : COMMON_CONSTANT.HYPHEN) | dotdotdot:30 }}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="ruleDescription">
+                <th class="px-3 columnWidth3" mat-header-cell *matHeaderCellDef> Rule </th>
+                <td class="px-3 columnWidth3" mat-cell *matCellDef="let row"
+                    [matTooltip]="row?.ruleDescription?.length>30? row.ruleDescription: ''"
+                    matTooltipPosition="above" matTooltipClass="nameTooltip">
+                    {{ (row.ruleDescription ? row.ruleDescription : COMMON_CONSTANT.HYPHEN) | dotdotdot:30 }}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="type">
+                <th class="px-3 columnWidth1" mat-header-cell *matHeaderCellDef> Type </th>
+                <td class="px-3 columnWidth1" mat-cell *matCellDef="let row">
+                    <span class="badge rounded-pill bg-light text-dark" [ngSwitch]="row?.type">
+                        <ng-container *ngSwitchCase="AlertTypeEnum.INSTANTANEOUS">{{
+                            AlertTypeLabelEnum.INSTANTANEOUS_LABEL
+                            }}</ng-container>
+                        <ng-container *ngSwitchCase="AlertTypeEnum.PERIODIC">{{ AlertTypeLabelEnum.PERIODIC_LABEL
+                            }}</ng-container>
+                        <ng-container *ngSwitchCase="AlertTypeEnum.CONSTANT_DATA">{{ AlertTypeLabelEnum.CONSTANT_DATA_LABEL
+                            }}</ng-container>
+                    </span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+                <th class="px-3 columnWidth1" mat-header-cell *matHeaderCellDef> Status </th>
+                <td class="px-3 columnWidth1" mat-cell *matCellDef="let row">
+                    <span class="badge rounded-pill" [ngClass]="{'bg-success': row?.status, 'bg-danger': !row?.status}">
+                        {{ row?.status ? StatusEnum.ACTIVE_STATUS : StatusEnum.INACTIVE_STATUS }}
+                    </span>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumn"></tr>
+            <tr mat-row *matRowDef="let task; columns: displayedColumn;"></tr>
+
+            <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell text-center" [attr.colspan]="displayedColumn.length">
+                    {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+                </td>
+            </tr>
+        </table>
+    </div>
+    <mat-paginator #paginator class="roundedBorder" showFirstLastButtons [length]="resultLength"
+        [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE" [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION">
+    </mat-paginator>
+</div>

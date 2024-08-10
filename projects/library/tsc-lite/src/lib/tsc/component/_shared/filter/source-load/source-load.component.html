@@ -1,0 +1,5 @@
+<mat-button-toggle-group class="matBtnFilter" [formControl]="categoryFC" (change)="categoryChange(categoryFC.value)">
+    <mat-button-toggle *ngFor="let category of listConstant.SOURCE_LOAD" value="{{ category.value }}">
+        {{ category.label }}
+    </mat-button-toggle>
+</mat-button-toggle-group>

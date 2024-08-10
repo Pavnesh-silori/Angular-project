@@ -1,0 +1,23 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Parameter Dashboard</div>
+        </div>
+    </div>
+
+    <nav mat-tab-nav-bar>
+        <ng-container *ngFor="let tabs of tab; let i = index;">
+            <a mat-tab-link [routerLink]="tabs.routerLink" (click)="activeLink = tabs.routerLink"
+                [active]="activeLink == tabs.routerLink">
+                <div class="d-flex align-items-center">
+                    <span class="material-symbols-outlined me-2">
+                        {{ tabs.icon }}
+                    </span>
+                    {{ tabs.label }}
+                </div>
+            </a>
+        </ng-container>
+    </nav>
+    <router-outlet></router-outlet>
+
+</div>

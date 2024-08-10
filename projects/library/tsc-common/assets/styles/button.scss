@@ -1,0 +1,75 @@
+.btnRightRadiusZero {
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    margin-right: 1px;
+}
+
+.btnLeftRadiusZero {
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+
+// .btnRightBorder {
+//     border-right: 1px solid #fff;
+// }
+
+// .btnRightBorder:hover {
+//     border-right: 1px solid #fff;
+// }
+
+// icon
+.iconBtn {
+    height: 32px;
+    width: 32px;
+    border: 0px;
+    border-radius: 16px;
+    background-color: transparent;
+}
+
+.iconBtn:hover {
+    border-radius: 16px;
+    background-color: #eeeeee;
+}
+
+.headerIconBtn {
+    border: none;
+    height: 31px;
+}
+
+.refreshBtn {
+    @extend .headerIconBtn;
+    color: #6C757D;
+}
+
+.updateBtn {
+    @extend .headerIconBtn;
+    color: #3f6ad8 !important;
+}
+
+.deleteIconHover:hover {
+    border-radius: 16px;
+    background-color: rgba(248, 223, 223, 0.7)
+}
+
+.updateIconHover:hover {
+    border-radius: 16px;
+    background-color: rgba(216, 229, 243, 0.7);
+}
+
+
+.icon {
+    font-size: 20px !important;
+}
+
+// /icon/
+
+.disableBtn {
+    cursor: not-allowed !important;
+    background-color: rgb(181, 178, 178) !important;
+    border-color: rgb(181, 178, 178) !important;
+    color: white !important;
+}
+
+.disableCursor {
+    cursor: not-allowed;
+}

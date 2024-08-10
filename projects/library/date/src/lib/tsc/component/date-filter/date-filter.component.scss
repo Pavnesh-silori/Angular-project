@@ -1,0 +1,13 @@
+.matBtnFilter {
+    mat-button-toggle.mat-button-toggle-checked {
+        background-color: #e6e6e6 !important;
+    }
+}
+
+.mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
+    line-height: 30px !important;
+}
+
+.mat-button-toggle-group-appearance-standard {
+    border-radius: 20px !important;
+}

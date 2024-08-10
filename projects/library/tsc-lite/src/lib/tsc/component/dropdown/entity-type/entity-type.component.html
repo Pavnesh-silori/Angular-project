@@ -1,0 +1,23 @@
+<mat-form-field class="matFieldWidth100" [appearance]="materialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+    <mat-label>Select entity type</mat-label>
+    <mat-select (selectionChange)="onChange($event.value)" [formControl]="entityTypeFC" required>
+        <ng-container *ngIf="entityTypeM && entityTypeM.length > 0 && entityTypeM?.[0]?.type; else noDataFound">
+            <mat-option>
+                <ngx-mat-select-search [formControl]="entityTypeSearchUtil.filterFC" placeholderLabel="Search by name"
+                    noEntriesFoundLabel="No matching name found.">
+                </ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let type of entityTypeSearchUtil.filteredEntities | async" [value]="type.type">
+                {{ type.type | titlecase }}
+            </mat-option>
+        </ng-container>
+        <ng-template #noDataFound>
+            <mat-option disabled>
+                {{ commonConstant.NO_DATA_FOUND }}
+            </mat-option>
+        </ng-template>
+    </mat-select>
+    <mat-error *ngIf="entityTypeFC.touched && entityTypeFC.hasError('required')">
+        {{ FormErrorEnum.REQUIRED }}
+    </mat-error>
+</mat-form-field>

@@ -1,0 +1,13 @@
+<div class="searchBlock">
+    <input class="searchInput" [type]="type" [placeholder]="'Search by ' + searchBy " [formControl]="searchFC"
+        (keydown.enter)="searchFn()" (keyup)="searchFn()">
+
+    <button class="searchResetBtn" [ngClass]="{'searchCloseBtnHide': !searchFC.value}" type="button"
+        (click)="searchReset()" #searchResetBtn>
+        <fa-icon [ngClass]="{'searchXIconHide': !searchFC.value}" [icon]="faTimes"></fa-icon>
+    </button>
+
+    <button class="searchBtn text-secondary" matRipple type="button" (click)="searchFn()" #searchBtn>
+        <fa-icon [icon]="faSearch"></fa-icon>
+    </button>
+</div>

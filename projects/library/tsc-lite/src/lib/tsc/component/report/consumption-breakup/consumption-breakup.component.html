@@ -1,0 +1,92 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Consumption Breakup Report</div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-4">
+                <lib-source-load #sourceLoadInput (emitFilter)="sourceLoadInpChange()"></lib-source-load>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-sm-3">
+                <lib-date-input #customDateInput (emitFilter)="dateInpChange()" [materialFieldWidthInp]="true"
+                    [materialFormFieldAppearanceInp]="materialFormFieldAppearance.FORM_FIELD_APPEARANCE"
+                    [isMandatoryFieldInp]="true" [dateInputTypeInp]="dateInputTypeEnum.CUSTOM_INPUT"
+                    [dateTypeInp]="dateTypeEnum.EXCLUSIVE" [showDefaultDurationInp]="true" [showCdrRangeLabelInp]="true"
+                    [labelInp]="'Select date'" [timezoneInp]="timezone" [rangeInp]="customRangeConstant" [showTimeInCDRInp]="true"
+                    [showRangeInp]="true" [cdrFormatInp]="'YYYY-MM-DD HH:mm:ss'"></lib-date-input>
+            </div>
+
+            <div class="col-sm-3">
+                <lib-aggregation-duration #aggDurationInput
+                    (emitFilter)="aggDurationInpChange()"></lib-aggregation-duration>
+            </div>
+
+            <div class="col-sm-3">
+                <lib-entity #entityInput [dropdownTypeInp]="dropdownTypeEnum.MULTIPLE_DROPDOWN"
+                    (emitFilter)="entityInpChange()"></lib-entity>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="float-end">
+                    <button class="btn btn-sm btn-primary" type="button" (click)="viewReport()" matRipple
+                        [matRippleCentered]="materialConstant.MAT_RIPPLE_CENTER">
+                        {{ buttonLabelEnum.READ_BTN_LABEL }}
+                    </button>
+                    <lib-download-report (fileTypeEmitted)="downloadReport($event)"></lib-download-report>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <lib-message-alert *ngIf="reportAlertObj.showAlert" [labelInp]="reportAlertObj.alertLabel"
+                    [contentInp]="reportAlertObj.alertContent" [messageAlertTypeInp]="reportAlertObj.messageAlertType"
+                    [messageAlertIconInp]="reportAlertObj.messageAlertIcon">
+                </lib-message-alert>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="centerAlign">
+                <lib-skeleton-loader *ngIf="showLoader" [count]="3" [appearance]="'circle'"
+                    [theme]="{ height: '15px', width: '15px', 'background-color': '#e7ebf3' }"></lib-skeleton-loader>
+            </div>
+        </div>
+
+        <div class="row mt-3" *ngIf="renderTable && renderTable.length > 0">
+            <div class="overflowX customScrollBar">
+                <table class="table">
+                    <tbody>
+                        <tr class="tableHeader">
+                            <td class="fw-bold"> Sr. No. </td>
+                            <td align="center" class="fw-bold"> Time </td>
+                            <ng-container *ngFor="let data of reportData; let i = index">
+                                <td align="center" class="fw-bold">
+                                    {{ data.entityName }}<br />
+                                    {{ data.paramLabel }} ({{ data.unit }}) ({{ data.dsAgg }})
+                                </td>
+                            </ng-container>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr *ngFor="let row of renderTable">
+                            <td>{{ row.index }}</td>
+                            <td align="center" class="colWidthContainingDateTime">{{ row.time }}</td>
+                            <td align="center" *ngFor="let value of row.data">{{ value ? value : commonConstant.HYPHEN
+                                }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,86 @@
+<div mat-dialog-title>
+    <strong class="dialogTitle">
+        {{ action == FormActionEnum.ADD ? PageTitleEnum.ADD : PageTitleEnum.UPDATE }} Source/Consumer
+    </strong>
+</div>
+<div class="matDialogContent" mat-dialog-content>
+    <form [formGroup]="sourceLoadFG">
+        <ng-container formArrayName="parameterMappingRecord">
+            <div class="row">
+                <div class="col-sm-12 mb-3" *ngFor="let param of parameterMappingRecordFA.controls; let i = index">
+                    <ng-container [formGroupName]="i">
+                        <mat-card class="border card cardOverwrite">
+                            <div class="cardTitle">
+                                {{ getParameterLabel(param.get('parameterID').value) }}
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-sm-4">
+                                    <mat-checkbox (change)="addSourceType($event, i)" formControlName="isSource">Source</mat-checkbox>
+                                </div>
+                                <div class="col-sm-8">
+                                    <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <mat-label>Select source type</mat-label>
+
+                                        <mat-select formControlName="sourceType" [disabled]="!parameterMappingRecordFA.controls[i].get('isSource').value"
+                                            required>
+                                            <ng-container *ngIf="sourceType && sourceType.length > 0 && sourceType[0]['id']; else noSourceType">
+                                                <mat-option *ngFor="let type of sourceType" [value]="type.id">
+                                                    {{ type.name }}
+                                                </mat-option>
+                                            </ng-container>
+                                            <ng-template #noSourceType>
+                                                <mat-option disabled>
+                                                    {{ COMMON_CONSTANT.NO_DATA_FOUND }}
+                                                </mat-option>
+                                            </ng-template>
+                                        </mat-select>
+
+                                        <mat-error *ngIf="this.parameterMappingRecordFA.controls[i].get('sourceType').hasError('required')">
+                                            {{ FormErrorEnum.REQUIRED }}
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                </div>
+                            <div class="row mt-2">
+                                <div class="col-sm-4">
+                                    <mat-checkbox (change)="addLoadType($event, i)" formControlName="isLoad">Load</mat-checkbox>
+                                </div>
+                                <div class="col-sm-8">
+                                    <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <mat-label>Select consumer type</mat-label>
+
+                                        <mat-select formControlName="loadType" [disabled]="!parameterMappingRecordFA.controls[i].get('isLoad').value"
+                                            required>
+                                            <ng-container *ngIf="loadType && loadType.length > 0 && loadType[0]['id']; else noLoadType">
+                                                <mat-option *ngFor="let type of loadType" [value]="type.id">
+                                                    {{ type.name }}
+                                                </mat-option>
+                                            </ng-container>
+                                            <ng-template #noLoadType>
+                                                <mat-option disabled>
+                                                    {{ COMMON_CONSTANT.NO_DATA_FOUND }}
+                                                </mat-option>
+                                            </ng-template>
+                                        </mat-select>
+
+                                        <mat-error *ngIf="this.parameterMappingRecordFA.controls[i].get('loadType').hasError('required')">
+                                            {{ FormErrorEnum.REQUIRED }}
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </mat-card>
+                    </ng-container>
+                </div>
+            </div>
+        </ng-container>
+    </form>
+</div>
+<div mat-dialog-footer align="end">
+    <button class="btn btn-sm btn-secondary me-2" type="button" (click)="cancel()">
+        {{ ButtonLabelEnum.CANCEL_BTN_LABEL }}
+    </button>
+    <button class="btn btn-sm btn-success" type="submit" [ngClass]="{'disabled': isEqual}" (click)="sourceLoadSubmit()">
+        {{ action == FormActionEnum.ADD ? ButtonLabelEnum.ADD_BTN_LABEL : ButtonLabelEnum.UPDATE_BTN_LABEL }}
+    </button>
+</div>

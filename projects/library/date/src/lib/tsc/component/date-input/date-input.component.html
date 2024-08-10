@@ -1,0 +1,61 @@
+<mat-form-field [ngClass]="{'d-none': dateInputType != dateInputTypeEnum.DAY_INPUT, 'matFieldWidth100': materialFieldWidth}" [appearance]="formFieldAppearance"
+    id="dailyField" appDateMonthYearFormat (click)="dateService.openDatepickerOnClick(daily)"
+    (keydown.arrowdown)="dateService.openDatepickerOnClick(daily)"
+    (keydown.enter)="dateService.openDatepickerOnClick(daily)">
+    <mat-label> {{ label }} </mat-label>
+    <input matInput class="noFocus" [matDatepicker]="daily" [formControl]="durationFC" [max]="date"
+        (dateInput)="dayDateInput($event.value)" [required]="isMandatoryField" readOnly/>
+    <mat-datepicker-toggle matSuffix class="fs-5" [for]="daily"></mat-datepicker-toggle>
+    <mat-datepicker #daily (closed)="dateService.takeFocusAway('dailyField')"></mat-datepicker>
+    <mat-error *ngIf="durationFC.touched && durationFC.hasError('required')">
+        {{ formErrorEnum.REQUIRED }}
+    </mat-error>
+</mat-form-field>
+
+
+<mat-form-field class="cursorPointer"
+    [ngClass]="{'d-none': dateInputType != dateInputTypeEnum.MONTH_INPUT, 'matFieldWidth100': materialFieldWidth}"
+    [appearance]="formFieldAppearance" id="monthlyField" appMonthYearFormat
+    (click)="dateService.openDatepickerOnClick(monthly)"
+    (keydown.arrowdown)="dateService.openDatepickerOnClick(monthly)"
+    (keydown.enter)="dateService.openDatepickerOnClick(monthly)">
+    <mat-label> {{ label }} </mat-label>
+    <input matInput [matDatepicker]="monthly" [formControl]="durationFC" [max]="date" [required]="isMandatoryField" readOnly/>
+    <mat-datepicker-toggle matSuffix class="fs-5" [for]="monthly"></mat-datepicker-toggle>
+    <mat-datepicker #monthly panelClass="monthPicker" startView="year" (monthSelected)="monthDateInput($event, monthly)"
+        (closed)="dateService.takeFocusAway('monthlyField')"></mat-datepicker>
+    <mat-error *ngIf="durationFC.touched && durationFC.hasError('required')">
+        {{ formErrorEnum.REQUIRED }}
+    </mat-error>
+</mat-form-field>
+
+<mat-form-field class="cursorPointer"
+    [ngClass]="{'d-none': dateInputType != dateInputTypeEnum.YEAR_INPUT, 'matFieldWidth100': materialFieldWidth}"
+    [appearance]="formFieldAppearance" id="yearlyField" appYearFormat
+    (click)="dateService.openDatepickerOnClick(yearly)" (keydown.arrowdown)="dateService.openDatepickerOnClick(yearly)"
+    (keydown.enter)="dateService.openDatepickerOnClick(yearly)">
+    <mat-label> {{ label }} </mat-label>
+    <input matInput [matDatepicker]="yearly" [formControl]="durationFC" [max]="date" [required]="isMandatoryField" readOnly/>
+    <mat-datepicker-toggle matSuffix class="fs-5" [for]="yearly"></mat-datepicker-toggle>
+    <mat-datepicker #yearly startView="multi-year" panelClass="yearPicker"
+        (yearSelected)="yearDateInput($event, yearly)"
+        (closed)="dateService.takeFocusAway('yearlyField')"></mat-datepicker>
+    <mat-error *ngIf="durationFC.touched && durationFC.hasError('required')">
+        {{ formErrorEnum.REQUIRED }}
+    </mat-error>
+</mat-form-field>
+
+<mat-form-field class="cursorPointer"
+    [ngClass]="{'d-none': dateInputType != dateInputTypeEnum.CUSTOM_INPUT, 'matFieldWidth100': materialFieldWidth}"
+    [appearance]="formFieldAppearance">
+    <mat-label> {{ label }} </mat-label>
+    <input type="text" matInput ngxDaterangepickerMd
+        [locale]="{direction: 'ltr', applyLabel: 'Apply', format: cDRformat, customRangeLabel: 'Custom Range'}"
+        [showCustomRangeLabel]="showCdrRangeLabel" [timePicker]="showTimeInCDR" [ranges]="showRange ? range : null"
+        [drops]="'down'" [opens]="'right'" [alwaysShowCalendars]="true" [keepCalendarOpeningWithRange]="true"
+        [showDropdowns]="true" [showCancel]="true" autocomplete="off" name="daterange" [formControl]="daterange"
+        (ngModelChange)="customDateInput(daterange.value)" [required]="isMandatoryField" readOnly/>
+    <mat-error *ngIf="daterange.touched && daterange.hasError('required')">
+        {{ formErrorEnum.REQUIRED }}
+    </mat-error>
+</mat-form-field>

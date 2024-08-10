@@ -1,0 +1,62 @@
+.searchBlock {
+    display: flex;
+    align-items: center;
+
+    input[type="search"]::-webkit-search-decoration,
+    input[type="search"]::-webkit-search-cancel-button,
+    input[type="search"]::-webkit-search-results-button,
+    input[type="search"]::-webkit-search-results-decoration {
+        -webkit-appearance: none;
+    }
+
+    .searchInput {
+        border: none;
+        outline-offset: none;
+        background-color: #eeeeee;
+        border-radius: 16px 0px 0px 16px;
+        padding: 5px 0px 5px 10px;
+        width: 155px;
+        font-size: 12px;
+        min-height: 31px;
+    }
+
+    .searchInput:focus {
+        outline: none;
+    }
+
+    .searchCloseBtnHide {
+        pointer-events: none;
+    }
+
+    .searchXIconHide {
+        opacity: 0;
+    }
+
+    .searchResetBtn {
+        border: none !important;
+        background-color: #eeeeee;
+        color: #a6a6a6;
+        padding: 5px 8px;
+        font-size: 12px;
+        min-height: 31px;
+    }
+
+    .searchResetBtn:hover {
+        color: #404040;
+    }
+
+    .searchBtn {
+        border: none !important;
+        border-radius: 0px 16px 16px 0px;
+        // border-left: 1px solid #8c8c8c !important;
+        background-color: #eeeeee;
+        // background-color: #d9d9d9;
+        padding: 5px 8px 5px 8px;
+        font-size: 12px;
+        min-height: 31px;
+    }
+}
+
+.searchBtn {
+    border: none;
+}

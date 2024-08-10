@@ -1,0 +1,36 @@
+<div mat-dialog-title>
+    <strong class="dialogTitle">
+        {{ paramLabel }} Trend
+    </strong>
+
+    <button mat-icon-button mat-dialog-close cdkFocusInitial class="float-end matDialogClose" matTooltip="Close"
+        matTooltipPosition="before">
+        <span class="material-symbols-outlined" [mat-dialog-close]="dialogEnum.CLOSE_DR">
+            close
+        </span>
+    </button>
+</div>
+
+<div class="matDialogContent" mat-dialog-content>
+    <div class="row">
+        <div class="col-sm-6">
+            <mat-form-field class="matFieldWidth100"
+                [appearance]="materialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                <mat-label>Select daterange</mat-label>
+                <mat-select (selectionChange)="dateRangeChange($event.value)" [formControl]="dateRangeFC">
+                    <mat-option disabled>Select daterange</mat-option>
+                    <mat-option *ngFor="let daterange of listConstant.TREND_DATE_RANGE" [value]="daterange.value">
+                        {{ daterange.label }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <lib-basic-area-line-bar [chartTypeInp]="chartType" [chartTitleInp]="chartTitle" [viewStateInp]="viewStateFlag"
+                [dataInp]="chartData"></lib-basic-area-line-bar>
+        </div>
+    </div>
+</div>

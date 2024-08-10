@@ -1,0 +1,8 @@
+@import 'projects/library/tsc-common/assets/styles/variable.scss';
+
+.footerOneWrapper {
+    background-color: #1a202c;
+    height: $footerOneHeight;
+    position: absolute;
+    bottom: 0;
+}

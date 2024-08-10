@@ -1,0 +1,217 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Home</div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-6">
+                <mat-card class="cardOverwrite cardBackgroundColor cardHeight">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <span class="cardTitle">
+                                Total {{ label }} Consumption
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="d-flex align-items-center">
+                            <div class="col-sm-6">
+                                <span class="centerAlign">
+                                    <circle-progress [options]="totalConsumptionCircleData" [renderOnClick]="false"
+                                        class="copy"></circle-progress>
+                                </span>
+                                <span class="centerAlign">
+                                    This Month
+                                </span>
+                            </div>
+                            <div class="col-sm-6 ms-4">
+                                <div class="row">
+                                    <ng-container *ngTemplateOutlet="totalConsumption; context: {
+                                        label: 'Today',
+                                        value: todayConsumption?.[0]?.['data']?.[0]?.['value'],
+                                        unit: todayConsumption?.[0]?.['unit'],
+                                        matCardClass: 'today'
+                                    }"></ng-container>
+                                </div>
+                                <div class="row mt-4">
+                                    <ng-container *ngTemplateOutlet="totalConsumption; context: {
+                                        label: 'This Month',
+                                        value: currentMonthConsumption?.[0]?.['data']?.[0]?.['value'],
+                                        unit: currentMonthConsumption?.[0]?.['unit'],
+                                        matCardClass: 'month'
+                                    }"></ng-container>
+                                </div>
+                                <div class="row mt-4">
+                                    <ng-container *ngTemplateOutlet="totalConsumption; context: {
+                                        label: 'This Year',
+                                        value: currentYearConsumption?.[0]?.['data']?.[0]?.['value'],
+                                        unit: currentYearConsumption?.[0]?.['unit'],
+                                        matCardClass: 'year'
+                                    }"></ng-container>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+            <div class="col-sm-6">
+                <mat-card class="cardOverwrite cardBackgroundColor cardHeight">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <span class="cardTitle">
+                                {{ label }} Consumption Breakup
+                            </span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="d-flex align-items-center">
+                            <div class="col-sm-6">
+                                <span class="centerAlign">
+                                    <circle-progress [options]="consumptionBreakupCircleData" [renderOnClick]="false"
+                                        class="copy"></circle-progress>
+                                </span>
+                                <span class="centerAlign">
+                                    This Month
+                                </span>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="row" *ngIf="entityConsumption?.[0]?.id">
+                                    <ng-container *ngTemplateOutlet="entityProgress; context: {
+                                        name: entityConsumption[0].name,
+                                        value: entityConsumption[0].value,
+                                        unit: entityConsumption[0].unit,
+                                        entityObj: entityConsumption[0],
+                                        outerProgressBarClass: 'progress1BGColor',
+                                        innerProgressBarClass: 'progress1Color'
+                                    }"></ng-container>
+                                </div>
+                                <div class="row mt-4" *ngIf="entityConsumption?.[1]">
+                                    <ng-container *ngTemplateOutlet="entityProgress; context: {
+                                        name: entityConsumption[1].name,
+                                        value: entityConsumption[1].value,
+                                        unit: entityConsumption[1].unit,
+                                        entityObj: entityConsumption[1],
+                                        outerProgressBarClass: 'progress2BGColor',
+                                        innerProgressBarClass: 'progress2Color'
+                                    }"></ng-container>
+                                </div>
+                                <div class="row mt-4" *ngIf="entityConsumption?.[2]">
+                                    <ng-container *ngTemplateOutlet="entityProgress; context: {
+                                        name: entityConsumption[2].name,
+                                        value: entityConsumption[2].value,
+                                        unit: entityConsumption[2].unit,
+                                        entityObj: entityConsumption[2],
+                                        outerProgressBarClass: 'progress3BGColor',
+                                        innerProgressBarClass: 'progress3Color'
+                                    }"></ng-container>
+                                </div>
+                                <div class="row mt-4" *ngIf="entityConsumption?.[3]">
+                                    <ng-container *ngTemplateOutlet="entityProgress; context: {
+                                        name: entityConsumption[3].name,
+                                        value: entityConsumption[3].value,
+                                        unit: entityConsumption[3].unit,
+                                        entityObj: entityConsumption[3],
+                                        outerProgressBarClass: 'progress4BGColor',
+                                        innerProgressBarClass: 'progress4Color'
+                                    }"></ng-container>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-sm-3">
+                <mat-card class="card main-card cardOverwrite card-info">
+                    <ng-container *ngTemplateOutlet="deviceStatus; context: {
+                        label: 'Total devices',
+                        count: deviceInfoM.total
+                    }"></ng-container>
+                </mat-card>
+            </div>
+            <div class="col-sm-3">
+                <mat-card class="card main-card cardOverwrite card-success">
+                    <ng-container *ngTemplateOutlet="deviceStatus; context: {
+                        label: 'Online devices',
+                        count: deviceInfoM.online
+                    }"></ng-container>
+                </mat-card>
+            </div>
+            <div class="col-sm-3">
+                <mat-card class="card main-card cardOverwrite card-warning">
+                    <ng-container *ngTemplateOutlet="deviceStatus; context: {
+                        label: 'Delayed devices',
+                        count: deviceInfoM.delay
+                    }"></ng-container>
+                </mat-card>
+            </div>
+            <div class="col-sm-3">
+                <mat-card class="card main-card cardOverwrite card-danger">
+                    <ng-container *ngTemplateOutlet="deviceStatus; context: {
+                        label: 'Offline devices',
+                        count: deviceInfoM.offline
+                    }"></ng-container>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #totalConsumption let-label="label" let-value="value" let-unit="unit" let-matCardClass="matCardClass"
+    let-outerProgressBarClass="outerProgressBarClass" let-innerProgressBarClass="innerProgressBarClass">
+    <div class="col-sm-12">
+        <div class="d-flex align-items-center">
+            <mat-card class="card main-card square d-flex justify-content-center me-2" [class]="matCardClass">
+                <span class="material-symbols-outlined">
+                    {{ icon }}
+                </span>
+            </mat-card>
+            <div class="row">
+                <span>{{ label }}</span><br />
+                <span class="text-primary fw-bold">{{ value ? value : commonConstant.HYPHEN }} <span
+                        class="unitSize">{{ value ? unit : '' }}</span></span>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #entityProgress let-name="name" let-value="value" let-unit="unit" let-entityObj="entityObj"
+    let-outerProgressBarClass="outerProgressBarClass" let-innerProgressBarClass="innerProgressBarClass">
+    <div class="col-sm-12">
+        <span>
+            {{ name }}
+        </span>
+        <span class="float-end text-primary fw-bold"> {{ value ? value : commonConstant.HYPHEN }}
+            <span class="unitSize"> {{ value ? unit : '' }} </span>
+        </span>
+        <div class="progress progressBarRadius" [class]="outerProgressBarClass">
+            <div class="progress-bar progressBarRadius" [class]="innerProgressBarClass" role="progressbar"
+                [style.width.%]="calculateProgress(entityObj)"></div>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #deviceStatus let-label="label" let-count="count">
+    <div class="row">
+        <div class="col-sm-12">
+            <span class="material-symbols-outlined">
+                devices
+            </span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 fs-1 fw-bold centerAlign">
+            {{ count != undefined && count != null ? count : commonConstant.HYPHEN }}
+        </div>
+    </div>
+    <div class="row mt-1">
+        <div class="col-sm-12 fs-5 centerAlign">
+            {{ label }}
+        </div>
+    </div>
+</ng-template>

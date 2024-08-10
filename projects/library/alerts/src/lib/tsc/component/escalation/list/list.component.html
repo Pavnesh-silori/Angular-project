@@ -1,0 +1,71 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Escalation Rule</div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="row mb-3" *ngFor="let level of escalationLevelJSON">
+            <div class="col-sm-12">
+                <mat-card class="border cardOverwrite">
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <div class="cardTitle">
+                                {{ level.name }}
+                            </div>
+                            <div class="col-sm-12">
+                                <span class="text-danger" *ngIf="!isLevelConfigured(level.id)">
+                                    Not configured.
+                                </span>
+                                <span *ngIf="isLevelConfigured(level.id)">
+                                    <div fxLayout="row wrap">
+                                        <div class="col-sm-3">
+                                            <div>Escalations:</div>
+                                            <div></div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div>Interval</div>
+                                            <div class="fw-bold">{{
+                                                getCorresondingEscLevelConfig(level.id)?.intervalValue}} - {{
+                                                getCorresondingEscLevelConfig(level.id)?.intervalFrequencyName}}</div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div>Notification frequency</div>
+                                            <div class="fw-bold">{{
+                                                getCorresondingEscLevelConfig(level.id)?.notificationPrefValue}}
+                                                - {{ getCorresondingEscLevelConfig(level.id)?.notificationPrefName}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-sm-4 centerAlignVertical justify-content-end">
+                            <button class="btn btn-sm btn-success" type="button"
+                                (click)="createUpdateEscalationRuleDialog(level.id, PageTitleEnum.CREATE)"
+                                *ngIf="!isLevelConfigured(level.id) && (level.id == 1 || (hasEscalationDataForPreviousLevel(level.id) && !hasEscalationDataForLevel(level.id)))">
+                                {{ ButtonLabelEnum.CREATE_BTN_LABEL }}
+                            </button>
+                            <button class="btn btn-sm btn-secondary disableButton" matTooltipPosition="above"
+                                [matTooltip]="'Setting up a previous level is mandatory before creating the escalation metric for the current level'"
+                                *ngIf="!isLevelConfigured(level.id) && level.id != 1 && (hasEscalationDataForLevel(level.id) || !hasEscalationDataForPreviousLevel(level.id))">
+                                {{ ButtonLabelEnum.CREATE_BTN_LABEL }}
+                            </button>
+                            <button class="btn btn-sm btn-primary me-2" type="button"
+                                (click)="createUpdateEscalationRuleDialog(level.id, PageTitleEnum.UPDATE, getCorresondingEscLevelConfig(level.id))"
+                                *ngIf="isLevelConfigured(level.id)">
+                                {{ ButtonLabelEnum.UPDATE_BTN_LABEL }}
+                            </button>
+                            <button class="btn btn-sm btn-danger" type="button"
+                                (click)="openDeleteEscRuleDialog(level.id, getCorresondingEscLevelConfig(level.id))"
+                                *ngIf="isLevelConfigured(level.id)">
+                                {{ ButtonLabelEnum.DELETE_BTN_LABEL }}
+                            </button>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>

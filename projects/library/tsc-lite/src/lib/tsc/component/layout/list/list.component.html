@@ -1,0 +1,85 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-12">
+                <!-- template call for entityTemplate -->
+                <mat-accordion>
+                    <ng-container *ngFor="let entity of entities">
+                        <ng-container *ngTemplateOutlet="entityTemplate; 
+                            context: {
+                                entity: entity,
+                                panelTitleClass: 'fw-bold',
+                                expansionPanelClass : 'cardBackgroundColor',
+                                expanded: hasContent(entity),
+                                allowUpdateDelete: false
+                            }">
+                        </ng-container>
+                    </ng-container>
+                </mat-accordion>
+                <!-- /template call for entityTemplate/ -->
+
+                <!-- template for recursive entity -->
+                <ng-template #entityTemplate let-entity="entity" let-panelTitleClass="panelTitleClass"
+                    let-expansionPanelClass="expansionPanelClass" let-expanded="expanded" let-allowUpdateDelete="allowUpdateDelete">
+                    <mat-expansion-panel class="mt-2 cardOverwrite" [class]="expansionPanelClass" [expanded]="expanded"
+                        [disabled]="!hasContent(entity)" [hideToggle]="!hasContent(entity)">
+
+                        <mat-expansion-panel-header class="matAccRightAlignedHeader">
+                            <mat-panel-title>
+                                <div class="d-flex align-items-center">
+                                    <span [class]="panelTitleClass">
+                                        {{ entity.name }}
+                                    </span> <span class="badge rounded-pill info ms-2">
+                                        {{ entity.type }}
+                                    </span>
+                                </div>
+                            </mat-panel-title>
+                            <mat-panel-description class="float-end">
+                                <span class="material-symbols-outlined text-primary me-3" #tooltip="matTooltip" matTooltipPosition="above"
+                                    matTooltipClass="nameTooltip" matTooltip="Add entity"
+                                    (click)="openEntityDialog(entity.id, 'create'); $event.stopPropagation()">
+                                    add_circle
+                                </span>
+                                <span class="material-symbols-outlined text-primary me-3" #tooltip="matTooltip" matTooltipPosition="above"
+                                    matTooltipClass="nameTooltip" matTooltip="Map device" (click)="mapDevice(entity.id); $event.stopPropagation()">
+                                    devices
+                                </span>
+                                <span class="material-symbols-outlined text-secondary me-3" #tooltip="matTooltip"
+                                    matTooltipPosition="above" matTooltipClass="nameTooltip" matTooltip="View mapped device"
+                                    (click)="viewMappedDevice(entity.id); $event.stopPropagation()">
+                                    visibility
+                                </span>
+                                <span class="material-symbols-outlined text-secondary me-3" *ngIf="allowUpdateDelete" #tooltip="matTooltip"
+                                    matTooltipPosition="above" matTooltipClass="nameTooltip" matTooltip="Edit entity"
+                                    (click)="openEntityDialog(entity.id, 'update'); $event.stopPropagation()">
+                                    edit_square
+                                </span>
+                                <span class="material-symbols-outlined text-danger me-3" *ngIf="allowUpdateDelete" #tooltip="matTooltip"
+                                    matTooltipPosition="above" matTooltipClass="nameTooltip" matTooltip="Delete entity"
+                                    (click)="openDeleteDialog(entity.id, entity.name); $event.stopPropagation()">
+                                    delete
+                                </span>
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+
+                        <ng-container *ngIf="entity.children && entity.children.length > 0">
+                            <ng-container *ngFor="let child of entity.children">
+                                <ng-container *ngTemplateOutlet="entityTemplate; 
+                                        context:{ 
+                                            entity: child,
+                                            panelTitleClass: 'text-dark',
+                                            expansionPanelClass : 'border',
+                                            expanded: 'false',
+                                            allowUpdateDelete: true
+                                        }">
+                                </ng-container>
+                            </ng-container>
+                        </ng-container>
+
+                    </mat-expansion-panel>
+                </ng-template>
+                <!-- /template for recursive entity/ -->
+            </div>
+        </div>
+    </div>
+</div>

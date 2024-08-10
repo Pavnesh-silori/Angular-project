@@ -1,0 +1,30 @@
+<mat-form-field class="matFieldWidth100" [appearance]="materialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+    <mat-label>Select parameter</mat-label>
+
+    <mat-select [formControl]="parameterFC" multiple required>
+        <ng-container *ngIf="parameterM && parameterM.length > 0 && parameterM[0]['id']; else noDataOption">
+            <ngx-mat-select-search [formControl]="paramSearchUtil.filterFC" placeholderLabel="Search by name"
+                noEntriesFoundLabel="No matching name found.">
+            </ngx-mat-select-search>
+            <mat-option [value]="-1" (click)="selectAllParameters()" [hidden]="paramSearchUtil.filterFC.value">
+                Select all
+            </mat-option>
+            <mat-option *ngFor="let parameter of paramSearchUtil.filteredEntities | async" [value]="parameter.paramMetric"
+                (click)="selectedParameters()">
+                {{ parameter.label }}
+            </mat-option>
+        </ng-container>
+        <ng-template #noDataOption>
+            <mat-option disabled>
+                {{ commonConstant.NO_DATA_FOUND }}
+            </mat-option>
+        </ng-template>
+    </mat-select>
+
+    <mat-error *ngIf="!deviceInp">
+        Please select device first
+    </mat-error>
+    <mat-error *ngIf="parameterFC.touched && parameterFC.hasError('required') && deviceInp">
+        {{ FormErrorEnum.REQUIRED }}
+    </mat-error>
+</mat-form-field>

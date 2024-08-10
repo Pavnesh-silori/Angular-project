@@ -1,0 +1,203 @@
+<div
+    [ngClass]="[sidebarType == 'LEFT' ? 'app-sidebar sidebar-shadow ' : 'setting-sidebar setting-drawer-wrapper', toggleSettingDrawer ? 'setting-drawer-open' : '']">
+
+    <div class="app-header__logo separator-bottom" *ngIf="headerLogo">
+        <div (click)="navigateToLandingPage()" class="cursorPointer" *ngIf="!toggleSidebar">
+            <img class="headerProductLogo ms-1"
+                [src]="applicationService.getApplicationLogoWithSideName(applicationKeyID)" alt="Application logo" />
+        </div>
+        <div class="header__pane ms-auto">
+            <button type="button" class="hamburger hamburger--elastic" [ngClass]="{'is-active' : !toggleSidebar}"
+                (click)="toggleSidebarFun();">
+                <span class="hamburger-box"><span class="hamburger-inner"></span></span>
+            </button>
+        </div>
+    </div>
+
+    <div class="drawer-nav-btn" *ngIf="!headerLogo">
+        <button type="button" class="hamburger hamburger--elastic" [ngClass]="{'is-active' : toggleSettingDrawer}"
+            (click)="toggleSettingDrawerFun()">
+            <span class="hamburger-box"><span class="hamburger-inner"></span></span>
+        </button>
+    </div>
+
+    <div class="app-sidebar-content pt-2" [ngClass]="{'drawer-content-wrapper': sidebarType == 'RIGHT'}">
+        <div class="app-sidebar-scroll">
+            <perfect-scrollbar [config]="{wheelPropagation: false}" class="scroll-fix" [scrollIndicators]="true">
+                <div class="v-sidebar-menu">
+                    <div class="vsm-list">
+                        <div *ngIf="sidebarHeaderLabelInp" [ngClass]="{'bottomMargin': sidebarHeaderLabelInp}">
+                            <span class="fw-bold ms-2 fs-4">{{ sidebarHeaderLabelInp }}</span>
+                        </div>
+
+                        <div *ngFor="let menu of sidebarArray">
+                            <ng-container *ngIf="!toggleSidebar; else closedSidebar">
+                                <ng-container *ngIf="!menu.children && !menu.isSidebarHeaderLabel; else childrenView">
+                                    <ng-container *isRenderFeature="menu?.featureKeyID">
+                                        <ng-container *isRenderRBAC="menu?.resourcePermission">
+                                            <div class="vsm-link mb-1"
+                                                [ngClass]="{'mb-3': menu.isBackButton, 'customPadding': !menu?.icon, 'selected': isActiveRoute(menu)}"
+                                                (click)="menu.isBackButton ? backFunc(menu) : onMenuClick(menu)"
+                                                routerLinkActive="active-item"
+                                                [matTooltip]="menu?.label?.length> menuItemCharLength? menu.label: ''"
+                                                matTooltipPosition="left" matTooltipClass="sideBarTooltip">
+                                                <div class="d-flex align-items-center">
+                                                    <span class="material-symbols-outlined vsm-icon icon me-3">
+                                                        {{ menu?.icon }}
+                                                    </span>
+                                                    <span
+                                                        [ngClass]="{'fw-bold fs-4': menu.isSidebarHeaderLabel, 'fw-bold': isActiveRoute(menu)}">
+                                                        {{ menu?.label | dotdotdot: menuItemCharLength }}
+                                                    </span>
+                                                    <span class="material-symbols-outlined showRightArrowOnHover ms-2"
+                                                        *ngIf="menu?.dualMenu">
+                                                        arrow_circle_right
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </ng-container>
+                                    </ng-container>
+                                </ng-container>
+
+                                <ng-template #childrenView>
+                                    <ng-container *ngIf="menu.type == 'ACCORDION'; else openMenuView">
+                                        <ng-container
+                                            *ngTemplateOutlet="accordionTemplate; context: { accordionContent: menu }"></ng-container>
+                                    </ng-container>
+
+                                    <ng-template #openMenuView>
+                                        <div class="openMenuHeader vsm-title mb-2" [ngClass]="{'fw-bold fs-4': menu.isSidebarHeaderLabel}"
+                                            [matTooltip]="menu?.label?.length> titleCharLength? menu.label: ''"
+                                            matTooltipPosition="right" matTooltipClass="sideBarTooltip">
+                                            {{ menu?.label | dotdotdot: titleCharLength }}
+                                        </div>
+                                        <div *ngFor="let openMenuChildren of menu.children">
+                                            <ng-container *isRenderFeature="openMenuChildren?.featureKeyID">
+                                                <ng-container *isRenderRBAC="openMenuChildren?.resourcePermission">
+                                                    <a class="vsm-link mb-1"
+                                                        [ngClass]="{'selected': isActiveRoute(openMenuChildren)}"
+                                                        routerLinkActive="active-item"
+                                                        (click)="navigate(openMenuChildren)"
+                                                        [matTooltip]="openMenuChildren?.label?.length> menuItemCharLength? openMenuChildren.label: ''"
+                                                        matTooltipPosition="left" matTooltipClass="sideBarTooltip">
+                                                        <div class="d-flex align-items-center">
+                                                            <span class="material-symbols-outlined icon ms-3">
+                                                                {{ openMenuChildren?.icon }}
+                                                            </span>
+                                                            <span class="ms-3"
+                                                                [ngClass]="{'fw-bold': isActiveRoute(openMenuChildren)}">
+                                                                {{ openMenuChildren?.label | dotdotdot: menuItemCharLength }}
+                                                            </span>
+                                                        </div>
+                                                    </a>
+                                                </ng-container>
+                                            </ng-container>
+                                        </div>
+                                    </ng-template>
+
+                                </ng-template>
+                            </ng-container>
+
+                            <ng-template #closedSidebar>
+                                <div *ngIf="!menu.children && !menu.isSidebarHeaderLabel">
+                                    <ng-container
+                                        *ngTemplateOutlet="closedSidebarTemplate; context: { menuItem: menu }"></ng-container>
+                                </div>
+                                <ng-container *ngFor="let child of menu.children">
+                                    <ng-container *ngIf="!child.subLabel">
+                                        <ng-container
+                                            *ngTemplateOutlet="closedSidebarTemplate; context: { menuItem: child }"></ng-container>
+                                    </ng-container>
+                                </ng-container>
+                            </ng-template>
+
+                        </div>
+                    </div>
+                </div>
+            </perfect-scrollbar>
+        </div>
+    </div>
+
+    <div class="app-header__logo separator-top" *ngIf="footerLogo">
+        <img class="tscLogoWithName" [ngClass]="{'d-none': toggleSidebar}"
+            src="../assets/images/application-logo/tsc-with-name.png" />
+        <img class="tscLogoWithoutName" [ngClass]="{'d-none': !toggleSidebar}"
+            src="../assets/images/application-logo/tsc-without-name.png" />
+    </div>
+</div>
+
+<div class="setting-drawer-overlay" (click)="toggleSettingDrawerFun()"></div>
+
+<ng-template #accordionTemplate let-accordionContent="accordionContent">
+    <ngb-accordion [destroyOnHide]="true" #acc="ngbAccordion" [activeIds]="activeID">
+        <ngb-panel [id]="accordionContent.label">
+
+            <ng-template ngbPanelHeader>
+                <button ngbPanelToggle routerLinkActive="active-item" class="vsm-link"
+                    [ngClass]="{'customPadding': !accordionContent?.icon, 'selected': isActiveRoute(accordionContent)}"
+                    [matTooltip]="accordionContent?.label?.length> titleCharLength? accordionContent.label: ''"
+                    matTooltipPosition="left" matTooltipClass="sideBarTooltip">
+                    <div class="d-flex align-items-center">
+                        <span class="material-symbols-outlined icon me-3">{{ accordionContent?.icon }}</span>
+                        <span class="fw-normal">{{ accordionContent?.label | dotdotdot: titleCharLength }}</span>
+                    </div>
+                    <i class="vsm-arrow"></i>
+                </button>
+            </ng-template>
+
+            <ng-template ngbPanelContent>
+                <div class="vsm-dropdown">
+                    <div class="vsm-list">
+                        <ng-container *ngFor="let submenuItem of accordionContent?.children">
+
+                            <ng-container *ngIf="!submenuItem.subLabel; else subMenuSubHeader">
+                                <ng-container *isRenderFeature="submenuItem?.featureKeyID">
+                                    <ng-container *isRenderRBAC="submenuItem?.resourcePermission">
+                                        <a class="vsm-link mb-1 ms-3"
+                                            [ngClass]="{'selected': isActiveRoute(submenuItem)}"
+                                            routerLinkActive="active-item"
+                                            (click)="changeAccordionState(accordionContent); navigate(submenuItem)"
+                                            [matTooltip]="submenuItem?.label?.length> menuItemCharLength? submenuItem.label: ''"
+                                            matTooltipPosition="left" matTooltipClass="sideBarTooltip">
+                                            <div class="d-flex align-items-center">
+                                                <span class="material-symbols-outlined icon me-3"> {{ submenuItem?.icon
+                                                    }}
+                                                </span>
+                                                <span [ngClass]="{'fw-bold': isActiveRoute(openMenuChildren)}"> {{
+                                                    submenuItem?.label | dotdotdot: menuItemCharLength}} </span>
+                                            </div>
+                                        </a>
+                                    </ng-container>
+                                </ng-container>
+                            </ng-container>
+
+                            <ng-template #subMenuSubHeader>
+                                <div class="ms-4 text-secondary fw-bold mb-2"
+                                    [matTooltip]="submenuItem?.label?.length> titleCharLength? submenuItem.label: ''"
+                                    matTooltipPosition="left" matTooltipClass="sideBarTooltip"> {{ submenuItem.subLabel
+                                    | dotdotdot: titleCharLength}} </div>
+                            </ng-template>
+
+                        </ng-container>
+                    </div>
+                </div>
+            </ng-template>
+        </ngb-panel>
+    </ngb-accordion>
+</ng-template>
+
+<ng-template #closedSidebarTemplate let-menuItem="menuItem">
+    <ng-container *isRenderFeature="menuItem?.featureKeyID">
+        <ng-container *isRenderRBAC="menuItem?.resourcePermission">
+            <a class="vsm-link mb-1 closedSideBarIconPadding" [ngClass]="{'selected': isActiveRoute(menuItem)}"
+                routerLinkActive="active-item"
+                (click)="menuItem.isBackButton ? backFunc(menuItem) : onMenuClick(menuItem); navigate(menuItem)"
+                [matTooltip]="menuItem?.label" matTooltipPosition="left" matTooltipClass="sideBarTooltip">
+                <div class="d-flex align-items-center">
+                    <span class="material-symbols-outlined vsm-icon icon me-3"> {{ menuItem?.icon }}
+                    </span>
+                </div>
+            </a>
+        </ng-container>
+    </ng-container>
+</ng-template>

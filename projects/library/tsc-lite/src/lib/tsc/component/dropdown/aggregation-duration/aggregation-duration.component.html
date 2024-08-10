@@ -1,0 +1,11 @@
+<mat-form-field class="matFieldWidth100" [appearance]="materialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+    <mat-label>Select aggregation duration</mat-label>
+    <mat-select (selectionChange)="onChange($event.value)" [formControl]="aggDurationFC" required>
+        <mat-option *ngFor="let duration of listConstant.AGGREGATION_DURATION" [value]="duration.value">
+            {{ duration.label }}
+        </mat-option>
+    </mat-select>
+    <mat-error *ngIf="aggDurationFC.touched && aggDurationFC.hasError('required')">
+        {{ FormErrorEnum.REQUIRED }}
+    </mat-error>
+</mat-form-field>

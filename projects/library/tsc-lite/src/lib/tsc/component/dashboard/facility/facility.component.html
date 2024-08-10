@@ -1,0 +1,149 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Facility Dashboard</div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="row">
+            <ng-container *ngIf="entityTypeLoader; else showEntityType">
+                <ng-container *ngTemplateOutlet="showLoader; context: { count: 1 }"></ng-container>
+            </ng-container>
+
+            <ng-template #showEntityType>
+                <div class="col-sm-3">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="materialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label>Select entity type</mat-label>
+                        <mat-select (selectionChange)="entityTypeChange($event.value)" [formControl]="entityTypeFC"
+                            required>
+                            <ng-container *ngIf="entityTypeM && entityTypeM.length > 0 && entityTypeM?.[0]?.type; else noDataFound">
+                                <mat-option>
+                                    <ngx-mat-select-search [formControl]="entityTypeSearchUtil.filterFC"
+                                        placeholderLabel="Search by name" noEntriesFoundLabel="No matching name found.">
+                                    </ngx-mat-select-search>
+                                </mat-option>
+                                <mat-option *ngFor="let type of entityTypeSearchUtil.filteredEntities | async"
+                                    [value]="type.type">
+                                    {{ type.type | titlecase }}
+                                </mat-option>
+                            </ng-container>
+                            <ng-template #noDataFound>
+                                <mat-option disabled>
+                                    {{ commonConstant.NO_DATA_FOUND }}
+                                </mat-option>
+                            </ng-template>
+                        </mat-select>
+                        <mat-error *ngIf="entityTypeFC.touched && entityTypeFC.hasError('required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </ng-template>
+        </div>
+
+        <div class="row mt-2" *ngIf="facilityDataLoader">
+            <ng-container *ngTemplateOutlet="showLoader; context: { count: 3 }"></ng-container>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <lib-message-alert *ngIf="alertObj.showAlert" [labelInp]="alertObj.alertLabel"
+                    [contentInp]="alertObj.alertContent" [messageAlertTypeInp]="alertObj.messageAlertType"
+                    [messageAlertIconInp]="alertObj.messageAlertIcon">
+                </lib-message-alert>
+            </div>
+        </div>
+
+        <div class="row mt-2" *ngIf="orgRecentDataM.length > 0 && orgRecentDataM[0].orgID != null">
+            <div class="col-sm-12 mb-3" *ngFor="let recentRes of orgRecentDataM">
+                <mat-card class="cardOverwrite border">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <div class="d-flex align-items-center">
+                                <span class="cardTitle me-2">{{ recentRes.entityName }}</span>
+                                <span class="badge rounded-pill info">
+                                    {{ recentRes.entityType }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 text-end" *ngIf="recentRes.entityStatusFlag">
+                            <a class="text-primary cursorPointer" matTooltip="Entity consumption"
+                                matTooltipPosition="below"
+                                (click)="showEntityConsumption(recentRes.entityID)">
+                                <span class="material-symbols-outlined fs-4 fw-bold">monitoring</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12" *ngFor="let deviceRes of recentRes.deviceData">
+                            <div class="d-flex align-items-center">
+                                <span class="material-symbols-outlined me-1"
+                                    [ngClass]="{'text-success': deviceRes.status == 'LIVE', 'text-secondary': deviceRes.status == 'OFFLINE' || deviceRes.status == 'NO_DATA'}">
+                                    devices
+                                </span>
+                                {{ deviceRes.name }}
+                            </div>
+
+                            <div class="row mt-2">
+                                <div class="col-sm-4 mb-3" *ngFor="let paramRes of deviceRes.paramData">
+                                    <mat-card class="cardOverwrite cardBackgroundColor">
+                                            <ng-container *ngTemplateOutlet="parameterData; context: {
+                                                duration: last48HrsMeterData[deviceRes.id]?.[paramRes.name]?.data?.date ? dateService.getRelativeTimeAgoLabel(last48HrsMeterData[deviceRes.id][paramRes.name]?.data?.date, timezone) : dateService.getRelativeTimeAgoLabel(paramRes?.data?.date, timezone),
+                                                value: last48HrsMeterData[deviceRes.id]?.[paramRes.name]?.data?.value != null ? last48HrsMeterData[deviceRes.id][paramRes.name]?.data?.value : paramRes?.data?.value,
+                                                unit: paramRes?.unit,
+                                                label: paramRes?.label,
+                                                entityID: recentRes?.entityID,
+                                                deviceID: deviceRes?.id,
+                                                paramName: paramRes?.name,
+                                                paramStatus: paramRes?.status
+                                            }"></ng-container>
+                                    </mat-card>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #parameterData let-duration="duration" let-label="label" let-value="value" let-unit="unit"
+    let-entityID="entityID" let-deviceID="deviceID" let-paramName="paramName" let-paramStatus="paramStatus">
+    <div class="row">
+        <div class="col-sm-6 textDurationWithAgoTime">
+            {{ duration }}
+        </div>
+        <div class="col-sm-6 text-end">
+            <a *ngIf="paramStatus == 'OFFLINE'" class="text-secondary cursorPointer me-2"
+                matTooltip="Currently parameter is offline, click here to see data of last 48 hrs." matTooltipPosition="below"
+                (click)="getLast48HrsMeterData(deviceID, paramName)">
+                <span class="material-symbols-outlined fs-5 fw-bold">devices</span>
+            </a>
+
+            <a class="text-primary cursorPointer" matTooltip="Trend" matTooltipPosition="below"
+                (click)="showTrend(paramName, deviceID, entityID)">
+                <span class="material-symbols-outlined fs-5 fw-bold">trending_up</span>
+            </a>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-sm-12 text-center">
+            <span class="fs-1 fw-bold text-primary">{{ value ? value : commonConstant.HYPHEN }}</span>
+            <span class="text-secondary fw-bold"> {{ value ? unit : '' }} </span>
+        </div>
+    </div>
+    <div class="row mt-4 mb-4">
+        <div class="col-sm-12 fs-5 text-center">
+            {{ label }}
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #showLoader let-count="count">
+    <lib-skeleton-loader [count]="count" [appearance]="''"
+        [theme]="{ 'border-radius': '16px', height: '40px', 'background-color': 'rgb(230 232 235)' }"></lib-skeleton-loader>
+</ng-template>

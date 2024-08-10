@@ -1,0 +1,7 @@
+{
+  "$schema": "../../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../../library/generate-otp",
+  "lib": {
+    "entryFile": "src/public-api.ts"
+  }
+}

@@ -1,0 +1,83 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Layout</div>
+        </div>
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <lib-search-bar-one class="me-3" #searchBar searchBy="name" (emitSearch)="searchFn($event)">
+                </lib-search-bar-one>
+                <a class="btn btn-sm btn-success btnBase" matRipple (click)="openCreateUpdateLayoutDialog('create', null)">
+                    <fa-icon [icon]="faPlus"></fa-icon>&nbsp; Layout
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <button #refreshBtn class="d-none"></button>
+
+    <table mat-table [dataSource]="dataSource" #sort="matSort" matSort matSortActive="id" matSortDirection="asc"
+        matSortDisableClear>
+
+        <ng-container matColumnDef="id">
+            <th class="columnWidth1 px-3" mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+                ID
+            </th>
+            <td class="columnWidth1" mat-cell *matCellDef="let row" (click)="navigateToViewPage(row['id'])">
+                {{ row['id'] }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+            <th class="columnWidth2 px-3" mat-header-cell *matHeaderCellDef> Name </th>
+            <td class="columnWidth2 px-3" mat-cell *matCellDef="let row"
+                [matTooltip]="row?.['name']?.length>24? row['name']: ''" matTooltipPosition="above"
+                matTooltipClass="nameTooltip" (click)="navigateToViewPage(row['id'])">
+                {{ row?.['name'] | dotdotdot:24 }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+            <th class="columnWidth2 px-3" mat-header-cell *matHeaderCellDef> Description </th>
+            <td class="columnWidth2 px-3" mat-cell *matCellDef="let row"
+                [matTooltip]="row?.['description']?.length>24? row['description']: ''" matTooltipPosition="above"
+                matTooltipClass="nameTooltip" (click)="navigateToViewPage(row['id'])">
+                {{ row?.['description'] | dotdotdot:24 }}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="option">
+            <th class="columnWidth3" mat-header-cell *matHeaderCellDef> Action </th>
+            <td class="columnWidth3 text-center" mat-cell *matCellDef="let row">
+                <div class="d-flex align-items-center">
+                    <div class="btn-group" ngbDropdown placement="left">
+                        <button type="button" ngbDropdownToggle class="dropdown-after dropdownAfter btn">
+                            <fa-icon [icon]="faEllipsisV"></fa-icon>
+                        </button>
+                        <div ngbDropdownMenu>
+                            <button class="dropdown-item" (click)="openCreateUpdateLayoutDialog('update', row.id)">
+                                {{ ButtonLabelEnum.UPDATE_BTN_LABEL }}
+                            </button>
+                            <!-- <button class="btn btn-outline-danger rounded-0 dropdown-item" (click)="openDeleteLayoutDialog(row.id, row.name)">
+                                {{ ButtonLabelEnum.DELETE_BTN_LABEL }}
+                            </button> -->
+                        </div>
+                    </div>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumn"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumn;" class="data-row"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumn.length">
+                {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+            </td>
+        </tr>
+    </table>
+
+    <mat-paginator #paginator class="roundedBorder" showFirstLastButtons [length]="resultLength"
+        [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE" [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION">
+    </mat-paginator>
+</div>

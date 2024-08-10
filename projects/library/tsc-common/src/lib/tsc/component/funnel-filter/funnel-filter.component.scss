@@ -1,0 +1,14 @@
+.funnelFilterDD {
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+.dropdownFooter {
+    position: sticky;
+    bottom: 0;
+    background-color: white; 
+    padding: 8px;
+    z-index: 1000;
+}
+

@@ -1,0 +1,14 @@
+{
+    "metaData": [
+        {
+            "name": "all",
+            "value": "27.18",
+            "unit": {
+                "code": "kWh"
+            }
+        }
+    ],
+    "showDataView": true,
+    "showRestore": true,
+    "showDownloadImage": true
+}

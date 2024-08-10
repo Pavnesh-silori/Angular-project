@@ -1,0 +1,59 @@
+<mat-form-field *ngIf="dropdownType == dropdownTypeEnum.SINGLE_DROPDOWN" class="matFieldWidth100"
+    [appearance]="materialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+    <mat-label>Select device</mat-label>
+    <mat-select (selectionChange)="onChange($event.value)" [formControl]="deviceFC" required>
+        <ng-container *ngIf="deviceM && deviceM.length > 0 && deviceM[0]['id']; else noDeviceFound">
+            <mat-option>
+                <ngx-mat-select-search [formControl]="deviceSearchUtil.filterFC" placeholderLabel="Search by name"
+                    noEntriesFoundLabel="No matching name found.">
+                </ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let device of deviceSearchUtil.filteredEntities | async" [value]="device.id">
+                {{ device.name }}
+            </mat-option>
+        </ng-container>
+        <ng-template #noDeviceFound>
+            <mat-option disabled>
+                {{ commonConstant.NO_DATA_FOUND }}
+            </mat-option>
+        </ng-template>
+    </mat-select>
+    <mat-error *ngIf="!entityInp">
+        Please select entity first
+    </mat-error>
+    <mat-error *ngIf="deviceFC.touched && deviceFC.hasError('required') && entityInp">
+        {{ FormErrorEnum.REQUIRED }}
+    </mat-error>
+</mat-form-field>
+
+<mat-form-field *ngIf="dropdownType == dropdownTypeEnum.MULTIPLE_DROPDOWN" class="matFieldWidth100"
+    [appearance]="materialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+    <mat-label>Select device</mat-label>
+
+    <mat-select [formControl]="multipleDeviceFC" multiple required>
+        <ng-container *ngIf="deviceM && deviceM.length > 0 && deviceM[0]['id']; else noDataOption">
+            <ngx-mat-select-search [formControl]="deviceSearchUtil.filterFC" placeholderLabel="Search by name"
+                noEntriesFoundLabel="No matching name found.">
+            </ngx-mat-select-search>
+            <mat-option [value]="-1" (click)="selectAllDevices()" [hidden]="deviceSearchUtil.filterFC.value">
+                Select all
+            </mat-option>
+            <mat-option *ngFor="let device of deviceSearchUtil.filteredEntities | async" [value]="device.id"
+                (click)="selectedDevices()">
+                {{ device.name }}
+            </mat-option>
+        </ng-container>
+        <ng-template #noDataOption>
+            <mat-option disabled>
+                {{ commonConstant.NO_DATA_FOUND }}
+            </mat-option>
+        </ng-template>
+    </mat-select>
+
+    <mat-error *ngIf="!entityInp">
+        Please select entity first
+    </mat-error>
+    <mat-error *ngIf="multipleDeviceFC.touched && multipleDeviceFC.hasError('required') && entityInp">
+        {{ FormErrorEnum.REQUIRED }}
+    </mat-error>
+</mat-form-field>

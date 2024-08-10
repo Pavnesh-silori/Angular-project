@@ -1,0 +1,68 @@
+<div class="header-dots">
+    <div class="btn-group" ngbDropdown placement="bottom">
+        <button type="button" class="btn btn-link text-secondary p-0" ngbDropdownToggle>
+            <img class="rounded-circle border profileImageHeaderView headerIcon mb-1"
+                [src]="userM.profileImgUrl || defaultImage(userM)" alt="profile image">
+        </button>
+        <div class="dropdown-menu-xl mt-3 pt-4 pb-3 userDrawerPositioning" ngbDropdownMenu>
+            <div class="grid-menu grid-menu-xl grid-menu-3col">
+                <div class="row g-1">
+                    <div class="col-sm-12">
+                        <div class="text-center">
+                            <img class="headerImg rounded-circle border"
+                                [src]="userM.profileImgUrl || defaultImage(userM)" alt="profile image" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-1">
+                    <div class="col-sm-12">
+                        <div class="menu-header-content">
+                            <h5 class="menu-header-title headerSection py-3 text-center">
+                                <span class="fs-5">
+                                    Hi, {{ userM.firstName + ' ' +
+                                    tscCommonService.nullToBlank(userM.lastName) }}!
+                                </span>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-1 mb-3">
+                    <div class="col-sm-12">
+                        <div class="text-center">
+                            <span #tooltip="matTooltip" matTooltipPosition="above" matTooltip="User ID">
+                                User ID: {{ userM.id }}
+                            </span><br />
+                            {{ userM.email }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-1 mb-3">
+                    <div class="col-sm-12">
+                        <div class="text-center">
+                            <mat-button-toggle-group class="matBtnFilter">
+                                <mat-button-toggle class="matButtonOnHover">
+                                    <a class="text-dark" href="{{ environment.ACCOUNT_URL }}" target="_blank">
+                                        <div class="d-flex align-items-center">
+                                            <span class="material-symbols-outlined">
+                                                person
+                                            </span>
+                                            <span class="ps-2">My Account</span>
+                                        </div>
+                                    </a>
+                                </mat-button-toggle>
+                                <mat-button-toggle class="btn-outline-danger" (click)="logout();">
+                                    <div class="d-flex align-items-center">
+                                        <span class="material-symbols-outlined">
+                                            power_settings_new
+                                        </span>
+                                        <span class="ps-2">Logout</span>
+                                    </div>
+                                </mat-button-toggle>
+                            </mat-button-toggle-group>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+<div class="btn-group" ngbDropdown>
+    <button type="button" ngbDropdownToggle class="btn btn-sm btn-primary ms-2 dropdownAfter" matRipple
+        [matRippleCentered]="materialConstant.MAT_RIPPLE_CENTER">
+        <div class="d-flex align-items-center">
+            <span class="me-2">
+                Export as
+            </span>
+            <span class="material-symbols-outlined iconSize">
+                arrow_drop_down
+            </span>
+        </div>
+    </button>
+
+    <div ngbDropdownMenu>
+        <button *ngFor="let type of listConstant.DOWNLOAD_TYPE" class="dropdown-item" [hidden]="excludeFileType == type.value"
+            (click)="onChange(type.value)">
+            <div class="d-flex align-items-center">
+                <span class="material-symbols-outlined me-2 fs-5" [ngSwitch]="type.value">
+                    <span *ngSwitchCase="fileTypeEnum.PDF" class="material-symbols-outlined pdfColor">
+                        picture_as_pdf
+                    </span>
+                    <span *ngSwitchCase="fileTypeEnum.CSV" class="material-symbols-outlined csvXlsxColor">
+                        csv
+                    </span>
+                    <span *ngSwitchCase="fileTypeEnum.XLSX" class="material-symbols-outlined csvXlsxColor">
+                        description
+                    </span>
+                </span>
+                <span>
+                    {{ type.label }}
+                </span>
+            </div>
+        </button>
+    </div>
+</div>

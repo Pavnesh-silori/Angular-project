@@ -1,0 +1,82 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">By Entity</div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-3">
+                <lib-date-input #customDateInput (emitFilter)="dateInpChange()" [materialFieldWidthInp]="true"
+                    [materialFormFieldAppearanceInp]="materialFormFieldAppearance.FORM_FIELD_APPEARANCE" [isMandatoryFieldInp]="true"
+                    [dateInputTypeInp]="dateInputTypeEnum.CUSTOM_INPUT" [dateTypeInp]="dateTypeEnum.EXCLUSIVE"
+                    [showDefaultDurationInp]="true" [showCdrRangeLabelInp]="true" [labelInp]="'Select date'" [timezoneInp]="timezone"
+                    [rangeInp]="customRangeConstant" [showTimeInCDRInp]="true" [showRangeInp]="true"
+                    [cdrFormatInp]="'YYYY-MM-DD HH:mm:ss'"></lib-date-input>
+            </div>
+
+            <div class="col-sm-3">
+                <lib-aggregation-duration #aggDurationInput (emitFilter)="aggDurationInpChange()"></lib-aggregation-duration>
+            </div>
+            
+            <div class="col-sm-3">
+                <lib-entity-type #entityTypeInput (emitFilter)="entityTypeInpChange()"></lib-entity-type>
+            </div>
+
+            <div class="col-sm-3">
+                <button class="btn btn-link selectEntityText" [ngClass]="{'mt-2': !selectEntityType || (isViewData && entityFC.value.length == 0)}" type="button"
+                    (click)="openEntityDialog()">
+                    Select entity *
+                </button>
+                <span class="textMatError" *ngIf="selectEntityType">
+                    <br />
+                    Please select entity type first
+                </span>
+                <span class="ms-2 textMatError" *ngIf="!selectEntityType && isViewData && entityFC.value.length == 0">
+                    <br />
+                    Select entity
+                </span>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="float-end">
+                    <button class="btn btn-sm btn-primary" type="button" (click)="viewEntityParameterData()" matRipple
+                        [matRippleCentered]="materialConstant.MAT_RIPPLE_CENTER">
+                        {{ buttonLabelEnum.READ_BTN_LABEL }}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-2">
+            <div class="col-sm-12">
+                <lib-message-alert *ngIf="alertObj.showAlert" [labelInp]="alertObj.alertLabel"
+                    [contentInp]="alertObj.alertContent" [messageAlertTypeInp]="alertObj.messageAlertType"
+                    [messageAlertIconInp]="alertObj.messageAlertIcon">
+                </lib-message-alert>
+            </div>
+        </div>
+
+        <div class="row mt-2">
+            <ng-container *ngIf="showLoader; else dataTemplate">
+                <lib-skeleton-loader [count]="3" [appearance]="''"
+                    [theme]="{ 'border-radius': '16px', height: '40px', 'background-color': 'rgb(230 232 235)' }"></lib-skeleton-loader>
+            </ng-container>
+
+            <ng-template #dataTemplate>
+                <div class="row" *ngIf="chartData.length > 0">
+                    <div class="col-sm-6" *ngFor="let data of chartData">
+                        <mat-card class="cardOverwrite cardBackgroundColor mb-3">
+                            <lib-basic-area-line-bar [chartTypeInp]="chartType" [chartTitleInp]="data.chartTitle"
+                                [viewStateInp]="viewStateFlag" [dataInp]="data">
+                            </lib-basic-area-line-bar>
+                        </mat-card>
+                    </div>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+</div>

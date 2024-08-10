@@ -1,0 +1,191 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Entity Dashboard</div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="row">
+            <ng-container *ngIf="entityTypeLoader; else showEntityType">
+                <ng-container *ngTemplateOutlet="showLoader; context: { count: 1 }"></ng-container>
+            </ng-container>
+
+            <ng-template #showEntityType>
+                <div class="col-sm-3">
+                    <mat-form-field class="matFieldWidth100" [appearance]="materialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label>Select entity type</mat-label>
+                        <mat-select (selectionChange)="entityTypeChange($event.value)" [formControl]="entityTypeFC" required>
+                            <ng-container *ngIf="entityTypeM && entityTypeM.length > 0 && entityTypeM?.[0]?.type; else noDataFound">
+                                <mat-option>
+                                    <ngx-mat-select-search [formControl]="entityTypeSearchUtil.filterFC"
+                                        placeholderLabel="Search by name" noEntriesFoundLabel="No matching name found.">
+                                    </ngx-mat-select-search>
+                                </mat-option>
+                                <mat-option *ngFor="let type of entityTypeSearchUtil.filteredEntities | async"
+                                    [value]="type.type">
+                                    {{ type.type | titlecase }}
+                                </mat-option>
+                            </ng-container>
+                            <ng-template #noDataFound>
+                                <mat-option disabled>
+                                    {{ commonConstant.NO_DATA_FOUND }}
+                                </mat-option>
+                            </ng-template>
+                        </mat-select>
+                        <mat-error *ngIf="entityTypeFC.touched && entityTypeFC.hasError('required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </ng-template>
+        </div>
+
+        <div class="row mt-2">
+            <div class="col-sm-6">
+                <mat-accordion>
+                    <mat-expansion-panel class="matAccordion" [expanded]="isAccordionOpen" (opened)="openAccordion()"
+                        (closed)="closeAccordion()">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                <div class="cardTitle">
+                                    Select entity
+                                </div>
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <lib-search-bar-two class="float-end me-3" #searchBar searchBy="name"
+                                    (emitSearch)="searchFn($event)">
+                                </lib-search-bar-two>
+                            </div>
+                        </div>
+                        
+                        <perfect-scrollbar class="scrollHeight" [config]="{useBothWheelAxes: true, suppressScrollX: false, suppressScrollY: false}" #scrollContainer>
+                            <ng-container *ngIf="entityDeviceLoader; else entityDeviceView">
+                                <div class="mt-2">
+                                    <ng-container *ngTemplateOutlet="showLoader; context: { count: 3 }"></ng-container>
+                                </div>
+                            </ng-container>
+                            <ng-template #entityDeviceView>
+                                <mat-radio-group [formControl]="entityFC" (change)="onEntityDeviceSelection()">
+                                    <div *ngFor="let entity of filteredEntityDeviceM">
+                                        <ng-container *ngTemplateOutlet="entityTemplate; context:{ $implicit: entity }"></ng-container>
+                                    </div>
+
+                                    <ng-template #entityTemplate let-entity>
+                                        <div class="ms-3 mt-2">
+                                            <ng-container *ngIf="isDeviceAttached(entity); else entityView">
+                                                <mat-radio-button class="radioBtnLabel me-2" [value]="entity.id">
+                                                    <span class="badge rounded-pill" [ngClass]="{'facility': entity.type == 'FACILITY', 'entity': entity.type == 'ENTITY', 'device': entity.type == 'DEVICE'}"
+                                                        [matTooltip]="getTooltipLabel(entity)" matTooltipPosition="above">
+                                                        <div class="d-flex align-items-center">
+                                                            <span class="material-symbols-outlined me-2" *ngIf="entity.type == 'FACILITY'">factory</span>
+                                                            <span class="material-symbols-outlined me-2" *ngIf="entity.type == 'ENTITY'">domain</span>
+                                                            <span class="material-symbols-outlined me-2" *ngIf="entity.type == 'DEVICE'">devices</span>
+                                                            {{ entity.name }}
+                                                        </div>
+                                                    </span>
+                                                </mat-radio-button>
+                                            </ng-container>
+
+                                            <ng-template #entityView>
+                                                <span class="badge rounded-pill" [ngClass]="{'facility': entity.type == 'FACILITY', 'entity': entity.type == 'ENTITY', 'device': entity.type == 'DEVICE'}"
+                                                    [matTooltip]="getTooltipLabel(entity)" matTooltipPosition="above">
+                                                    <div class="d-flex align-items-center">
+                                                        <span class="material-symbols-outlined me-2" *ngIf="entity.type == 'FACILITY'">factory</span>
+                                                        <span class="material-symbols-outlined me-2" *ngIf="entity.type == 'ENTITY'">domain</span>
+                                                        <span class="material-symbols-outlined me-2" *ngIf="entity.type == 'DEVICE'">devices</span>
+                                                        {{ entity.name }}
+                                                    </div>
+                                                </span>
+                                            </ng-template>
+                                        </div>
+
+                                        <div *ngIf="entity.children && entity.children.length > 0" class="ms-3 mt-2">
+                                            <ng-container *ngFor="let child of entity.children">
+                                                <ng-container
+                                                    *ngTemplateOutlet="entityTemplate; context:{ $implicit: child }"></ng-container>
+                                            </ng-container>
+                                        </div>
+                                    </ng-template>
+                                </mat-radio-group>
+                                
+                            </ng-template>
+                        </perfect-scrollbar>
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </div>
+
+            <div class="col-sm-6">
+                <mat-card class="cardOverwrite cardBackgroundColor cardHeight2">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="d-flex align-items-center">
+                                <span class="material-symbols-outlined me-3">
+                                    devices
+                                </span>
+                                <span class="cardTitle mt-1">
+                                    Real time data
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <perfect-scrollbar class="scrollHeight">
+                        <ng-container *ngIf="realTimeDeviceDataLoader; else realTimeDeviceDataView">
+                            <ng-container *ngTemplateOutlet="showLoader; context: { count: 3 }"></ng-container>
+                        </ng-container>
+
+                        <ng-template #realTimeDeviceDataView>
+                            <ng-container *ngFor="let realTimeData of orgRecentDataM;">
+                                <ng-container *ngTemplateOutlet="parameterSummary; context: {
+                                    device: realTimeData?.deviceData,
+                                    entityID: realTimeData?.entityID
+                                }"></ng-container>
+                            </ng-container>
+                        </ng-template>
+                    </perfect-scrollbar>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #parameterSummary let-device="device" let-entityID="entityID">
+    <ng-container *ngFor="let deviceData of device;">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="d-flex align-items-center fw-bold">
+                    <span class="material-symbols-outlined me-1"
+                        [ngClass]="{'text-success': deviceData.status == 'LIVE', 'text-secondary': deviceData.status == 'OFFLINE' || deviceData.status == 'NO_DATA'}">
+                        devices
+                    </span>
+                    {{ deviceData.name ? deviceData.name : commonConstant.HYPHEN }}
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2" *ngFor="let parameterData of deviceData.paramData;">
+            <div class="col-sm-4 text-start text-secondary">
+                {{ parameterData.label ? parameterData.label : commonConstant.HYPHEN }}
+            </div>
+            <div class="col-sm-4 text-center">
+                <a class="text-primary cursorPointer fw-bold" matTooltip="Trend" matTooltipPosition="above"
+                    (click)="showTrend(parameterData?.name, entityID, deviceData?.id)">
+                    <span> {{ parameterData?.data?.value ? parameterData?.data?.value : commonConstant.HYPHEN }} </span>
+                    <span> {{ parameterData?.data?.value ? parameterData?.unit : '' }} </span>
+                </a>
+            </div>
+            <div class="col-sm-4 text-start text-secondary">
+                {{ dateService.getRelativeTimeAgoLabel(parameterData?.data?.date, timezone) }}
+            </div>
+        </div>
+        <hr>
+    </ng-container>
+</ng-template>
+
+<ng-template #showLoader let-count="count">
+    <lib-skeleton-loader [count]="count" [appearance]="''"
+        [theme]="{ 'border-radius': '16px', height: '40px', 'background-color': 'rgb(230 232 235)' }"></lib-skeleton-loader>
+</ng-template>

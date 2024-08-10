@@ -1,0 +1,90 @@
+.matAccordion {
+    box-shadow: none !important;
+    background: whitesmoke;
+    border-radius: 16px !important;
+}
+
+.entityError {
+    font-size: 10.56px;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.userCardHeight {
+    max-height: 200px;
+}
+
+.card {
+    box-shadow: none !important;
+}
+
+.scrollHeight {
+    height: 110px;
+}
+
+.radioBtnField {
+    height: 82px;
+}
+
+.radioBtnGroupLabel {
+    font-size: 16px;
+}
+
+.radioBtnGroupError {
+    font-size: 10.56px;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.radioBtnLabel {
+    color: #686868f3;
+}
+
+.lineHeight {
+    line-height: 1;
+}
+
+.profileImageDropdownView {
+    height: 35px;
+    width: 35px;
+}
+
+.profileImgContainer {
+    width: 35px;
+    min-height: 35px;
+    max-height: auto;
+    float: left;
+    margin: 3px;
+    padding: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profileImg {
+    width: 35px;
+}
+
+/* mat-slide-toggle css overwrite */
+::ng-deep .userContext .mat-slide-toggle.mat-checked .mat-slide-toggle-bar {
+    background-color: rgba(92, 128, 222, 0.54);
+}
+
+::ng-deep .userContext .mat-slide-toggle.mat-checked .mat-slide-toggle-thumb {
+    background-color: #5c80de;
+}
+
+::ng-deep .userContext .mat-slide-toggle .mat-slide-toggle-bar {
+    background-color: rgba(92, 128, 222, 0.54);
+}
+
+::ng-deep .userContext .mat-slide-toggle .mat-slide-toggle-thumb {
+    background-color: #5c80de;
+}
+/* mat-slide-toggle css overwrite */
+  
+.userEmailError {
+    font-size: 75%;
+}
+
+.matOptionNameEmail{
+    line-height: 1.5em !important;
+}

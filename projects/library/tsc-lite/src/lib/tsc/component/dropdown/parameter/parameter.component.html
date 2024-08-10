@@ -1,0 +1,25 @@
+<div class="row">
+    <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+        <mat-label>Select parameter</mat-label>
+        <mat-select (selectionChange)="parameterChange($event.value)" [formControl]="selectedParameterFC" required>
+            <ng-container *ngIf="parameterM && parameterM.length > 0 && parameterM[0]['id']; else noDataFound">
+                <mat-option>
+                    <ngx-mat-select-search [formControl]="parameterSearchUtil.filterFC"
+                        placeholderLabel="Search by name" noEntriesFoundLabel="No matching name found.">
+                    </ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let parameter of parameterSearchUtil.filteredEntities | async" [value]="parameter.id">
+                    {{ parameter.label }}
+                </mat-option>
+            </ng-container>
+            <ng-template #noDataFound>
+                <mat-option disabled>
+                    {{ COMMON_CONSTANT.NO_DATA_FOUND }}
+                </mat-option>
+            </ng-template>
+        </mat-select>
+        <mat-error *ngIf="selectedParameterFC.hasError('required')">
+            {{ FormErrorEnum.REQUIRED }}
+        </mat-error>
+    </mat-form-field>
+</div>

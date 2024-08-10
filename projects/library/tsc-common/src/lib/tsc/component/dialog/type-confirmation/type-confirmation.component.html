@@ -1,0 +1,63 @@
+<ng-container *ngIf="data.type; else deleteTemplate">
+    <div mat-dialog-title class="fw-4 mb-1 d-flex">
+        <div class="col-sm-1">
+            <span class="material-symbols-outlined mr-2 pt-2 ps-3">
+                {{data.icon}}
+            </span>
+        </div>
+
+        <strong class="col-sm-11 ">
+            <div class="pt-1" [innerHTML]="data.header"></div>
+        </strong>
+    </div>
+</ng-container>
+
+<ng-template #deleteTemplate>
+    <div mat-dialog-title class="fw-4 mb-1 text-danger d-flex">
+        <div class="col-sm-1">
+            <span class="material-symbols-outlined mr-2 pt-2 ps-3">
+                {{data.icon}}
+            </span>
+        </div>
+
+        <strong class="col-sm-11 ">
+            <div class="pt-1" [innerHTML]="data.header"></div>
+        </strong>
+    </div>
+</ng-template>
+
+<div mat-dialog-content class="card-body ms-4 mb-2">
+    <div [innerHTML]="data.body"></div><br />
+    <div class="ps-2">
+        <div class="col-sm-6">
+            <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                <mat-label class="formLabel">Please type "{{data.confirmationInput}}" to continue.</mat-label>
+                <input matInput type="text" placeholder=""  (input)="confirmationCheck($event.target.value)">
+            </mat-form-field>
+        </div>
+    </div>
+</div>
+
+<div mat-dialog-footer align="end" class="ms-2 mb-3">
+    <ng-container *ngIf="data.type; else elseBlock">
+        <button class="btn btn-sm btn-secondary float-end ms-2 mb-3 me-1" (click)="fail()" matRipple
+            [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">
+            {{ data.buttonOne }}
+        </button>
+        <button class="btn btn-sm btn-success float-end ms-2 mb-3 me-1" (click)="success()" matRipple
+            [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" [disabled]="!btnFlag">
+            {{ data.buttonTwo }}
+        </button>
+    </ng-container>
+
+    <ng-template #elseBlock>
+        <button class="btn btn-sm btn-secondary float-end ms-2 mb-3 me-1" (click)="fail()" matRipple
+            [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">
+            {{ data.buttonOne }}
+        </button>
+        <button class="btn btn-sm btn-danger float-end ms-2 mb-3 me-1" (click)="success()" matRipple
+            [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" [disabled]="!btnFlag">
+            {{ data.buttonTwo }}
+        </button>
+    </ng-template>
+</div>

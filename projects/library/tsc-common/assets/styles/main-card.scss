@@ -1,0 +1,16 @@
+// variables
+$headerOneHeight: 60px;
+$footerOneHeight: 60px;
+$layoutOneMargin: 40px;
+
+.cardHeightWithoutHF {
+    min-height: calc(100vh - (#{$headerOneHeight} + #{$footerOneHeight} + #{$layoutOneMargin * 2}));
+}
+
+.cardHeightWithHF {
+    min-height: calc(100vh - 168px);
+}
+
+.pageOneDefaultImage {
+    max-height: 350px;
+}

@@ -1,0 +1,7 @@
+<app-loader-one></app-loader-one>
+
+<div [@architectUIAnimation]="o.isActivated ? o.activatedRoute : ''">
+    <router-outlet #o="outlet"></router-outlet>
+</div>
+
+<ngx-loading-bar [color]="'#3f6ad8'"></ngx-loading-bar>

@@ -1,0 +1,79 @@
+<div mat-dialog-title>
+    <strong class="dialogTitle">
+        {{ title }} Entity
+    </strong>
+    <button mat-icon-button mat-dialog-close cdkFocusInitial class="float-end matDialogClose" matTooltip="Close"
+        matTooltipPosition="before">
+        <span class="material-symbols-outlined" [mat-dialog-close]="DialogEnum.CLOSE_DR">
+            close
+        </span>
+    </button>
+</div>
+
+<div class="matDialogContent" mat-dialog-content>
+    <form [formGroup]="entityFG">
+        <div class="row">
+            <div class="col-sm-6">
+                <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Name</mat-label>
+                    <input matInput placeholder="Name" type="text" formControlName="name" required />
+                    <mat-error *ngIf="errorHandling('name', 'required')">
+                        {{ FormErrorEnum.REQUIRED }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="col-sm-6" *ngIf="!isNewEntityTypeSelected">
+                <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label>Select type</mat-label>
+                    <mat-select formControlName="type" required>
+                        <mat-option>
+                            <ngx-mat-select-search [formControl]="entityTypeSearchUtil.filterFC" placeholderLabel="Search by name"
+                                noEntriesFoundLabel="No matching type found.">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option *ngFor="let entity of entityTypeSearchUtil.filteredEntities | async" [value]="entity.type">
+                            {{ entity.type }}
+                        </mat-option>
+
+                        <div class="row m-0 stickyDropdownMenuItem">
+                            <div class="col-sm-12 text-primary cursorPointer" (click)="createNewType()">
+                                Create new type
+                            </div>
+                        </div>
+                    </mat-select>
+                    <mat-error *ngIf="errorHandling('type', 'required')">
+                        {{ FormErrorEnum.REQUIRED }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="col-sm-6" *ngIf="isNewEntityTypeSelected">
+                <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Type</mat-label>
+                    <input matInput placeholder="Type" type="text" formControlName="type" required />
+                    <mat-error *ngIf="errorHandling('type', 'required')">
+                        {{ FormErrorEnum.REQUIRED }}
+                    </mat-error>
+                </mat-form-field>
+
+                <span class="mt-2 text-primary cursorPointer" (click)="isNewEntityTypeSelected = false">
+                    <small>Select type *</small>
+                </span>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div mat-dialog-footer align="end">
+    <div [ngSwitch]="action" class="d-inline">
+        <button *ngSwitchCase="'create'" type="button" class="btn btn-sm btn-success" (click)="addEntity()">
+            {{ ButtonLabelEnum.CREATE_BTN_LABEL }}
+        </button>
+        <button *ngSwitchCase="'update'" type="button" class="btn btn-sm btn-success" [ngClass]="{'disabled': isEqual}"
+            (click)="updateEntity()">
+            {{ ButtonLabelEnum.UPDATE_BTN_LABEL }}
+        </button>
+        <button *ngSwitchDefault class="d-none"></button>
+    </div>
+</div>

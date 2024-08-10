@@ -1,0 +1,19 @@
+.layoutIcon {
+    color: #4d4d4d;
+    font-size: 22px
+}
+
+.dropdownAfter::after {
+    display: none;
+}
+
+.selectedItem {
+    .dropdown-item.active, .dropdown-item:active {
+        color: black;
+        background-color: #e0f3ff;
+    } 
+}
+
+.dropdown-menu .dropdown-item {
+    display: block !important;
+}

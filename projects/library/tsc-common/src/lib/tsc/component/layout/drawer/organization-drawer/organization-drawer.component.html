@@ -1,0 +1,189 @@
+<div class="drawer-wrapper">
+    <div class="drawer-nav-btn">
+        <button type="button" class="hamburger hamburger--elastic" [ngClass]="{'is-active' : toggleOrgDrawer}"
+            (click)="toggleOrgDrawerFun()">
+            <span class="hamburger-box"><span class="hamburger-inner"></span></span>
+        </button>
+    </div>
+    <div class="drawer-content-wrapper">
+        <section class="scrollbar-container">
+            <perfect-scrollbar [autoPropagation]="true">
+                <div class="container mt-5">
+                    <div class="row mt-3" *ngIf="showOrgAndFacility">
+                        <ng-container *ngTemplateOutlet="orgFacilityTemplate; 
+                            context: {
+                                matCardClass: 'org-border-left',
+                                name: organizationM.name,
+                                idLabel: 'Org ID',
+                                id: organizationM.id,
+                                state: organizationM.stateName,
+                                country: organizationM.countryName,
+                                status: organizationM.status,
+                                image: organizationM.logoUrl,
+                                orgFacilityLabel: 'Organization',
+                                orgFacilityLabelClass: 'bg-primary',
+                                type: OrgType.ORGANIZATION
+                            }">
+                        </ng-container>
+                    </div>
+                    <div class="row mt-3">
+                        <ng-container *ngTemplateOutlet="orgFacilityTemplate; 
+                            context: {
+                                matCardClass: 'current-org-border-left',
+                                name: facilityM.name,
+                                idLabel: rootOrgID == currentOrgID ? 'Org ID' : 'Facility ID',
+                                id: facilityM.id,
+                                state: facilityM.stateName,
+                                country: facilityM.countryName,
+                                status: facilityM.status,
+                                image: facilityM.logoUrl,
+                                orgFacilityLabel: rootOrgID == currentOrgID ? 'Current organization' : 'Current facility',
+                                orgFacilityLabelClass: 'bg-success',
+                                type: rootOrgID == currentOrgID ? OrgType.ORGANIZATION : OrgType.SITE
+                            }">
+                        </ng-container>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-sm-6">
+                            <span class="card-title sectionTitle">
+                                <ng-container *ngIf="drawerAccessType == OrgSiteAccessType.SITE; else showOrg;">
+                                    All Facilities
+                                </ng-container>
+                                <ng-template #showOrg>
+                                    All Organizations
+                                </ng-template>
+                            </span>
+                            <span class="badge rounded-pill bg-light text-dark ms-3">{{ orgSiteAccessM ?
+                                orgSiteAccessM.totalCount : COMMON_CONSTANT.HYPHEN }}</span>
+                        </div>
+                        <div class="col-sm-6">
+                            <lib-search-bar-two class="float-end me-3" #searchBar searchBy="name"
+                                (emitSearch)="searchFn($event)">
+                            </lib-search-bar-two>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-sm-12 mb-3" *ngFor="let org of filteredOrgAccessM; let i=index"
+                            (click)="currentOrgID != org.id && orgSwitch(org.id)"
+                            [ngClass]="{'cursorPointer': currentOrgID != org.id}">
+                            <mat-card class="card cardOverwrite"
+                                [ngClass]="{'current-org': currentOrgID == org.id, 'border': currentOrgID != org.id}">
+                                <div class="row">
+                                    <div class="col-sm-8 d-flex flex-column justify-content-center">
+                                        <span class="fw-bold">{{ org.name ? org.name :
+                                            COMMON_CONSTANT.HYPHEN }}</span>
+                                        <div class="row text-secondary">
+                                            <div class="col-sm-4" *ngIf="org.type == OrgType.ORGANIZATION">Org ID:
+                                            </div>
+                                            <div class="col-sm-4" *ngIf="org.type == OrgType.SITE">Facility ID:</div>
+                                            <div class="col-sm-8 fw-bold">{{ org.id }}</div>
+                                        </div>
+                                        <div *ngIf="org.type == OrgType.SITE">
+                                            <div class="row text-secondary">
+                                                <div class="col-sm-4">Org Name:</div>
+                                                <div class="col-sm-8 fw-bold">{{ org.orgName }}</div>
+                                            </div>
+                                            <div class="row text-secondary">
+                                                <div class="col-sm-4">Org ID:</div>
+                                                <div class="col-sm-8 fw-bold">{{ org.orgID }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 d-flex flex-column align-items-center justify-content-center">
+                                        <ng-container *ngIf="org.logoUrl && org.logoUrl != null; else showDefaultIcon;">
+                                            <img class="listOrgView" [src]="org.logoUrl" alt="org-logo" />
+                                        </ng-container>
+                                        <ng-template #showDefaultIcon>
+                                            <ng-container *ngIf="org.type == OrgType.ORGANIZATION">
+                                                <span class="material-symbols-outlined fs-1">
+                                                    corporate_fare
+                                                </span>
+                                            </ng-container>
+                                            <ng-container *ngIf="org.type == OrgType.SITE">
+                                                <span class="material-symbols-outlined fs-1">
+                                                    factory
+                                                </span>
+                                            </ng-container>
+                                        </ng-template>
+                                        <span [ngSwitch]="org.type">
+                                            <span class="badge rounded-pill mt-2"
+                                                [ngClass]="{'bg-success': currentOrgID == org.id, 'bg-secondary': currentOrgID != org.id}"
+                                                *ngSwitchCase="'ORG'">Organization</span>
+                                            <span class="badge rounded-pill mt-2"
+                                                [ngClass]="{'bg-success': currentOrgID == org.id, 'bg-secondary': currentOrgID != org.id}"
+                                                *ngSwitchCase="'SITE'">Facility</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row" *ngIf="org.subscriptionStatus == OrgStatus.INACTIVE_STATUS">
+                                    <div class="col-sm-12">
+                                        <span class="text-danger me-3 fw-bold float-end expiredFontSize">
+                                            Subscription expired
+                                        </span>
+                                    </div>
+                                </div>
+                            </mat-card>
+                        </div>
+                    </div>
+                </div>
+            </perfect-scrollbar>
+        </section>
+    </div>
+</div>
+
+<div class="drawer-overlay" (click)="toggleOrgDrawerFun()"></div>
+
+<ng-template #orgFacilityTemplate let-name="name" let-state="state" let-country="country" let-status="status"
+    let-type="type" let-idLabel="idLabel" let-id="id" let-matCardClass="matCardClass" let-image="image"
+    let-orgFacilityLabel="orgFacilityLabel" let-orgFacilityLabelClass="orgFacilityLabelClass">
+    <div class="col-sm-12">
+        <mat-card class="cardOverwrite cardBackgroundColor" [class]="matCardClass">
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="d-flex flex-column">
+                        <span class="fw-bold">
+                            {{ name ? name : COMMON_CONSTANT.HYPHEN }}
+                        </span>
+                        <div class="row text-secondary">
+                            <div class="col-sm-4">
+                                {{ idLabel }}
+                            </div>
+                            <div class="col-sm-8 fw-bold">
+                                {{ id }}
+                            </div>
+                        </div>
+                        <div class="row text-secondary">
+                            <div class="col-sm-4">Address:</div>
+                            <div class="col-sm-8 fw-bold">{{ state }}, {{ country }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4 text-secondary">Status:</div>
+                            <div class="col-sm-8 fw-bold"
+                                [ngClass]="{'text-success': status == OrgStatus.ACTIVE_STATUS, 'text-danger': status == OrgStatus.INACTIVE_STATUS}">
+                                {{ status | titlecase }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 d-flex flex-column align-items-center justify-content-center">
+                    <ng-container *ngIf="image && image != null; else showIcon;">
+                        <img class="orgViewLogo" [src]="image" alt="org-logo" />
+                    </ng-container>
+                    <ng-template #showIcon>
+                        <ng-container *ngIf="type == OrgType.ORGANIZATION">
+                            <span class="material-symbols-outlined fs-1">
+                                corporate_fare
+                            </span>
+                        </ng-container>
+                        <ng-container *ngIf="type == OrgType.SITE">
+                            <span class="material-symbols-outlined fs-1">
+                                factory
+                            </span>
+                        </ng-container>
+                    </ng-template>
+                    <span class="badge rounded-pill mt-2" [class]="orgFacilityLabelClass">{{ orgFacilityLabel }}</span>
+                </div>
+            </div>
+        </mat-card>
+    </div>
+</ng-template>

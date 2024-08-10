@@ -1,0 +1,21 @@
+.showSubscriptionMessage {
+    margin-bottom: 50px !important;
+}
+
+.subscriptionExpiringMessage {
+    background-color: #b3261e;
+    z-index: 10;
+    position: fixed;
+    height: 50px;
+    width: 100%;
+    // height: $app-header-height;
+    margin: 0;
+    border: none;
+    border-radius: 0;
+}
+
+.btnCloseCustom {
+    font-size: 0.7rem;
+    position: absolute;
+    right: 12px;
+}

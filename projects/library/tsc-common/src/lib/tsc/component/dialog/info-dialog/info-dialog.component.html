@@ -1,0 +1,16 @@
+<h6 mat-dialog-title class="dialogTitle mb-0">
+    <div class="d-flex align-items-center">
+        <strong> {{ title }} </strong>
+    </div>
+</h6>
+
+<mat-dialog-content class="mat-typography">
+    <div [innerHTML]="body"></div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button class="button btn btn-secondary px-4" type="button" mat-dialog-close matRipple
+    [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">
+        Close
+    </button>
+</mat-dialog-actions>

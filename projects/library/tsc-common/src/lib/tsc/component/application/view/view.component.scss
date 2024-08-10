@@ -1,0 +1,59 @@
+.appTile {
+    .celebrateEmoji {
+        max-width: 20px;
+    }
+
+    .appImg {
+        max-width: 70%;
+        height: auto;
+    }
+
+    .appCardOuter {
+        .mat-card {
+            min-height: 70px !important;
+        }
+    }
+
+    .appCardInner {
+        height: 8rem;
+
+        transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+
+        &:hover {
+            box-shadow: 0 1px 20px rgba(0, 0, 0, 0), 0 10px 10px rgba(0, 0, 0, 0.05) !important;
+        }
+    }
+
+    // .appCardInner:hover {
+    //     transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+    //     box-shadow: 0 1px 20px rgba(0, 0, 0, 0), 0 10px 10px rgba(0, 0, 0, .05) !important;
+    // }
+
+    .mat-card-subtitle,
+    .mat-card-content {
+        font-size: 13px;
+    }
+
+    .mat-card-title {
+        font-size: 16px !important;
+        margin: 0px !important;
+        color: #495057;
+    }
+
+    .mat-card-title p {
+        margin-bottom: 0px !important;
+    }
+
+    .mat-card-content {
+        color: #808080;
+    }
+
+    // .mat-card-header-text {
+    //     margin: 0px !important;
+    // }
+
+    .tickIcon {
+        width: 24px;
+        height: 24px;
+    }
+}

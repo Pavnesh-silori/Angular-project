@@ -1,0 +1,132 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">{{ action == FormAction.CREATE ? PageTitleEnum.CREATE :
+                PageTitleEnum.UPDATE }} vehicle
+            </div>
+            <div class="pageSubtitle">
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body" [ngClass]="{ 'vechileCreateUpdateForm' : source == VIEW_TYPE_ENUM.PAGE }">
+        <form [formGroup]="vehicleFG" (ngSubmit)="vechileSubmit()">
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Vehicle number</mat-label>
+                        <input class="formPlaceholder" matInput type="text" placeholder="Vehicle number"
+                            formControlName="vehicleNumber" required />
+                        <mat-error *ngIf="errorHandling('vehicleNumber', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-sm-6">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Vehicle name</mat-label>
+                        <input class="formPlaceholder" matInput type="text" placeholder="Vehicle name"
+                            formControlName="vehicleName" required />
+                        <mat-error *ngIf="errorHandling('vehicleName', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="radioBtnGroupLabel">Select a vehicle type</div>
+                    <mat-radio-group formControlName="vehicleTypeID">
+                        <div class="row mt-1">
+                            <div class="col-sm-6" *ngFor="let data of vehicleTypeM">
+                                <mat-radio-button class="radioBtnLabel" [value]="data.id"
+                                    (change)="onVehicleTypeChange(data)">
+                                    {{ data.name }}
+                                </mat-radio-button>
+                            </div>
+                        </div>
+                    </mat-radio-group>
+                </div>
+            </div>
+
+            <div class="row mt-3" *ngIf="!isIpcc">
+                <div class="col-sm-6">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Select vehicle category
+                        </mat-label>
+                        <mat-select formControlName="vehicleCategoryID" required>
+                            <mat-option *ngFor="let method of vehicleCategory" [value]="method.id">
+                                {{ method.name }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="errorHandling('vehicleCategoryID', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-sm-6">
+                    <mat-form-field *ngIf="isEngineStroke" class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Select engine stroke</mat-label>
+                        <mat-select formControlName="engineStrokeId" required>
+                            <mat-option *ngFor="let data of engineStrokeM" [value]="data.id">
+                                <span class="d-flex justify-content-between">{{ data.name }}
+                                </span>
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="errorHandling('engineStrokeId', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6" *ngIf="!isIpcc">
+                    <lib-date-input class="cursorPointer"  #yearInput (emitFilter)="dateInpChange()" [materialFieldWidthInp]="true"
+                        [materialFormFieldAppearanceInp]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE"
+                        [isMandatoryFieldInp]="true" [dateInputTypeInp]="DateInputTypeEnum.YEAR_INPUT"
+                        [labelInp]="'Vehicle Year'"></lib-date-input>
+                </div>
+
+                <div class="col-sm-6">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Select odometer unit</mat-label>
+                        <mat-select formControlName="odoMeterUnitID" required>
+                            <mat-option *ngFor="let units of unitM" [value]="units.id">
+                                <span class="d-flex justify-content-between">{{ units.name }}
+                                    <span>{{ units.uomCode }} </span></span>
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="errorHandling('odoMeterUnitID', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="float-end">
+                <button class="btn btn-sm btn-secondary me-2" type="button" (click)="cancelButtonClick()">
+                    Cancel
+                </button>
+
+                <button class="btn btn-sm btn-success" [ngClass]="{
+                        'btn-success' : action == FormAction.CREATE,
+                        'btn-primary' : action == FormAction.UPDATE,
+                        'disabled' : action == FormAction.UPDATE && isEqual
+                    }" type="submit">{{ action ==
+                    FormAction.CREATE ? ButtonLabelEnum.CREATE_BTN_LABEL :
+                    ButtonLabelEnum.UPDATE_BTN_LABEL }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,30 @@
+<div class="text-end">
+    <button class="btn btn-success" type="button" *ngIf="showGenreateOtpBtn" (click)="generateOtp()" matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">
+        {{ generateOtpBtnLbl }}
+    </button>
+
+    <div *ngIf="showEnterOtp">
+        <div class="pt-2">
+            <span>Enter a OTP</span>
+            <ng-otp-input (onInputChange)="onOtpChange($event)"
+                [config]="{length:6,inputClass:'dot',allowNumbersOnly:true}">
+            </ng-otp-input>
+
+            <div class="pt-2">
+                <button [disabled]="remainingTime > 0" class="btn ps-1 fw-normal" (click)="resendOtp()"><span
+                        class="cursorPointer btn-link">Resend OTP </span> <span *ngIf="remainingTime > 0"
+                        class="ml-2">in {{
+                        formatTime() }}</span></button>
+            </div>
+        </div>
+
+        <div class="pt-1 sm-3">
+            <button class="btn btn-success" (click)="submitOtp()" matRipple
+                [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">
+                {{ submitBtnLbl }}
+            </button>
+        </div>
+
+    </div>
+</div>

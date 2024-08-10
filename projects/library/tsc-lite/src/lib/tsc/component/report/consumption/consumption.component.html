@@ -1,0 +1,168 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">{{ pageTitle }}</div>
+        </div>
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <mat-slide-toggle (change)="scheduleReport($event.checked)">Schedule report</mat-slide-toggle>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <form [formGroup]="reportFG" (ngSubmit)="reportSubmit()">
+            <div class="row">
+                <div formGroupName="sourceConsumer">
+                    <div class="col-sm-3">
+                        <mat-button-toggle-group class="matBtnFilter" formControlName="type">
+                            <mat-button-toggle [value]="'SOURCE'">Source</mat-button-toggle>
+                            <mat-button-toggle [value]="'CONSUMER'">Consumer</mat-button-toggle>
+                        </mat-button-toggle-group>
+                        <mat-error class="textMatError ms-1"
+                            *ngIf="errorHandling(reportFG, 'sourceConsumer.type', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-sm-3">
+                    <lib-date-input #monthDateInput (emitFilter)="dateInpChange()" [materialFieldWidthInp]="true"
+                        [materialFormFieldAppearanceInp]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE"
+                        [isMandatoryFieldInp]="true" [dateInputTypeInp]="DateInputTypeEnum.MONTH_INPUT"
+                        [dateTypeInp]="DateTypeEnum.EXCLUSIVE" [showDefaultDurationInp]="true"
+                        [labelInp]="'Select date'" [timezoneInp]="timezone"></lib-date-input>
+                </div>
+
+                <div class="col-sm-3">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label>Select aggregation</mat-label>
+                        <mat-select formControlName="interval" required>
+                            <mat-option [value]="'DAILY'">Daily</mat-option>
+                            <mat-option [value]="'MONTHLY'">Monthly</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="errorHandling(reportFG, 'interval', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+
+                <div class="col-sm-3">
+                    <div formGroupName="sourceConsumer">
+                        <mat-form-field class="matFieldWidth100"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label> Select {{ reportFG.get('sourceConsumer.type').value == 'SOURCE' ? 'source' :
+                                'consumer' }} type</mat-label>
+
+                            <mat-select formControlName="keyID" required>
+                                <ng-container
+                                    *ngIf="sourceConsumerType && sourceConsumerType.length > 0 && sourceConsumerType[0]['id']; else noSourceConsumerType">
+                                    <mat-option *ngFor="let type of sourceConsumerType" [value]="type.keyID">
+                                        {{ type.name }}
+                                    </mat-option>
+                                </ng-container>
+
+                                <ng-template #noSourceConsumerType>
+                                    <mat-option disabled>
+                                        {{ COMMON_CONSTANT.NO_DATA_FOUND }}
+                                    </mat-option>
+                                </ng-template>
+                            </mat-select>
+
+                            <mat-error *ngIf="errorHandling(reportFG, 'sourceConsumer.keyID', 'required')">
+                                {{ FormErrorEnum.REQUIRED }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="col-sm-3">
+                    <div formGroupName="params">
+                        <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label>Select consumption parameter</mat-label>
+
+                            <mat-select formControlName="name" required>
+                                <ng-container
+                                    *ngIf="consumptionParamM && consumptionParamM.length > 0 && consumptionParamM[0]['id']; else noConsumptionParamM">
+                                    <mat-option *ngFor="let param of consumptionParamM" [value]="param.paramMetric">
+                                        {{ param.label }}
+                                    </mat-option>
+                                </ng-container>
+
+                                <ng-template #noConsumptionParamM>
+                                    <mat-option disabled>
+                                        {{ COMMON_CONSTANT.NO_DATA_FOUND }}
+                                    </mat-option>
+                                </ng-template>
+                            </mat-select>
+
+                            <mat-error *ngIf="errorHandling(reportFG, 'params.name', 'required')">
+                                {{ FormErrorEnum.REQUIRED }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+
+            <button class="d-none" type="submit" #formSubmitBtn></button>
+        </form>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="float-end">
+                    <button class="btn btn-sm btn-primary" (click)="formSubmitBtn.click()" matRipple
+                        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">
+                        {{ ButtonLabelEnum.READ_BTN_LABEL }}
+                    </button>
+                    <lib-download-report [excludeFileTypeInp]="FileTypeEnum.CSV" (fileTypeEmitted)="downloadReport($event)"></lib-download-report>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-sm-12">
+                <lib-message-alert *ngIf="reportAlertObj.showAlert" [labelInp]="reportAlertObj.alertLabel"
+                    [contentInp]="reportAlertObj.alertContent" [messageAlertTypeInp]="reportAlertObj.messageAlertType"
+                    [messageAlertIconInp]="reportAlertObj.messageAlertIcon">
+                </lib-message-alert>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="centerAlign">
+                <lib-skeleton-loader *ngIf="showLoader" [count]="3" [appearance]="'circle'"
+                    [theme]="{ height: '15px', width: '15px', 'background-color': '#e7ebf3' }"></lib-skeleton-loader>
+            </div>
+        </div>
+
+        <div class="row mt-3" *ngIf="reportData && reportData.length > 0 && reportData[0].date">
+            <table class="table">
+                <tbody>
+                    <tr class="tableHeader">
+                        <td align="center" class="fw-bold"> Date </td>
+                        <td align="center" class="fw-bold"> Meter name </td>
+                        <td align="center" class="fw-bold"> Parameter name </td>
+                        <td align="center" class="fw-bold"> Meter start reading </td>
+                        <td align="center" class="fw-bold"> Meter end reading </td>
+                        <td align="center" class="fw-bold"> Consumption </td>
+                    </tr>
+                </tbody>
+                <tbody>
+                    <tr *ngFor="let data of reportData; let i = index">
+                        <td align="center" class="colWidthContainingDateTime">{{ row?.date | date: 'dd-MMM-yyyy
+                            HH:mm:ss' }}</td>
+                        <td align="center">{{ row?.meterName }}</td>
+                        <td align="center">{{ row?.parameterName }}</td>
+                        <td align="center">{{ row?.meterStartReading }}</td>
+                        <td align="center">{{ row?.meterEndReading }}</td>
+                        <td align="center">{{ row?.meterConsumption }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

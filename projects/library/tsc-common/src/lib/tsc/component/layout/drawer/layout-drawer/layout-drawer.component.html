@@ -1,0 +1,37 @@
+<div class="header-dots">
+    <div class="btn-group" ngbDropdown placement="bottom">
+        <button type="button" class="btn dropdownAfter" ngbDropdownToggle>
+            <span class="material-symbols-outlined layoutIcon" matTooltip="Layout" matTooltipPosition="below">
+                grid_view
+            </span>
+        </button>
+        <div class="selectedItem" ngbDropdownMenu>
+            <ng-container *ngIf="layoutM && layoutM.length > 0 && layoutM[0]['id']; else noLayoutFound">
+                <a class="dropdown-item mt-1" *ngFor="let layout of layoutM"
+                    [ngClass]="{'active': layout.id == selectedLayout?.id}">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="float-start">
+                                <span class="me-2" [matTooltip]="layout?.['name']?.length>22? layout['name']: ''"
+                                    matTooltipPosition="above" matTooltipClass="nameTooltip"
+                                    (click)="changeLayout(layout)">{{ layout?.name | dotdotdot:22
+                                    }}</span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="float-end">
+                                <span class="text-secondary me-1">|</span>
+                                <span class="text-primary" (click)="viewLayout(layout.id)">View</span>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </ng-container>
+            <ng-template #noLayoutFound>
+                <a class="dropdown-item">
+                    {{ COMMON_CONSTANT.NO_DATA_FOUND }}
+                </a>
+            </ng-template>
+        </div>
+    </div>
+</div>

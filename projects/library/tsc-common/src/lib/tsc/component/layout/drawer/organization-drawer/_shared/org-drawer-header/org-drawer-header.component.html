@@ -1,0 +1,32 @@
+<div class="headerText" placement="bottom-right">
+    <button type="button" class="btn" (click)="toggleOrgDrawFn()">
+        <div class="d-flex align-items-center"
+            *ngIf="currentOrgType == OrgType.ORGANIZATION || currentOrgType == OrgType.NETZERO_ADMIN">
+            <ng-container *ngIf="organizationM.logoUrl && organizationM.logoUrl != null; else showDefaultOrgIcon">
+                <img class="headerImg pe-2" [src]="organizationM.logoUrl" alt="logo" />
+            </ng-container>
+            <ng-template #showDefaultOrgIcon>
+                <span class="material-symbols-outlined fs-1 pe-2">
+                    corporate_fare
+                </span>
+            </ng-template>
+            <span class="headerSection">{{ organizationM.name }}</span>
+            &nbsp;
+            <i class="fa fa-caret-down"></i>
+        </div>
+
+        <div class="d-flex align-items-center" *ngIf="currentOrgType == OrgType.SITE">
+            <ng-container *ngIf="facilityM.logoUrl && facilityM.logoUrl != null; else showDefaultFacilityIcon">
+                <img class="headerImg pe-2" [src]="facilityM.logoUrl" alt="logo" />
+            </ng-container>
+            <ng-template #showDefaultFacilityIcon>
+                <span class="material-symbols-outlined fs-1 pe-2">
+                    factory
+                </span>
+            </ng-template>
+            <span class="headerSection">{{ facilityM.name }}</span>
+            &nbsp;
+            <i class="fa fa-caret-down"></i>
+        </div>
+    </button>
+</div>

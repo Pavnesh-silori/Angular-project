@@ -1,0 +1,48 @@
+<div mat-dialog-title>
+    <div class="row">
+        <div class="col-sm-11">
+            <div class="pageTitle dialogHeader fw-bold"> Select Entity </div>
+            <div class="pageSubtitle">
+                Entities displayed in gray color have never had consumption, whereas those in black have consumption.
+            </div>
+        </div>
+        <div class="col-sm-1">
+            <button mat-icon-button mat-dialog-close cdkFocusInitial class="float-end matDialogClose"
+                matTooltip="Close" matTooltipPosition="before">
+                <span class="material-symbols-outlined">
+                    close
+                </span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="matDialogContent" mat-dialog-content>
+    <mat-radio-group [formControl]="entityFC" (change)="onEntityChange($event.value)" *ngIf="entityObject && entityObject.length > 0 && entityObject[0].id">
+        <div class="row">
+            <div class="col-sm-12">
+                <div *ngFor="let entity of entityObject; let i = index" class="mt-2">
+                    <mat-radio-button class="radioBtnLabel me-2" [ngClass]="{'text-secondary': !entity.entityStatusFlag}"
+                        [value]="entity.id" [disabled]="!entity.entityStatusFlag">
+                        {{ entity.name }}
+                    </mat-radio-button>
+                    <div *ngIf="entity.children && entity.children.length > 0" class="ms-5">
+                        <ng-container *ngTemplateOutlet="recursiveTemplate; context:{ $implicit: entity.children }"></ng-container>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <ng-template #recursiveTemplate let-entities>
+            <div *ngFor="let entity of entities; let i = index" class="mt-2">
+                <mat-radio-button class="radioBtnLabel me-2" [ngClass]="{'text-secondary': !entity.entityStatusFlag}"
+                    [value]="entity.id" [disabled]="!entity.entityStatusFlag">
+                    {{ entity.name }}
+                </mat-radio-button>
+                <div *ngIf="entity.children && entity.children.length > 0" class="ms-5">
+                    <ng-container *ngTemplateOutlet="recursiveTemplate; context:{ $implicit: entity.children }"></ng-container>
+                </div>
+            </div>
+        </ng-template>
+    </mat-radio-group>
+</div>

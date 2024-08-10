@@ -1,0 +1,43 @@
+<mat-button-toggle-group class="matBtnFilter" [formControl]="frequencyFC" (change)="frequencyChange()">
+    <mat-button-toggle *ngFor="let frequency of frequencyOptions" value="{{ frequency.keyID }}">
+        {{ frequency.name }}
+    </mat-button-toggle>
+</mat-button-toggle-group>
+
+<mat-form-field class="ms-3" id="dailyField" appDateMonthYearFormat
+    [ngClass]="{'d-none': frequencyFC.value != FrequencyEnum.DAILY}" (click)="openDatepickerOnClick(daily)"
+    (keydown.arrowdown)="openDatepickerOnClick(daily)" (keydown.enter)="openDatepickerOnClick(daily)">
+    <input matInput class="noFocus" [matDatepicker]="daily" [formControl]="durationFC" [max]="today"
+        (dateInput)="dailyDateSelectedHandler($event.value)" readonly />
+    <mat-datepicker-toggle matSuffix class="fs-5" [for]="daily"></mat-datepicker-toggle>
+    <mat-datepicker #daily (closed)="takeFocusAway('dailyField')"></mat-datepicker>
+</mat-form-field>
+
+<mat-form-field class="ms-3" id="monthlyField" appMonthYearFormat
+    [ngClass]="{'d-none': frequencyFC.value != FrequencyEnum.MONTHLY}" (click)="openDatepickerOnClick(monthly)"
+    (keydown.arrowdown)="openDatepickerOnClick(monthly)" (keydown.enter)="openDatepickerOnClick(monthly)">
+    <input matInput class="noFocus" [matDatepicker]="monthly" [formControl]="durationFC" [max]="today" readonly />
+    <mat-datepicker-toggle matSuffix class="fs-5" [for]="monthly"></mat-datepicker-toggle>
+    <mat-datepicker panelClass="monthPicker" #monthly startView="year"
+        (monthSelected)="monthlyDateSelectedHandler($event, monthly)" (closed)="takeFocusAway('monthlyField')">
+    </mat-datepicker>
+</mat-form-field>
+
+<mat-form-field class="ms-3" id="yearlyField" appYearFormat [ngClass]="{'d-none': frequencyFC.value != FrequencyEnum.YEARLY}"
+    (click)="openDatepickerOnClick(yearly)" (keydown.arrowdown)="openDatepickerOnClick(yearly)"
+    (keydown.enter)="openDatepickerOnClick(yearly)">
+    <input matInput class="noFocus" [matDatepicker]="yearly" [formControl]="durationFC" [max]="today" readonly />
+    <mat-datepicker-toggle matSuffix class="fs-5" [for]="yearly"></mat-datepicker-toggle>
+    <mat-datepicker panelClass="yearPicker" #yearly startView="multi-year"
+        (yearSelected)="yearlyDateSelectedHandler($event, yearly)" (closed)="takeFocusAway('yearlyField')">
+    </mat-datepicker>
+</mat-form-field>
+
+<mat-form-field class="ms-3" [ngClass]="{'d-none': frequencyFC.value != FrequencyEnum.CUSTOM}">
+    <mat-label class="formLabel"> Select date </mat-label>
+    <input type="text" matInput ngxDaterangepickerMd
+        [locale]="{direction: 'ltr', applyLabel: 'Apply', format: 'DD-MMM-YYYY', customRangeLabel: 'Custom Range'}"
+        [drops]="'down'" [opens]="'right'" [alwaysShowCalendars]="true" [keepCalendarOpeningWithRange]="true"
+        [showDropdowns]="true" [showCancel]="true" autocomplete="off" name="daterange" [formControl]="daterange"
+        (ngModelChange)="customDateRange(daterange.value)" [readonly]="true" />
+</mat-form-field>

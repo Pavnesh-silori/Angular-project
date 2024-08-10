@@ -1,0 +1,103 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">By Parameter</div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-3">
+                <lib-date-input #customDateInput (emitFilter)="dateInpChange()" [materialFieldWidthInp]="true"
+                    [materialFormFieldAppearanceInp]="materialFormFieldAppearance.FORM_FIELD_APPEARANCE"
+                    [isMandatoryFieldInp]="true" [dateInputTypeInp]="dateInputTypeEnum.CUSTOM_INPUT"
+                    [dateTypeInp]="dateTypeEnum.EXCLUSIVE" [showDefaultDurationInp]="true" [showCdrRangeLabelInp]="true"
+                    [labelInp]="'Select date'" [timezoneInp]="timezone" [rangeInp]="customRangeConstant"
+                    [showTimeInCDRInp]="true" [showRangeInp]="true"
+                    [cdrFormatInp]="'YYYY-MM-DD HH:mm:ss'"></lib-date-input>
+            </div>
+
+            <div class="col-sm-3">
+                <lib-aggregation-duration #aggDurationInput
+                    (emitFilter)="aggDurationInpChange()"></lib-aggregation-duration>
+            </div>
+
+            <div class="col-sm-3">
+                <lib-entity-type #entityTypeInput (emitFilter)="entityTypeInpChange()"></lib-entity-type>
+            </div>
+
+            <div class="col-sm-3">
+                <mat-form-field class="matFieldWidth100"
+                    [appearance]="materialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label>Select parameter</mat-label>
+                    <mat-select (selectionChange)="onParameterChange($event.value)" [formControl]="parameterFC"
+                        required>
+                        <ng-container
+                            *ngIf="parameterByEntityTypeM && parameterByEntityTypeM.length > 0 && parameterByEntityTypeM[0]['id']; else noDataFound">
+                            <mat-option>
+                                <ngx-mat-select-search [formControl]="parameterSearchUtil.filterFC"
+                                    placeholderLabel="Search by name" noEntriesFoundLabel="No matching name found.">
+                                </ngx-mat-select-search>
+                            </mat-option>
+                            <mat-option *ngFor="let parameter of parameterSearchUtil.filteredEntities | async"
+                                [value]="parameter.paramMetric">
+                                {{ parameter.label }}
+                            </mat-option>
+                        </ng-container>
+                        <ng-template #noDataFound>
+                            <mat-option disabled>
+                                {{ commonConstant.NO_DATA_FOUND }}
+                            </mat-option>
+                        </ng-template>
+                    </mat-select>
+                    <mat-error *ngIf="!entityType">
+                        Please select entity type first
+                    </mat-error>
+                    <mat-error *ngIf="parameterFC.touched && parameterFC.hasError('required') && entityType">
+                        {{ FormErrorEnum.REQUIRED }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="float-end">
+                    <button class="btn btn-sm btn-primary" type="button" (click)="viewParameterData()" matRipple
+                        [matRippleCentered]="materialConstant.MAT_RIPPLE_CENTER">
+                        {{ buttonLabelEnum.READ_BTN_LABEL }}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-2">
+            <div class="col-sm-12">
+                <lib-message-alert *ngIf="alertObj.showAlert" [labelInp]="alertObj.alertLabel"
+                    [contentInp]="alertObj.alertContent" [messageAlertTypeInp]="alertObj.messageAlertType"
+                    [messageAlertIconInp]="alertObj.messageAlertIcon">
+                </lib-message-alert>
+            </div>
+        </div>
+
+        <div class="row mt-2">
+            <ng-container *ngIf="showLoader; else dataTemplate">
+                <lib-skeleton-loader [count]="3" [appearance]="''"
+                    [theme]="{ 'border-radius': '16px', height: '40px', 'background-color': 'rgb(230 232 235)' }"></lib-skeleton-loader>
+            </ng-container>
+
+            <ng-template #dataTemplate>
+                <div class="row" *ngIf="chartData.length > 0">
+                    <div class="col-sm-6" *ngFor="let data of chartData">
+                        <mat-card class="cardOverwrite cardBackgroundColor mb-3">
+                            <lib-basic-area-line-bar [chartTypeInp]="chartType" [chartTitleInp]="data.chartTitle"
+                                [viewStateInp]="viewStateFlag" [dataInp]="data">
+                            </lib-basic-area-line-bar>
+                        </mat-card>
+                    </div>
+                </div>
+            </ng-template>
+        </div>
+
+    </div>
+</div>

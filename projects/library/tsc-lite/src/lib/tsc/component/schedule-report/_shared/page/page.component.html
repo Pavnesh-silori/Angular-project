@@ -1,0 +1,163 @@
+<div class="card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Schedule Report</div>
+            <div class="pageSubtitle"></div>
+        </div>
+
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <lib-search-bar-one class="me-3" #searchBar [searchBy]="searchByPlaceHolder"
+                    (emitSearch)="searchFn($event)"></lib-search-bar-one>
+
+                <button class="btn btn-sm btn-light refreshBtn centerAlign me-3 py-1" #refreshBtn matRipple
+                    [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                    [matTooltip]="ButtonTooltipEnum.REFRESH">
+                    <span class="material-symbols-outlined text-secondary">
+                        refresh
+                    </span>
+                </button>
+
+                <div class="btn-group" ngbDropdown placement="bottom-right">
+                    <button type="button" ngbDropdownToggle class="hideDropdownIcon btn btn-sm btn-success">
+                        <fa-icon [icon]="faPlus" class="me-1"></fa-icon>Schedule report
+                        <fa-icon [icon]="faCaretDown" class="ms-2"></fa-icon>
+                    </button>
+                    <div ngbDropdownMenu>
+                        <a class="dropdown-item mt-1" *ngFor="let type of reportType" (click)="goToReportPage(type.value)">
+                            {{ type.label }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="overflowX customScrollBar">
+        <table class="w-100" mat-table matSort #sort="matSort" matSortActive="name" matSortDirection="asc"
+            matSortDisableClear [dataSource]="dataSource">
+
+            <ng-container matColumnDef="id">
+                <th class="columnWidth1" mat-header-cell *matHeaderCellDef>ID</th>
+                <td class="columnWidth1" mat-cell *matCellDef="let row">{{ row.id }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+                <th class="px-4 columnWidth2" mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Name</th>
+                <td class="px-4 columnWidth2" mat-cell *matCellDef="let row" matTooltipPosition="above"
+                    [matTooltip]="(row?.name.length > 20 ? row?.name : '')" matTooltipClass="nameTooltip">
+                    {{ (row.name ? row.name : COMMON_CONSTANT.HYPHEN) | dotdotdot:20 }}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="type">
+                <th class="px-4 columnWidth2" mat-header-cell *matHeaderCellDef>
+                    <funnel-filter #typeSelect header="Report type" type="multi" [entityList]="reportType" value="value" view="label"
+                        [selectFC]="reportTypeFC" [active]="reportTypeFlag" selectAllLabel="All report type"
+                        (multi)="reportTypeFlag = true;">
+                    </funnel-filter>
+                </th>
+                <td class="px-4 columnWidth2" mat-cell *matCellDef="let row">
+                    {{ getReportTypeLabel(row.type) }}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="recipients">
+                <th class="columnWidth1" mat-header-cell *matHeaderCellDef>Recipients</th>
+                <td class="columnWidth1" mat-cell *matCellDef="let row">
+                    <ng-container *ngFor="let user of row.recipients.slice(0,3); let i = index">
+                        <img class="multipleProfileImg rounded-circle border"
+                            [src]="imageService.getProfileImageUrl(user, ProfileImg.PROFILE_IMAGE_DROPDOWN_NAME_VIEW)" alt="profile-image"
+                            #tooltip="matTooltip" matTooltipPosition="above"
+                            [matTooltip]="row.recipients.length != 1 ? (user?.firstName ? user?.firstName + ' ' + (user?.lastName ? user?.lastName : '') : '') : ''"
+                            matTooltipClass="nameTooltip" />
+
+                        <span *ngIf="row.recipients.length == 1">
+                            {{ user.firstName }} {{user.lastName }}
+                        </span>
+                    </ng-container>
+                    <button *ngIf="imageService.getCountForCircleDisplay(row.recipients) >= 1" [matMenuTriggerFor]="menu"
+                        class="btn btn-sm rounded-circle countCircleBtn" (click)="showAllRecipient(row.recipients)">
+                        {{ imageService.getCountForCircleDisplay(row.recipients) }}
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button mat-menu-item *ngFor="let recipient of recipientUserList">
+                            <img class="multipleProfileImg rounded-circle border me-1" [src]="recipient.profileImg">
+                            {{ recipient.name }}
+                        </button>
+                    </mat-menu>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="frequency">
+                <th class="columnWidth1" mat-header-cell *matHeaderCellDef>Frequency</th>
+                <td class="columnWidth1" mat-cell *matCellDef="let row">
+                    {{ getFrequencyLabel(row.frequency) }}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="scheduledBy">
+                <th class="columnWidth1" mat-header-cell *matHeaderCellDef>Scheduled by</th>
+                <td class="columnWidth1" mat-cell *matCellDef="let row">
+                    <img class="rounded-circle border profileImageDropdownView"
+                        [src]="row?.scheduledBy?.profileImgUrl || userService.defaultImage(row?.scheduledBy?.firstName + ' ', ProfileImg.PROFILE_IMAGE_DROPDOWN_NAME_VIEW)"
+                        alt="profile img">
+                    <span matTooltipPosition="above"
+                        [matTooltip]="(row?.scheduledBy?.firstName + ' ' + row?.scheduledBy?.lastName).length > 12 ? row?.scheduledBy?.firstName + ' ' + row?.scheduledBy?.lastName : ''"
+                        matTooltipClass="nameTooltip">
+                        {{ (row?.scheduledBy?.firstName ? row?.scheduledBy?.firstName + ' ' + row?.scheduledBy?.lastName :
+                        COMMON_CONSTANT.HYPHEN)| dotdotdot:12 }}
+                    </span>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+                <th class="columnWidth1" mat-header-cell *matHeaderCellDef>Status</th>
+                <td class="columnWidth1" mat-cell *matCellDef="let row"
+                    [ngClass]="statusService.getStatusClass(row.status)">{{
+                    row.status ? statusService.getStatusValue(row.status) : COMMON_CONSTANT.HYPHEN }}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="option">
+                <th class="columnWidth1" mat-header-cell *matHeaderCellDef></th>
+                <td class="columnWidth1" mat-cell *matCellDef="let row">
+                    <div class="centerAlignVertical">
+
+                        <button type="button" class="iconBtn centerAlign text-primary updateIconHover"
+                            (click)="updateScheduledReport(row)" matRipple
+                            [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                            [matTooltip]="ButtonTooltipEnum.UPDATE">
+                            <span class="material-symbols-outlined icon">
+                                edit
+                            </span>
+                        </button>
+
+                        <button type="button" class="iconBtn centerAlign text-danger deleteIconHover cursorPointer"
+                            matTooltipPosition="below" [matTooltip]="ButtonTooltipEnum.DELETE" matRipple
+                            [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" (click)="openDeleteDialog(row)">
+                            <span class="material-symbols-outlined icon">
+                                delete
+                            </span>
+                        </button>
+
+                        <mat-slide-toggle class="ms-3" [checked]="row.status == 'ACTIVE'"
+                            (change)="updateReportStatusByID(row)"></mat-slide-toggle>
+                    </div>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumn"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumn;" class="dataRow"></tr>
+
+            <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell text-center" [attr.colspan]="displayedColumn.length">
+                    {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <mat-paginator class="roundedBorder" showFirstLastButtons #paginator [length]="dataSourceLength"
+        [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE" [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION">
+    </mat-paginator>
+</div>

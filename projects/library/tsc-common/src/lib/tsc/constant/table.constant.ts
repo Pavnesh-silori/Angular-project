@@ -1,0 +1,7 @@
+export const TABLE_CONSTANT = {
+    TABLE_NO_DATA: 'No Data',
+    DEFAULT_PAGE_SIZE: 50,
+    PAGE_SIZE_OPTION: [50, 100, 150, 200]
+    // DEFAULT_PAGE_SIZE: 2,
+    // PAGE_SIZE_OPTION: [2, 4, 6, 8],
+};

@@ -1,0 +1,96 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">CGWA Report</div>
+        </div>
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <mat-slide-toggle (change)="scheduleReport($event.checked)">Schedule report</mat-slide-toggle>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <form [formGroup]="reportFG" (ngSubmit)="reportSubmit()">
+            <div class="row">
+                <div class="col-sm-3">
+                    <lib-date-input #monthDateInput (emitFilter)="dateInpChange()" [materialFieldWidthInp]="true"
+                        [materialFormFieldAppearanceInp]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE"
+                        [isMandatoryFieldInp]="true" [dateInputTypeInp]="DateInputTypeEnum.MONTH_INPUT"
+                        [dateTypeInp]="DateTypeEnum.EXCLUSIVE" [showDefaultDurationInp]="true"
+                        [labelInp]="'Select date'" [timezoneInp]="timezone"></lib-date-input>
+                </div>
+
+                <div class="col-sm-3">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label>Select aggregation duration</mat-label>
+                        <mat-select formControlName="interval" required>
+                            <mat-option [value]="'DAILY'">Daily</mat-option>
+                            <mat-option [value]="'MONTHLY'">Monthly</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="errorHandling(reportFG, 'interval', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <button class="d-none" type="submit" #formSubmitBtn></button>
+        </form>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="float-end">
+                    <button class="btn btn-sm btn-primary" (click)="formSubmitBtn.click()" matRipple
+                        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">
+                        {{ ButtonLabelEnum.READ_BTN_LABEL }}
+                    </button>
+                    <lib-download-report [excludeFileTypeInp]="FileTypeEnum.CSV" (fileTypeEmitted)="downloadReport($event)"></lib-download-report>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-sm-12">
+                <lib-message-alert *ngIf="reportAlertObj.showAlert" [labelInp]="reportAlertObj.alertLabel"
+                    [contentInp]="reportAlertObj.alertContent" [messageAlertTypeInp]="reportAlertObj.messageAlertType"
+                    [messageAlertIconInp]="reportAlertObj.messageAlertIcon">
+                </lib-message-alert>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="centerAlign">
+                <lib-skeleton-loader *ngIf="showLoader" [count]="3" [appearance]="'circle'"
+                    [theme]="{ height: '15px', width: '15px', 'background-color': '#e7ebf3' }"></lib-skeleton-loader>
+            </div>
+        </div>
+
+        <div class="row mt-3" *ngIf="reportData && reportData.length > 0 && reportData[0].date">
+            <table class="table">
+                <tbody>
+                    <tr class="tableHeader">
+                        <td align="center" class="fw-bold"> Date </td>
+                        <td align="center" class="fw-bold"> Meter name </td>
+                        <td align="center" class="fw-bold"> Parameter name </td>
+                        <td align="center" class="fw-bold"> Meter start reading </td>
+                        <td align="center" class="fw-bold"> Meter end reading </td>
+                        <td align="center" class="fw-bold"> Consumption </td>
+                    </tr>
+                </tbody>
+                <tbody>
+                    <tr *ngFor="let data of reportData; let i = index">
+                        <td align="center" class="colWidthContainingDateTime">{{ row?.date | date: 'dd-MMM-yyyy
+                            HH:mm:ss' }}</td>
+                        <td align="center">{{ row?.meterName }}</td>
+                        <td align="center">{{ row?.parameterName }}</td>
+                        <td align="center">{{ row?.meterStartReading }}</td>
+                        <td align="center">{{ row?.meterEndReading }}</td>
+                        <td align="center">{{ row?.meterConsumption }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

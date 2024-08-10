@@ -1,0 +1,197 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">View Mapped Devices <span *ngIf="entityM">
+                    - ({{ entityM?.name }})
+                </span></div>
+        </div>
+
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <lib-search-bar-one class="me-2" #searchBar searchBy="device name" (emitSearch)="searchFn($event)">
+                </lib-search-bar-one>
+                <div class="me-2 btn-group" ngbDropdown placement="bottom-right">
+                    <button type="button" ngbDropdownToggle class="btn btn-sm btn-primary"
+                        [ngClass]="{'disableButton': selection.selected.length == 0}"
+                        [disabled]="selection.selected.length == 0">
+                        Bulk action
+                    </button>
+                    <div ngbDropdownMenu>
+                        <button class="btn btn-outline-danger rounded-0 dropdown-item"
+                            (click)="openDeleteDialog('BULK_DELETE')">
+                            Delete
+                        </button>
+                    </div>
+                </div>
+                <a [routerLink]="'/layout/' + layoutID + '/entity/' + entityID + '/map-device/add'">Map devices</a>
+            </div>
+        </div>
+    </div>
+
+    <button #refreshBtn class="d-none"></button>
+
+    <table mat-table [dataSource]="dataSource">
+
+        <ng-container matColumnDef="checkbox">
+            <th class="columnWidth1" mat-header-cell *matHeaderCellDef>
+                <mat-checkbox (change)="$event ? selectAll() : null"
+                    [checked]="selection.hasValue() && isAllSelected()" [disabled]="dataSource.length == 0">
+                    Select all
+                </mat-checkbox>
+            </th>
+            <td class="px-3 columnWidth1" mat-cell *matCellDef="let row; let i = index;" class="text-start">
+                <mat-checkbox (change)="$event ? selection.toggle(row.id) : null"
+                    [checked]="selection.isSelected(row.id)"></mat-checkbox>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="body">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td class="px-3" mat-cell *matCellDef="let row">
+                <div class="pt-3 pb-3">
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <mat-card class="card main-card border cardOverwrite">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <span class="card-title sectionTitle">
+                                            Devices
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row pt-2">
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                ID
+                                            </div>
+                                            <div class="col-sm-8 fw-bold">
+                                                {{ row.id }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                Name
+                                            </div>
+                                            <div class="col-sm-8 fw-bold"
+                                                [matTooltip]="row?.['name']?.length>20? row['name']: ''"
+                                                matTooltipPosition="above" matTooltipClass="nameTooltip">
+                                                {{ row.name | dotdotdot:20 }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row pt-2">
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                Make
+                                            </div>
+                                            <div class="col-sm-8 fw-bold">
+                                                {{ row.make }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                Model
+                                            </div>
+                                            <div class="col-sm-8 fw-bold">
+                                                {{ row.model }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row pt-2">
+                                    <div class="col-sm-6">
+                                        <div class="row">
+                                            <div class="col-sm-3">
+                                                Type
+                                            </div>
+                                            <div class="col-sm-8 fw-bold">
+                                                {{ row.type | titlecase }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-card>
+                        </div>
+                    </div>
+
+                    <div class="row pt-3" *ngIf="row.mappingRecords && row.mappingRecords.length > 0">
+                        <div class="col-sm-12">
+                            <mat-card class="card main-card border cardOverwrite">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <span class="card-title sectionTitle">
+                                            Device property
+                                        </span>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <span class="material-symbols-outlined text-secondary float-end cursorPointer"
+                                            matTooltipPosition="above" matTooltip="Edit"
+                                            (click)="openSourceLoadDialog(row)">
+                                            edit_square
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="row pt-2">
+                                    <div class="col-sm-6" *ngFor="let mapping of row.mappingRecords">
+                                        Parameter Name: <span class="fw-bold">
+                                            {{ mapping?.parameterName }}
+                                        </span>
+
+                                        <div *ngFor="let sourceLoad of mapping?.mapping">
+                                            <div class="row mt-2">
+                                                <div class="col-sm-3" *ngIf="sourceLoad?.type == 'SOURCE'">
+                                                    Source
+                                                </div>
+                                                <div class="col-sm-3" *ngIf="sourceLoad?.type == 'LOAD'">
+                                                    Load
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <span class="fw-bold">{{ sourceLoad?.name }}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-card>
+                        </div>
+                    </div>
+                </div>
+
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="delete">
+            <th class="columnWidth2" mat-header-cell *matHeaderCellDef></th>
+            <td class="columnWidth2" mat-cell *matCellDef="let row">
+                <span class="material-symbols-outlined text-danger float-end"
+                    [ngClass]="{'text-danger cursorPointer': selection.selected.length == 0, 'text-secondary': selection.selected.length > 0}"
+                    matTooltipPosition="above" [matTooltip]="selection.selected.length == 0 ? 'Remove mapping': ''"
+                    (click)="selection.selected.length == 0 && openDeleteDialog('SINGLE_DELETE', row.id, row.name)">
+                    delete
+                </span>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumn; sticky: true"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumn;"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumn.length">
+                {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+            </td>
+        </tr>
+    </table>
+
+    <mat-paginator #paginator class="roundedBorder" showFirstLastButtons [length]="resultLength"
+        [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE" [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION">
+    </mat-paginator>
+</div>

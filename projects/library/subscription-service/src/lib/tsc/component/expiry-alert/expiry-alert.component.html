@@ -1,0 +1,11 @@
+<div [ngClass]="{'showSubscriptionMessage': showSubscriptionMessage}">
+    <div class="alert alert-danger subscriptionExpiringMessage centerAlign"
+        [ngClass]="{'d-none': !showSubscriptionMessage}">
+        <span class="text-light" [innerHTML]="message"></span>
+        <button *ngIf="showCloseBtn" matRipple [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" type="button" 
+            class="btn-close rounded-circle btnCloseCustom pt-2"
+            (click)="hideSubscriptionMessage()">
+        </button>
+    </div>
+</div>
+

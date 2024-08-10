@@ -1,0 +1,12 @@
+@import 'projects/library/tsc-common/assets/styles/variable.scss';
+
+.layoutOneWrapper {
+    background-color: #f1f3f6;
+    position: relative;
+    min-height: calc(100vh - #{$headerOneHeight});
+}
+
+.layoutOneContainer {
+    padding-top: $layoutOneMargin;
+    padding-bottom: calc(#{$footerOneHeight} + #{$layoutOneMargin});
+}

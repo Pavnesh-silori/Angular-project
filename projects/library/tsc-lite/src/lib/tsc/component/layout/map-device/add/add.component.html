@@ -1,0 +1,127 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Map Devices <span *ngIf="entityM">
+                    - ({{ entityM?.name }})
+                </span></div>
+        </div>
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <lib-search-bar-one class="me-3" #searchBar searchBy="device name" (emitSearch)="searchFn($event)">
+                </lib-search-bar-one>
+                <a [routerLink]="'/layout/' + layoutID + '/entity/' + entityID + '/map-device/view'">View mapped devices</a>
+            </div>
+        </div>
+    </div>
+
+    <button #refreshBtn class="d-none"></button>
+
+    <form [formGroup]="deviceMappingFG">
+        <div class="overflowX customScrollBar w-100">
+            <table mat-table class="w-100" [dataSource]="dataSource" #sort="matSort" matSort matSortActive="name"
+                matSortDirection="asc" matSortDisableClear>
+
+                <ng-container matColumnDef="mapDevice">
+                    <th class="columnWidth1" mat-header-cell *matHeaderCellDef> Map device </th>
+                    <td class="columnWidth1" mat-cell *matCellDef="let row; let i = index">
+                        <div class="d-flex align-items-center">
+                            <mat-checkbox [formControl]="deviceRecords?.at(i)?.get('isDeviceMapped')"
+                                [disabled]="row.type == 'METER' && (!sourceConsumerConfiguredM.sourceTypeConfigured || !sourceConsumerConfiguredM.consumerTypeConfigured)"
+                                (change)="onCheckboxChange(i, $event.checked)"></mat-checkbox>
+
+                            <span
+                                *ngIf="row.type == 'METER' && (!sourceConsumerConfiguredM.sourceTypeConfigured || !sourceConsumerConfiguredM.consumerTypeConfigured)"
+                                [popover]="infoPopover" popoverPlacement="right" [popoverOnHover]="false" [popoverAnimation]="true">
+                                <span class="material-symbols-outlined fontSize cursorPointer mt-2 ms-2">
+                                    info
+                                </span>
+                            </span>
+
+                            <popover-content #infoPopover [animation]="true" [closeOnClickOutside]="true">
+                                <span>Click <a [href]="redirectUrl">here </a>to set preferences</span>
+                            </popover-content>
+
+                            <span *ngIf="deviceRecords?.at(i)?.get('mappingRecords').length > 0"
+                                class="material-symbols-outlined text-secondary fontSize cursorPointer ms-5" #tooltip="matTooltip"
+                                matTooltipPosition="above" matTooltipClass="nameTooltip" matTooltip="Update source/consumer"
+                                (click)="this.openSourceLoadDialog(deviceRecords?.at(i).value)">
+                                edit_square
+                            </span>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="id">
+                    <th class="columnWidth2" mat-header-cell *matHeaderCellDef>
+                        Device ID
+                    </th>
+                    <td class="columnWidth2" mat-cell *matCellDef="let row">
+                        {{ row['id'] }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="name">
+                    <th class="columnWidth3" mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Name </th>
+                    <td class="columnWidth3" mat-cell *matCellDef="let row"> <span
+                            [matTooltip]="row?.['name']?.length>24? row['name']: ''" matTooltipPosition="above"
+                            matTooltipClass="nameTooltip">
+                            {{ row.name | dotdotdot:24 }}
+                        </span>
+                        <button [cdkCopyToClipboard]="row.name" matSuffix mat-icon-button type="button">
+                            <span class="material-symbols-outlined fs-5" mat-raised-button matTooltipPosition="right"
+                                matTooltip="copy">
+                                content_copy
+                            </span>
+                        </button>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="make">
+                    <th class="columnWidth4" mat-header-cell *matHeaderCellDef> Make </th>
+                    <td class="columnWidth4" mat-cell *matCellDef="let row"
+                        [matTooltip]="row?.['make']?.length>15? row['make']: ''" matTooltipPosition="above"
+                        matTooltipClass="nameTooltip">
+                        {{ row?.['make'] | dotdotdot:15 }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="model">
+                    <th class="columnWidth4" mat-header-cell *matHeaderCellDef> Model </th>
+                    <td class="columnWidth4" mat-cell *matCellDef="let row"
+                        [matTooltip]="row?.['model']?.length>15? row['model']: ''" matTooltipPosition="above"
+                        matTooltipClass="nameTooltip">
+                        {{ row?.['model'] | dotdotdot:15 }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="type">
+                    <th class="columnWidth4" mat-header-cell *matHeaderCellDef> Type </th>
+                    <td class="columnWidth4" mat-cell *matCellDef="let row">
+                        {{ row.type | titlecase }}
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumn; sticky: true"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumn;"></tr>
+
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell text-center" [attr.colspan]="displayedColumn.length">
+                        {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <mat-paginator #paginator class="roundedBorder" showFirstLastButtons [length]="resultLength"
+            [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE" [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION">
+        </mat-paginator>
+    </form>
+
+    <div align="end">
+        <button type="submit" class="btn btn-sm btn-success me-3 mb-2" [ngClass]="{'disabled': isEqual}"
+            (click)="saveDeviceMapping()">
+            {{ ButtonLabelEnum.SAVE_BTN_LABEL }}
+        </button>
+    </div>
+
+</div>

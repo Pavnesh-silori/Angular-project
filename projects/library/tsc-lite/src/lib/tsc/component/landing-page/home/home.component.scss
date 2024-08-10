@@ -1,0 +1,85 @@
+.cardHeight {
+    height: 280px;
+}
+
+.square {
+    box-shadow: none !important;
+    border-radius: 6px !important;
+    height: 50px;
+    width: 50px;
+}
+
+.unitSize {
+    font-size: 0.66rem;
+}
+
+.today {
+    background-color: #f9dedc;
+    color: #fa7d74;
+}
+
+.month {
+    background-color: #c2e7ff;
+    color: #21a1f7;
+}
+
+.year {
+    background-color: #c4eed0;
+    color: #04942d;
+}
+
+.progressBarRadius {
+    border-radius: 16px !important;
+}
+
+.progress1BGColor {
+    background-color: #f9dedc;
+}
+
+.progress2BGColor {
+    background-color: #c2e7ff;
+}
+
+.progress3BGColor {
+    background-color: #fff0d1;
+}
+
+.progress4BGColor {
+    background-color: #c4eed0;
+}
+
+.progress1Color {
+    background-color: #fa7d74;
+}
+
+.progress2Color {
+    background-color: #21a1f7;
+}
+
+.progress3Color {
+    background-color: #ffbb29;
+}
+
+.progress4Color {
+    background-color: #04942d;
+}
+
+.card-info {
+    background-color: #cfe2ff;
+    color: #084298;
+}
+
+.card-success {
+    background-color: #c3f1d9;
+    color: #058844;
+}
+
+.card-warning {
+    background-color: #fff3cd;
+    color: #664d03;
+}
+
+.card-danger {
+    background-color: #f8d7da;
+    color: #842029;
+}

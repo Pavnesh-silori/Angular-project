@@ -1,0 +1,26 @@
+<mat-button-toggle-group class="matBtnFilter" [formControl]="frequencyFC">
+    <mat-button-toggle *ngFor="let freq of frequency" value="{{ freq.keyID }}" (click)="onChange()">
+        {{ freq.name }}
+    </mat-button-toggle>
+</mat-button-toggle-group>
+
+<lib-date-input class="ms-3" [ngClass]="{'d-none': frequencyFC.value != frequencyEnum.DAILY}" #dayDateInput
+    (emitFilter)="frequencyFC.value == frequencyEnum.DAILY && onChange()" [frequencyInp]="frequencyFC.value" [materialFormFieldAppearanceInp]="formFieldAppearance" [dateTypeInp]="dateType"
+    [dateInputTypeInp]="dateInputTypeEnum.DAY_INPUT" [showDefaultDurationInp]="showDefaultDuration" [labelInp]="label"
+    [timezoneInp]="timezone"></lib-date-input>
+
+<lib-date-input class="ms-3" [ngClass]="{'d-none': frequencyFC.value != frequencyEnum.MONTHLY}" #monthDateInput
+    (emitFilter)="frequencyFC.value == frequencyEnum.MONTHLY && onChange()" [frequencyInp]="frequencyFC.value" [materialFormFieldAppearanceInp]="formFieldAppearance" [dateTypeInp]="dateType"
+    [dateInputTypeInp]="dateInputTypeEnum.MONTH_INPUT" [showDefaultDurationInp]="showDefaultDuration" [labelInp]="label"
+    [timezoneInp]="timezone"></lib-date-input>
+
+<lib-date-input class="ms-3" [ngClass]="{'d-none': frequencyFC.value != frequencyEnum.YEARLY}" #yearDateInput
+    (emitFilter)="frequencyFC.value == frequencyEnum.YEARLY && onChange()" [frequencyInp]="frequencyFC.value" [materialFormFieldAppearanceInp]="formFieldAppearance" [dateTypeInp]="dateType"
+    [dateInputTypeInp]="dateInputTypeEnum.YEAR_INPUT" [showDefaultDurationInp]="showDefaultDuration" [labelInp]="label"
+    [timezoneInp]="timezone"></lib-date-input>
+
+<lib-date-input class="ms-3" [ngClass]="{'d-none': frequencyFC.value != frequencyEnum.CUSTOM}" #customDateInput
+    (emitFilter)="frequencyFC.value == frequencyEnum.CUSTOM && onChange()" [frequencyInp]="frequencyFC.value" [materialFormFieldAppearanceInp]="formFieldAppearance" [dateTypeInp]="dateType"
+    [dateInputTypeInp]="dateInputTypeEnum.CUSTOM_INPUT" [showDefaultDurationInp]="showDefaultDuration"
+    [showCdrRangeLabelInp]="showCdrRangeLabel" [labelInp]="label" [timezoneInp]="timezone" [rangeInp]=""
+    [showTimeInCDRInp]="showTimeInCDR" [showRangeInp]="showRange"></lib-date-input>

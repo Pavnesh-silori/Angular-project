@@ -1,0 +1,70 @@
+<div class="imageContainer border rounded">
+    <img class="imgView d-block cursorPointer" [src]="currentImg" alt="Uploaded Image" (click)="chooseImage()">
+
+    <button class="editImgBtn profilelogoBtn" type="button" (click)="chooseImage()" #tooltip="matTooltip"
+        matTooltipPosition="above" matTooltip="Click to edit image." mat-icon-button>
+        <span class="material-symbols-outlined imageIcon">
+            edit
+        </span>
+    </button>
+
+    <button *ngIf="showDeleteBtnInp" class="deleteImgBtn profilelogoBtn" type="button" (click)="removeImage()"
+        #tooltip="matTooltip" matTooltipPosition="above" matTooltip="Remove image." mat-icon-button>
+        <span class="material-symbols-outlined imageIcon">
+            delete
+        </span>
+    </button>
+
+    <input #imageUpdate class="d-none" type="file" accept="image/png, image/jpeg, image/jpg"
+        (change)="updateFile($event)" />
+</div>
+
+<ng-template #openCropper>
+    <h6 mat-dialog-title>
+        <strong [ngClass]="{'d-none': hideCropper}">Crop Image</strong>
+        <strong [ngClass]="{'d-none': !hideCropper}">Preview</strong>
+        <button mat-icon-button mat-dialog-close cdkFocusInitial class="float-end matDialogClose" matTooltip="Close"
+            matTooltipPosition="before">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+    </h6>
+    <hr class="mt-0" />
+    <div mat-dialog-content>
+        <form enctype="multipart/form-data">
+            <div class="row cropperDimensions mx-auto" [ngClass]="{'d-none': hideCropper}">
+                <input #cropperImageInput class="d-none" type="file" accept="image/png, image/jpeg, image/jpg"
+                    (change)="fileChangeEvent($event)" />
+                <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="roundCropper"
+                    [roundCropper]="roundCropper" format="png,jpg,jpeg" (imageCropped)="imageCropped($event)"
+                    (imageLoaded)="imageLoaded($event)" (cropperReady)="cropperReady()"
+                    (loadImageFailed)="loadImageFailed()">
+                </image-cropper>
+            </div>
+            <div class="row" [ngClass]="{'d-none': !hideCropper}">
+                <div class="col-sm-12">
+                    <img class="border d-block mx-auto updateImgPreview" [src]="croppedImage"
+                        [ngClass]="{'rounded-circle': roundCropper}" />
+                </div>
+            </div>
+        </form>
+    </div>
+    <mat-divider class="mt-2"></mat-divider>
+    <mat-dialog-actions align="end">
+        <div [ngClass]="{'d-none': hideCropper}">
+            <button class="btn btn-link" type="button" (click)="imageSelected()">
+                Choose Another
+            </button>
+            <button class="btn btn-primary ms-2" type="button" (click)="hideCropper = !hideCropper">
+                Crop
+            </button>
+        </div>
+        <div [ngClass]="{'d-none': !hideCropper}">
+            <button class="btn btn-link" type="button" (click)="imageSelected()">
+                Choose Another
+            </button>
+            <button class="btn btn-success ms-2" type="button" (click)="updateImage()">
+                {{ previewBtnLabel }}
+            </button>
+        </div>
+    </mat-dialog-actions>
+</ng-template>

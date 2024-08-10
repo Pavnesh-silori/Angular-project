@@ -1,0 +1,84 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Consumption Breakup</div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-12">
+                <lib-date-filter-two [frequencyInp]="frequency" [defaultFrequencyInp]="defaultFrequency"
+                    [dateTypeInp]="dateType" [showDefaultDurationInp]="true" [timezoneInp]="timezone"
+                    (dateFilterEmitter)="dateFilterEmitted($event)"></lib-date-filter-two>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-sm-6">
+                <mat-card class="cardOverwrite cardBackgroundColor">
+                    <ng-container *ngTemplateOutlet="sourceConsumTemplate; context: {
+                        value: orgSourceRes?.[0]?.['data']?.[0]?.['value'],
+                        unit: orgSourceRes?.[0]?.['unit'],
+                        label: 'Sourced',
+                        loader: showLoader
+                        }"></ng-container>
+                </mat-card>
+            </div>
+            <div class="col-sm-6">
+                <mat-card class="cardOverwrite cardBackgroundColor">
+                    <ng-container *ngTemplateOutlet="sourceConsumTemplate; context: {
+                        value: orgConsumedRes?.[0]?.['data']?.[0]?.['value'],
+                        unit: orgConsumedRes?.[0]?.['unit'],
+                        label: 'Consumed',
+                        loader: showLoader
+                        }"></ng-container>
+                </mat-card>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-sm-6">
+                <mat-card class="cardOverwrite cardBackgroundColor">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <lib-doughnut [viewStateInp]="viewStateFlagForSource" [chartTitleInp]="chartTitleForSource" [dataInp]="chartDataForSource"></lib-doughnut>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+            <div class="col-sm-6">
+                <mat-card class="cardOverwrite cardBackgroundColor">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <lib-doughnut [viewStateInp]="viewStateFlagForLoad" [chartTitleInp]="chartTitleForLoad" [dataInp]="chartDataForLoad"></lib-doughnut>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #sourceConsumTemplate let-label="label" let-value="value" let-unit="unit" let-loader="loader">
+    <ng-container *ngIf="loader; else dataTemplate">
+        <lib-skeleton-loader [count]="1" [appearance]="''"
+            [theme]="{ 'border-radius': '16px', height: '40px', 'background-color': 'rgb(230 232 235)' }"></lib-skeleton-loader>
+    </ng-container>
+
+    <ng-template #dataTemplate>
+        <div class="row">
+            <div class="col-sm-12">
+                <span class="fs-2 fw-bold text-primary">{{ value ? tscCommonService.formatLargeNumber(value, 'false', 1)
+                    : commonConstant.HYPHEN
+                    }}</span>
+                <span class="text-secondary fw-bold"> {{ value ? unit : '' }} </span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 cardTitle">
+                {{ label }}
+            </div>
+        </div>
+    </ng-template>
+</ng-template>

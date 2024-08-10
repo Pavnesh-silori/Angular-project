@@ -1,0 +1,185 @@
+<div mat-dialog-title>
+    <strong class="dialogTitle">
+        {{ action }} Escalation Rule
+    </strong>
+    <button mat-icon-button mat-dialog-close cdkFocusInitial class="float-end matDialogClose" matTooltip="Close"
+        matTooltipPosition="before">
+        <span class="material-symbols-outlined" [mat-dialog-close]="DialogEnum.CLOSE_DR">
+            close
+        </span>
+    </button>
+</div>
+
+<div class="matDialogContent" mat-dialog-content>
+    <form [formGroup]="escalationFG">
+        <div class="row">
+            <div class="col-sm-12">
+                <mat-card class="border cardOverwrite">
+                    <div class="cardTitle">
+                        Interval
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel"> Value </mat-label>
+                                <input class="formPlaceholder" matInput type="number" placeholder="0" [min]="0"
+                                    formControlName="intervalValue" required>
+                                <mat-error *ngIf="errorHandling('intervalValue', 'required')">
+                                    {{ FormErrorEnum.REQUIRED }}
+                                </mat-error>
+                                <mat-error *ngIf="errorHandling('intervalValue', 'min')">
+                                    {{ FormErrorEnum.NEGATIVE }}
+                                </mat-error>
+                                <mat-error *ngIf="errorHandling('intervalValue', 'integerError')">
+                                    Please enter an integer value
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label>Select frequency</mat-label>
+                                <mat-select formControlName="intervalFrequencyKey" required>
+                                    <mat-option *ngFor="let frequency of LIST_CONSTANT.ESCALATION_FREQUENCY" [value]="frequency.value">
+                                        {{ frequency.label }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="errorHandling('intervalFrequencyKey', 'required')">
+                                    {{ FormErrorEnum.REQUIRED }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-sm-12">
+                <mat-card class="border cardOverwrite">
+                    <div class="cardTitle">
+                        Notification frequency
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel"> Value </mat-label>
+                                <input class="formPlaceholder" matInput type="number" placeholder="0" [min]="0"
+                                    formControlName="notificationPrefValue" required>
+                                <mat-error *ngIf="errorHandling('notificationPrefValue', 'required')">
+                                    {{ FormErrorEnum.REQUIRED }}
+                                </mat-error>
+                                <mat-error *ngIf="errorHandling('notificationPrefValue', 'min')">
+                                    {{ FormErrorEnum.NEGATIVE }}
+                                </mat-error>
+                                <mat-error *ngIf="errorHandling('notificationPrefValue', 'integerError')">
+                                    Please enter an integer value
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label>Select frequency</mat-label>
+                                <mat-select formControlName="notificationPrefKey" required>
+                                    <mat-option *ngFor="let frequency of LIST_CONSTANT.ESCALATION_FREQUENCY" [value]="frequency.value">
+                                        {{ frequency.label }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="errorHandling('notificationPrefKey', 'required')">
+                                    {{ FormErrorEnum.REQUIRED }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-sm-12">
+                <mat-card class="border cardOverwrite">
+                    <div class="cardTitle">
+                        Escalated to
+                    </div>
+                    <div class="row userContext">
+                        <div class="col-sm-6 d-flex justify-content-start centerAlignVertical">
+                            <span class="fw-bold text-secondary me-2"> Current org users </span>
+                            <mat-slide-toggle class="slideToggleBtn" [formControl]="userFC"
+                                (change)="userContextChange()"></mat-slide-toggle>
+                            <span class="fw-bold text-secondary ms-2"> All users </span>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label>Select user</mat-label>
+                                <mat-select formControlName="userID" multiple required>
+                                    <ng-container *ngIf="userM && userM.length > 0 && userM[0]['id']; else noUserFound">
+                                        <mat-option>
+                                            <ngx-mat-select-search [formControl]="userSearchUtil.filterFC"
+                                                placeholderLabel="Search by name/email"
+                                                noEntriesFoundLabel="No matching name/email found.">
+                                            </ngx-mat-select-search>
+                                        </mat-option>
+                                        <mat-option [value]="-1" (click)="selectAllUsers()">
+                                            Select all
+                                        </mat-option>
+                                        <mat-option *ngFor="let user of userSearchUtil.filteredEntities | async" [value]="user.id"
+                                            (click)="selectUser()">
+                                            {{ user?.email }}
+                                        </mat-option>
+                                    </ng-container>
+                                    <ng-template #noUserFound>
+                                        <mat-option disabled>
+                                            {{ COMMON_CONSTANT.NO_DATA_FOUND }}
+                                        </mat-option>
+                                    </ng-template>
+                                </mat-select>
+                                <mat-error *ngIf="errorHandling('userID', 'required')">
+                                    {{ FormErrorEnum.REQUIRED }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-sm-6 mb-3 d-flex justify-content-start centerAlignVertical">
+                            <mat-checkbox formControlName="isAnyOtherUser" (change)="addOtherUser($event)">
+                                Any other user
+                            </mat-checkbox>
+                        </div>
+
+                        <div class="col-sm-6" *ngIf="escalationFG.controls['isAnyOtherUser'].value == true">
+                            <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label>Enter user email</mat-label>
+                                <mat-chip-list #chipList>
+                                    <mat-chip *ngFor="let email of otherUserEmail.value" [removable]="removable"
+                                        (removed)="removeEmail(email)">
+                                        {{ email }}
+                                        <button matChipRemove *ngIf="removable">
+                                            <mat-icon>cancel</mat-icon>
+                                        </button>
+                                    </mat-chip>
+                                    <input [placeholder]="inputPlaceholder" [matChipInputFor]="chipList"
+                                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+                                        (matChipInputTokenEnd)="add($event)" (input)="onInput()" required>
+                                    <mat-error class="userEmailError" *ngIf="otherUserEmail.hasError('required')">
+                                        {{ FormErrorEnum.REQUIRED }}
+                                    </mat-error>
+                                </mat-chip-list>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div mat-dialog-footer align="end">
+    <button type="submit" class="btn btn-sm btn-success" (click)="createUpdateEscalationRule()"
+        [ngClass]="{'disabled': action == PageTitleEnum.UPDATE && isEqual}">
+        {{ action == PageTitleEnum.CREATE ? ButtonLabelEnum.CREATE_BTN_LABEL :
+        ButtonLabelEnum.UPDATE_BTN_LABEL }}
+    </button>
+</div>

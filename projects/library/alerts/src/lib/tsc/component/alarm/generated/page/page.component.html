@@ -1,0 +1,148 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Generated Alarms</div>
+        </div>
+    </div>
+
+    <button #refreshBtn class="d-none"></button>
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-2">
+                <mat-form-field id="monthlyField" appMonthYearFormat (click)="dateService.openDatepickerOnClick(monthly)"
+                    (keydown.arrowdown)="dateService.openDatepickerOnClick(monthly)"
+                    (keydown.enter)="dateService.openDatepickerOnClick(monthly)" class="matFieldWidth100 cursorPointer"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Select month</mat-label>
+                    <input matInput class="noFocus" [matDatepicker]="monthly" [formControl]="selectedMonthFC" [max]="today" required
+                        readonly />
+                    <mat-datepicker-toggle matSuffix class="fs-5" [for]="monthly"></mat-datepicker-toggle>
+                    <mat-datepicker panelClass="monthPicker" #monthly startView="year"
+                        (monthSelected)="monthSelectedHandler($event, monthly)"
+                        (closed)="dateService.takeFocusAway('monthlyField')">
+                    </mat-datepicker>
+                </mat-form-field>
+            </div>
+
+            <div class="col-sm-10">
+                <div class="float-end me-1 mt-2">
+                    <mat-button-toggle-group class="matBtnFilter" [formControl]="statusFC" (change)="statusChange()">
+                        <mat-button-toggle value="{{ AlertStatusEnum.ACTIVE }}">
+                            {{ AlertStatusLabelEnum.ACTIVE_LABEL }}
+                        </mat-button-toggle>
+                        <mat-button-toggle value="{{ AlertStatusEnum.RESOLVED }}">
+                            {{ AlertStatusLabelEnum.RESOLVED_LABEL }}
+                        </mat-button-toggle>
+                    </mat-button-toggle-group>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <lib-search-bar-one class="me-1 float-end" #searchBar searchBy="parameter name"
+                    (emitSearch)="searchFn($event)">
+                </lib-search-bar-one>
+            </div>
+        </div>
+
+        <div class="overflowX customScrollBar">
+            <table class="w-100" mat-table [dataSource]="dataSource" #sort="matSort" matSort matSortActive="id"
+                matSortDirection="asc" matSortDisableClear>
+
+                <ng-container matColumnDef="id">
+                    <th class="px-3 columnWidth1" mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+                        ID
+                    </th>
+                    <td class="px-3 columnWidth1" mat-cell *matCellDef="let row">
+                        {{ row.id ? row.id: COMMON_CONSTANT.HYPHEN }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="alertName">
+                    <th class="px-3 columnWidth4" mat-header-cell *matHeaderCellDef> Name </th>
+                    <td class="px-3 columnWidth4" mat-cell *matCellDef="let row"
+                        [matTooltip]="row?.alertName?.length>15? row.alertName: ''" matTooltipPosition="above"
+                        matTooltipClass="nameTooltip">
+                        {{ (row.alertName ? row.alertName: COMMON_CONSTANT.HYPHEN) | dotdotdot:15 }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="parameterLabel">
+                    <th class="px-3 columnWidth4" mat-header-cell *matHeaderCellDef>
+                        Parameter name
+                    </th>
+                    <td class="px-3 columnWidth4" mat-cell *matCellDef="let row">
+                        {{ row.parameterLabel ? row.parameterLabel: COMMON_CONSTANT.HYPHEN }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="associatedWith">
+                    <th class="px-3 columnWidth3" mat-header-cell *matHeaderCellDef> Associated with </th>
+                    <td class="px-3 columnWidth3" mat-cell *matCellDef="let row"
+                        [matTooltip]="row?.associatedWith?.length>30? row.associatedWith: ''" matTooltipPosition="above"
+                        matTooltipClass="nameTooltip">
+                        {{ (row.associatedWith ? row.associatedWith: COMMON_CONSTANT.HYPHEN) | dotdotdot:30 }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="description">
+                    <th class="px-3 columnWidth3" mat-header-cell *matHeaderCellDef> Rule </th>
+                    <td class="px-3 columnWidth3" mat-cell *matCellDef="let row"
+                        [matTooltip]="row?.description?.length>30? row.description: ''" matTooltipPosition="above"
+                        matTooltipClass="nameTooltip">
+                        {{ (row.description ? row.description: COMMON_CONSTANT.HYPHEN) | dotdotdot:30 }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="time">
+                    <th class="px-3 columnWidth1" mat-header-cell *matHeaderCellDef>
+                        Time
+                    </th>
+                    <td class="px-3 columnWidth1" mat-cell *matCellDef="let row">
+                        {{ getTimeLabel(row.time) }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="type">
+                    <th class="px-3 columnWidth1" mat-header-cell *matHeaderCellDef> Type </th>
+                    <td class="px-3 columnWidth1" mat-cell *matCellDef="let row">
+                        <span class="badge rounded-pill bg-light text-dark" [ngSwitch]="row?.type">
+                            <ng-container *ngSwitchCase="AlertTypeEnum.INSTANTANEOUS">{{
+                                AlertTypeLabelEnum.INSTANTANEOUS_LABEL
+                                }}</ng-container>
+                            <ng-container *ngSwitchCase="AlertTypeEnum.PERIODIC">{{ AlertTypeLabelEnum.PERIODIC_LABEL
+                                }}</ng-container>
+                            <ng-container *ngSwitchCase="AlertTypeEnum.CONSTANT_DATA">{{ AlertTypeLabelEnum.CONSTANT_DATA_LABEL
+                                }}</ng-container>
+                        </span>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="status">
+                    <th class="px-3 columnWidth1" mat-header-cell *matHeaderCellDef> Status </th>
+                    <td class="px-3 columnWidth1" mat-cell *matCellDef="let row">
+                        <span [ngClass]="getStatusLabelAndClass(row.status).class">
+                            {{ getStatusLabelAndClass(row.status).label }}
+                        </span>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumn"></tr>
+                <tr mat-row *matRowDef="let task; columns: displayedColumn;"></tr>
+
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell text-center" [attr.colspan]="displayedColumn.length">
+                        {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <mat-paginator #paginator class="roundedBorder" showFirstLastButtons [length]="resultLength"
+            [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE" [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION">
+        </mat-paginator>
+    </div>
+
+</div>

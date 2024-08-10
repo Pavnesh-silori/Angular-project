@@ -1,0 +1,49 @@
+<div mat-dialog-title>
+    <strong class="dialogTitle">
+        {{ title }} layout
+    </strong>
+    <button mat-icon-button mat-dialog-close cdkFocusInitial class="float-end matDialogClose" matTooltip="Close"
+        matTooltipPosition="before">
+        <span class="material-symbols-outlined" [mat-dialog-close]="DialogEnum.CLOSE_DR">
+            close
+        </span>
+    </button>
+</div>
+
+<div class="matDialogContent" mat-dialog-content>
+    <form [formGroup]="layoutFG">
+        <div class="row">
+            <div class="col-sm-6">
+                <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Name</mat-label>
+                    <input matInput placeholder="Layout Name" type="text" formControlName="name" required/>
+                    <mat-error *ngIf="errorHandling('name', 'required')">
+                        {{ FormErrorEnum.REQUIRED }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+            <div class="col-sm-6">
+                <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label class="formLabel">Description</mat-label>
+                    <input class="formPlaceholder" matInput formControlName="description" [maxlength]="maxLength"
+                        #input />
+                    <mat-hint>Total number of character remaining: {{input.value.length}}
+                        /{{ maxLength }}</mat-hint>
+                </mat-form-field>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div mat-dialog-footer align="end">
+    <div [ngSwitch]="action" class="d-inline">
+        <button *ngSwitchCase="'create'" type="button" class="btn btn-sm btn-success" (click)="createLayout()">
+            {{ ButtonLabelEnum.CREATE_BTN_LABEL }}
+        </button>
+        <button *ngSwitchCase="'update'" type="button" class="btn btn-sm btn-success" [ngClass]="{'disabled': isEqual}"
+            (click)="updateLayout()">
+            {{ ButtonLabelEnum.UPDATE_BTN_LABEL }}
+        </button>
+        <button *ngSwitchDefault class="d-none"></button>
+    </div>
+</div>

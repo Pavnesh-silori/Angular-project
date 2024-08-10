@@ -1,0 +1,62 @@
+<div mat-dialog-title class="dialogTitle mb-0">
+    <div *ngIf="data.type == dialogOne.DELETE;else ElseBlock" class="d-flex text-danger row">
+        <div class="row d-flix">
+            <div class="col-sm-1 centerAlign">
+                <span class="material-symbols-outlined ">
+                    {{data.icon}}
+                </span>
+            </div>
+            <div class="col-sm-11">
+                <strong>
+                    {{data.header}}
+                </strong>
+            </div>
+        </div>
+
+    </div>
+    <ng-template #ElseBlock class="d-flex row">
+        <div class="row" [ngClass]="{'text-warning': data.type == dialogOne.CONFIRMATION, 'text-info': data.type == dialogOne.INFO}">
+            <div class="col-sm-1 ps-2 centerAlign">
+                <span class="material-symbols-outlined">
+                    {{data.icon}}
+                </span>
+            </div>
+            <div class="col-sm-11">
+                <strong>
+                    {{data.header}}
+                </strong>
+            </div>
+        </div>
+    </ng-template>
+</div>
+<div class="card-body breakLine mat-typography ms-4">
+    <div [innerHTML]="data.body"></div><br />
+</div>
+<div *ngIf="data.type == dialogOne.DELETE">
+    <button class="btn btn-sm btn-secondary float-end ms-2" (click)="fail()" matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">
+        {{ data.buttonOne }}
+    </button>
+    <button class="btn btn-sm btn-danger float-end ms-2" (click)="success()" matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">
+        {{ data.buttonTwo }}
+    </button>
+</div>
+
+<div *ngIf="data.type == dialogOne.INFO">
+    <button class="btn btn-sm  float-centre ms-2" (click)="success()" matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">
+        {{ data.buttonOne }}
+    </button>
+</div>
+
+<div *ngIf="data.type == dialogOne.CONFIRMATION">
+    <button class="btn btn-sm btn-warning text-white float-end ms-2" (click)="success()" matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">
+        {{ data.buttonTwo }}
+    </button>
+    <button class="btn btn-sm btn-secondary float-end ms-2" (click)="fail()" matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">
+        {{ data.buttonOne }}
+    </button>
+</div>

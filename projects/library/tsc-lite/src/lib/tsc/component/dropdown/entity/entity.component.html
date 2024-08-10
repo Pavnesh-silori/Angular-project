@@ -1,0 +1,52 @@
+<mat-form-field *ngIf="dropdownType == dropdownTypeEnum.SINGLE_DROPDOWN" class="matFieldWidth100"
+    [appearance]="materialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+    <mat-label>Select entity</mat-label>
+    <mat-select (selectionChange)="onChange($event.value)" [formControl]="entityFC" required>
+        <ng-container *ngIf="entityM && entityM.length > 0 && entityM[0]['id']; else noDataFound">
+            <mat-option>
+                <ngx-mat-select-search [formControl]="entitySearchUtil.filterFC" placeholderLabel="Search by name"
+                    noEntriesFoundLabel="No matching name found.">
+                </ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let entity of entitySearchUtil.filteredEntities | async" [value]="entity.id">
+                {{ entity.name }}
+            </mat-option>
+        </ng-container>
+        <ng-template #noDataFound>
+            <mat-option disabled>
+                {{ commonConstant.NO_DATA_FOUND }}
+            </mat-option>
+        </ng-template>
+    </mat-select>
+    <mat-error *ngIf="entityFC.touched && entityFC.hasError('required')">
+        {{ FormErrorEnum.REQUIRED }}
+    </mat-error>
+</mat-form-field>
+
+<mat-form-field *ngIf="dropdownType == dropdownTypeEnum.MULTIPLE_DROPDOWN" class="matFieldWidth100"
+    [appearance]="materialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+    <mat-label>Select entity</mat-label>
+
+    <mat-select [formControl]="multipleEntityFC" multiple required>
+        <ng-container *ngIf="entityM && entityM.length > 0 && entityM[0]['id']; else noDataOption">
+            <ngx-mat-select-search [formControl]="entitySearchUtil.filterFC" placeholderLabel="Search by name"
+                noEntriesFoundLabel="No matching name found.">
+            </ngx-mat-select-search>
+            <mat-option [value]="-1" (click)="selectAllEntities()" [hidden]="entitySearchUtil.filterFC.value">
+                Select all
+            </mat-option>
+            <mat-option *ngFor="let entity of entitySearchUtil.filteredEntities | async" [value]="entity.id"
+                (click)="selectedEntities()">
+                {{ entity.name }}
+            </mat-option>
+        </ng-container>
+        <ng-template #noDataOption>
+            <mat-option disabled>
+                {{ commonConstant.NO_DATA_FOUND }}
+            </mat-option>
+        </ng-template>
+    </mat-select>
+    <mat-error *ngIf="multipleEntityFC.hasError('required')">
+        {{ FormErrorEnum.REQUIRED }}
+    </mat-error>
+</mat-form-field>

@@ -1,0 +1,128 @@
+.scroll-fix {
+    height: calc(100vh - 122px) !important;
+}
+
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 1;
+}
+
+.headerProductLogo {
+    height: 40px;
+    width: auto;
+}
+
+.vsm-link.selected {
+    background-color: #e0f3ff;
+    color: #3f6ad8;
+}
+
+.vsm-link {
+    font-weight: normal !important;
+    min-height: 30px !important;
+    border-radius: 16px;
+
+    &:hover {
+        .showRightArrowOnHover {
+            opacity: 1;
+        }
+    }
+}
+
+.showRightArrowOnHover {
+    text-align: center;
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    margin-top: -17px;
+    font-size: 1.5rem;
+    opacity: 0;
+}
+
+.showLeftArrow {
+    text-align: center;
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    margin-top: -17px;
+    font-size: 1.5rem;
+}
+
+.customPadding {
+    padding: 0 1.5rem 0 15px;
+}
+
+.sideBarTooltip {
+    white-space: pre-line !important;
+    max-width: 1100px !important;
+    max-height: 550px !important;
+    font-size: 18px !important;
+}
+
+.openMenuHeader {
+    // pointer-events: none;
+    cursor: default;
+    padding: 0 1.5rem 0 15px;
+}
+
+.vsm-title {
+    font-size: 14px;
+    white-space: nowrap;
+    position: relative;
+    font-weight: normal;
+}
+
+.v-sidebar-menu .vsm-dropdown .vsm-list {
+    padding: 0.75rem 0.75rem;
+}
+
+.vsm-icon {        /* to show icons in between vsm-link on closed sidebar */
+    opacity: 1;
+}
+
+.icon {
+    text-align: center;
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    margin-top: -17px;
+    font-size: 1.3rem;
+}
+
+.subLabelMargin {
+    margin-left: 1.9rem !important;
+}
+
+.separator-top {
+    border-top: 1px solid #f6eded;
+    background-color: white !important;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
+
+.tscLogoWithName {
+    height: 38px;
+    width: auto;
+}
+
+.tscLogoWithoutName {
+    width: 32px;
+    height: 32px;
+}
+
+.bottomMargin {
+    margin-bottom: 17px;
+}
+
+.closedSideBarIconPadding {
+    padding: unset;
+}

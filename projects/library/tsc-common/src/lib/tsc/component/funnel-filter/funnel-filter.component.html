@@ -1,0 +1,84 @@
+<!-- for single select -->
+<ng-container *ngIf="type == 'mono'">
+    <div class="row">
+        <div class="col-sm-12 centerAlignVertical d-flex justify-content-start">
+            {{ header }}
+            <div>
+                <button mat-icon-button (click)="select.open()">
+                    <span class="fs-4 material-symbols-outlined funnel" [ngClass]="{'text-primary': active}">
+                        filter_alt
+                    </span>
+                    <div class="funnelFilterDD">
+                        <mat-form-field>
+                            <mat-select #select [formControl]="selectFC" (selectionChange)="selectionChange($event);">
+                                <mat-select-trigger class="d-none"></mat-select-trigger>
+                                <mat-option *ngIf="showSearchBar">
+                                    <ngx-mat-select-search [formControl]="searchUtil.filterFC"
+                                        [placeholderLabel]="'Search by '+ searchByPlaceholder"
+                                        noEntriesFoundLabel="No match found.">
+                                    </ngx-mat-select-search>
+                                </mat-option>
+
+                                <mat-option *ngFor="let entity of searchUtil.filteredEntities | async"
+                                    [value]="entity?.[value]" (click)="selectedEntity(entity)">
+                                    <span class="d-flex justify-content-between">
+                                        {{ entity?.[view] }}
+                                    </span>
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+
+<!-- for multiple select -->
+<ng-container *ngIf="type == 'multi'">
+    <div class="row">
+        <div class="col-sm-12 centerAlignVertical justify-content-start pe-0">
+            {{ header }}
+            <div>
+                <button mat-icon-button (click)="multiSelect.open()">
+                    <span class="material-symbols-outlined fs-4 funnel" [ngClass]="{'text-primary': active}">
+                        filter_alt
+                    </span>
+                    <div class="funnelFilterDD">
+                        <mat-form-field>
+                            <mat-select #multiSelect [formControl]="selectFC" (openedChange)="resetOnNoChange($event)"
+                                multiple>
+                                <mat-option *ngIf="showSearchBar">
+                                    <ngx-mat-select-search [formControl]="searchUtil.filterFC"
+                                        [placeholderLabel]="'Search by '+ searchByPlaceholder"
+                                        noEntriesFoundLabel="No match found.">
+                                    </ngx-mat-select-search>
+                                </mat-option>
+                                <mat-select-trigger class="d-none"></mat-select-trigger>
+                                <mat-option value="all" (click)="selectAllEntities()">
+                                    {{ selectAllLabel }}
+                                </mat-option>
+                                <mat-option *ngFor="let entity of searchUtil.filteredEntities | async"
+                                    [value]="entity[value]" (click)="selectEntity(entity)">
+                                    {{ entity[view] }}
+                                </mat-option>
+                                <div class="row m-0 dropdownFooter">
+                                    <div class="col-sm-12">
+                                        <button class="button btn btn-primary float-end m-1"
+                                            [ngClass]="{'disableBtn': selectFC.value.length == 0}"
+                                            (click)="selectFC.value.length == 0 ? null : applyFilter();"
+                                            (click)="selectFC.value.length == 0 ? null : multiSelect.close();" matRipple
+                                            [matRippleCentered]="MATERIAL_CONSTANT.matRippleCentered">
+                                            Apply
+                                        </button>
+                                    </div>
+                                </div>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+</ng-container>

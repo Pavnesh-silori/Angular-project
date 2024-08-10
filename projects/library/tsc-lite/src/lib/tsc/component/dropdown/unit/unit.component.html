@@ -1,0 +1,30 @@
+<div class="row">
+    <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+        <mat-label>Select unit</mat-label>
+
+        <mat-select (selectionChange)="unitChange($event.value)" [formControl]="selectedUnitFC" required>
+            <ng-container *ngIf="unitM && unitM.length > 0 && unitM[0]['id']; else noDataFound">
+                <mat-option>
+                    <ngx-mat-select-search [formControl]="unitSearchUtil.filterFC" placeholderLabel="Search by name"
+                        noEntriesFoundLabel="No matching name found.">
+                    </ngx-mat-select-search>
+                </mat-option>
+                <mat-option *ngFor="let unit of unitSearchUtil.filteredEntities | async" [value]="unit.id">
+                    {{ unit.name }}
+                </mat-option>
+            </ng-container>
+            <ng-template #noDataFound>
+                <mat-option disabled>
+                    {{ COMMON_CONSTANT.NO_DATA_FOUND }}
+                </mat-option>
+            </ng-template>
+        </mat-select>
+
+        <mat-error *ngIf="!selectedParameterID">
+            Please select parameter first
+        </mat-error>
+        <mat-error *ngIf="selectedUnitFC.hasError('required') && selectedParameterID">
+            {{ FormErrorEnum.REQUIRED }}
+        </mat-error>
+    </mat-form-field>
+</div>

@@ -1,0 +1,156 @@
+<mat-card class="border cardOverwrite">
+    <form [formGroup]="scheduleReportFG">
+        <div class="row">
+            <div class="col-sm-6">
+                <span class="cardTitle">
+                    Scheduler configuration
+                </span>
+            </div>
+            <div class="col-sm-6 centerAlignVertical justify-content-end">
+                <span class="me-2"> Inactive </span>
+                <mat-slide-toggle [checked]="scheduleReportFG.get('status').value == 'ACTIVE'"
+                    (change)="onStatusChange($event)"></mat-slide-toggle>
+                <span class="ms-2"> Active </span>
+            </div>
+            <div class="col-sm-12 centerAlignVertical justify-content-end">
+                <mat-error class="textMatError" *ngIf="errorHandling(scheduleReportFG, 'status', 'required')">
+                    {{ FormErrorEnum.REQUIRED }}
+                </mat-error>
+            </div>
+        </div>
+
+        <div class="row mt-2">
+            <div class="row">
+                <div class="col-sm-4">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Schedule report name</mat-label>
+                        <input class="formPlaceholder" type="text" placeholder="Schedule report name" matInput
+                            formControlName="name" required />
+                        <mat-error *ngIf="errorHandling(scheduleReportFG, 'name', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-sm-4">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label>Select data interval</mat-label>
+                        <mat-select formControlName="dataInterval" required>
+                            <mat-option *ngFor="let interval of intervalList" [value]="interval.value">
+                                {{ interval.label }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="errorHandling(scheduleReportFG, 'dataInterval', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-sm-4">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label>Select frequency</mat-label>
+                        <mat-select formControlName="frequency" required>
+                            <mat-option *ngFor="let frequency of frequencyList" [value]="frequency.value">
+                                {{ frequency.label }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-hint>{{ frequencyInfoLabel }}</mat-hint>
+                        <mat-error *ngIf="errorHandling(scheduleReportFG, 'frequency', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row enabledToggle">
+                <div class="col-sm-4 d-flex justify-content-start centerAlignVertical">
+                    <span class="me-2"> Current org users </span>
+                    <mat-slide-toggle [formControl]="userFC" (change)="userContextChange()"></mat-slide-toggle>
+                    <span class="ms-2"> All users </span>
+                </div>
+            </div>
+
+            <div class="row mt-2">
+                <div class="col-sm-4">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label>Select user</mat-label>
+                        <mat-select formControlName="userID" multiple required>
+
+                            <ng-container *ngIf="userM && userM.length > 0 && userM[0]['id']; else noUserFound">
+                                <mat-option>
+                                    <ngx-mat-select-search [formControl]="userSearchUtil.filterFC"
+                                        placeholderLabel="Search by name/email"
+                                        noEntriesFoundLabel="No matching name/email found.">
+                                    </ngx-mat-select-search>
+                                </mat-option>
+                                <mat-option [value]="-1" (click)="selectAllUsers()"
+                                    [hidden]="userSearchUtil.filterFC.value">
+                                    Select all
+                                </mat-option>
+                                <mat-option *ngFor="let user of userSearchUtil.filteredEntities | async"
+                                    [value]="user.id" (click)="selectUser()">
+                                    {{ user?.email }}
+                                </mat-option>
+                            </ng-container>
+
+                            <ng-template #noUserFound>
+                                <mat-option disabled>
+                                    {{ COMMON_CONSTANT.NO_DATA_FOUND }}
+                                </mat-option>
+                            </ng-template>
+                        </mat-select>
+                        <mat-error *ngIf="errorHandling(scheduleReportFG, 'userID', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-4">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label>Enter other user email</mat-label>
+                        <mat-chip-list #chipList>
+                            <mat-chip *ngFor="let email of otherUserEmail.value" [removable]="removable"
+                                (removed)="removeEmail(email)">
+                                {{ email }}
+                                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                            </mat-chip>
+                            <input [placeholder]="inputPlaceholder" [matChipInputFor]="chipList"
+                                [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+                                (matChipInputTokenEnd)="add($event)" (input)="onInput()">
+                        </mat-chip-list>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="radioBtnField">
+                        <div class="radioBtnGroupLabel"> Select report format * </div>
+                        <mat-radio-group formControlName="reportFormat">
+                            <div class="row my-1">
+                                <div class="col-sm-6">
+                                    <mat-radio-button class="radioBtnLabel" [value]="'PDF'">
+                                        pdf
+                                    </mat-radio-button>
+                                </div>
+                                <div class="col-sm-6">
+                                    <mat-radio-button class="radioBtnLabel" [value]="'XLSX'">
+                                        xlsx
+                                    </mat-radio-button>
+                                </div>
+                                <mat-error class="textMatError ms-1 mt-1"
+                                    *ngIf="errorHandling(scheduleReportFG, 'reportFormat', 'required')">
+                                    {{ FormErrorEnum.REQUIRED }}
+                                </mat-error>
+                            </div>
+                        </mat-radio-group>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</mat-card>

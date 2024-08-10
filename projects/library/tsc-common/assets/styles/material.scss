@@ -1,0 +1,71 @@
+.matFieldWidth100 {
+    width: 100%;
+}
+
+.successMatCard {
+    border-left: 5px solid #3ac47d;
+    background: whitesmoke;
+}
+
+/* mat toogle css overwrite */
+.matBtnFilter {
+    mat-button-toggle.mat-button-toggle-checked {
+        background-color: #e6e6e6 !important;
+    }
+
+    .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
+        line-height: 30px !important;
+    }
+}
+
+.mat-button-toggle-group-appearance-standard {
+    border-radius: 16px !important;
+}
+
+/* mat toogle css overwrite */
+
+
+// material dialog css overwrite
+.matDialogContainerOverride {
+    .mat-dialog-container {
+        padding-bottom: 0 !important;
+    }
+}
+
+// /material dialog css overwrite/
+
+
+// material dialog footer
+.tscDialogFooter {
+    display: flex;
+    flex-direction: row-reverse;
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
+// /material dialog footer/
+
+
+// angular material calendar
+.yearPicker,
+.monthPicker {
+    .mat-calendar-period-button {
+        pointer-events: none;
+    }
+
+    .mat-calendar-arrow {
+        display: none;
+    }
+}
+
+// /angular material calendar
+
+
+// angular material toggle filter
+.matBtnFilter {
+    mat-button-toggle.mat-button-toggle-checked {
+        background-color: #e6e6e6 !important;
+    }
+}
+
+// /angular material toggle filter/

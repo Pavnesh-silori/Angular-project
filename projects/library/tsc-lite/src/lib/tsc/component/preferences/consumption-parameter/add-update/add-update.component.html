@@ -1,0 +1,128 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Add Consumption Parameter</div>
+            <div class="pageSubtitle"></div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <ng-container *ngIf="sourceConsumerConfiguredM?.sourceTypeConfigured; else notSourceType">
+            <ng-container
+                *ngIf="consumptionParamM && consumptionParamM.length > 0 && consumptionParamM[0]['id']; else noComsumptionParamFound">
+                <div class="row">
+                    <div class="col-sm-12 mb-3">
+                        <lib-message-alert [labelInp]="'Info'"
+                            [contentInp]="'Adding consumption parameters will impact your data.'"
+                            [messageAlertTypeInp]="MessageAlertTypeEnum.INFO"
+                            [messageAlertIconInp]="MessageAlertIconEnum.INFO_ICON">
+                        </lib-message-alert>
+                    </div>
+                </div>
+                <form [formGroup]="consumptionParamFG" (ngSubmit)="consumptionParameterSubmit()">
+                    <ng-container formArrayName="consumptionParameter">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <table class="table">
+                                    <tbody>
+                                        <tr class="tableHeader">
+                                            <td><mat-checkbox (change)="$event ? selectAll() : null"
+                                                    [checked]="selection.hasValue() && isAllSelected()"
+                                                    [disabled]="consumptionParamM.length == 0 || consumptionParamM[0]['id'] == null">
+                                                    Select all
+                                                </mat-checkbox></td>
+                                            <td align="center" class="fw-bold"> Consumption Parameter </td>
+                                            <td align="center" class="fw-bold"> Dependent Parameter </td>
+                                        </tr>
+                                    </tbody>
+                                    <tbody>
+                                        <tr *ngFor="let parameter of consumptionParamM; let i = index">
+                                            <ng-container [formGroupName]="i">
+                                                <td>
+                                                    <mat-checkbox
+                                                        (change)="$event ? selection.toggle(parameter.id) : null"
+                                                        [checked]="selection.isSelected(parameter.id)"></mat-checkbox>
+                                                </td>
+                                                <td align="center">
+                                                    <div class="mt-4">
+                                                        {{ parameter.label }}
+                                                    </div>
+                                                </td>
+                                                <td align="center">
+                                                    <div class="row pt-2">
+                                                        <div class="col-sm-8">
+                                                            <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                                <mat-label>Select dependent parameter</mat-label>
+
+                                                                <mat-select formControlName="dependentParameterID" [disabled]="toggleField(i, parameter.id)"
+                                                                    (selectionChange)="selection.select(parameter.id)" multiple required>
+                                                                    <ng-container *ngIf="dependentConsumParamSearchUtil[i]['filteredEntities']; else noDependentParamFound">
+                                                                        <ngx-mat-select-search [formControl]="dependentConsumParamSearchUtil[i].filterFC"
+                                                                            placeholderLabel="Search by name" noEntriesFoundLabel="No matching name found.">
+                                                                        </ngx-mat-select-search>
+                                                                        <mat-option [value]="-1" (click)="selectAllDependentParam(i)"
+                                                                            [hidden]="dependentConsumParamSearchUtil[i].filterFC.value">
+                                                                            Select all
+                                                                        </mat-option>
+                                                                        <mat-option *ngFor="let param of dependentConsumParamSearchUtil[i]['filteredEntities'] | async"
+                                                                            [value]="param.id" (click)="selectDependentParam(i)">
+                                                                            {{ param.label }}
+                                                                        </mat-option>
+                                                                    </ng-container>
+                                                                    <ng-template #noDependentParamFound>
+                                                                        <mat-option disabled>
+                                                                            {{ COMMON_CONSTANT.NO_DATA_FOUND }}
+                                                                        </mat-option>
+                                                                    </ng-template>
+                                                                </mat-select>
+
+                                                                <mat-error *ngIf="this.consumptionParameterFA.controls[i].get('dependentParameterID').hasError('required')">
+                                                                    {{ FormErrorEnum.REQUIRED }}
+                                                                </mat-error>
+                                                            </mat-form-field>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </ng-container>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </ng-container>
+
+                    <button class="d-none" type="submit" #formSubmitBtn></button>
+
+                    <div class="row mt-2">
+                        <div class="col-sm-12">
+                            <div class="float-end">
+                                <button class="btn btn-sm btn-secondary me-2" type="button"
+                                    (click)="tscCommonService.back()">
+                                    {{ ButtonLabelEnum.CANCEL_BTN_LABEL }}
+                                </button>
+
+                                <button class="btn btn-sm btn-success" [ngClass]="{'disabled' : isEqual}"
+                                    type="submit">{{
+                                    ButtonLabelEnum.SAVE_BTN_LABEL }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </ng-container>
+            <ng-template #noComsumptionParamFound>
+                <lib-message-alert [labelInp]="'Not found!'" [contentInp]="'No consumption parameter found.'"
+                    [messageAlertTypeInp]="MessageAlertTypeEnum.DANGER"
+                    [messageAlertIconInp]="MessageAlertIconEnum.DANGER_ICON">
+                </lib-message-alert>
+            </ng-template>
+        </ng-container>
+        <ng-template #notSourceType>
+            <lib-message-alert [labelInp]="'Info'"
+                [contentInp]="'Source type not set. Please set source type first to add consumption parameters'"
+                [messageAlertTypeInp]="MessageAlertTypeEnum.INFO"
+                [messageAlertIconInp]="MessageAlertIconEnum.INFO_ICON">
+            </lib-message-alert>
+        </ng-template>
+    </div>
+</div>

@@ -1,0 +1,81 @@
+{
+    "metaData": [
+        {
+            "xAxisSeries": "2024-03-08T00:00:00+05:30",
+            "totalDataValue": 50,
+            "barData": [
+                {
+                    "name": "Flow Rate",
+                    "value": 20,
+                    "unit": {
+                        "name": "",
+                        "code": "m³"
+                    }
+                },
+                {
+                    "name": "Flow Total",
+                    "value": 30,
+                    "unit": {
+                        "name": "",
+                        "code": "m³"
+                    }
+                }
+            ]
+        },
+        {
+            "xAxisSeries": "2024-03-08T01:00:00+05:30",
+            "totalDataValue": 75,
+            "barData": [
+                {
+                    "name": "Flow Rate",
+                    "value": 15,
+                    "unit": {
+                        "name": "",
+                        "code": "m³"
+                    }
+                },
+                {
+                    "name": "Flow Total",
+                    "value": 60,
+                    "unit": {
+                        "name": "",
+                        "code": "m³"
+                    }
+                }
+            ]
+        },
+        {
+            "xAxisSeries": "2024-03-08T02:00:00+05:30",
+            "totalDataValue": 120,
+            "barData": [
+                {
+                    "name": "Flow Rate",
+                    "value": 30,
+                    "unit": {
+                        "name": "",
+                        "code": "m³"
+                    }
+                },
+                {
+                    "name": "Flow Total",
+                    "value": 90,
+                    "unit": {
+                        "name": "",
+                        "code": "m³"
+                    }
+                }
+            ]
+        }
+    ],
+    "tooltipHeaderLabel": "",
+    "totalDataLabel": "Total consumption",
+    "xAxisLabel": "",
+    "yAxisLabel": "",
+    "xAxisNameGap": 0,
+    "yAxisNameGap": 0,
+    "showDataZoomSlider": "true",
+    "showDataView": "true",
+    "showMagicType": "true",
+    "showRestore": "true",
+    "showDownloadImage": "true"
+}

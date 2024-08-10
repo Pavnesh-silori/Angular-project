@@ -1,0 +1,107 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Meter Data Dashboard</div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-3">
+                <mat-form-field class="matFieldWidth100"
+                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label>Select meter</mat-label>
+                    <mat-select (selectionChange)="meterChange($event.value)" [formControl]="meterFC" required>
+                        <ng-container
+                            *ngIf="entityDeviceM && entityDeviceM.length > 0 && entityDeviceM?.[0]?.id; else noDataFound">
+                            <mat-option>
+                                <ngx-mat-select-search [formControl]="meterSearchUtil.filterFC"
+                                    placeholderLabel="Search by entity name"
+                                    noEntriesFoundLabel="No matching name found.">
+                                </ngx-mat-select-search>
+                            </mat-option>
+                            <mat-optgroup *ngFor="let entity of meterSearchUtil.filteredEntities | async"
+                                [label]="entity.name" [disabled]="entity.disabled">
+                                <mat-option *ngFor="let device of entity.devices" [value]="device.id">
+                                    {{ device.name }}
+                                </mat-option>
+                            </mat-optgroup>
+                        </ng-container>
+                        <ng-template #noDataFound>
+                            <mat-option disabled>
+                                {{ COMMON_CONSTANT.NO_DATA_FOUND }}
+                            </mat-option>
+                        </ng-template>
+                    </mat-select>
+                    <mat-error *ngIf="meterFC.touched && meterFC.hasError('required')">
+                        {{ FormErrorEnum.REQUIRED }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+
+        <div class="row mt-2">
+            <div class="col-sm-12">
+                <lib-message-alert *ngIf="alertObj.showAlert" [labelInp]="alertObj.alertLabel"
+                    [contentInp]="alertObj.alertContent" [messageAlertTypeInp]="alertObj.messageAlertType"
+                    [messageAlertIconInp]="alertObj.messageAlertIcon">
+                </lib-message-alert>
+            </div>
+        </div>
+
+        <div class="row mt-2">
+            <ng-container *ngIf="showLoader; else dataTemplate">
+                <lib-skeleton-loader [count]="3" [appearance]="''"
+                    [theme]="{ 'border-radius': '16px', height: '40px', 'background-color': 'rgb(230 232 235)' }"></lib-skeleton-loader>
+            </ng-container>
+            <ng-template #dataTemplate>
+                <div class="col-sm-4 mb-3" *ngFor="let meterData of meterDataRes">
+                    <mat-card class="cardOverwrite cardBackgroundColor">
+                        <ng-container *ngTemplateOutlet="parameterData; context: {
+                            duration: last48HrsMeterData && last48HrsMeterData[meterData.paramName]?.data?.date ? dateService.getRelativeTimeAgoLabel(last48HrsMeterData[meterData.paramName]?.data?.date, timezone) : dateService.getRelativeTimeAgoLabel(meterData?.data?.date, timezone),
+                            value: last48HrsMeterData && last48HrsMeterData[meterData.paramName]?.data?.value != null ? last48HrsMeterData[meterData.paramName]?.data?.value : meterData?.data?.value,
+                            unit: meterData?.unit,
+                            label: meterData?.paramLabel,
+                            entityID: meterData?.entityID,
+                            paramName: meterData?.paramName,
+                            status: meterData?.status
+                        }"></ng-container>
+                    </mat-card>
+                </div>
+            </ng-template>
+        </div>
+
+    </div>
+</div>
+
+<ng-template #parameterData let-duration="duration" let-label="label" let-value="value" let-unit="unit"
+    let-entityID="entityID" let-paramName="paramName" let-status="status">
+    <div class="row">
+        <div class="col-sm-6 textDurationWithAgoTime">
+            {{ duration }}
+        </div>
+        <div class="col-sm-6 text-end">
+            <a *ngIf="status == 'OFFLINE'" class="text-secondary cursorPointer me-2"
+                matTooltip="Currently parameter is offline, click here to see data of last 48 hrs."
+                matTooltipPosition="below" (click)="getLast48HrsMeterData(paramName)">
+                <span class="material-symbols-outlined fs-5 fw-bold">devices</span>
+            </a>
+            <a class="text-primary cursorPointer" matTooltip="Trend" matTooltipPosition="below"
+                (click)="showTrend(paramName, entityID)">
+                <span class="material-symbols-outlined fs-5 fw-bold">trending_up</span>
+            </a>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col-sm-12 text-center">
+            <span class="fs-1 fw-bold text-primary">{{ value != null && value != undefined ? (value | number: '1.2-2' ||
+                COMMON_CONSTANT.HYPHEN) : COMMON_CONSTANT.HYPHEN }}</span>
+            <span class="text-secondary fw-bold"> {{ value ? unit : '' }} </span>
+        </div>
+    </div>
+    <div class="row mt-4 mb-4">
+        <div class="col-sm-12 fs-5 text-center">
+            {{ label }}
+        </div>
+    </div>
+</ng-template>

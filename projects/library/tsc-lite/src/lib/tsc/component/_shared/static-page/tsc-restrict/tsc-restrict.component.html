@@ -1,0 +1,38 @@
+<div class="card main-card cardOverwrite h-100">
+    <div class="card-body">
+        <div class="container d-flex align-items-center">
+            <div class="mx-auto text-center">
+                <img class="img" src="/assets/images/tsc-restrict.jpg" alt="Not found" />
+                <br />
+                <br />
+                <ng-container
+                    *ngIf="!consumptionParameter?.[0]?.['consumptionParamID'] && !layoutID; else setConsumptionParameter">
+                    You have not set consumption parameters. Please add consumption parameters for better experience.
+                    <br />
+                    Click <a [href]="setConsumptionRedirectUrl">here</a> to add consumption parameters.
+                    <br />
+                    <br />
+                    You don't have any layout to showcase the respective page. Please create a layout for better
+                    experience.
+                    <br />
+                    Click <a [href]="setLayoutRedirectUrl">here</a> to create a layout.
+                </ng-container>
+                <ng-template #setConsumptionParameter>
+                    <ng-container
+                        *ngIf="!consumptionParameter?.[0]?.['consumptionParamID'] && layoutID; else setLayout">
+                        You have not set consumption parameters. Please add consumption parameters for better
+                        experience.
+                        <br />
+                        Click <a [href]="setConsumptionRedirectUrl">here</a> to add consumption parameters.
+                    </ng-container>
+                    <ng-template #setLayout>
+                        You don't have any layout to showcase the respective page. Please create a layout for better
+                        experience.
+                        <br />
+                        Click <a [href]="setLayoutRedirectUrl">here</a> to create a layout.
+                    </ng-template>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+</div>

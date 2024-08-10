@@ -1,0 +1,25 @@
+<div class="header-dots">
+    <div class="btn-group" ngbDropdown placement="bottom">
+        <button type="button" class="btn btn-link text-secondary p-0" ngbDropdownToggle>
+            <span class="material-symbols-outlined fw-bolder">
+                apps
+            </span>
+        </button>
+        <div class="dropdown-menu-xl mt-3 appDrawerPositioning" ngbDropdownMenu>
+            <div class="grid-menu grid-menu-xl grid-menu-3col">
+                <div class="g-0 row">
+
+                    <div class="col-sm-4 col-xl-4 border-0" *ngFor="let applicationsM of applicationFilter">
+                        <a class="btn" [href]="appUrlBuilder(applicationsM.keyID, applicationsM.url)" target="_blank">
+
+                            <img class="appDrawerIcon" [src]="getApplicationLogo(applicationsM.keyID)" alt="{{ applicationsM.name }}">
+                            <br />
+                            <span class="appDrawerName">{{ applicationsM.name }}</span>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

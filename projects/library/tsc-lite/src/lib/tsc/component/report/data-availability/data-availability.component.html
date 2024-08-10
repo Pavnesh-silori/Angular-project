@@ -1,0 +1,112 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Data Availability Report</div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-12">
+                <lib-date-filter-two [frequencyInp]="frequency" [defaultFrequencyInp]="defaultFrequency"
+                    [dateTypeInp]="dateType" [showDefaultDurationInp]="true" [timezoneInp]="timezone"
+                    (dateFilterEmitter)="dateFilterEmitted($event)"></lib-date-filter-two>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-sm-3">
+                <mat-form-field class="matFieldWidth100"
+                    [appearance]="materialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                    <mat-label>Select aggregation duration</mat-label>
+                    <mat-select (selectionChange)="aggDurationChange($event.value)" [formControl]="aggDurationFC"
+                        required>
+                        <mat-option [value]="'day_1'">
+                            Daily
+                        </mat-option>
+                        <mat-option [value]="'month_1'" *ngIf="selectedFrequency == 'MONTHLY'">
+                            Monthly
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="aggDurationFC.touched && aggDurationFC.hasError('required')">
+                        {{ FormErrorEnum.REQUIRED }}
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div class="col-sm-3">
+                <lib-entity #entityInput (emitFilter)="entityInpChange()"></lib-entity>
+            </div>
+
+            <div class="col-sm-3">
+                <lib-device #deviceInput [dropdownTypeInp]="dropdownTypeEnum.SINGLE_DROPDOWN" [entityInp]="entityID"
+                    (emitFilter)="deviceInpChange()"></lib-device>
+            </div>
+
+            <div class="col-sm-3">
+                <lib-param-metric #paramInput [deviceInp]="deviceID" (emitFilter)="paramInpChange()"></lib-param-metric>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="float-end">
+                    <button class="btn btn-sm btn-primary" type="button" (click)="viewReport()" matRipple
+                        [matRippleCentered]="materialConstant.MAT_RIPPLE_CENTER">
+                        {{ buttonLabelEnum.READ_BTN_LABEL }}
+                    </button>
+                    <lib-download-report (fileTypeEmitted)="downloadReport($event)"></lib-download-report>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <lib-message-alert *ngIf="reportAlertObj.showAlert" [labelInp]="reportAlertObj.alertLabel"
+                    [contentInp]="reportAlertObj.alertContent" [messageAlertTypeInp]="reportAlertObj.messageAlertType"
+                    [messageAlertIconInp]="reportAlertObj.messageAlertIcon">
+                </lib-message-alert>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="centerAlign">
+                <lib-skeleton-loader *ngIf="showLoader" [count]="3" [appearance]="'circle'"
+                    [theme]="{ height: '15px', width: '15px', 'background-color': '#e7ebf3' }"></lib-skeleton-loader>
+            </div>
+        </div>
+
+        <div class="row mt-3" *ngIf="dataAvailabilityM && dataAvailabilityM?.length > 0 && dataAvailabilityM[0]?.deviceName">
+            <div class="overflowX customScrollBar">
+                <table class="table">
+                    <tbody>
+                        <tr class="tableHeader">
+                            <td class="fw-bold"> Sr. No. </td>
+                            <td align="center" class="fw-bold"> Time </td>
+                            <td align="center" class="fw-bold"> Entity </td>
+                            <td align="center" class="fw-bold"> Device </td>
+                            <td align="center" class="fw-bold"> Parameter </td>
+                            <td align="center" class="fw-bold"> Min value </td>
+                            <td align="center" class="fw-bold"> Max value </td>
+                            <td align="center" class="fw-bold"> Avg value </td>
+                            <td align="center" class="fw-bold"> Data availability (%) </td>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr *ngFor="let data of dataAvailabilityM; let i = index">
+                            <td>{{ i + 1 }}</td>
+                            <td align="center" class="colWidthContainingDateTime">{{ dateService.formatDate(data.date, this.format) }}</td>
+                            <td align="center">{{ data.entityName }}</td>
+                            <td align="center">{{ data.deviceName }}</td>
+                            <td align="center">{{ data.parameterName }}</td>
+                            <td align="center">{{ data.minValue }}</td>
+                            <td align="center">{{ data.maxValue }}</td>
+                            <td align="center">{{ data.avgValue }}</td>
+                            <td align="center">{{ data.dataAvailability }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
