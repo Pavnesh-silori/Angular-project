@@ -1,0 +1,30 @@
+.formLabel {
+    text-transform: none;
+}
+
+.formPlaceholder::placeholder {
+    text-transform: none;
+}
+
+/* Applied to override boostrap class form-control start*/
+.fileInput {
+    .form-control {
+        border: 1px solid rgba(26, 54, 126, .125);
+        border-radius: 0.25rem;
+        outline: none;
+        // height: 3rem;
+        background: transparent;
+        box-shadow: none;
+        line-height: 2.5;
+    }
+
+    .form-control:focus {
+        outline: 2px solid #3f6ad8;
+        box-shadow: none !important;
+    }
+
+    .form-control:hover {
+        outline: 2px solid rgba(0,0,0,.87);
+    }
+}
+/* Applied to override boostrap class form-control end*/

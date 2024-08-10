@@ -1,0 +1,12 @@
+
+.nameTooltip {
+    white-space: pre-line !important;
+    max-width: 1100px !important;
+    max-height: 550px !important;
+    font-size: 13px;
+}
+
+.infoTooltip {
+    @extend .nameTooltip;
+    max-width: 500px !important;
+}

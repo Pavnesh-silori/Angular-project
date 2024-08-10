@@ -1,0 +1,22 @@
+@import './variable.scss';
+@import './common.scss';
+@import './typography.scss';
+@import './material.scss';
+@import './dialog.scss';
+@import './org-drawer.scss';
+@import './table.scss';
+@import './scrollbar.scss';
+@import './toastr.scss';
+@import './profile.scss';
+@import './text.scss';
+@import './intl-tel-input.scss';
+@import './overwrite.scss';
+@import './main-card.scss';
+@import './right-drawer-overwrite.scss';
+@import './button.scss';
+@import './form.scss';
+@import './tooltip.scss';
+
+/* custom style imports */
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+@import url("https://cdn.jsdelivr.net/npm/intl-tel-input@17.0.3/build/css/intlTelInput.css");

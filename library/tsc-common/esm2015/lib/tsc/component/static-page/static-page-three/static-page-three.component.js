@@ -1,0 +1,27 @@
+import { Component } from '@angular/core';
+import { StaticPageOne } from '../../../model/static-page-one.model';
+import * as i0 from "@angular/core";
+import * as i1 from "@angular/router";
+import * as i2 from "@angular/common";
+export class StaticPageThreeComponent {
+    constructor(activatedRoute) {
+        this.activatedRoute = activatedRoute;
+        this.data = new StaticPageOne();
+    }
+    ngOnInit() {
+        this.activatedRoute.data.subscribe(data => {
+            this.data = data.data;
+        });
+    }
+}
+StaticPageThreeComponent.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: StaticPageThreeComponent, deps: [{ token: i1.ActivatedRoute }], target: i0.ɵɵFactoryTarget.Component });
+StaticPageThreeComponent.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "12.0.0", version: "12.2.17", type: StaticPageThreeComponent, selector: "lib-static-page-three", ngImport: i0, template: "<div [ngClass]=\"{'container': !data.containsHeaderFooter}\">\n    <div class=\"card main-card centerAlign cardOverwrite\" [class]=\"data.cardClass\">\n        <div class=\"row\">\n            <div class=\"col-sm-12 px-5 py-2 centerAlign\">\n                <img [class]=\"data.imgClass\" [src]=\"data.imgPath\" [alt]=\"data.imgAlt\" />\n            </div>\n\n            <div class=\"col-sm-12 px-5 py-2\">\n                <div class=\"card-body\">\n                    <div class=\"fs-4 fw-bold centerAlign\">\n                        {{ data.title }}\n                    </div>\n                    <br />\n                    <div class=\"centerAlign\">\n                        <p class=\"text-center\" [innerHTML]=\"data.body\"></p>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n", directives: [{ type: i2.NgClass, selector: "[ngClass]", inputs: ["class", "ngClass"] }] });
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: StaticPageThreeComponent, decorators: [{
+            type: Component,
+            args: [{
+                    selector: 'lib-static-page-three',
+                    templateUrl: './static-page-three.component.html',
+                    styleUrls: []
+                }]
+        }], ctorParameters: function () { return [{ type: i1.ActivatedRoute }]; } });
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoic3RhdGljLXBhZ2UtdGhyZWUuY29tcG9uZW50LmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiLi4vLi4vLi4vLi4vLi4vLi4vLi4vLi4vcHJvamVjdHMvbGlicmFyeS90c2MtY29tbW9uL3NyYy9saWIvdHNjL2NvbXBvbmVudC9zdGF0aWMtcGFnZS9zdGF0aWMtcGFnZS10aHJlZS9zdGF0aWMtcGFnZS10aHJlZS5jb21wb25lbnQudHMiLCIuLi8uLi8uLi8uLi8uLi8uLi8uLi8uLi9wcm9qZWN0cy9saWJyYXJ5L3RzYy1jb21tb24vc3JjL2xpYi90c2MvY29tcG9uZW50L3N0YXRpYy1wYWdlL3N0YXRpYy1wYWdlLXRocmVlL3N0YXRpYy1wYWdlLXRocmVlLmNvbXBvbmVudC5odG1sIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBLE9BQU8sRUFBRSxTQUFTLEVBQVUsTUFBTSxlQUFlLENBQUM7QUFHbEQsT0FBTyxFQUFFLGFBQWEsRUFBRSxNQUFNLHNDQUFzQyxDQUFDOzs7O0FBUXJFLE1BQU0sT0FBTyx3QkFBd0I7SUFHakMsWUFDWSxjQUE4QjtRQUE5QixtQkFBYyxHQUFkLGNBQWMsQ0FBZ0I7UUFIMUMsU0FBSSxHQUFHLElBQUksYUFBYSxFQUFFLENBQUM7SUFJdkIsQ0FBQztJQUVMLFFBQVE7UUFDSixJQUFJLENBQUMsY0FBYyxDQUFDLElBQUksQ0FBQyxTQUFTLENBQUMsSUFBSSxDQUFDLEVBQUU7WUFDdEMsSUFBSSxDQUFDLElBQUksR0FBRyxJQUFJLENBQUMsSUFBSSxDQUFDO1FBQzFCLENBQUMsQ0FBQyxDQUFDO0lBQ1AsQ0FBQzs7c0hBWFEsd0JBQXdCOzBHQUF4Qix3QkFBd0IsNkRDWHJDLG8xQkFxQkE7NEZEVmEsd0JBQXdCO2tCQU5wQyxTQUFTO21CQUFDO29CQUNQLFFBQVEsRUFBRSx1QkFBdUI7b0JBQ2pDLFdBQVcsRUFBRSxvQ0FBb0M7b0JBQ2pELFNBQVMsRUFBRSxFQUFFO2lCQUNoQiIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IENvbXBvbmVudCwgT25Jbml0IH0gZnJvbSAnQGFuZ3VsYXIvY29yZSc7XG5pbXBvcnQgeyBBY3RpdmF0ZWRSb3V0ZSB9IGZyb20gJ0Bhbmd1bGFyL3JvdXRlcic7XG5cbmltcG9ydCB7IFN0YXRpY1BhZ2VPbmUgfSBmcm9tICcuLi8uLi8uLi9tb2RlbC9zdGF0aWMtcGFnZS1vbmUubW9kZWwnOyBcblxuQENvbXBvbmVudCh7XG4gICAgc2VsZWN0b3I6ICdsaWItc3RhdGljLXBhZ2UtdGhyZWUnLFxuICAgIHRlbXBsYXRlVXJsOiAnLi9zdGF0aWMtcGFnZS10aHJlZS5jb21wb25lbnQuaHRtbCcsXG4gICAgc3R5bGVVcmxzOiBbXVxufSlcblxuZXhwb3J0IGNsYXNzIFN0YXRpY1BhZ2VUaHJlZUNvbXBvbmVudCBpbXBsZW1lbnRzIE9uSW5pdCB7XG4gICAgZGF0YSA9IG5ldyBTdGF0aWNQYWdlT25lKCk7XG5cbiAgICBjb25zdHJ1Y3RvcihcbiAgICAgICAgcHJpdmF0ZSBhY3RpdmF0ZWRSb3V0ZTogQWN0aXZhdGVkUm91dGVcbiAgICApIHsgfVxuXG4gICAgbmdPbkluaXQoKTogdm9pZCB7XG4gICAgICAgIHRoaXMuYWN0aXZhdGVkUm91dGUuZGF0YS5zdWJzY3JpYmUoZGF0YSA9PiB7XG4gICAgICAgICAgICB0aGlzLmRhdGEgPSBkYXRhLmRhdGE7XG4gICAgICAgIH0pO1xuICAgIH1cblxufVxuIiwiPGRpdiBbbmdDbGFzc109XCJ7J2NvbnRhaW5lcic6ICFkYXRhLmNvbnRhaW5zSGVhZGVyRm9vdGVyfVwiPlxuICAgIDxkaXYgY2xhc3M9XCJjYXJkIG1haW4tY2FyZCBjZW50ZXJBbGlnbiBjYXJkT3ZlcndyaXRlXCIgW2NsYXNzXT1cImRhdGEuY2FyZENsYXNzXCI+XG4gICAgICAgIDxkaXYgY2xhc3M9XCJyb3dcIj5cbiAgICAgICAgICAgIDxkaXYgY2xhc3M9XCJjb2wtc20tMTIgcHgtNSBweS0yIGNlbnRlckFsaWduXCI+XG4gICAgICAgICAgICAgICAgPGltZyBbY2xhc3NdPVwiZGF0YS5pbWdDbGFzc1wiIFtzcmNdPVwiZGF0YS5pbWdQYXRoXCIgW2FsdF09XCJkYXRhLmltZ0FsdFwiIC8+XG4gICAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgICAgPGRpdiBjbGFzcz1cImNvbC1zbS0xMiBweC01IHB5LTJcIj5cbiAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPVwiY2FyZC1ib2R5XCI+XG4gICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9XCJmcy00IGZ3LWJvbGQgY2VudGVyQWxpZ25cIj5cbiAgICAgICAgICAgICAgICAgICAgICAgIHt7IGRhdGEudGl0bGUgfX1cbiAgICAgICAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICAgICAgICAgIDxiciAvPlxuICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPVwiY2VudGVyQWxpZ25cIj5cbiAgICAgICAgICAgICAgICAgICAgICAgIDxwIGNsYXNzPVwidGV4dC1jZW50ZXJcIiBbaW5uZXJIVE1MXT1cImRhdGEuYm9keVwiPjwvcD5cbiAgICAgICAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICAgICAgPC9kaXY+XG4gICAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgPC9kaXY+XG4gICAgPC9kaXY+XG48L2Rpdj5cbiJdfQ==

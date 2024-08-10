@@ -1,0 +1,81 @@
+import { __awaiter } from "tslib";
+import { Component, EventEmitter, Output } from '@angular/core';
+import { FormControl, Validators } from '@angular/forms';
+import { Shift } from '../../../model/shift.model';
+import { COMMON_CONSTANT, FormErrorEnum, MaterialFormFieldAppearance, MatSelectSearchService } from '@library/tsc-common';
+import * as i0 from "@angular/core";
+import * as i1 from "@library/storage-service";
+import * as i2 from "../../../service/shift.service";
+import * as i3 from "@angular/material/form-field";
+import * as i4 from "@angular/material/select";
+import * as i5 from "@angular/material/core";
+import * as i6 from "ngx-mat-select-search";
+import * as i7 from "@angular/forms";
+import * as i8 from "@angular/common";
+// /tsc-library/
+export class ShiftComponent {
+    constructor(storageService, shiftService) {
+        this.storageService = storageService;
+        this.shiftService = shiftService;
+        this.emitFilter = new EventEmitter();
+        this.COMMON_CONSTANT = COMMON_CONSTANT;
+        this.MaterialFormFieldAppearance = MaterialFormFieldAppearance;
+        this.FormErrorEnum = FormErrorEnum;
+        this.shiftM = [new Shift()];
+        this.allShiftID = [];
+        this.totalShiftCount = 0;
+        this.multiSelectedShiftFC = new FormControl([], [Validators.required]);
+        this.shiftSearchUtil = new MatSelectSearchService(['name']);
+    }
+    ngOnInit() {
+        this.orgID = this.storageService.getStorage('currentOrgID');
+        this.getShift();
+    }
+    getShift() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.shiftM = (yield this.shiftService.getShift(this.orgID, 'NO'));
+            this.shiftSearchUtil.entityArr = this.shiftM;
+            this.shiftSearchUtil.createSubscription();
+            this.totalShiftCount = this.shiftM.length;
+            this.shiftM.forEach(shift => this.allShiftID.push(shift['id']));
+            this.emitFilter.emit();
+        });
+    }
+    selectAllShifts() {
+        if (!this.multiSelectedShiftFC.value.includes(-1)) {
+            this.multiSelectedShiftFC.reset([]);
+            return;
+        }
+        this.multiSelectedShiftFC.setValue([-1, ...this.allShiftID]);
+        this.emitFilter.emit();
+    }
+    selectedShift() {
+        const selected = this.multiSelectedShiftFC.value;
+        if (selected.includes(-1)) {
+            selected.shift();
+            this.multiSelectedShiftFC.patchValue(selected);
+        }
+        else if (this.multiSelectedShiftFC.value.length == this.totalShiftCount) {
+            this.allShiftID.splice(0, 0, -1);
+            this.multiSelectedShiftFC.patchValue(this.allShiftID);
+        }
+        else {
+            const filteredSelected = selected.filter(s => s != -1);
+            this.multiSelectedShiftFC.patchValue(filteredSelected);
+        }
+        this.emitFilter.emit();
+    }
+}
+ShiftComponent.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: ShiftComponent, deps: [{ token: i1.StorageService }, { token: i2.ShiftService }], target: i0.ɵɵFactoryTarget.Component });
+ShiftComponent.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "12.0.0", version: "12.2.17", type: ShiftComponent, selector: "lib-shift", outputs: { emitFilter: "emitFilter" }, ngImport: i0, template: "<div class=\"row\">\n    <mat-form-field class=\"matFieldWidth100\" [appearance]=\"MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE\">\n        <mat-label>Select shift</mat-label>\n\n        <mat-select [formControl]=\"multiSelectedShiftFC\" multiple required>\n            <ng-container *ngIf=\"shiftM && shiftM.length > 0 && shiftM[0]['id']; else noDataOption\">\n                <mat-option>\n                    <ngx-mat-select-search [formControl]=\"shiftSearchUtil.filterFC\" placeholderLabel=\"Search by name\"\n                        noEntriesFoundLabel=\"No matching name found.\">\n                    </ngx-mat-select-search>\n                </mat-option>\n                <mat-option [value]=\"-1\" (click)=\"selectAllShifts()\">\n                    Select all\n                </mat-option>\n                <mat-option *ngFor=\"let shift of shiftSearchUtil.filteredEntities | async\" [value]=\"shift.id\"\n                    (click)=\"selectedShift()\">\n                    {{ shift.name }}\n                </mat-option>\n            </ng-container>\n            <ng-template #noDataOption>\n                <mat-option disabled>\n                    {{ COMMON_CONSTANT.NO_DATA_FOUND }}\n                </mat-option>\n            </ng-template>\n        </mat-select>\n\n        <mat-error *ngIf=\"multiSelectedShiftFC.hasError('required')\">\n            {{ FormErrorEnum.REQUIRED }}\n        </mat-error>\n    </mat-form-field>\n</div>", components: [{ type: i3.MatFormField, selector: "mat-form-field", inputs: ["color", "floatLabel", "appearance", "hideRequiredMarker", "hintLabel"], exportAs: ["matFormField"] }, { type: i4.MatSelect, selector: "mat-select", inputs: ["disabled", "disableRipple", "tabIndex"], exportAs: ["matSelect"] }, { type: i5.MatOption, selector: "mat-option", exportAs: ["matOption"] }, { type: i6.MatSelectSearchComponent, selector: "ngx-mat-select-search", inputs: ["placeholderLabel", "type", "closeIcon", "closeSvgIcon", "noEntriesFoundLabel", "indexAndLengthScreenReaderText", "clearSearchInput", "searching", "disableInitialFocus", "enableClearOnEscapePressed", "preventHomeEndKeyPropagation", "disableScrollToActiveOnOptionsChanged", "ariaLabel", "showToggleAllCheckbox", "toggleAllCheckboxChecked", "toggleAllCheckboxIndeterminate", "toggleAllCheckboxTooltipMessage", "toogleAllCheckboxTooltipPosition", "hideClearSearchButton", "alwaysRestoreSelectedOptionsMulti"], outputs: ["toggleAll"] }], directives: [{ type: i3.MatLabel, selector: "mat-label" }, { type: i7.RequiredValidator, selector: ":not([type=checkbox])[required][formControlName],:not([type=checkbox])[required][formControl],:not([type=checkbox])[required][ngModel]", inputs: ["required"] }, { type: i7.NgControlStatus, selector: "[formControlName],[ngModel],[formControl]" }, { type: i7.FormControlDirective, selector: "[formControl]", inputs: ["disabled", "formControl", "ngModel"], outputs: ["ngModelChange"], exportAs: ["ngForm"] }, { type: i8.NgIf, selector: "[ngIf]", inputs: ["ngIf", "ngIfThen", "ngIfElse"] }, { type: i8.NgForOf, selector: "[ngFor][ngForOf]", inputs: ["ngForOf", "ngForTrackBy", "ngForTemplate"] }, { type: i3.MatError, selector: "mat-error", inputs: ["id"] }], pipes: { "async": i8.AsyncPipe } });
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "12.2.17", ngImport: i0, type: ShiftComponent, decorators: [{
+            type: Component,
+            args: [{
+                    selector: 'lib-shift',
+                    templateUrl: './shift.component.html',
+                    styles: []
+                }]
+        }], ctorParameters: function () { return [{ type: i1.StorageService }, { type: i2.ShiftService }]; }, propDecorators: { emitFilter: [{
+                type: Output
+            }] } });
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoic2hpZnQuY29tcG9uZW50LmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiLi4vLi4vLi4vLi4vLi4vLi4vLi4vLi4vcHJvamVjdHMvbGlicmFyeS90c2MtbGl0ZS9zcmMvbGliL3RzYy9jb21wb25lbnQvZHJvcGRvd24vc2hpZnQvc2hpZnQuY29tcG9uZW50LnRzIiwiLi4vLi4vLi4vLi4vLi4vLi4vLi4vLi4vcHJvamVjdHMvbGlicmFyeS90c2MtbGl0ZS9zcmMvbGliL3RzYy9jb21wb25lbnQvZHJvcGRvd24vc2hpZnQvc2hpZnQuY29tcG9uZW50Lmh0bWwiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IjtBQUFBLE9BQU8sRUFBRSxTQUFTLEVBQUUsWUFBWSxFQUFpQixNQUFNLEVBQWlCLE1BQU0sZUFBZSxDQUFDO0FBQzlGLE9BQU8sRUFBRSxXQUFXLEVBQUUsVUFBVSxFQUFFLE1BQU0sZ0JBQWdCLENBQUM7QUFFekQsT0FBTyxFQUFFLEtBQUssRUFBVSxNQUFNLDRCQUE0QixDQUFDO0FBTTNELE9BQU8sRUFBRSxlQUFlLEVBQUUsYUFBYSxFQUFFLDJCQUEyQixFQUFFLHNCQUFzQixFQUFFLE1BQU0scUJBQXFCLENBQUM7Ozs7Ozs7Ozs7QUFDMUgsZ0JBQWdCO0FBUWhCLE1BQU0sT0FBTyxjQUFjO0lBcUJ2QixZQUNZLGNBQThCLEVBQzlCLFlBQTBCO1FBRDFCLG1CQUFjLEdBQWQsY0FBYyxDQUFnQjtRQUM5QixpQkFBWSxHQUFaLFlBQVksQ0FBYztRQXBCdEMsZUFBVSxHQUFHLElBQUksWUFBWSxFQUFFLENBQUM7UUFFaEMsb0JBQWUsR0FBRyxlQUFlLENBQUM7UUFDbEMsZ0NBQTJCLEdBQUcsMkJBQTJCLENBQUM7UUFFMUQsa0JBQWEsR0FBRyxhQUFhLENBQUM7UUFJOUIsV0FBTSxHQUFHLENBQUMsSUFBSSxLQUFLLEVBQUUsQ0FBQyxDQUFDO1FBRXZCLGVBQVUsR0FBVSxFQUFFLENBQUM7UUFDdkIsb0JBQWUsR0FBVyxDQUFDLENBQUM7UUFFNUIs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QU0iLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyBDb21wb25lbnQsIEV2ZW50RW1pdHRlciwgSW5wdXQsIE9uSW5pdCwgT3V0cHV0LCBTaW1wbGVDaGFuZ2VzIH0gZnJvbSAnQGFuZ3VsYXIvY29yZSc7XG5pbXBvcnQgeyBGb3JtQ29udHJvbCwgVmFsaWRhdG9ycyB9IGZyb20gJ0Bhbmd1bGFyL2Zvcm1zJztcblxuaW1wb3J0IHsgU2hpZnQsIFNoaWZ0TSB9IGZyb20gJy4uLy4uLy4uL21vZGVsL3NoaWZ0Lm1vZGVsJztcblxuaW1wb3J0IHsgU2hpZnRTZXJ2aWNlIH0gZnJvbSAnLi4vLi4vLi4vc2VydmljZS9zaGlmdC5zZXJ2aWNlJztcblxuLy8gdHNjLWxpYnJhcnlcbmltcG9ydCB7IFN0b3JhZ2VTZXJ2aWNlIH0gZnJvbSAnQGxpYnJhcnkvc3RvcmFnZS1zZXJ2aWNlJztcbmltcG9ydCB7IENPTU1PTl9DT05TVEFOVCwgRm9ybUVycm9yRW51bSwgTWF0ZXJpYWxGb3JtRmllbGRBcHBlYXJhbmNlLCBNYXRTZWxlY3RTZWFyY2hTZXJ2aWNlIH0gZnJvbSAnQGxpYnJhcnkvdHNjLWNvbW1vbic7XG4vLyAvdHNjLWxpYnJhcnkvXG5cbkBDb21wb25lbnQoe1xuICAgIHNlbGVjdG9yOiAnbGliLXNoaWZ0JyxcbiAgICB0ZW1wbGF0ZVVybDogJy4vc2hpZnQuY29tcG9uZW50Lmh0bWwnLFxuICAgIHN0eWxlczogW1xuICAgIF1cbn0pXG5leHBvcnQgY2xhc3MgU2hpZnRDb21wb25lbnQgaW1wbGVtZW50cyBPbkluaXQge1xuXG4gICAgQE91dHB1dCgpXG4gICAgZW1pdEZpbHRlciA9IG5ldyBFdmVudEVtaXR0ZXIoKTtcblxuICAgIENPTU1PTl9DT05TVEFOVCA9IENPTU1PTl9DT05TVEFOVDtcbiAgICBNYXRlcmlhbEZvcm1GaWVsZEFwcGVhcmFuY2UgPSBNYXRlcmlhbEZvcm1GaWVsZEFwcGVhcmFuY2U7XG5cbiAgICBGb3JtRXJyb3JFbnVtID0gRm9ybUVycm9yRW51bTtcblxuICAgIG9yZ0lEOiBhbnk7XG5cbiAgICBzaGlmdE0gPSBbbmV3IFNoaWZ0KCldO1xuXG4gICAgYWxsU2hpZnRJRDogYW55W10gPSBbXTtcbiAgICB0b3RhbFNoaWZ0Q291bnQ6IG51bWJlciA9IDA7XG5cbiAgICBtdWx0aVNlbGVjdGVkU2hpZnRGQzogRm9ybUNvbnRyb2wgPSBuZXcgRm9ybUNvbnRyb2woW10sIFtWYWxpZGF0b3JzLnJlcXVpcmVkXSk7XG5cbiAgICBzaGlmdFNlYXJjaFV0aWw6IE1hdFNlbGVjdFNlYXJjaFNlcnZpY2UgPSBuZXcgTWF0U2VsZWN0U2VhcmNoU2VydmljZShbJ25hbWUnXSk7XG5cbiAgICBjb25zdHJ1Y3RvcihcbiAgICAgICAgcHJpdmF0ZSBzdG9yYWdlU2VydmljZTogU3RvcmFnZVNlcnZpY2UsXG4gICAgICAgIHByaXZhdGUgc2hpZnRTZXJ2aWNlOiBTaGlmdFNlcnZpY2VcbiAgICApIHsgfVxuXG4gICAgbmdPbkluaXQoKTogdm9pZCB7XG4gICAgICAgIHRoaXMub3JnSUQgPSB0aGlzLnN0b3JhZ2VTZXJ2aWNlLmdldFN0b3JhZ2UoJ2N1cnJlbnRPcmdJRCcpO1xuXG4gICAgICAgIHRoaXMuZ2V0U2hpZnQoKTtcbiAgICB9XG5cbiAgICBhc3luYyBnZXRTaGlmdCgpIHtcbiAgICAgICAgdGhpcy5zaGlmdE0gPSA8U2hpZnRNW10+YXdhaXQgdGhpcy5zaGlmdFNlcnZpY2UuZ2V0U2hpZnQodGhpcy5vcmdJRCwgJ05PJyk7XG5cbiAgICAgICAgdGhpcy5zaGlmdFNlYXJjaFV0aWwuZW50aXR5QXJyID0gdGhpcy5zaGlmdE07XG4gICAgICAgIHRoaXMuc2hpZnRTZWFyY2hVdGlsLmNyZWF0ZVN1YnNjcmlwdGlvbigpO1xuXG4gICAgICAgIHRoaXMudG90YWxTaGlmdENvdW50ID0gdGhpcy5zaGlmdE0ubGVuZ3RoO1xuICAgICAgICB0aGlzLnNoaWZ0TS5mb3JFYWNoKHNoaWZ0ID0+IHRoaXMuYWxsU2hpZnRJRC5wdXNoKHNoaWZ0WydpZCddKSk7XG4gICAgICAgIHRoaXMuZW1pdEZpbHRlci5lbWl0KCk7XG4gICAgfVxuXG4gICAgc2VsZWN0QWxsU2hpZnRzKCkge1xuICAgICAgICBpZiAoIXRoaXMubXVsdGlTZWxlY3RlZFNoaWZ0RkMudmFsdWUuaW5jbHVkZXMoLTEpKSB7XG4gICAgICAgICAgICB0aGlzLm11bHRpU2VsZWN0ZWRTaGlmdEZDLnJlc2V0KFtdKTtcbiAgICAgICAgICAgIHJldHVybjtcbiAgICAgICAgfVxuICAgICAgICB0aGlzLm11bHRpU2VsZWN0ZWRTaGlmdEZDLnNldFZhbHVlKFstMSwgLi4udGhpcy5hbGxTaGlmdElEXSk7XG4gICAgICAgIHRoaXMuZW1pdEZpbHRlci5lbWl0KCk7XG4gICAgfVxuXG4gICAgc2VsZWN0ZWRTaGlmdCgpIHtcbiAgICAgICAgY29uc3Qgc2VsZWN0ZWQgPSB0aGlzLm11bHRpU2VsZWN0ZWRTaGlmdEZDLnZhbHVlO1xuXG4gICAgICAgIGlmIChzZWxlY3RlZC5pbmNsdWRlcygtMSkpIHtcbiAgICAgICAgICAgIHNlbGVjdGVkLnNoaWZ0KCk7XG4gICAgICAgICAgICB0aGlzLm11bHRpU2VsZWN0ZWRTaGlmdEZDLnBhdGNoVmFsdWUoc2VsZWN0ZWQpO1xuICAgICAgICB9IGVsc2UgaWYgKHRoaXMubXVsdGlTZWxlY3RlZFNoaWZ0RkMudmFsdWUubGVuZ3RoID09IHRoaXMudG90YWxTaGlmdENvdW50KSB7XG4gICAgICAgICAgICB0aGlzLmFsbFNoaWZ0SUQuc3BsaWNlKDAsIDAsIC0xKTtcbiAgICAgICAgICAgIHRoaXMubXVsdGlTZWxlY3RlZFNoaWZ0RkMucGF0Y2hWYWx1ZSh0aGlzLmFsbFNoaWZ0SUQpO1xuICAgICAgICB9IGVsc2Uge1xuICAgICAgICAgICAgY29uc3QgZmlsdGVyZWRTZWxlY3RlZCA9IHNlbGVjdGVkLmZpbHRlcihzID0+IHMgIT0gLTEpO1xuICAgICAgICAgICAgdGhpcy5tdWx0aVNlbGVjdGVkU2hpZnRGQy5wYXRjaFZhbHVlKGZpbHRlcmVkU2VsZWN0ZWQpO1xuICAgICAgICB9XG4gICAgICAgIHRoaXMuZW1pdEZpbHRlci5lbWl0KCk7XG4gICAgfVxuXG59XG4iLCI8ZGl2IGNsYXNzPVwicm93XCI+XG4gICAgPG1hdC1mb3JtLWZpZWxkIGNsYXNzPVwibWF0RmllbGRXaWR0aDEwMFwiIFthcHBlYXJhbmNlXT1cIk1hdGVyaWFsRm9ybUZpZWxkQXBwZWFyYW5jZS5GT1JNX0ZJRUxEX0FQUEVBUkFOQ0VcIj5cbiAgICAgICAgPG1hdC1sYWJlbD5TZWxlY3Qgc2hpZnQ8L21hdC1sYWJlbD5cblxuICAgICAgICA8bWF0LXNlbGVjdCBbZm9ybUNvbnRyb2xdPVwibXVsdGlTZWxlY3RlZFNoaWZ0RkNcIiBtdWx0aXBsZSByZXF1aXJlZD5cbiAgICAgICAgICAgIDxuZy1jb250YWluZXIgKm5nSWY9XCJzaGlmdE0gJiYgc2hpZnRNLmxlbmd0aCA+IDAgJiYgc2hpZnRNWzBdWydpZCddOyBlbHNlIG5vRGF0YU9wdGlvblwiPlxuICAgICAgICAgICAgICAgIDxtYXQtb3B0aW9uPlxuICAgICAgICAgICAgICAgICAgICA8bmd4LW1hdC1zZWxlY3Qtc2VhcmNoIFtmb3JtQ29udHJvbF09XCJzaGlmdFNlYXJjaFV0aWwuZmlsdGVyRkNcIiBwbGFjZWhvbGRlckxhYmVsPVwiU2VhcmNoIGJ5IG5hbWVcIlxuICAgICAgICAgICAgICAgICAgICAgICAgbm9FbnRyaWVzRm91bmRMYWJlbD1cIk5vIG1hdGNoaW5nIG5hbWUgZm91bmQuXCI+XG4gICAgICAgICAgICAgICAgICAgIDwvbmd4LW1hdC1zZWxlY3Qtc2VhcmNoPlxuICAgICAgICAgICAgICAgIDwvbWF0LW9wdGlvbj5cbiAgICAgICAgICAgICAgICA8bWF0LW9wdGlvbiBbdmFsdWVdPVwiLTFcIiAoY2xpY2spPVwic2VsZWN0QWxsU2hpZnRzKClcIj5cbiAgICAgICAgICAgICAgICAgICAgU2VsZWN0IGFsbFxuICAgICAgICAgICAgICAgIDwvbWF0LW9wdGlvbj5cbiAgICAgICAgICAgICAgICA8bWF0LW9wdGlvbiAqbmdGb3I9XCJsZXQgc2hpZnQgb2Ygc2hpZnRTZWFyY2hVdGlsLmZpbHRlcmVkRW50aXRpZXMgfCBhc3luY1wiIFt2YWx1ZV09XCJzaGlmdC5pZFwiXG4gICAgICAgICAgICAgICAgICAgIChjbGljayk9XCJzZWxlY3RlZFNoaWZ0KClcIj5cbiAgICAgICAgICAgICAgICAgICAge3sgc2hpZnQubmFtZSB9fVxuICAgICAgICAgICAgICAgIDwvbWF0LW9wdGlvbj5cbiAgICAgICAgICAgIDwvbmctY29udGFpbmVyPlxuICAgICAgICAgICAgPG5nLXRlbXBsYXRlICNub0RhdGFPcHRpb24+XG4gICAgICAgICAgICAgICAgPG1hdC1vcHRpb24gZGlzYWJsZWQ+XG4gICAgICAgICAgICAgICAgICAgIHt7IENPTU1PTl9DT05TVEFOVC5OT19EQVRBX0ZPVU5EIH19XG4gICAgICAgICAgICAgICAgPC9tYXQtb3B0aW9uPlxuICAgICAgICAgICAgPC9uZy10ZW1wbGF0ZT5cbiAgICAgICAgPC9tYXQtc2VsZWN0PlxuXG4gICAgICAgIDxtYXQtZXJyb3IgKm5nSWY9XCJtdWx0aVNlbGVjdGVkU2hpZnRGQy5oYXNFcnJvcigncmVxdWlyZWQnKVwiPlxuICAgICAgICAgICAge3sgRm9ybUVycm9yRW51bS5SRVFVSVJFRCB9fVxuICAgICAgICA8L21hdC1lcnJvcj5cbiAgICA8L21hdC1mb3JtLWZpZWxkPlxuPC9kaXY+Il19

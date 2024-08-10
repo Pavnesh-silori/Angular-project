@@ -1,0 +1,11 @@
+export class DialogOne {
+    constructor() {
+        this.icon = null;
+        this.type = null;
+        this.header = null;
+        this.body = null;
+        this.buttonOne = null;
+        this.buttonTwo = null;
+    }
+}
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiZGlhbG9nLW9uZS5tb2RlbC5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uLy4uLy4uL3Byb2plY3RzL2xpYnJhcnkvdHNjLWNvbW1vbi9zcmMvbGliL3RzYy9tb2RlbC9kaWFsb2ctb25lLm1vZGVsLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQVNBLE1BQU0sT0FBTyxTQUFTO0lBQXRCO1FBQ0ksU0FBSSxHQUFHLElBQUksQ0FBQztRQUNaLFNBQUksR0FBRyxJQUFJLENBQUM7UUFDWixXQUFNLEdBQUcsSUFBSSxDQUFDO1FBQ2QsU0FBSSxHQUFHLElBQUksQ0FBQztRQUNaLGNBQVMsR0FBRyxJQUFJLENBQUM7UUFDakIsY0FBUyxHQUFHLElBQUksQ0FBQztJQUNyQixDQUFDO0NBQUEiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgaW50ZXJmYWNlIERpYWxvZ09uZU0ge1xuICAgIHR5cGU6IHN0cmluZyxcbiAgICBpY29uOiBzdHJpbmcsXG4gICAgaGVhZGVyOiBzdHJpbmcsXG4gICAgYm9keTogc3RyaW5nLFxuICAgIGJ1dHRvbk9uZTogc3RyaW5nLFxuICAgIGJ1dHRvblR3bzogc3RyaW5nXG59XG5cbmV4cG9ydCBjbGFzcyBEaWFsb2dPbmUgaW1wbGVtZW50cyBEaWFsb2dPbmVNIHtcbiAgICBpY29uID0gbnVsbDtcbiAgICB0eXBlID0gbnVsbDtcbiAgICBoZWFkZXIgPSBudWxsO1xuICAgIGJvZHkgPSBudWxsO1xuICAgIGJ1dHRvbk9uZSA9IG51bGw7XG4gICAgYnV0dG9uVHdvID0gbnVsbDtcbn0iXX0=

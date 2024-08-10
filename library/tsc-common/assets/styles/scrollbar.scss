@@ -1,0 +1,28 @@
+.customScrollBar::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+    background: rgba(153, 153, 153, 0.16);
+
+    &:hover {
+        width: 100px;
+    }
+}
+
+.customScrollBar::-webkit-scrollbar-thumb:vertical {
+    border-radius: 16px;
+    width: 5px !important;
+    background: #97979797;
+
+    &:hover {
+        background: #3e3c3c97;
+    }
+}
+
+.customScrollBar::-webkit-scrollbar-thumb:horizontal {
+    border-radius: 16px;
+    background: #97979797;
+
+    &:hover {
+        background: #3e3c3c97;
+    }
+}

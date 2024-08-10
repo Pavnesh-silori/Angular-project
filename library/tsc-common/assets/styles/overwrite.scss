@@ -1,0 +1,88 @@
+.appTile {
+    .mat-card-header-text {
+        margin: 0px !important;
+    }
+}
+
+
+/* Applied for custom-date-range-picker */
+.prev {
+    background-color: white !important;
+    color: #fff !important;
+    opacity: 0.5 !important;
+}
+
+.next {
+    background-color: white !important;
+    color: #fff !important;
+    opacity: 0.5 !important;
+}
+
+.md-drppicker .btn.btn-default {
+    text-transform: none;
+    color: #000 !important;
+    background-color: #878282;
+    margin-right: 0.5rem;
+    border: 1px solid transparent;
+}
+
+.md-drppicker .btn {
+    position: relative !important;
+    overflow: hidden !important;
+    border-width: 0 !important;
+    border-radius: 0.2rem !important;
+    outline: 0 !important;
+    padding: 0.25rem 0.5rem !important;
+    box-shadow: none !important;
+    background-color: #3f51b5;
+    color: #ecf0f1 !important;
+    transition: background-color .4s !important;
+    height: auto !important;
+    text-align: center !important;
+    text-transform: none !important;
+    text-decoration: none !important;
+    vertical-align: middle !important;
+    line-height: 1.5 !important;
+    border: 1px solid transparent !important;
+}
+
+.md-drppicker .dropdowns select.monthselect,
+.md-drppicker .dropdowns select.yearselect {
+    opacity: 1 !important;
+    color: rgb(120, 118, 118);
+}
+
+.md-drppicker .calendar-time .select .select-item {
+    display: inline-block;
+    width: auto;
+    position: relative;
+    font-family: inherit;
+    background-color: transparent;
+    padding: 0.25rem 0.5rem !important;
+    font-size: 12px !important;
+    border-radius: 0;
+    border: none;
+    border-bottom: none !important;
+    color: rgb(120, 118, 118);
+}
+/* Applied for custom-date-range-picker*/
+
+
+/* Applied for mat accordion*/
+.matAccRightAlignedHeader>.mat-content {
+    justify-content: space-between;
+}
+
+.mat-content>mat-panel-title,
+.mat-content>mat-panel-description {
+    flex: 0 0 auto;
+}
+
+.mat-expansion-panel:not([class*=mat-elevation-z]) {
+    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+}
+
+.mat-accordion-radius {
+    border-radius: 16px !important;
+}
+/* Applied for mat accordion*/

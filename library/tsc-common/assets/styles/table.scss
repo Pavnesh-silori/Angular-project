@@ -1,0 +1,38 @@
+.data-row:hover {
+    background-color: #F2F3F5;
+    cursor: pointer;
+}
+
+.overflowX {
+    overflow-x: auto;
+}
+
+.customScrollBar::-webkit-scrollbar {
+    height: 8px;
+    background: rgba(153, 153, 153, 0.19);
+}
+
+.customScrollBar::-webkit-scrollbar-thumb:horizontal {
+    border-radius: 16px;
+    background: #97979797;
+
+    &:hover {
+        background: #3e3c3c97;
+    }
+}
+
+.tableHeader {
+    background: aliceblue;
+}
+
+.colWidthContainingDateTime {
+    min-width: 155px;
+}
+
+.dataRow:hover {
+    background-color: #F2F3F5;
+}
+
+.disableRow {
+    opacity: 0.5;
+}

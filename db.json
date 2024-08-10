@@ -1,0 +1,85 @@
+{
+    "scheduleReportByID": {
+        "reportConfig": {
+            "reportType": "SOURCING_REPORT",
+            "deviceID": [],
+            "entityID": [],
+            "paramMetric": [
+                "gwWaterConsumed"
+            ]
+        },
+        "schedulerConfig": {
+            "name": "Schedule Water Sourcing Report one",
+            "dataInterval": "DAILY",
+            "frequency": "DAILY",
+            "userChoice": "ROOT_ORG_USER",
+            "userID": [
+                100000211,
+                100000107,
+                100000203,
+                100000221,
+                100000265,
+                100000220,
+                100000243,
+                100000201,
+                100000245,
+                100000198
+            ],
+            "otherUserEmail": [
+                "somya.agrawal@logicladder.com"
+            ],
+            "status": "INACTIVE",
+            "reportFormat": "PDF"
+        }
+    },
+    "scheduleReportByPage": {
+        "totalCount": 5,
+        "records": [
+            {
+                "id": 100000101,
+                "name": "Schedule Water Sourcing Report one",
+                "type": "SOURCING_REPORT",
+                "recipients": [
+                    {
+                        "id": 100000245,
+                        "firstName": "Somya",
+                        "lastName": "Agrawal",
+                        "email": "somya.agrawal@logicladder.com",
+                        "profileImgUrl": null
+                    },
+                    {
+                        "id": 100000135,
+                        "firstName": "SOMYA",
+                        "lastName": "AGRAWAL",
+                        "email": "somya.agrawal@logicladder.com",
+                        "profileImgUrl": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/staging/images/961eeeee-c24c-472c-80bf-556c40feb5e2_blob"
+                    },
+                    {
+                        "id": 100000135,
+                        "firstName": "somya",
+                        "lastName": "agrawal",
+                        "email": "somya.agrawal@logicladder.com",
+                        "profileImgUrl": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/staging/images/961eeeee-c24c-472c-80bf-556c40feb5e2_blob"
+                    },
+                    {
+                        "id": 100000135,
+                        "firstName": "SSOOMMYYAA",
+                        "lastName": "agrawal",
+                        "email": "somya.agrawal@logicladder.com",
+                        "profileImgUrl": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/staging/images/961eeeee-c24c-472c-80bf-556c40feb5e2_blob"
+                    }
+                ],
+                "scheduledBy": {
+                    "id": 100000245,
+                    "firstName": "Somya",
+                    "lastName": "Agrawal",
+                    "email": "somya.agrawal@logicladder.com",
+                    "profileImgUrl": "https://logicladder-netzero.s3.ap-south-1.amazonaws.com/staging/images/961eeeee-c24c-472c-80bf-556c40feb5e2_blob"
+                },
+                "frequency": "DAILY",
+                "status": "INACTIVE",
+                "reportFormat": "PDF"
+            }
+        ]
+    }
+}
