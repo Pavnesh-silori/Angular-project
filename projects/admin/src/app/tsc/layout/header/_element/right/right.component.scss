@@ -1,0 +1,36 @@
+.dropdownAfter::after {
+    display: none;
+}
+
+.headerText {
+    color: #4d4d4d;
+}
+
+.headerSection {
+    font-size: 15px;
+}
+
+.headerImg {
+    height: 40px;
+}
+
+.headerIcon {
+    color: #4d4d4d;
+    font-size: 22px
+}
+
+.profileImageHeaderView {
+    height: 25px;
+    width: 25px;
+}
+
+.selectedItem {
+    .dropdown-item.active, .dropdown-item:active {
+        color: black;
+        background-color: #e0f3ff;
+    } 
+}
+
+.dropdown-menu .dropdown-item {
+    display: block !important;
+}

@@ -1,0 +1,526 @@
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+    </symbol>
+    <symbol id="info-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+    </symbol>
+</svg>
+<div class="card main-card cardOverwrite h100">
+    <div class="cardHeaderBlock">
+        <mat-stepper #stepper labelPosition="bottom" linear (selectionChange)="onStepChange($event)">
+            <mat-step [stepControl]="selectedPlanFC" label="Select Plan">
+                <mat-radio-group [formControl]="selectedPlanFC" class="row">
+                    <div class="card-body pt-4 pb-4">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="d-flex align-items-center"
+                                            *ngIf="planGroupType != PlanGroupType.PLAN_BUNDLED">
+                                            <!-- <span class="material-symbols-outlined fw-bold fs-2 me-2"
+                                                (click)="titleSelect.open()" [ngClass]="{'netzeroIcon': standardPlanAppKeyID == 'TSC_NETZERO',
+                                                        'supplierIcon': standardPlanAppKeyID == 'SCOPE_3_SUPPLIER',
+                                                        'text-info': standardPlanAppKeyID == 'TSC_WATER',
+                                                        'text-warning': standardPlanAppKeyID == 'TSC_ENERGY',
+                                                        'enviroIcon': standardPlanAppKeyID == 'TSC_ENVIRO',
+                                                        'offSetIcon': standardPlanAppKeyID == 'TSC_OFFSET',
+                                                        'accountIcon': standardPlanAppKeyID == 'ACCOUNT'
+                                                        }">
+                                                {{ standardPlanAppIcon }}
+                                            </span>
+                                            <span class="fw-bold fs-3 text-dark">
+                                                {{ standardPlanAppName }}
+                                            </span> -->
+
+                                            <span [ngSwitch]="standardPlanAppKeyID">
+                                                <span class="centerAlign" *ngSwitchCase="ApplicationKeyID.NETZERO_KEY_ID" [matTooltip]="application.applicationName">
+                                                    <img class="subscriptionPlanProductIcon buyPlanProductIcon"
+                                                        [src]="getApplicationLogoFileName(ApplicationKeyID.NETZERO_KEY_ID)">
+                                                </span>
+                                                
+                                                <span class="centerAlign" *ngSwitchCase="ApplicationKeyID.WATER_KEY_ID" [matTooltip]="application.applicationName">
+                                                    <img class="subscriptionProductIcon buyPlanProductIcon"
+                                                        [src]="getApplicationLogoFileName(ApplicationKeyID.WATER_KEY_ID)">
+                                                </span>
+                                                
+                                                <span class="centerAlign" *ngSwitchCase="ApplicationKeyID.ENERGY_KEY_ID" [matTooltip]="application.applicationName">
+                                                    <img class="subscriptionProductIcon buyPlanProductIcon"
+                                                        [src]="getApplicationLogoFileName(ApplicationKeyID.ENERGY_KEY_ID)">
+                                                </span>
+                                                
+                                                <span class="centerAlign" *ngSwitchCase="ApplicationKeyID.ENVIRO_KEY_ID" [matTooltip]="application.applicationName">
+                                                    <img class="subscriptionProductIcon buyPlanProductIcon"
+                                                        [src]="getApplicationLogoFileName(ApplicationKeyID.ENVIRO_KEY_ID)">
+                                                </span>
+                                                
+                                                <span class="centerAlign" *ngSwitchCase="ApplicationKeyID.OFFSET_KEY_ID" [matTooltip]="application.applicationName">
+                                                    <img class="subscriptionProductIcon buyPlanProductIcon"
+                                                        [src]="getApplicationLogoFileName(ApplicationKeyID.OFFSET_KEY_ID)">
+                                                </span>
+                                                
+                                                <span class="centerAlign" *ngSwitchCase="ApplicationKeyID.CONNECT_KEY_ID" [matTooltip]="application.applicationName">
+                                                    <img class="subscriptionProductIcon buyPlanProductIcon"
+                                                        [src]="getApplicationLogoFileName(ApplicationKeyID.CONNECT_KEY_ID)">
+                                                </span>
+                                            </span>
+                                        </div>
+                                        <div class="d-flex align-items-center"
+                                            *ngIf="planGroupType == PlanGroupType.PLAN_BUNDLED">
+                                            <span class="material-symbols-outlined fw-bold fs-1 me-2"
+                                                (click)="titleSelect.open()" [ngClass]="{'netzeroIcon': standardPlanAppKeyID == 'TSC_NETZERO',
+                                                        'supplierIcon': standardPlanAppKeyID == 'SCOPE_3_SUPPLIER',
+                                                        'text-info': standardPlanAppKeyID == 'TSC_WATER',
+                                                        'text-warning': standardPlanAppKeyID == 'TSC_ENERGY',
+                                                        'enviroIcon': standardPlanAppKeyID == 'TSC_ENVIRO',
+                                                        'offSetIcon': standardPlanAppKeyID == 'TSC_OFFSET',
+                                                        'accountIcon': standardPlanAppKeyID == 'ACCOUNT',
+                                                        'text-secondary': standardPlanAppKeyID == 'TSC_CONNECT'
+                                                        }">
+                                                {{ standardPlanAppIcon }}
+                                            </span>
+                                            <span class="fw-bold fs-3 text-dark">
+                                                {{ standardPlanAppName }}
+                                            </span>
+                                            <button mat-icon-button (click)="titleSelect.open()">
+                                                <fa-icon [icon]="faChevronDown"></fa-icon>
+                                                <div class="funnelFilterDD">
+                                                    <mat-form-field>
+                                                        <mat-select #titleSelect [formControl]="appFormControl"
+                                                            (selectionChange)="onAppSelectionChangePlan($event.value)">
+                                                            <mat-option *ngFor="let appFilters of applicationFilter"
+                                                                [value]="appFilters.applicationKeyID">
+                                                                <div class="d-flex align-items-center">
+                                                                    <span class="material-symbols-outlined me-2"
+                                                                        [ngClass]="{
+                                                                            'netzeroIcon': appFilters.applicationKeyID == 'TSC_NETZERO',
+                                                                            'supplierIcon': appFilters.applicationKeyID == 'SCOPE_3_SUPPLIER',
+                                                                            'text-info': appFilters.applicationKeyID == 'TSC_WATER',
+                                                                            'text-warning': appFilters.applicationKeyID == 'TSC_ENERGY',
+                                                                            'enviroIcon': appFilters.applicationKeyID == 'TSC_ENVIRO',
+                                                                            'offSetIcon': appFilters.applicationKeyID == 'TSC_OFFSET',
+                                                                            'accountIcon': appFilters.applicationKeyID == 'ACCOUNT',
+                                                                            'text-secondary': standardPlanAppKeyID == 'TSC_CONNECT'
+                                                                            }">
+                                                                        {{ appFilters.applicationIcon }}
+                                                                    </span>
+                                                                    <span class="text-dark">
+                                                                        {{ appFilters.applicationName }}
+                                                                    </span>
+                                                                </div>
+                                                            </mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <!-- TODO: later -->
+                                    <!-- <div class="col-sm-6 d-flex align-items-center justify-content-end">
+                                        <div class="d-flex align-items-center pb-3">
+                                            <a [href]="globalConstant.PRICING" target="_blank" class="fs-5">Compare
+                                                plans</a>
+                                        </div>
+                                    </div> -->
+                                </div>
+                                <div class="row" *ngIf="standardPlanDetails.length > 0">
+                                    <div class="mt-3" fxLayout="row wrap" fxLayoutGap="16px grid">
+                                        <div fxFlex="33%" fxFlex.xs="100%" fxFlex.sm="33%"
+                                            *ngFor="let data of standardPlanDetails" [style.color]="black"
+                                            [ngClass]="{'appDisable': data.isCurrentPlan }">
+                                            <!-- <div class="col-sm-4 mt-3" *ngFor="let data of standardPlanDetails"
+                                                                        [style.color]="black" [ngClass]="{'appDisable': data.isCurrentPlan }"> -->
+                                            <div class="card main-card border border-secondary cardOverwrite"
+                                                [ngStyle]="{'border-left': data.isCurrentPlan ? '5px solid #3ac47d' : 'none'}">
+                                                <div class="card-body projectCard mt-3">
+                                                    <div class="fw-bold mb-2">
+                                                        <div class="row align-items-center mb-2">
+                                                            <div class="d-flex justify-content-between">
+                                                                <div
+                                                                    class="col-sm-12 d-flex justify-content-start align-items-center ms-2">
+                                                                    <mat-radio-button class="ps-2 mt-2"
+                                                                        *ngIf="!data.isCurrentPlan"
+                                                                        [value]="data.planID"></mat-radio-button>
+                                                                    <svg [ngClass]="{'d-none': !data.isCurrentPlan}"
+                                                                        fill="currentColor"
+                                                                        class="check-circle-fill fs-2 dialogHeaderIcon verifiedIcon"
+                                                                        viewBox="0 0 16 16">
+                                                                        <path
+                                                                            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                                                                    </svg>
+                                                                    <div class="position-absolute mt-3 end-0 me-2">
+                                                                        <span *ngIf="data.isCurrentPlan"
+                                                                            class="badge rounded-pill text-capitalize text-success border border-success mb-3">current
+                                                                            edition</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div fxLayout="row wrap" class="fs-3 ps-5 text-secondary">{{
+                                                            data.planName }}</div>
+                                                    </div>
+                                                    <div class="mb-2">
+                                                        <span class="fw-bold fs-3 ps-5 mb-2">
+                                                            {{ data.billedAmount |
+                                                            currency:
+                                                            data.currencyCode:
+                                                            'symbol-narrow':'1.2-2'
+                                                            }}
+                                                        </span>
+                                                        <!-- <span class="fw-bold"
+                                                            *ngIf="data.frequency == GLOBAL_CONSTANT.FREQUENCY_YEARLY">
+                                                            / Year
+                                                        </span> -->
+                                                        <span class="fw-bold">
+                                                            / Year
+                                                        </span>
+                                                    </div>
+                                                    <div class="mb-2 ps-5 fs-5 fw-bold text-secondary"
+                                                        style="min-height: 52px; max-width: 400px">
+                                                        {{ data.planDescription }}</div>
+                                                    <!-- <button type="button" class="btn btn-light rounded-pill"> Include
+                                                                                        Add-Ons
+                                                                                    </button> -->
+                                                    <div class="mt-3 ps-5 justify-content-start centerAlignVertical">
+                                                        <svg fill="currentColor"
+                                                            class="check-circle-fill flex-shrink-0 fs-2 dialogHeaderIcon verifiedIcon me-3"
+                                                            viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                                                        </svg>
+                                                        <span class="fs-5">Organization emission activities</span>
+                                                    </div>
+                                                    <div class="mt-3 ps-5 justify-content-start centerAlignVertical">
+                                                        <svg fill="currentColor"
+                                                            class="check-circle-fill flex-shrink-0 fs-2 dialogHeaderIcon verifiedIcon me-3"
+                                                            viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                                                        </svg>
+                                                        <span class="fs-5">GHG inventory</span>
+                                                    </div>
+                                                    <div class="mt-3 ps-5 justify-content-start centerAlignVertical">
+                                                        <svg fill="currentColor"
+                                                            class="check-circle-fill flex-shrink-0 fs-2 dialogHeaderIcon verifiedIcon me-3"
+                                                            viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                                                        </svg>
+                                                        <span class="fs-5">Data capture APIs and workflows</span>
+                                                    </div>
+                                                    <div class="mt-3 ps-5 justify-content-start centerAlignVertical">
+                                                        <svg fill="currentColor"
+                                                            class="check-circle-fill flex-shrink-0 fs-2 dialogHeaderIcon verifiedIcon me-3"
+                                                            viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                                                        </svg>
+                                                        <span class="fs-5">Scope 1, Scope 2 emissions accounting</span>
+                                                    </div>
+                                                    <div class="mt-3 ps-5 justify-content-start centerAlignVertical">
+                                                        <svg fill="currentColor"
+                                                            class="check-circle-fill flex-shrink-0 fs-2 dialogHeaderIcon verifiedIcon me-3"
+                                                            viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                                                        </svg>
+                                                        <span class="fs-5">Proprietary emission factor databases</span>
+                                                    </div>
+                                                    <div class="mt-3 ps-5 justify-content-start centerAlignVertical">
+                                                        <svg fill="currentColor"
+                                                            class="check-circle-fill flex-shrink-0 fs-2 dialogHeaderIcon verifiedIcon me-3"
+                                                            viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                                                        </svg>
+                                                        <span class="fs-5">Carbon dashboards and reports</span>
+                                                    </div>
+                                                    <div class="mt-3 ps-5 justify-content-start centerAlignVertical">
+                                                        <svg fill="currentColor"
+                                                            class="check-circle-fill flex-shrink-0 fs-2 dialogHeaderIcon verifiedIcon me-3"
+                                                            viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                                                        </svg>
+                                                        <span class="fs-5">24x5 Email and Phone Support</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" *ngIf="standardPlanDetails.length == 0">
+                                    <div class="row centerAlign">
+                                        <div class="col-sm-6">
+                                            <div class="card main-card cardOverwrite"
+                                                style="background-color:whitesmoke;">
+                                                <div class="card-body text-center text-secondary fs-5 fw-bold">
+                                                    No plans available for the application: {{ standardPlanAppName
+                                                    }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div [ngClass]="{'order-1': planGroupType == globalConstant.PLAN_BUNDLED, 'order-2': planGroupType !== globalConstant.PLAN_BUNDLED}"
+                        class="card-body pt-4 pb-4">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <mat-card class="border border-bottom-0 cardOverwrite pt-1 pb-1 filterHeaderBorder"
+                                    style="background-color:whitesmoke">
+                                    <div class="fs-5 fw-bold pageSubtitle">
+                                        Bundled application plans
+                                    </div>
+                                </mat-card>
+                                <mat-card class="border cardOverwrite matCardBorder"
+                                    style="background-color:whitesmoke">
+                                    <div class="row mb-2">
+                                        <div class="col-sm-12 text-center">
+                                            <span class="card-title sectionTitle fw-bold fs-4"
+                                                style="color:rgb(0, 95, 139);">
+                                                Give your Sustainability Journey some zing.
+                                            </span>
+                                            <a [href]="globalConstant.PRICING" target="_blank"
+                                                class="float-end fs-5 ms-auto"
+                                                style="right: 20px; position: absolute;">Compare bundles</a>
+
+                                            <div class="fw-bold fs-5" style="color:rgb(0, 95, 139);">
+                                                Switch to a bundled plan for a holistic sustainability experience
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-4" *ngFor="let data of bundledPlanDetails"
+                                            [style.color]="black" [ngClass]="{'appDisable': data.isCurrentPlan }">
+                                            <div class="card main-card cardOverwrite bg-white"
+                                                [ngStyle]="{'border-left': data.isCurrentPlan ? '5px solid #3ac47d' : 'none'}">
+                                                <div class="card-body projectCard text-center mt-3">
+                                                    <div class="fw-bold mb-2">
+                                                        <div class="row align-items-center">
+                                                            <div class="d-flex justify-content-between">
+                                                                <div
+                                                                    class="col-sm-12 d-flex justify-content-start align-items-center ms-2">
+                                                                    <mat-radio-button *ngIf="!data.isCurrentPlan"
+                                                                        [value]="data.planID"></mat-radio-button>
+                                                                    <svg [ngClass]="{'d-none': !data.isCurrentPlan}"
+                                                                        fill="currentColor"
+                                                                        class="check-circle-fill fs-2 dialogHeaderIcon verifiedIcon"
+                                                                        viewBox="0 0 16 16">
+                                                                        <path
+                                                                            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                                                                    </svg>
+                                                                    <div class="position-absolute mt-3 end-0 me-2">
+                                                                        <span *ngIf="data.isCurrentPlan"
+                                                                            class="badge rounded-pill text-capitalize text-success border border-success mb-3">current
+                                                                            edition</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <span class="fs-5">{{ data.planName }}</span>
+                                                    </div>
+                                                    <div class="fw-bold fs-2 mb-2">{{ data.billedAmount | currency:
+                                                        data.currencyCode:
+                                                        'symbol-narrow':'1.2-2'
+                                                        }}</div>
+                                                    <div class="mb-2"
+                                                        *ngIf="data.frequency == globalConstant.FREQUENCY_YEARLY">
+                                                        Billed Annually</div>
+                                                    <button type="button" class="btn btn-light rounded-pill"> Include
+                                                        Add-Ons
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </mat-card>
+                            </div>
+                        </div>
+                    </div> -->
+                    <div class="card-body cardOverwrite pt-4 pb-4">
+                        <div class="alert alert-primary centerAlignVertical roundedBorder">
+                            <svg class="bi flex-shrink-0 me-3 cardIcon">
+                                <use xlink:href="#info-fill" />
+                            </svg>
+                            <div class="text-dark">
+                                To buy bundled plans, addons, or for any other support, contact <span
+                                    class="text-primary">{{ COMMON_CONSTANT.SUPPORT_EMAIL }}</span>.
+                            </div>
+                        </div>
+                    </div>
+                </mat-radio-group>
+                <div class="card-body pt-1 pb-1">
+                    <div class="row">
+                        <div class="justify-content-end centerAlignVertical">
+                            <button type="button" class="btn btn-sm btn-secondary me-2"
+                                routerLink="/subscription/active">
+                                Cancel
+                            </button>
+                            <button type="button" class="btn btn-sm btn-success text-white me-2" matStepperNext
+                                [disabled]="selectedPlanFC.invalid" (selectionChange)="onStepChange($event)">
+                                Next
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </mat-step>
+            <mat-step label="Confirm Order">
+                <div class="card-body pt-0 pb-0">
+                    <div class="row centerAlign">
+                        <div class="col-sm-6">
+                            <mat-card class="border mt-5 cardOverwrite"
+                                style="background-color:whitesmoke; min-height: 250px;">
+                                <div class="row mb-2">
+                                    <div class="col-sm-6">
+                                        <span class="card-title sectionTitle text-dark fs-5 me-2">
+                                            Billing profile
+                                        </span>
+                                    </div>
+                                    <div class="col-sm-6 d-flex justify-content-end centerAlignVertical"
+                                        *ngIf="defaultBillingProfileM">
+                                        <mat-icon type="button" class="fs-6" #tooltip="matTooltip"
+                                            matTooltipPosition="above" matTooltip="Change billing profile"
+                                            (click)="changeBillingProfile()">
+                                            <span class="material-symbols-outlined">
+                                                edit_square
+                                            </span>
+                                        </mat-icon>
+                                    </div>
+                                </div>
+                                <hr />
+                                <div class="row" *ngIf="defaultBillingProfileM">
+                                    <div class="row mt-2 ps-3">
+                                        <div class="col-sm-12">
+                                            <span class="fw-bold fs-4" *ngIf="defaultBillingProfileM.companyName">
+                                                {{ defaultBillingProfileM.companyName }}
+                                            </span>
+                                        </div>
+                                        <div class="col-sm-12">
+                                            <span>
+                                                {{ defaultBillingProfileM.billingAddress }}, {{
+                                                defaultBillingProfileM.city }}, {{ defaultBillingProfileM.stateName }},
+                                                {{
+                                                defaultBillingProfileM.countryName }}, {{ defaultBillingProfileM.zipCode
+                                                }}
+                                            </span>
+                                        </div>
+                                        <div class="row mt-4">
+                                            <div class="col-sm-4">
+                                                Billing contact:
+                                            </div>
+                                            <div class="col-sm-8" *ngIf="defaultBillingProfileM.userName">
+                                                <div>{{ defaultBillingProfileM.userName }}</div>
+                                            </div>
+                                            <div class="col-sm-8" *ngIf="!defaultBillingProfileM.userName">
+                                                <div>{{ COMMON_CONSTANT['HYPHEN'] }}</div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                Email:
+                                            </div>
+                                            <div class="col-sm-8" *ngIf="defaultBillingProfileM.userEmail">
+                                                <div>{{ defaultBillingProfileM.userEmail }}</div>
+                                            </div>
+                                            <div class="col-sm-8" *ngIf="!defaultBillingProfileM.userEmail">
+                                                <div>{{ COMMON_CONSTANT['HYPHEN'] }}</div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                Phone number:
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <div>{{ defaultBillingProfileM.userCountryCallingCode }}-{{
+                                                    defaultBillingProfileM.userContactNumber ?
+                                                    defaultBillingProfileM.userContactNumber : '--' }}</div>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-4">
+                                            <div class="col-sm-4">
+                                                VAT TIN/CST TIN:
+                                            </div>
+                                            <div class="col-sm-8" *ngIf="defaultBillingProfileM.tinNo">
+                                                <div>{{ defaultBillingProfileM.tinNo }}</div>
+                                            </div>
+                                            <div class="col-sm-6" *ngIf="!defaultBillingProfileM.tinNo">
+                                                <div>{{ COMMON_CONSTANT['HYPHEN'] }}</div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-sm-4">
+                                                Invoices shared with:
+                                            </div>
+                                            <div class="col-sm-8"
+                                                *ngIf="defaultBillingProfileM.extraInvoiceEmails.length != 0">
+                                                <div *ngFor="let email of defaultBillingProfileM.extraInvoiceEmails">{{
+                                                    email }}</div>
+                                            </div>
+                                            <div class="col-sm-8"
+                                                *ngIf="defaultBillingProfileM.extraInvoiceEmails.length == 0">
+                                                <div>{{ COMMON_CONSTANT['HYPHEN'] }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-5 mb-4 centerAlign" *ngIf="!defaultBillingProfileM">
+                                    <div class="col-sm-10">
+                                        <div class="card main-card cardOverwrite bg-white">
+                                            <div class="card-body text-center text-secondary fs-5 fw-bold">
+                                                <div>You don't have a billing profile available. Please create one!
+                                                </div>
+                                                <div>
+                                                    <button type="button" class="btn btn-sm btn-success mt-2"
+                                                        (click)="createBillingProfile('create')">
+                                                        <fa-icon [icon]="faPlus"></fa-icon>&nbsp;Billing profile
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </mat-card>
+                            <div class="row text-center mt-4">
+                                <div class="fs-5 mb-2">
+                                    Amount to be paid now
+                                </div>
+                                <div class="text-dark fw-bold fs-2 mb-2">
+                                    {{ billedAmount | currency: currencyCode: 'symbol-narrow':'1.2-2'
+                                    }}
+                                </div>
+                                <div class="d-flex justify-content-center align-items-center mb-2">
+                                    <mat-checkbox class="me-2" (change)="onCheckboxChange($event)">
+                                    </mat-checkbox>
+                                    <span class="mt-1">
+                                        I agree to the Logicladder <a [href]="COMMON_CONSTANT.TERMS"
+                                            target="_blank">Terms of
+                                            Service</a> and <a [href]="COMMON_CONSTANT.PRIVACY" target="_blank">Privacy
+                                            Statement</a>.
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body pt-0 pb-1">
+                    <div class="row">
+                        <div class="justify-content-end centerAlignVertical">
+                            <button type="button" class="btn btn-sm btn-secondary me-2" matStepperPrevious>
+                                Back
+                            </button>
+                            <button type="button" class="btn btn-sm btn-success text-white me-2"
+                                [disabled]="!termsCondition || !defaultBillingProfileM" (click)="redirectToPayment()">
+                                Pay Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </mat-step>
+        </mat-stepper>
+    </div>
+</div>

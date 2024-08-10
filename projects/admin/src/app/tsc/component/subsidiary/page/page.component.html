@@ -1,0 +1,186 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Subsidiaries / Joint Ventures</div>
+        </div>
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <lib-search-bar-one class="me-3" #searchBar searchBy="name" (emitSearch)="searchFn($event)">
+                </lib-search-bar-one>
+                <a class="btn btn-sm btn-success btnBase" matRipple
+                    [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" routerLink="/subsidiary/create">
+                    <fa-icon [icon]="faPlus"></fa-icon> Subsidiary / Joint Venture
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- REFRESH_BTN -->
+    <button type="button" class="d-none" #refreshBtn></button>
+
+    <div class="overflowX customScrollBar">
+        <table class="w-100" mat-table [dataSource]="dataSource" #sort="matSort" matSort matSortActive="id"
+            matSortDirection="asc" matSortDisableClear>
+
+            <ng-container matColumnDef="id">
+                <th class="columnWidth2" mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+                    Subsidiary/JV ID
+                </th>
+                <td class="columnWidth2" mat-cell *matCellDef="let row">
+                    <ng-container>
+                        <a [routerLink]="['/subsidiary', row['id'], 'view']">
+                            {{ row['id'] }}
+                        </a>
+                    </ng-container>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="name">
+                <th class="px-3 columnWidth2" mat-header-cell *matHeaderCellDef>
+                    Subsidiary / JV name
+                </th>
+                <td class="px-3 columnWidth2" mat-cell *matCellDef="let row"
+                    [matTooltip]="row?.['name'].length>13? row['name']: ''" matTooltipPosition="above"
+                    matTooltipClass="nameTooltip">
+                    {{ row?.['name'] | dotdotdot:13}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="type">
+                <th class="px-3 columnWidth2" mat-header-cell *matHeaderCellDef>
+                    Type
+                </th>
+                <td class="px-3 columnWidth2" mat-cell *matCellDef="let row">
+                    <ng-container [ngSwitch]="row['type']">
+                        <span *ngSwitchCase="SUBSIDIARY">
+                            Subsidiary
+                        </span>
+                        <span *ngSwitchCase="JOINT_VENTURE">
+                            Joint Venture
+                        </span>
+                        <span *ngSwitchDefault>
+                            {{ row['type'] }}
+                        </span>
+                    </ng-container>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="state">
+                <th class="columnWidth5" mat-header-cell *matHeaderCellDef>
+                    State
+                </th>
+                <td class="columnWidth5" mat-cell *matCellDef="let row">
+                    {{ row?.['stateName']}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="country">
+                <th class="columnWidth4" mat-header-cell *matHeaderCellDef>
+                    Country
+                </th>
+                <td class="columnWidth4" mat-cell *matCellDef="let row">
+                    {{ row?.['countryName']}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="operationalControl">
+                <th class="px-2 columnWidth2 text-end" mat-header-cell *matHeaderCellDef>
+                    Operational control (%)
+                </th>
+                <td class="px-2 columnWidth2 text-end" mat-cell *matCellDef="let row">
+                    {{ row?.['operationalControlPct']}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="financialControl">
+                <th class="px-2 columnWidth2 text-end" mat-header-cell *matHeaderCellDef>
+                    Financial control (%)
+                </th>
+                <td class="px-2 columnWidth2 text-end" mat-cell *matCellDef="let row">
+                    {{ row?.['financialControlPct']}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="equityControl">
+                <th class="px-2 columnWidth2 text-end" mat-header-cell *matHeaderCellDef>
+                    Equity control (%)
+                </th>
+                <td class="px-2 columnWidth2 text-end" mat-cell *matCellDef="let row">
+                    {{ row?.['equityControlPct']}}
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+                <th class="px-3 columnWidth5" mat-header-cell *matHeaderCellDef>
+                    <funnel-filter #statusSelect header="Status" type="mono" [entityList]="statusList"
+                        [selectFC]="statusFC" [active]="statusFlag" (mono)="statusFlag = true;"
+                        headerWidth="4"></funnel-filter>
+                </th>
+                <td class="px-3 columnWidth5" mat-cell *matCellDef="let row">
+                    <ng-container [ngSwitch]="row['status']">
+                        <span class="textActiveStatus" *ngSwitchCase="'ACTIVE'">
+                            Active
+                        </span>
+                        <span class="badge rounded-pill bg-success"
+                            *ngIf="row?.['status'] == 'ACTIVE' && row?.['approvalStatus'] == 'APPROVED'">Approved</span>
+                        <span class="badge rounded-pill bg-warning text-white"
+                            *ngIf="row?.['status'] == 'ACTIVE' && row?.['approvalStatus'] == 'REQUESTED'">Requested</span>
+                        <span class="badge rounded-pill bg-danger"
+                            *ngIf="row?.['status'] == 'ACTIVE' && row?.['approvalStatus'] == 'REJECTED'">Rejected</span>
+                        <span class="textInActiveStatus" *ngSwitchCase="'INACTIVE'">
+                            Inactive
+                        </span>
+                        <span *ngSwitchDefault>
+                            {{ row?.['status'] }}
+                        </span>
+                    </ng-container>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="option">
+                <th class="columnWidth4" mat-header-cell *matHeaderCellDef></th>
+                <td class="columnWidth4 text-center" mat-cell *matCellDef="let row">
+                    <div class="btn-group content align-items-center float-end" ngbDropdown placement="left-top">
+                        <button type="button" ngbDropdownToggle class="dropdown-after dropdownAfter btn">
+                            <fa-icon [icon]="faEllipsisV"></fa-icon>
+                        </button>
+                        <div ngbDropdownMenu>
+                            <button class="dropdown-item" [routerLink]="['/subsidiary', row['id'], 'update']">
+                                {{ ButtonLabelEnum.UPDATE_BTN_LABEL }}
+                            </button>
+                            <button class="dropdown-item"
+                                *ngIf="row?.['status'] == 'ACTIVE' && row?.['approvalStatus'] == 'REJECTED'"
+                                (click)="updateSubsidaryStatusByID(row, 'REQUESTED')">
+                                Request again
+                            </button>
+                            <button class="dropdown-item" *ngIf="row['status'] == 'INACTIVE'"
+                                (click)="updateSubsidaryStatusByID(row, 'ACTIVE')">
+                                Mark as Active
+                            </button>
+                            <button class="dropdown-item" *ngIf="row['status'] == 'ACTIVE'"
+                                (click)="confirmStatus(row, 'INACTIVE')">
+                                Mark as Inactive
+                            </button>
+                            <button class="btn btn-outline-danger rounded-0 dropdown-item" (click)="confirmDelete(row)">
+                                {{ ButtonLabelEnum.DELETE_BTN_LABEL }}
+                            </button>
+                        </div>
+                    </div>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumn"></tr>
+            <tr mat-row *matRowDef="let task; columns: displayedColumn;"></tr>
+
+            <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell text-center" [attr.colspan]="displayedColumn.length">
+                    {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <mat-paginator #paginator class="roundedBorder" showFirstLastButtons [length]="resultLength"
+        [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE" [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION">
+    </mat-paginator>
+</div>

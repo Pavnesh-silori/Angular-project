@@ -1,0 +1,137 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Users</div>
+        </div>
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                  <lib-search-bar-one #searchBar [searchBy]="'user first name'"
+                (emitSearch)="searchFn($event)"></lib-search-bar-one>
+                <a class="btn btn-sm btn-success btnBase ms-2" (click)="InviteUser()">
+                    Invite User
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- REFRESH_BTN -->
+    <button type="button" class="d-none" #refreshBtn></button>
+
+    <table class="w-100" mat-table [dataSource]="dataSource" #sort="matSort" matSort matSortActive="user"
+        matSortDirection="desc" matSortDisableClear>
+
+        <ng-container matColumnDef="select">
+            <th mat-header-cell *matHeaderCellDef>
+                <mat-checkbox (change)="$event ? selectAllInPage() : null"
+                    [checked]="selection.hasValue() && isAllSelected()"></mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let row">
+                <mat-checkbox (change)="$event ? selection.toggle(row['id']) : null"
+                    [checked]="selection.isSelected(row['id'])"></mat-checkbox>
+            </td>
+        </ng-container>
+
+       
+        <ng-container matColumnDef="user">
+            <th class="px-4" mat-header-cell *matHeaderCellDef mat-sort-header matSortDisableClear>
+                User
+            </th>
+            <td class="px-2" mat-cell *matCellDef="let row">
+                <div class="d-flex align-items-center">
+                    <div class="profileImgContainer">
+                        <img class="profileImg rounded-circle border" [src]="getImage(row)" alt="profile-image" />
+                    </div>
+                    <div class="ps-3">
+                        <span> {{ row.firstName }} {{ row?.lastName }} </span>
+                        <br />
+                        <span class="text-secondary"> {{row.email}} </span>
+                    </div>
+                </div>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="apps">
+            <th class="px-3 products text-center" mat-header-cell *matHeaderCellDef>
+                Products
+            </th>
+            <td class="px-3 text-center" mat-cell *matCellDef="let row">
+                {{ row['applications']}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+            <th class="px-3" mat-header-cell *matHeaderCellDef>
+                Status
+            </th>
+            <td class="px-3" mat-cell *matCellDef="let row">
+                <ng-container [ngSwitch]="row['status']">
+                    <span *ngSwitchCase="UserStatus['ACTIVE']" class="textActiveStatus">
+                        Active
+                    </span>
+                    <span *ngSwitchCase="UserStatus['INACTIVE']" class="textInActiveStatus">
+                        Inactive
+                    </span>
+                    <span *ngSwitchCase="UserStatus['INVITED']" class="textInvitedStatus">
+                        Invited
+                    </span>
+                    <span *ngSwitchDefault>
+                        {{ row['status'] }}
+                    </span>
+                </ng-container>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td class="text-center" mat-cell *matCellDef="let row">
+                <div class="mt-2 btn-group" ngbDropdown placement="left">
+                    <button type="button" ngbDropdownToggle class="dropdown-after dropdownAfter btn">
+                        <fa-icon [icon]="faEllipsisV"></fa-icon>
+                    </button>
+                    <div ngbDropdownMenu>
+                        <button class="dropdown-item" (click)="manageAccess(row)">
+                            Manage access
+                        </button>
+                        <ng-container *ngIf="row?.['id'] != currentUserID">
+                            <ng-container *ngIf="
+                                    row?.['status'] == UserStatus['ACTIVE'] || 
+                                    row?.['status'] == UserStatus['INACTIVE']">
+                                <button class="dropdown-item" (click)="updateUserStatusByID(row)">
+                                    Mark as {{row?.['status'] == UserStatus.ACTIVE? 'Inactive': 'Active'}}
+                                </button>
+                            </ng-container>
+                            <button class="dropdown-item btn-outline-danger" (click)="confirmDelete(row)">
+                                Delete
+                            </button>
+                        </ng-container>
+                    </div>
+                </div>
+            </td>
+        </ng-container>
+
+        <!-- <ng-container matColumnDef="selected">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let row">
+                <button mat-icon-button *ngIf="selection.isSelected(row['id'])">
+                    <span class="material-symbols-outlined">
+                        person_remove
+                    </span>
+                </button>
+            </td>
+        </ng-container> -->
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let task; columns: displayedColumns;"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+            </td>
+        </tr>
+
+    </table>
+
+    <mat-paginator #paginator class="roundedBorder" showFirstLastButtons [length]="resultLength"
+        [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE" [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION">
+    </mat-paginator>
+</div>

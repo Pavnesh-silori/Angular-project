@@ -1,0 +1,56 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Client ID</div>
+            <div class="pageSubtitle"></div>
+        </div>
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <button [ngClass]="{'d-none': isClientAvailable !== 'YES'}" class="btn btn-sm btn-success btnBase"
+                    (click)="generateKey()">
+                    <fa-icon [icon]="faPlus"></fa-icon> Generate Client ID
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <button #refreshBtn class="d-none">refresh</button>
+
+    <table mat-table matSort [dataSource]="dataSource" 
+        matSortActive="creationDate" matSortDirection="asc">
+
+        <ng-container matColumnDef="clientID">
+            <th mat-header-cell *matHeaderCellDef>Client ID</th>
+            <td mat-cell *matCellDef="let row">{{row.clientID}}
+                <button [cdkCopyToClipboard]="row.clientID" matSuffix mat-icon-button type="button">
+                    <span class="material-symbols-outlined fs-5" mat-raised-button matTooltipPosition="right"
+                        matTooltip="copy">
+                        content_copy
+                    </span>
+                </button>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="clientSecretKey">
+            <th mat-header-cell *matHeaderCellDef>Client Secret Key</th>
+            <td mat-cell *matCellDef="let row">{{row.clientSecretKey}}
+                <button [cdkCopyToClipboard]="row.clientSecretKey" matSuffix mat-icon-button type="button">
+                    <span class="material-symbols-outlined fs-5" mat-raised-button matTooltipPosition="right"
+                        matTooltip="copy">
+                        content_copy
+                    </span>
+                </button>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="creationDate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Creation Date</th>
+            <td mat-cell *matCellDef="let row">{{row.creationDate}}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator class="roundedBorder" [length]="resultLength" [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION" [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE" showFirstLastButtons>
+    </mat-paginator>
+</div>

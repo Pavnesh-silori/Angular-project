@@ -1,0 +1,19 @@
+export var ReportErrorEnum;
+(function (ReportErrorEnum) {
+    ReportErrorEnum["INVALID_DATE_LABEL"] = "Invalid dates!";
+    ReportErrorEnum["INVALID_DATE_MESSAGE"] = "Select distinct dates to view the desired report.";
+    ReportErrorEnum["TIME_EXCEEDED_LABEL"] = "Time exceeded!";
+    ReportErrorEnum["TIME_EXCEEDED_MESSAGE"] = "You cannot view or download report for more than 24 hours.";
+    ReportErrorEnum["DATA_NOT_FOUND_LABEL"] = "No data found!";
+    ReportErrorEnum["DATA_NOT_FOUND_MESSAGE"] = "No data was recorded for the above specified filters. Please keep changing the filters and try again.";
+    ReportErrorEnum["INVALID_ERROR_LABEL"] = "Please try again later!";
+    ReportErrorEnum["INVALID_ERROR_MESSAGE"] = "We are not able to fetch the data for the specified filters at the moment. Please keep changing the filters and try again.";
+})(ReportErrorEnum || (ReportErrorEnum = {}));
+export var DashboardErrorEnum;
+(function (DashboardErrorEnum) {
+    DashboardErrorEnum["DATA_NOT_FOUND_LABEL"] = "No data found!";
+    DashboardErrorEnum["DATA_NOT_FOUND_MESSAGE"] = "No data was recorded at the moment. Please try again after sometime.";
+    DashboardErrorEnum["INVALID_ERROR_LABEL"] = "Please try again later!";
+    DashboardErrorEnum["INVALID_ERROR_MESSAGE"] = "We are not able to fetch the requested data at the moment. Please try again after sometime.";
+})(DashboardErrorEnum || (DashboardErrorEnum = {}));
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiZXJyb3IuZW51bS5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbIi4uLy4uLy4uLy4uLy4uLy4uL3Byb2plY3RzL2xpYnJhcnkvdHNjLWxpdGUvc3JjL2xpYi90c2MvZW51bS9lcnJvci5lbnVtLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBLE1BQU0sQ0FBTixJQUFZLGVBU1g7QUFURCxXQUFZLGVBQWU7SUFDdkIsd0RBQXFDLENBQUE7SUFDckMsNkZBQTBFLENBQUE7SUFDMUUseURBQXNDLENBQUE7SUFDdEMsdUdBQW9GLENBQUE7SUFDcEYsMERBQXVDLENBQUE7SUFDdkMsbUpBQWdJLENBQUE7SUFDaEksa0VBQStDLENBQUE7SUFDL0MsdUtBQW9KLENBQUE7QUFDeEosQ0FBQyxFQVRXLGVBQWUsS0FBZixlQUFlLFFBUzFCO0FBRUQsTUFBTSxDQUFOLElBQVksa0JBS1g7QUFMRCxXQUFZLGtCQUFrQjtJQUMxQiw2REFBdUMsQ0FBQTtJQUN2QyxxSEFBK0YsQ0FBQTtJQUMvRixxRUFBK0MsQ0FBQTtJQUMvQywySUFBcUgsQ0FBQTtBQUN6SCxDQUFDLEVBTFcsa0JBQWtCLEtBQWxCLGtCQUFrQixRQUs3QiIsInNvdXJjZXNDb250ZW50IjpbImV4cG9ydCBlbnVtIFJlcG9ydEVycm9yRW51bSB7XG4gICAgSU5WQUxJRF9EQVRFX0xBQkVMID0gJ0ludmFsaWQgZGF0ZXMhJyxcbiAgICBJTlZBTElEX0RBVEVfTUVTU0FHRSA9ICdTZWxlY3QgZGlzdGluY3QgZGF0ZXMgdG8gdmlldyB0aGUgZGVzaXJlZCByZXBvcnQuJyxcbiAgICBUSU1FX0VYQ0VFREVEX0xBQkVMID0gJ1RpbWUgZXhjZWVkZWQhJyxcbiAgICBUSU1FX0VYQ0VFREVEX01FU1NBR0UgPSAnWW91IGNhbm5vdCB2aWV3IG9yIGRvd25sb2FkIHJlcG9ydCBmb3IgbW9yZSB0aGFuIDI0IGhvdXJzLicsXG4gICAgREFUQV9OT1RfRk9VTkRfTEFCRUwgPSAnTm8gZGF0YSBmb3VuZCEnLFxuICAgIERBVEFfTk9UX0ZPVU5EX01FU1NBR0UgPSAnTm8gZGF0YSB3YXMgcmVjb3JkZWQgZm9yIHRoZSBhYm92ZSBzcGVjaWZpZWQgZmlsdGVycy4gUGxlYXNlIGtlZXAgY2hhbmdpbmcgdGhlIGZpbHRlcnMgYW5kIHRyeSBhZ2Fpbi4nLFxuICAgIElOVkFMSURfRVJST1JfTEFCRUwgPSAnUGxlYXNlIHRyeSBhZ2FpbiBsYXRlciEnLFxuICAgIElOVkFMSURfRVJST1JfTUVTU0FHRSA9ICdXZSBhcmUgbm90IGFibGUgdG8gZmV0Y2ggdGhlIGRhdGEgZm9yIHRoZSBzcGVjaWZpZWQgZmlsdGVycyBhdCB0aGUgbW9tZW50LiBQbGVhc2Uga2VlcCBjaGFuZ2luZyB0aGUgZmlsdGVycyBhbmQgdHJ5IGFnYWluLidcbn1cblxuZXhwb3J0IGVudW0gRGFzaGJvYXJkRXJyb3JFbnVtIHtcbiAgICBEQVRBX05PVF9GT1VORF9MQUJFTCA9ICdObyBkYXRhIGZvdW5kIScsXG4gICAgREFUQV9OT1RfRk9VTkRfTUVTU0FHRSA9ICdObyBkYXRhIHdhcyByZWNvcmRlZCBhdCB0aGUgbW9tZW50LiBQbGVhc2UgdHJ5IGFnYWluIGFmdGVyIHNvbWV0aW1lLicsXG4gICAgSU5WQUxJRF9FUlJPUl9MQUJFTCA9ICdQbGVhc2UgdHJ5IGFnYWluIGxhdGVyIScsXG4gICAgSU5WQUxJRF9FUlJPUl9NRVNTQUdFID0gJ1dlIGFyZSBub3QgYWJsZSB0byBmZXRjaCB0aGUgcmVxdWVzdGVkIGRhdGEgYXQgdGhlIG1vbWVudC4gUGxlYXNlIHRyeSBhZ2FpbiBhZnRlciBzb21ldGltZS4nXG59Il19

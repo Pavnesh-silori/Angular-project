@@ -1,0 +1,18 @@
+{
+  "name": "@library/rbac-service",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^12.2.0",
+    "@angular/core": "^12.2.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "main": "bundles/library-rbac-service.umd.js",
+  "module": "fesm2015/library-rbac-service.js",
+  "es2015": "fesm2015/library-rbac-service.js",
+  "esm2015": "esm2015/library-rbac-service.js",
+  "fesm2015": "fesm2015/library-rbac-service.js",
+  "typings": "library-rbac-service.d.ts",
+  "sideEffects": false
+}

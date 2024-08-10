@@ -1,0 +1,18 @@
+::ng-deep .content {
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+
+    .dialogContent {
+        min-height: 100%;
+    }
+
+    .mat-cell,
+    .mat-header-cell {
+        border: none !important;
+    }
+
+    .mat-expansion-panel {
+        .mat-expansion-panel-body {
+            padding: 0;
+        }
+    }
+}

@@ -1,0 +1,47 @@
+import { EventEmitter, OnInit, SimpleChanges } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { Entity } from '../../../model/entity.model';
+import { EntityService } from '../../../service/entity.service';
+import { MatSelectSearchService, MaterialFormFieldAppearance } from '@library/tsc-common';
+import { StorageService } from '@library/storage-service';
+import { DropdownTypeEnum } from '../../../enum/dropdown.enum';
+import * as i0 from "@angular/core";
+export declare class EntityComponent implements OnInit {
+    private storageService;
+    private entityService;
+    dropdownTypeInp: DropdownTypeEnum;
+    materialFormFieldAppearance: typeof MaterialFormFieldAppearance;
+    commonConstant: {
+        PRIVACY: string;
+        TERMS: string;
+        PRICING: string;
+        SUPPORT_EMAIL: string;
+        HYPHEN: string;
+        NO_DATA_FOUND: string;
+        NO_DATA: string;
+        EMAIL_PATTERN: string;
+        ZIPCODE_PATTERN: string;
+        GST_NUMBER_PATTERN: string;
+        ALLOWED_IMAGE_TYPES: string[];
+        MAX_IMAGE_SIZE: number;
+    };
+    dropdownTypeEnum: typeof DropdownTypeEnum;
+    orgID: any;
+    entityM: Entity[];
+    dropdownType: string;
+    allEntityID: any[];
+    totalEntityCount: number;
+    entityFC: FormControl;
+    multipleEntityFC: FormControl;
+    entitySearchUtil: MatSelectSearchService;
+    emitFilter: EventEmitter<any>;
+    constructor(storageService: StorageService, entityService: EntityService);
+    ngOnInit(): void;
+    ngOnChanges(changes: SimpleChanges): void;
+    getEntitiesByOrgID(): Promise<void>;
+    onChange(selectedEntity: any): void;
+    selectAllEntities(): void;
+    selectedEntities(): void;
+    static ɵfac: i0.ɵɵFactoryDeclaration<EntityComponent, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<EntityComponent, "lib-entity", never, { "dropdownTypeInp": "dropdownTypeInp"; }, { "emitFilter": "emitFilter"; }, never, never>;
+}

@@ -1,0 +1,12 @@
+export class StaticPageOne {
+    constructor() {
+        this.cardClass = null;
+        this.title = null;
+        this.body = null;
+        this.imgPath = null;
+        this.imgClass = null;
+        this.imgAlt = null;
+        this.containsHeaderFooter = null;
+    }
+}
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoic3RhdGljLXBhZ2Utb25lLm1vZGVsLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiLi4vLi4vLi4vLi4vLi4vLi4vcHJvamVjdHMvbGlicmFyeS90c2MtY29tbW9uL3NyYy9saWIvdHNjL21vZGVsL3N0YXRpYy1wYWdlLW9uZS5tb2RlbC50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFVQSxNQUFNLE9BQU8sYUFBYTtJQUExQjtRQUNJLGNBQVMsR0FBRyxJQUFJLENBQUM7UUFDakIsVUFBSyxHQUFHLElBQUksQ0FBQztRQUNiLFNBQUksR0FBRyxJQUFJLENBQUM7UUFDWixZQUFPLEdBQUcsSUFBSSxDQUFDO1FBQ2YsYUFBUSxHQUFHLElBQUksQ0FBQztRQUNoQixXQUFNLEdBQUcsSUFBSSxDQUFDO1FBQ2QseUJBQW9CLEdBQUcsSUFBSSxDQUFDO0lBQ2hDLENBQUM7Q0FBQSIsInNvdXJjZXNDb250ZW50IjpbImV4cG9ydCBpbnRlcmZhY2UgU3RhdGljUGFnZU9uZUkge1xuICAgIGNhcmRDbGFzczogc3RyaW5nO1xuICAgIHRpdGxlOiBzdHJpbmc7XG4gICAgYm9keTogc3RyaW5nO1xuICAgIGltZ1BhdGg6IHN0cmluZztcbiAgICBpbWdDbGFzczogc3RyaW5nO1xuICAgIGltZ0FsdDogc3RyaW5nO1xuICAgIGNvbnRhaW5zSGVhZGVyRm9vdGVyOiBib29sZWFuO1xufVxuXG5leHBvcnQgY2xhc3MgU3RhdGljUGFnZU9uZSBpbXBsZW1lbnRzIFN0YXRpY1BhZ2VPbmVJIHtcbiAgICBjYXJkQ2xhc3MgPSBudWxsO1xuICAgIHRpdGxlID0gbnVsbDtcbiAgICBib2R5ID0gbnVsbDtcbiAgICBpbWdQYXRoID0gbnVsbDtcbiAgICBpbWdDbGFzcyA9IG51bGw7XG4gICAgaW1nQWx0ID0gbnVsbDtcbiAgICBjb250YWluc0hlYWRlckZvb3RlciA9IG51bGw7XG59XG4iXX0=

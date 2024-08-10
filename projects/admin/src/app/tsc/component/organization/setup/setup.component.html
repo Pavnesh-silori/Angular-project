@@ -1,0 +1,154 @@
+<div class="container">
+    <div class="card main-card appPageLayoutMain centerAlignHorizontal cardOverwrite">
+        <div class="row">
+            <div class="col-sm-6 p-5 centerAlign">
+                <img class="orgSetupImg" src="/assets/images/setup.jpg" alt="Set up your organization." />
+            </div>
+
+            <div class="col-sm-6 p-5 centerAlign">
+                <mat-card class="mat-elevation-z0 border rounded-3 w-100">
+
+                    <div class="card-title pageTitle ps-3">
+                        Organization Setup
+                    </div>
+                    <div class="card-body">
+                        <form [formGroup]="setupOrgFG" (ngSubmit)="setupOrg()">
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <mat-form-field [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE"
+                                        class="matFieldWidth100">
+                                        <mat-label>Organization Name</mat-label>
+                                        <input matInput type="text" placeholder="Organization Name"
+                                            formControlName="name" required />
+                                        <mat-error *ngIf="errorHandling('name', 'required')">
+                                            Organization name is required
+                                        </mat-error>
+                                    </mat-form-field>
+
+                                    <mat-form-field [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE"
+                                        class="matFieldWidth100">
+                                        <mat-label>Select reporting period</mat-label>
+                                        <mat-select formControlName="fiscalStartMonth" required>
+                                            <mat-option>
+                                                <ngx-mat-select-search [formControl]="monthFilterFC"
+                                                    placeholderLabel="Search by month name"
+                                                    noEntriesFoundLabel="No matching month found.">
+                                                </ngx-mat-select-search>
+                                            </mat-option>
+                                            <mat-option *ngFor="let months of monthFiltered | async"
+                                                [value]="months.keyID">
+                                                {{months.name}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="errorHandling('fiscalStartMonth', 'required')">
+                                            Reporting period is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-3 centerAlignHorizontal">
+                                    <lib-profile-logo-upload [imageInp]="logoImg" [showDeleteBtnInp]="showDeleteBtnInp" [removeImgActionInp]="removeImgActionInp" (imageRemoveEvent)="removeImage()" (imageSelectedEvent)="imageSelectedEvent($event)" [previewBtnLabelInp]="previewBtnLabelInp"></lib-profile-logo-upload>
+                                </div>
+                            </div>
+
+                            <mat-form-field [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE"
+                                class="matFieldWidth100">
+                                <mat-label>Address</mat-label>
+                                <textarea matInput placeholder="Address" matTextareaAutosize matAutosizeMinRows="2"
+                                    matAutosizeMaxRows="5" formControlName="address1" required></textarea>
+                                <mat-error *ngIf="errorHandling('address1', 'required')">
+                                    Address is required
+                                </mat-error>
+                            </mat-form-field>
+
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <mat-form-field [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE"
+                                        class="matFieldWidth100">
+                                        <mat-label>Select Country</mat-label>
+                                        <mat-select (selectionChange)="countryChange($event.value)"
+                                            formControlName="countryCode">
+                                            <mat-option>
+                                                <ngx-mat-select-search [formControl]="countryFilterFC"
+                                                    placeholderLabel="Search by Country Name"
+                                                    noEntriesFoundLabel="No matching country found.">
+                                                </ngx-mat-select-search>
+                                            </mat-option>
+                                            <mat-option *ngFor="let countriesM of countryFiltered | async"
+                                                [value]="countriesM.countryCode">
+                                                <span class="d-flex justify-content-between">
+                                                    {{countriesM.countryName}} - <span>{{countriesM.countryCode}}</span>
+                                                </span>
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="errorHandling('countryCode', 'required')">
+                                            Country is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div class="col-sm-6">
+                                    <mat-form-field [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE"
+                                        class="matFieldWidth100">
+                                        <mat-label>Select State</mat-label>
+                                        <mat-select formControlName="stateCode" required>
+                                            <mat-option>
+                                                <ngx-mat-select-search [formControl]="stateFilterFC"
+                                                    placeholderLabel="Search by State Name"
+                                                    noEntriesFoundLabel="No matching state found.">
+                                                </ngx-mat-select-search>
+                                            </mat-option>
+                                            <mat-option *ngFor="let statesM of stateFiltered | async"
+                                                [value]="statesM.stateCode">
+                                                {{statesM.name}}
+                                            </mat-option>
+                                        </mat-select>
+                                        <mat-hint *ngIf="errorHandling('stateCode', 'required')">
+                                            Select a country to view its states.
+                                        </mat-hint>
+                                        <mat-error *ngIf="errorHandling('stateCode', 'required')">
+                                            State is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <mat-form-field [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE"
+                                        class="matFieldWidth100">
+                                        <mat-label>City</mat-label>
+                                        <input matInput type="text" placeholder="City" formControlName="city"
+                                            required />
+                                        <mat-error *ngIf="errorHandling('city', 'required')">
+                                            City is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <mat-form-field [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE"
+                                        class="matFieldWidth100">
+                                        <mat-label>Zip Code</mat-label>
+                                        <input matInput type="text" placeholder="Zip Code" formControlName="zipCode"
+                                            required />
+                                        <mat-error *ngIf="errorHandling('zipCode', 'required')">
+                                            Zipcode is required
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <br />
+
+                            <div class="float-end">
+                                <button type="submit" class="btn btn-success button" matRipple
+                                    [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">
+                                    Submit
+                                </button>
+                            </div>
+                        </form>
+
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>

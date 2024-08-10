@@ -1,0 +1,135 @@
+<div class="content">
+    <div mat-dialog-header>
+        <div class="row">
+            <div class="col-sm-10">
+                <div class="d-flex align-items-center">
+                    <div class="profileImgContainer">
+                        <img class="profileImg rounded-circle border" [src]="getImage(user)" alt="profile-image" />
+                    </div>
+                    <div class="ps-3">
+                        <span class="fs-5"> {{ user?.firstName }} </span>
+                        <br />
+                        <span class="text-secondary">
+                            {{user?.email}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                <button mat-icon-button mat-dialog-close cdkFocusInitial class="float-end matDialogClose"
+                    matTooltip="Close" matTooltipPosition="before">
+                    <span class="material-symbols-outlined">
+                        close
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <hr />
+
+    <div mat-dialog-content class="card main-card cardOverwrite">
+        <form [formGroup]="accessFG">
+            <!-- ORGANIZATION_ACCESS -->
+            <ng-container>
+                <div class="pageTitle fs-5 mb-3"> Organization access </div>
+                <div class="row">
+                    <div class="col-sm-10">
+                        <mat-form-field class="matFieldWidth100"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label>Select organization</mat-label>
+                            <mat-select formControlName="organizationAccess" multiple>
+                                <option-search [filterFC]="orgSelectSearch['filterFC']" placeholder="Search by name"
+                                    noEntriesFoundLabel="No matching organization found.">
+                                </option-search>
+                                <mat-option [value]="-1" (click)="selectAllOrg()"
+                                    [hidden]="orgSelectSearch['filterFC'].value">
+                                    Select all
+                                </mat-option>
+                                <mat-option (click)="orgSelected()"
+                                    [disabled]="((org['id'] == currentOrgID) && isCurrentUser)"
+                                    *ngFor="let org of orgSelectSearch['filteredEntities'] | async" [value]="org['id']">
+                                    {{ org['name']}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </ng-container>
+
+            <!-- APPLICATION_ACCESS -->
+            <ng-container formArrayName="applicationAccess">
+                <div class="-3">
+                    <div class="pageTitle fs-5"> Product access </div>
+                    <div class="row">
+                        <div class="col-sm-10">
+                            <table mat-table class="w-100" [dataSource]="dataSource">
+                                <ng-container matColumnDef="application">
+                                    <th mat-header-cell *matHeaderCellDef> Product name </th>
+                                    <td mat-cell *matCellDef="let row">
+                                        {{ row['name'] }}
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="isEnabled">
+                                    <th mat-header-cell *matHeaderCellDef>
+                                        <mat-checkbox (change)="$event ? selectAll() : null"
+                                            [checked]="selection.hasValue() && isAllSelected()">
+                                            Access
+                                        </mat-checkbox>
+                                    </th>
+                                    <td class="px-3" mat-cell *matCellDef="let row; let i = index;" class="text-start">
+                                        <mat-checkbox (change)="$event ? selection.toggle(row['id']) : null"
+                                            [checked]="selection.isSelected(row['id'])"
+                                            [disabled]="row['id'] == currentApplicationID && isCurrentUser">
+                                        </mat-checkbox>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="role">
+                                    <th mat-header-cell *matHeaderCellDef> Role </th>
+                                    <td mat-cell *matCellDef="let row; let i = index;" class="pe-0">
+                                        <ng-container [formGroupName]="i">
+                                            <mat-form-field class="matFieldWidth100"
+                                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                <mat-label>Select role</mat-label>
+                                                <mat-select formControlName="roleID"
+                                                    [disabled]="!isAppSelected(i, row['id'])"
+                                                    [disabled]="(isCurrentUser && (row['id'] == currentApplicationID))? disableRoleSelection(i, row['id']): null"
+                                                    (selectionChange)="selection.select(row['id'])">
+                                                    <mat-option>
+                                                        <ngx-mat-select-search
+                                                            [formControl]="searchUtility[i]['filterFC']"
+                                                            placeholderLabel="Search by role name"
+                                                            noEntriesFoundLabel="No matching role found.">
+                                                        </ngx-mat-select-search>
+                                                    </mat-option>
+                                                    <mat-option
+                                                        *ngFor="let role of searchUtility[i]['filteredEntities'] | async"
+                                                        [value]="role['id']">
+                                                        {{ role['name'] }}
+                                                    </mat-option>
+                                                </mat-select>
+                                                <mat-error
+                                                    *ngIf="this.applicationAccessFA.controls[i].get('roleID').hasError('required')">
+                                                    Role is mandatory
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </ng-container>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let task; columns: displayedColumns;"></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </form>
+    </div>
+    <div mat-dialog-actions align="end" class="py-3">
+        <button class="btn btn-success" (click)="grantAccess()">
+            {{ ButtonLabelEnum.SAVE_BTN_LABEL }}
+        </button>
+    </div>
+</div>

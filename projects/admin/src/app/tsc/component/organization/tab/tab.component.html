@@ -1,0 +1,17 @@
+<div class="card main-card cardOverwrite">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Organizations</div>
+        </div>
+    </div>
+
+    <nav mat-tab-nav-bar>
+        <ng-container *ngFor="let tabs of tab; let i = index;">
+            <a mat-tab-link [routerLink]="tabs['routerLink']" (click)="activeLink = tabs['routerLink']"
+                [active]="activeLink == tabs['routerLink']">
+                {{ tabs['label'] }}
+            </a>
+        </ng-container>
+    </nav>
+    <router-outlet></router-outlet>
+</div>

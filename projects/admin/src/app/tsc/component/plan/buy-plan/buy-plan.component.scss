@@ -1,0 +1,206 @@
+.main-card:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.cell-header {
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.54);
+}
+
+:host ::ng-deep .mat-radio-container {
+    height: 25px;
+    width: 25px;
+}
+
+:host ::ng-deep .mat-radio-outer-circle {
+    height: 25px;
+    width: 25px;
+}
+
+:host ::ng-deep .mat-radio-inner-circle {
+    height: 25px;
+    width: 25px;
+}
+
+.cell-value {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.87);
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+::ng-deep .mat-horizontal-stepper-header {
+    pointer-events: none !important;
+}
+
+::ng-deep .mat-stepper-horizontal {
+    display: flex;
+    justify-content: center;
+}
+
+::ng-deep .mat-step-header {
+    width: 100% !important;
+}
+
+::ng-deep .mat-stepper-horizontal .mat-horizontal-stepper-header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Remove the gray color background from the stepper */
+::ng-deep .mat-step-header {
+    background-color: transparent !important;
+}  
+
+.projectCard {
+    max-width: 600px;
+    min-height: 650px;
+    margin-top: 0px;
+    padding: 0;
+    padding-bottom: 50px !important;
+    border-radius: 16px !important;
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+        &:hover{box-shadow: 0 1px 20px rgba(0,0,0,0), 0 10px 10px rgba(0,0,0,0.05);}
+}
+
+/* DD: dropdown */
+.funnelFilterDD {
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+.buyPlanProductIcon {
+    height: 50px;
+    width: auto;
+}
+
+.subscriptionProductIcon {
+    width: 60px;
+    height: 40px;
+}
+
+.subscriptionPlanProductIcon {
+    width: 160px;
+    height: 82px;
+}
+
+.netzeroIcon{
+    color: rgb(17, 97, 17);
+}
+.supplierIcon {
+    color: rgb(245, 134, 7);
+}
+
+.enviroIcon {
+    color: gray;
+}
+
+.offSetIcon {
+    color: #702963;
+}
+
+.verifiedIcon{
+    color: #3AC47D;
+}
+
+.appTile {
+    height: 8rem;
+}
+
+.appIcon {
+    font-size: 3.8rem !important;
+}
+
+.appDisable {
+    pointer-events: none;
+}
+
+.matCardTitle{
+    .mat-card-title{
+        font-size: 18px;
+    }
+}
+
+.cardHeight{
+    .mat-card{
+        min-height: 70px !important;
+        // max-width: 500px !important;
+    }
+}
+
+.matHeader {
+    .mat-card-header-text{
+        margin: 0px !important;
+    }
+}
+
+.cardHover{
+    .mat-card:hover{
+        box-shadow: -1px 10px 29px 0px rgba(0,0,0,0.8);
+    }
+}
+
+.mat-card-subtitle, .mat-card-content {
+    font-size: 13px;
+}
+
+.mat-card-title{
+    font-size: 16px !important;
+    margin: 0px !important;
+    color: #495057;
+    // margin-right: 10px !important;
+
+}
+
+.mat-card-title p {
+    margin-bottom: 0px !important;
+}
+
+
+
+.headerTitle{
+    text-transform: none !important;
+}
+
+
+.hrDivider {
+    color: #acb2b6;
+    margin-left: 18px !important;
+    margin-right: 18px !important;
+}
+
+.celebrateEmoji{
+    height: 20px; 
+    width: 20px;
+}
+
+// img {
+//     max-width: 70%;
+//     height: auto;
+//   }
+
+.productWidth {
+    max-width: 70%;
+    height: auto; 
+}
+
+.productIcon {
+    width: 65px;
+    height: 70px;
+}
+
+.newEnviroIcon {
+    width: 70px;
+    height: 75px;
+}
+
+
+.expired-badge {
+    padding: 0.35em 0.65em;
+    font-size: .62em;
+    font-weight: 500;
+    line-height: 0.7;
+}
+  

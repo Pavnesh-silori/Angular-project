@@ -1,0 +1,116 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="endAlignVertical">
+                <span class="fw-bold fs-5"> {{ facilityM?.['name'] }} </span>
+                <div class="py-1">Facility ID: {{ facilityM?.['id'] }}</div>
+            </div>
+        </div>
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <a class="text-secondary" [routerLink]="['/facility', this.facilityID, 'update']" matTooltip="Update"
+                    matTooltipPosition="below">
+                    <span class="material-symbols-outlined fs-5">
+                        edit_square
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <hr class="hrDivider">
+    <div class="card-body">
+        <!-- <div class="row pt-1">
+            <div class="col-sm-6">
+                <div class="row">
+                    <div class="col-sm-4">
+                        Time zone
+                    </div>
+                    <div class="col-sm-6 fw-bold">
+                        {{ facilityM?.['timeZone'] }} ({{facilityM?.['timeZoneGMTOffset']}})
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <div class="row pt-1">
+            <div class="col-sm-6">
+                <div class="row">
+                    <div class="col-sm-4">
+                        Address
+                    </div>
+                    <div class="col-sm-8 fw-bold">
+                        {{ facilityM['address1'] }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="row">
+                    <div class="col-sm-4">
+                        Country
+                    </div>
+                    <div class="col-sm-6 fw-bold">
+                        {{ facilityM['countryName'] }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row pt-3">
+            <div class="col-sm-6">
+                <div class="row">
+                    <div class="col-sm-4">
+                        State
+                    </div>
+                    <div class="col-sm-6 fw-bold">
+                        {{ facilityM['stateName'] }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="row">
+                    <div class="col-sm-4">
+                        City
+                    </div>
+                    <div class="col-sm-6 fw-bold">
+                        {{ facilityM['city'] }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row pt-3">
+            <div class="col-sm-6">
+                <div class="row">
+                    <div class="col-sm-4">
+                        Zipcode
+                    </div>
+                    <div class="col-sm-6 fw-bold">
+                        {{ facilityM['zipCode'] }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="row">
+                    <div class="col-sm-4">
+                        Timezone
+                    </div>
+                    <div class="col-sm-6 fw-bold">
+                        {{ facilityM['timeZoneName']? facilityM['timeZoneName'] : COMMON_CONSTANT['HYPHEN'] }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row pt-3 pb-1">
+            <div class="col-sm-6">
+                <div class="row">
+                    <div class="col-sm-4">
+                        Status
+                    </div>
+                    <div class="col-sm-6 fw-bold"
+                        [ngClass]="{'textActiveStatus': facilityM?.['status'] == 'ACTIVE', 'textInActiveStatus': facilityM?.['status'] == 'INACTIVE'}">
+                        {{ facilityM['status'] | titlecase}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

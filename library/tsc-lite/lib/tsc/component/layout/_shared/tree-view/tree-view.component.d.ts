@@ -1,0 +1,32 @@
+import { EventEmitter, OnInit, SimpleChanges } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { EntityTree } from '../../../../model/entity.model';
+import { EntityController } from '../../../../controller/entity.controller';
+import { StorageService } from '@library/storage-service';
+import { FormAction } from '@library/tsc-common';
+import { ToastrService } from '@library/toastr-service';
+import * as i0 from "@angular/core";
+export declare class CreateUpdateTreeViewComponent implements OnInit {
+    private storageService;
+    private entityController;
+    private toastrService;
+    private dialog;
+    formActionEnum: typeof FormAction;
+    permissionType: string;
+    allowUpdateOnClick: string;
+    layoutID: number;
+    emitFilter: EventEmitter<any>;
+    orgID: any;
+    entities: EntityTree[];
+    constructor(storageService: StorageService, entityController: EntityController, toastrService: ToastrService, dialog: MatDialog);
+    ngOnInit(): void;
+    ngOnChanges(changes: SimpleChanges): void;
+    getEntitiesForTreeView(): void;
+    hasContent(entity: any): boolean;
+    openChildDialog(entityID: any, action: any): void;
+    mapDevices(entityID: any): void;
+    openDeleteEntityDialog(entityID: any, entityName: any): void;
+    deleteEntity(entityID: any): void;
+    static ɵfac: i0.ɵɵFactoryDeclaration<CreateUpdateTreeViewComponent, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<CreateUpdateTreeViewComponent, "lib-tree-view", never, { "permissionType": "permissionType"; "allowUpdateOnClick": "allowUpdateOnClick"; "layoutID": "layoutID"; }, { "emitFilter": "emitFilter"; }, never, never>;
+}

@@ -1,0 +1,33 @@
+import { OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { FormControl } from '@angular/forms';
+import { EChartsOption } from 'echarts';
+import { EntityTree } from '../../../model/entity.model';
+import { EntityService } from '../../../service/entity.service';
+import { StorageService } from '@library/storage-service';
+import { Layout, LayoutService } from '@library/layout-service';
+import { FormAction } from '@library/tsc-common';
+import * as i0 from "@angular/core";
+export declare class ViewComponent implements OnInit {
+    private activatedRoute;
+    private storageService;
+    private layoutService;
+    private entityService;
+    formActionEnum: typeof FormAction;
+    orgID: any;
+    qParams: any;
+    layoutID: any;
+    layoutM: Layout;
+    entityDeviceM: EntityTree;
+    allowUpdateEntityTree: boolean;
+    chartDataOption: EChartsOption;
+    selectedViewFC: FormControl;
+    constructor(activatedRoute: ActivatedRoute, storageService: StorageService, layoutService: LayoutService, entityService: EntityService);
+    ngOnInit(): void;
+    getLayoutByID(): Promise<void>;
+    getEntitiesWithDevices(): Promise<void>;
+    changeState(): void;
+    drawChart(): void;
+    static ɵfac: i0.ɵɵFactoryDeclaration<ViewComponent, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<ViewComponent, "lib-view", never, {}, {}, never, never>;
+}

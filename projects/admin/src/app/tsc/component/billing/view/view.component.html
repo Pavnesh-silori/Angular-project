@@ -1,0 +1,120 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="cardHeaderBlock d-flex align-items-center">
+        <div class="col-sm-6 pageTitle">
+            Billing Profiles
+        </div>
+        <div class="col-sm-6">
+            <div class="float-end">
+                <button type="button" class="btn btn-sm btn-success" (click)="createUpdateBillingProfile('create')">
+                    <fa-icon [icon]="faPlus"></fa-icon> &nbsp;
+                    Billing profile
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body pt-0 pb-0">
+        <div class="row" *ngIf="billingProfileM">
+            <div class="col-sm-5" *ngFor="let profile of allProfiles">
+                <mat-card class="border mb-4 cardOverwrite" [ngStyle]="{'background-color': 'whitesmoke'}">
+                    <div class="position-absolute top-0 end-0 d-flex align-items-center justify-content-end">
+                        <span *ngIf="profile.isDefault" class="badge bg-secondary text-capitalize">primary</span>
+                        <div class="btn-group" ngbDropdown>
+                            <button type="button" ngbDropdownToggle class="dropdown-after dropdownAfter btn ml-auto">
+                                <fa-icon [icon]="faEllipsisV" class="me-2 fs-5 fw-bold"></fa-icon>
+                            </button>
+                            <div ngbDropdownMenu>
+                                <a class="dropdown-item" *ngIf="!profile.isDefault"
+                                    (click)="makeDefault(profile.billingProfileID)">
+                                    Mark as default
+                                </a>
+                                <a class="dropdown-item"
+                                    (click)="billingProfile = profile; createUpdateBillingProfile('update');">
+                                    Update
+                                </a>
+                                <button class="dropdown-item btn btn-outline-danger"
+                                    (click)="deleteBillingProfile(profile.billingProfileID)">
+                                    Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-4 ps-3">
+                        <div class="col-sm-12">
+                            <span class="fw-bold fs-4" *ngIf="profile.companyName">
+                                {{ profile.companyName }}
+                            </span>
+                        </div>
+                        <div class="col-sm-12">
+                            <span>
+                                {{ profile.billingAddress }}, {{ profile.city }}, {{ profile.stateName }}, {{
+                                profile.countryName }}, {{ profile.zipCode }}
+                            </span>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-sm-4">
+                                Billing contact:
+                            </div>
+                            <div class="col-sm-8" *ngIf="profile.userName">
+                                <div>{{ profile.userName }}</div>
+                            </div>
+                            <div class="col-sm-8" *ngIf="!profile.userName">
+                                <div>{{ COMMON_CONSTANT['HYPHEN'] }}</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                Email:
+                            </div>
+                            <div class="col-sm-8" *ngIf="profile.userEmail">
+                                <div>{{ profile.userEmail }}</div>
+                            </div>
+                            <div class="col-sm-8" *ngIf="!profile.userEmail">
+                                <div>{{ COMMON_CONSTANT['HYPHEN'] }}</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                Phone number:
+                            </div>
+                            <div class="col-sm-8">
+                                <div>{{ profile.userCountryCallingCode }}-{{ profile.userContactNumber ?
+                                    profile.userContactNumber : '--' }}</div>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-sm-4">
+                                VAT TIN/CST TIN:
+                            </div>
+                            <div class="col-sm-8" *ngIf="profile.tinNo">
+                                <div>{{ profile.tinNo }}</div>
+                            </div>
+                            <div class="col-sm-8" *ngIf="!profile.tinNo">
+                                <div>{{ COMMON_CONSTANT['HYPHEN'] }}</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                Invoices shared with:
+                            </div>
+                            <div class="col-sm-8" *ngIf="profile.extraInvoiceEmails.length != 0">
+                                <div *ngFor="let email of profile.extraInvoiceEmails">{{ email }}</div>
+                            </div>
+                            <div class="col-sm-8" *ngIf="profile.extraInvoiceEmails.length == 0">
+                                <div>{{ COMMON_CONSTANT['HYPHEN'] }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+            <div class="container d-flex align-items-center" *ngIf="billingProfileM.length == 0">
+                <div class="mx-auto fs-5 text-center">
+                    <img class="imgHeight" src="/assets/images/noProfile.jpg" />
+                    <br />
+                    <span class="fs-3 mt-0">
+                        There are no billing profiles currently.
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

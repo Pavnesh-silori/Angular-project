@@ -1,0 +1,58 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="cardHeaderBlock d-flex align-items-center">
+        <div class="col-sm-6 pageTitle">
+            Payment History
+        </div>
+    </div>
+    <div class="card-body pt-0 pb-0">
+        <div class="row" *ngIf="paymentHistory && paymentHistory.length > 0 ">
+            <table class="mb-4" mat-table [dataSource]="dataSource">
+                <ng-container matColumnDef="transactionID">
+                    <th mat-header-cell *matHeaderCellDef> Transaction ID </th>
+                    <td mat-cell *matCellDef="let row"> {{row.transactionID}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="date">
+                    <th mat-header-cell *matHeaderCellDef> Date </th>
+                    <td mat-cell *matCellDef="let row"> {{row.transactionDate}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="plan">
+                    <th mat-header-cell *matHeaderCellDef> Plan </th>
+                    <td mat-cell *matCellDef="let row"> {{row.planName}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="amount">
+                    <th mat-header-cell *matHeaderCellDef> Amount </th>
+                    <td mat-cell *matCellDef="let row"> {{ row.billedAmount | currency: row.currencyCode:
+                        'symbol-narrow':'1.2-2' }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="invoice">
+                    <th mat-header-cell *matHeaderCellDef> Invoice </th>
+                    <td mat-cell *matCellDef="let row"> <a href="{{row.invoiceZohoApiUrl}}" target="_blank">
+                            {{row.invoiceNumber}} </a> </td>
+                </ng-container>
+
+                <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef> Status </th>
+                    <td mat-cell *matCellDef="let row" class="text-capitalize"> {{row.paymentStatus}} </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            </table>
+        </div>
+        <div class="container d-flex align-items-center" *ngIf="!paymentHistory || paymentHistory.length == 0">
+            <div class="mx-auto fs-5 text-center">
+                <img class="imgHeight" src="/assets/images/noTransaction.jpg" />
+                <br />
+                <span class="fs-3 mt-0">
+                    There are no transactions currently.
+                </span>
+            </div>
+        </div>
+    </div>
+</div>

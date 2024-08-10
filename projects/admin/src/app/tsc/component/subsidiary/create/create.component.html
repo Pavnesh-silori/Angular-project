@@ -1,0 +1,275 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Create Subsidiary / Joint Venture</div>
+        </div>
+    </div>
+    <div class="card-body">
+        <form [formGroup]="createSubsidiaryFG">
+            <div class="row">
+                <div class="col-sm-6">
+                    <mat-card class="border cardOverwrite">
+                        <div class="cardTitle fw-bold pb-3">
+                            Subsidiary/JV details
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Subsidiary/JV name</mat-label>
+                                    <input matInput placeholder="Subsidiary/JV Name" type="text"
+                                        formControlName="name" />
+                                    <mat-error *ngIf="errorHandling('name', 'required')">
+                                        Subsidiary/JV name is required
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Operational control (%)</mat-label>
+                                    <input matInput placeholder="Operational control" type="number" [min]="0"
+                                        [max]="100" formControlName="operationalControlPct" />
+                                    <mat-error *ngIf="errorHandling('operationalControlPct', 'required')">
+                                        Operational control is required
+                                    </mat-error>
+                                    <mat-error *ngIf="errorHandling('operationalControlPct', 'min')">
+                                        This field can not be negative
+                                    </mat-error>
+                                    <mat-error *ngIf="errorHandling('operationalControlPct', 'max')">
+                                        % value cannot be more than 100
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Financial control (%)</mat-label>
+                                    <input matInput placeholder="Financial control" type="number" [min]="0" [max]="100"
+                                        formControlName="financialControlPct" />
+                                    <mat-error *ngIf="errorHandling('financialControlPct', 'required')">
+                                        Financial control is required
+                                    </mat-error>
+                                    <mat-error *ngIf="errorHandling('financialControlPct', 'min')">
+                                        This field can not be negative
+                                    </mat-error>
+                                    <mat-error *ngIf="errorHandling('financialControlPct', 'max')">
+                                        % value cannot be more than 100
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Equity control (%)</mat-label>
+                                    <input matInput placeholder="Equity control" type="number" [min]="0" [max]="100"
+                                        formControlName="equityControlPct" />
+                                    <mat-error *ngIf="errorHandling('equityControlPct', 'required')">
+                                        Equity control is required
+                                    </mat-error>
+                                    <mat-error *ngIf="errorHandling('equityControlPct', 'min')">
+                                        This field can not be negative
+                                    </mat-error>
+                                    <mat-error *ngIf="errorHandling('equityControlPct', 'max')">
+                                        % value cannot be more than 100
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+
+                <div class="col-sm-6">
+                    <mat-card class="border cardOverwrite">
+                        <div class="cardTitle fw-bold pb-3">
+                            Address details
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Address</mat-label>
+                                    <textarea matInput placeholder="Address" matTextareaAutosize matAutosizeMinRows="1"
+                                        matAutosizeMaxRows="5" formControlName="address1"></textarea>
+                                    <mat-error *ngIf="errorHandling('address1', 'required')">
+                                        Address is required
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Select country</mat-label>
+                                    <mat-select (selectionChange)="getStatesByCountry($event.value)"
+                                        formControlName="countryCode">
+                                        <mat-option>
+                                            <ngx-mat-select-search [formControl]="countryFilterFC"
+                                                placeholderLabel="Search by Country Name"
+                                                noEntriesFoundLabel="No matching country found.">
+                                            </ngx-mat-select-search>
+                                        </mat-option>
+                                        <mat-option *ngFor="let countriesM of countryFiltered | async"
+                                            [value]="countriesM.countryCode">
+                                            <span class="d-flex justify-content-between">
+                                                {{countriesM.countryName}} - <span>{{countriesM.countryCode}}</span>
+                                            </span>
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="errorHandling('countryCode', 'required')">
+                                        Country is required
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-6">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Select state</mat-label>
+                                    <mat-select formControlName="stateCode">
+                                        <mat-option>
+                                            <ngx-mat-select-search [formControl]="stateFilterFC"
+                                                placeholderLabel="Search by State Name"
+                                                noEntriesFoundLabel="No matching state found.">
+                                            </ngx-mat-select-search>
+                                        </mat-option>
+                                        <mat-option *ngFor="let statesM of stateFiltered | async"
+                                            [value]="statesM.stateCode">
+                                            {{statesM.name}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="createSubsidiaryFG.get('countryCode').invalid">
+                                        Please select country first
+                                    </mat-error>
+                                    <mat-error
+                                        *ngIf="errorHandling('stateCode', 'required') && createSubsidiaryFG.get('countryCode').valid">
+                                        State is required
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">City</mat-label>
+                                    <input matInput placeholder="City Name" type="text" formControlName="city" />
+                                    <mat-error *ngIf="errorHandling('city', 'required')">
+                                        City is required
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-6">
+                                <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                    <mat-label class="formLabel">Zipcode</mat-label>
+                                    <input matInput placeholder="Zipcode" type="text" formControlName="zipCode" />
+                                    <mat-error *ngIf="errorHandling('zipCode', 'required')">
+                                        Zip code is required
+                                    </mat-error>
+                                    <mat-error *ngIf="createSubsidiaryFG.get('zipCode').hasError('pattern')">
+                                        Only text and numbers are allowed in Zip Code.
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+
+                <div class="row pt-3">
+                    <div class="col-sm-6">
+                        <div class="ps-1 radioBtnField">
+                            <div class="radioBtnGroupLabel"> Type
+                            </div>
+                            <mat-radio-group formControlName="type" (change)="changeType($event.value)">
+                                <div class="row my-2">
+                                    <div class="col-sm-6">
+                                        <mat-radio-button class="radioBtnLabel" [value]="'SUBSIDIARY'">
+                                            Subsidiary
+                                        </mat-radio-button>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <mat-radio-button class="radioBtnLabel" [value]="'JOINT_VENTURE'">
+                                            Joint Venture
+                                        </mat-radio-button>
+                                    </div>
+                                    <mat-error
+                                        *ngIf="createSubsidiaryFG.get('type').touched && errorHandling('type', 'required')">
+                                        Select type
+                                    </mat-error>
+                                </div>
+                            </mat-radio-group>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row pt-2" *ngIf="isEntityTypeSelected">
+                    <div class="col-sm-6">
+                        <div class="ps-1 radioBtnField">
+                            <div class="radioBtnGroupLabel"> Does this {{ entityName | lowercase }} use 'The
+                                Sustainability Cloud'?
+                            </div>
+                            <mat-radio-group formControlName="useSustainabilityCloud"
+                                (change)="useSustainabilityCloudChange($event.value)">
+                                <div class="row my-2">
+                                    <div class="col-sm-6">
+                                        <mat-radio-button class="radioBtnLabel" [value]="true">
+                                            Yes
+                                        </mat-radio-button>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <mat-radio-button class="radioBtnLabel" [value]="false">
+                                            No
+                                        </mat-radio-button>
+                                    </div>
+                                    <mat-error
+                                        *ngIf="createSubsidiaryFG.get('useSustainabilityCloud').touched && errorHandling('useSustainabilityCloud', 'required')">
+                                        Select an option
+                                    </mat-error>
+                                </div>
+                            </mat-radio-group>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" *ngIf="createSubsidiaryFG.get('useSustainabilityCloud').value == true">
+                    <div class="col-sm-6">
+                        <mat-form-field class="matFieldWidth100"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel">Organization ID</mat-label>
+                            <input matInput placeholder="Subsidiary / JV Organization ID in The Sustainability Cloud"
+                                type="number" formControlName="subsidiaryOrgID" />
+                            <mat-error *ngIf="errorHandling('subsidiaryOrgID', 'required')">
+                                Organization ID is required
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="float-end">
+                            <button class="btn btn-secondary me-2" type="button" (click)="cancelButtonAction();">
+                                {{ ButtonLabelEnum.CANCEL_BTN_LABEL }}
+                            </button>
+                            <button class="btn btn-success" type="button" (click)="createSubsidiary()">
+                                {{ ButtonLabelEnum.CREATE_BTN_LABEL }}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

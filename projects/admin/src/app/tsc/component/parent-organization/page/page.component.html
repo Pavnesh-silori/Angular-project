@@ -1,0 +1,114 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Parent-Organization</div>
+            <div class="subTitle">Parent Organization will only be visible when they add your organization as Subsidiary
+                / Joint Venture</div>
+        </div>
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <lib-search-bar-one class="ms-3" #searchBar [searchBy]="'name'"
+                    (emitSearch)="searchFn($event)"></lib-search-bar-one>
+            </div>
+        </div>
+    </div>
+    <!-- REFRESH_BTN -->
+    <button type="button" class="d-none" #refreshBtn></button>
+
+    <table mat-table [dataSource]="dataSource" #sort="matSort" matSort matSortActive="id" matSortDirection="asc"
+        matSortDisableClear>
+
+        <ng-container matColumnDef="id">
+            <th class="columnWidth1" mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+                Org ID
+            </th>
+            <td class="columnWidth1" mat-cell *matCellDef="let row">
+                {{ row['id']}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+            <th class="px-3 columnWidth2" mat-header-cell *matHeaderCellDef>
+                Name
+            </th>
+            <td class="px-3 columnWidth2" mat-cell *matCellDef="let row"
+                [matTooltip]="row?.['name'].length>15? row['name']: ''" matTooltipPosition="above"
+                matTooltipClass="nameTooltip">{{row.name}}
+                <!-- {{ row?.['name'] | dotdotdot:15}} -->
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="state">
+            <th class="columnWidth3" mat-header-cell *matHeaderCellDef>
+                State
+            </th>
+            <td class="columnWidth3" mat-cell *matCellDef="let row">
+                {{ row['state']}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="country">
+            <th class="columnWidth3" mat-header-cell *matHeaderCellDef>
+                Country
+            </th>
+            <td class="columnWidth3" mat-cell *matCellDef="let row">
+                {{ row['country']}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+            <th class="px-3 status" mat-header-cell *matHeaderCellDef>
+                <funnel-filter #statusSelect header="Status" type="mono" [entityList]="statusList" [selectFC]="statusFC"
+                    [active]="statusFlag" (mono)="statusFlag = true;"></funnel-filter>
+            </th>
+            <td class="px-3 columnWidth1" mat-cell *matCellDef="let row">
+                <ng-container [ngSwitch]="row['status']">
+                    <span class="textActiveStatus" *ngSwitchCase="StatusEnum.ACTIVE_STATUS">
+                        Active
+                    </span>
+                    <span class="badge rounded-pill bg-success ms-2"
+                        *ngIf="row?.['status'] == StatusEnum.ACTIVE_STATUS && row?.['approvalStatus'] == RequestAccessEnum.APPROVED">Approved</span>
+                    <span class="badge rounded-pill bg-warning text-white ms-2"
+                        *ngIf="row?.['status'] == StatusEnum.ACTIVE_STATUS && row?.['approvalStatus'] == RequestAccessEnum.REQUESTED">Requested</span>
+                    <span class="badge rounded-pill bg-danger ms-2"
+                        *ngIf="row?.['status'] == StatusEnum.ACTIVE_STATUS && row?.['approvalStatus'] == RequestAccessEnum.REJECTED">Rejected</span>
+                    <span class="textInActiveStatus" *ngSwitchCase="StatusEnum.INACTIVE_STATUS">
+                        Inactive
+                    </span>
+                    <span *ngSwitchDefault>
+                        {{ row['status'] }}
+                    </span>
+                </ng-container>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <th class="columnWidth1" mat-header-cell *matHeaderCellDef></th>
+            <td class="columnWidth1 text-center" mat-cell *matCellDef="let row">
+                <ng-container *ngIf="row?.['status'] == 'ACTIVE' && row?.['approvalStatus'] == 'REQUESTED'">
+                    <button matRipple [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" type="submit"
+                        class="btn btn-sm btn-success"
+                        (click)="updateParentOrgStatusByID(row, RequestAccessEnum.APPROVED)">
+                        Approve
+                    </button>
+                    <button matRipple [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" type="submit"
+                        class="btn btn-sm btn-danger ms-2" (click)="updateParentOrgStatusByID(row, 'REJECTED')">
+                        Reject
+                    </button>
+                </ng-container>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumn"></tr>
+        <tr mat-row *matRowDef="let task; columns: displayedColumn;"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumn.length">
+                {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+            </td>
+        </tr>
+    </table>
+    <mat-paginator #paginator class="roundedBorder" showFirstLastButtons [length]="resultLength"
+        [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION" [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE">
+    </mat-paginator>
+</div>

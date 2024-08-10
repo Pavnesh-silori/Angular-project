@@ -1,0 +1,31 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="row">
+        <div class="col-sm-6 p-5 centerAlign">
+            <div class="card-body">
+                <div class="fs-3 fw-bold ps-5">
+                    Payment Successful
+                </div>
+                <div class="mt-2 ps-5">
+                    {{ paymentConfirmationUpdate }}
+                    Thank you for choosing The Sustainability Cloud.
+                </div>
+                <div class="ps-5 mt-3" *ngIf="isSubscriptionMade == 'default'">
+                    <div class="fs-5">
+                        <span class="spinner-border spinner-border-sm text-success "></span> Loading ...
+                    </div>
+                </div>
+                <div class="mt-5 ps-5">
+                    <button type="button" class="btn btn-sm btn-success me-2" [routerLink]="['/subscription/payment']">
+                        View transactions
+                    </button>
+                    <button type="button" class="btn btn-sm btn-success" [routerLink]="['/app']">
+                        Back to home
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 p-5 centerAlign">
+            <img class="subscriptionExpirePageImg" src="/assets/images/subscribed.jpg" />
+        </div>
+    </div>
+</div>

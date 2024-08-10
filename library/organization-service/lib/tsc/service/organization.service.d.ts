@@ -1,0 +1,32 @@
+import { Router } from "@angular/router";
+import { OrgType } from "../enum/organization.enum";
+import { OrgAccessM, OrgSiteAccessM, Organization, OrganizationM } from "../model/organization.model";
+import { OrganizationController } from "../controller/organization.controller";
+import { StorageService } from "@library/storage-service";
+import { ApplicationService } from "@library/application-service";
+import { Facility, FacilityService } from "@library/facility-service";
+import * as i0 from "@angular/core";
+export declare class OrganizationService {
+    private router;
+    private storageService;
+    private applicationService;
+    private organizationController;
+    private facilityService;
+    OrgType: OrgType;
+    currentOrgType: any;
+    rootOrgID: any;
+    currentOrgID: any;
+    organizationM: Organization;
+    facilityM: Facility;
+    redirectUrl: string;
+    constructor(router: Router, storageService: StorageService, applicationService: ApplicationService, organizationController: OrganizationController, facilityService: FacilityService);
+    orgSwitch(orgID: any, orgSwitchRedirect: string): void;
+    getOrganizationByID(orgID: number): Promise<OrganizationM>;
+    getOrgByAccess(userID: number): Promise<OrgAccessM[]>;
+    getOrganizations(orgID: any): Promise<OrgAccessM[]>;
+    getOrgSiteWithUserAccess(userID: number): Promise<OrgSiteAccessM>;
+    getOrgStatus(status: any): "Active" | "Inactive" | "Pending setup";
+    getOrgTimezone(): Promise<string>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<OrganizationService, never>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<OrganizationService>;
+}

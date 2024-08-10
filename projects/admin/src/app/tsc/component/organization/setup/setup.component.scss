@@ -1,0 +1,36 @@
+.orgSetupImg {
+    max-width: 95%;
+    max-height: 500px;
+}
+
+.border {
+    min-height: 90px;
+    height: auto !important;
+}
+
+.orgSetUpLogoImgContainer {
+    height: 130px !important;
+}
+
+.orgSetUpLogoImgWrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.orgSetUpLogoImgWrapper2 {
+    text-align: center;
+    padding-top: 8px;
+    will-change: transform;
+
+        :hover {
+        opacity: 0.85;
+        transition: transform 500ms;
+        transform: scale(1.05);
+    }
+}
+
+.orgSetUpLogoPreview {
+    width: 100%;
+    height: auto;
+}
+

@@ -1,0 +1,117 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Facilities</div>
+        </div>
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+               <div class="pe-3"> <lib-search-bar-one #searchBar [searchBy]="'user first name'"
+                    (emitSearch)="searchFn($event)"></lib-search-bar-one> </div> 
+                <a class="btn btn-sm btn-success btnBase" matRipple
+                    [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" routerLink="/facility/create">
+                    <fa-icon [icon]="faPlus"></fa-icon> Facility
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- REFRESH_BTN -->
+    <button type="button" class="d-none" #refreshBtn></button>
+
+    <table class="w-100" mat-table [dataSource]="dataSource" #sort="matSort" matSort matSortActive="id"
+        matSortDirection="asc" matSortDisableClear>
+
+        <ng-container matColumnDef="id">
+            <th class="columnWidth1" mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+                Facility ID
+            </th>
+            <td class="columnWidth1" mat-cell *matCellDef="let row">
+                <ng-container>
+                    <a [routerLink]="['/facility', row['id'], 'view']">
+                        {{ row['id'] }}
+                    </a>
+                </ng-container>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+            <th class="px-3 columnWidth2" mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+                Facility Name
+            </th>
+            <td class="px-3 columnWidth2" mat-cell *matCellDef="let row">
+                {{ row['name']}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="state">
+            <th class="columnWidth3" mat-header-cell *matHeaderCellDef>
+                State
+            </th>
+            <td class="columnWidth3" mat-cell *matCellDef="let row">
+                {{ row['state']}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="country">
+            <th class="columnWidth3" mat-header-cell *matHeaderCellDef>
+                Country
+            </th>
+            <td class="columnWidth3" mat-cell *matCellDef="let row">
+                {{ row['country']}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+            <th class="px-3 status" mat-header-cell *matHeaderCellDef>
+                <funnel-filter #statusSelect header="Status" type="mono" [entityList]="statusList" [selectFC]="statusFC"
+                    [active]="statusFlag" (mono)="statusFlag = true;"></funnel-filter>
+            </th>
+            <td class="px-3 columnWidth1" mat-cell *matCellDef="let row">
+                <ng-container [ngSwitch]="row['status']">
+                    <span class="textActiveStatus" *ngSwitchCase="'ACTIVE'">
+                        Active
+                    </span>
+                    <span class="textInActiveStatus" *ngSwitchCase="'INACTIVE'">
+                        Inactive
+                    </span>
+                    <span *ngSwitchDefault>
+                        {{ row['status'] }}
+                    </span>
+                </ng-container>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="option">
+            <th class="columnWidth1" mat-header-cell *matHeaderCellDef></th>
+            <td class="columnWidth1 text-center" mat-cell *matCellDef="let row">
+                <div class="btn-group" ngbDropdown placement="left">
+                    <button type="button" ngbDropdownToggle class="dropdown-after dropdownAfter btn">
+                        <fa-icon [icon]="faEllipsisV"></fa-icon>
+                    </button>
+                    <div ngbDropdownMenu>
+                        <button class="dropdown-item" [routerLink]="['/facility', row['id'], 'update']">
+                            {{ ButtonLabelEnum.UPDATE_BTN_LABEL }}
+                        </button>
+                        <button class="dropdown-item" (click)="updateFacilityStatusByID(row)">
+                            Mark as {{row?.['status'] == 'ACTIVE' ? 'Inactive':
+                            'Active'}}
+                        </button>
+                    </div>
+                </div>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumn"></tr>
+        <tr mat-row *matRowDef="let task; columns: displayedColumn;"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell text-center" [attr.colspan]="displayedColumn.length">
+                {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+            </td>
+        </tr>
+    </table>
+
+    <mat-paginator #paginator class="roundedBorder" showFirstLastButtons [length]="resultLength"
+        [pageSize]="TABLE_CONSTANT['DEFAULT_PAGE_SIZE']" [pageSizeOptions]="TABLE_CONSTANT['PAGE_SIZE_OPTION']">
+    </mat-paginator>
+</div>

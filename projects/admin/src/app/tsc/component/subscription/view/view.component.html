@@ -1,0 +1,88 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="cardHeaderBlock">
+        <div class="col-sm-12">
+            <div class="pageTitle">
+                Subscriptions
+            </div>
+        </div>
+    </div>
+    <div class="card-body pt-0 pb-0">
+        <div fxLayout="row wrap" fxLayoutGap="16px grid">
+            <div fxFlex="50%" fxFlex.xs="50%" fxFlex.sm="50%" *ngFor="let data of activeSubscription">
+                <mat-card class="border mb-4 cardOverwrite"
+                    [ngStyle]="{'background-color': data.subscriptionStatus == 'EXPIRED' ? 'white' : 'whitesmoke'}"
+                    [ngClass]="{'text-secondary': data.subscriptionStatus === 'EXPIRED'}">
+                    <div class="row">
+                        <span class="card-title sectionTitle fs-5"
+                            [ngClass]="{'text-secondary': data.subscriptionStatus == 'EXPIRED', 'text-dark': data.subscriptionStatus != 'EXPIRED'}">
+                            {{ data.planName }}
+                        </span>
+                        <div class="position-absolute end-0 d-flex align-items-center justify-content-end">
+                            <span *ngIf="data.subscriptionStatus == 'EXPIRED'"
+                                class="badge bg-secondary text-capitalize">expired</span>
+                        </div>
+                    </div>
+                    <hr class="mt-0">
+                    <div fxLayout="row wrap">
+                        <div class="col-sm-4">
+                            <div class="table-header">Subscription ID</div>
+                            <div class="table-value mt-2">{{ data.subscriptionID }}</div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="table-header">Next billing date</div>
+                            <div class="table-value mt-2">{{ data.endDate }}</div>
+                        </div>
+                        <div class="col-sm-4" *ngIf="data.priceType=='PAID'">
+                            <div class="table-header centerAlignVertical justify-content-end">Billed amount</div>
+                            <div class="mt-2 fw-bold centerAlignVertical justify-content-end">
+                                <span *ngIf="data.billedAmount == 0">{{ 0 | currency: data.currencyCode:
+                                    'symbol-narrow':'1.2-2'
+                                    }}</span>
+                                <span *ngIf="data.billedAmount != 0">
+                                    {{ data.billedAmount | currency: data.currencyCode: 'symbol-narrow':'1.2-2'
+                                    }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-sm-9 d-flex justify-content-start centerAlignVertical">
+                            <span class="fw-bold fs-5 me-2">Products:</span>
+                            <div class="d-flex flex-wrap align-items-center">
+                                <!-- <span *ngFor="let application of data.application"
+                                    class="material-symbols-outlined fw-bold me-1" [ngClass]="{
+                                                    'netzeroIcon': application.applicationKeyID == 'TSC_NETZERO',
+                                                    'supplierIcon': application.applicationKeyID == 'SCOPE_3_SUPPLIER',
+                                                    'text-info': application.applicationKeyID == 'TSC_WATER',
+                                                    'text-warning': application.applicationKeyID == 'TSC_ENERGY',
+                                                    'enviroIcon': application.applicationKeyID == 'TSC_ENVIRO',
+                                                    'offSetIcon': application.applicationKeyID == 'TSC_OFFSET',
+                                                    'accountIcon': application.applicationKeyID == 'ACCOUNT'
+                                                  }" #tooltip="matTooltip" matTooltipPosition="above"
+                                    [matTooltip]="application.applicationName">
+                                    <span class="centerAlign me-2">{{ application.applicationIcon }}</span>
+                                </span> -->
+                                <div *ngFor="let application of data.application">
+                                    <span class="centerAlign pe-2" [matTooltip]="application.applicationName">
+                                        <img class="appLogo" [ngClass]="{'black-and-white-image': data.subscriptionStatus == 'EXPIRED'}"
+                                            [src]="getApplicationLogoFileName(application.applicationKeyID)" alt="{{ application.applicationName }}">
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-3 d-flex justify-content-end centerAlignVertical">
+                            <button type="button" class="btn btn-sm btn-success me-2"
+                                *ngIf="data.priceType == PlanPriceType['PLAN_PRICE_TYPE_FREE'] || data.subscriptionStatus == 'EXPIRED'"
+                                [routerLink]="['/subscription-new/plan']"
+                                [queryParams]="{subscriptionID: data.subscriptionID,planGroupType: data.planGroupType}"
+                                [disabled]="paymentMaintenanceStatus == 'YES'">
+                                Buy plan
+                            </button>
+                        </div>
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>

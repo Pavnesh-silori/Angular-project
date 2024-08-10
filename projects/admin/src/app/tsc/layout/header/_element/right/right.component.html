@@ -1,0 +1,27 @@
+<div class="centerAlign">
+    <div>
+        <lib-org-drawer-header [toggleOrgDrawer]="globals.toggleOrgDrawer"
+            (toggleOrgDrawerGlobal)="globals.toggleOrgDrawer=$event;"></lib-org-drawer-header>
+    </div>
+
+    <div>
+        <button type="button" class="btn btn-link text-secondary p-0 ms-3"
+            [ngClass]="{'is-active' : globals.toggleDrawer}" (click)="toggleDrawer()">
+            <span [matBadge]="totalNotificationCount" matBadgeSize="small">
+                <span class="material-symbols-outlined">
+                    notifications
+                </span>
+            </span>
+        </button>
+    </div>
+
+    <div class="ps-2">
+        <lib-user-drawer></lib-user-drawer>
+    </div>
+
+    <div class="ps-2">
+        <lib-application-drawer></lib-application-drawer>
+    </div>
+</div>
+
+<app-notification-drawer (notificationCount)="notificationCount($event)"></app-notification-drawer>

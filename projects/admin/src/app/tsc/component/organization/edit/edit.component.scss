@@ -1,0 +1,77 @@
+.orgLogoImg {
+    will-change: transform;
+    width: auto;
+    max-width: 110px;
+    max-height: 110px;
+    display: flex;
+    // left:100px;
+    flex: auto;
+    align-items: center;
+    justify-content: center;
+
+    :hover {
+        opacity: 0.85;
+        transition: transform 500ms;
+        transform: scale(1.05);
+    }
+}
+
+.orgLogoContainer {
+    width: 90px;
+    min-height: 95px;
+    max-height: auto;
+    float: left;
+    margin: 3px;
+    padding: 3px;
+}
+
+.viewLogoBtn {
+    will-change: transform;
+    right: -2px;
+    bottom: -2px;
+    position: absolute !important;
+    width: 25px !important;
+    height: 25px !important;
+    color: white;
+    background-color: rgb(0, 0, 0);
+    border-radius: 50%;
+    border: 1px solid white !important;
+    opacity: 0.5;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.deleteLogo{
+    will-change: transform;
+    right: 25px;
+    bottom: -2px;
+    position: absolute !important;
+    width: 25px !important;
+    height: 25px !important;
+    color: white;
+    background-color: rgb(0, 0, 0);
+    border-radius: 50%;
+    border: 1px solid white !important;
+    opacity: 0.5;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.orgLogoUpdateImg {
+    max-width: 100%;
+    height: auto;
+}
+
+.cropperDimensions {
+    max-width: 350px;
+    max-height: auto;
+}
+
+.border {
+    // min-height: 0px;
+    height: auto !important;
+    width: auto !important;
+}

@@ -1,0 +1,105 @@
+.logo {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+}
+
+.separator-top {
+    border-top: 1px solid #f6eded;
+    background-color: white !important;
+}
+
+.separator-bottom {
+    border-bottom: 1px solid #f6eded;
+    background-color: white !important;
+}
+
+.tscLogoFooterClose {
+    width: 32px;
+    height: 32px;
+}
+
+.tscLogoHeader {
+    height: 38px;
+    width: auto;
+}
+
+.menu-icon {
+    text-align: center;
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    margin-top: -17px;
+    font-size: 1.3rem;
+}
+
+.navIcon {
+    text-align: center;
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    margin-top: -17px;
+    font-size: 1.5rem;
+    opacity: 0;
+}
+
+.vsm-link {
+    font-weight: unset !important;
+    min-height: 30px !important;
+
+    &:hover {
+        .navIcon {
+            opacity: 1;
+        }
+    }
+}
+
+.vsm-title {
+    font-size: 14px;
+    white-space: nowrap;
+    position: relative;
+    font-weight: normal;
+}
+
+.vsm-icon {
+    opacity: 1;
+}
+
+.iconSpacing {
+    padding-left: 10px;
+    margin-left: 15px;
+}
+
+@media (min-width: 768px) {
+    .closed-sidebar {
+        .app-sidebar {
+            .header__pane {
+                display: block;
+            }
+
+            .headerLogo {
+                display: none;
+            }
+        }
+    }
+}
+
+.mainSidebarIcon {
+    text-align: center;
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    margin-top: -17px;
+    opacity: 1 !important;
+    transition: color 300ms;
+    font-size: 20px !important;
+}

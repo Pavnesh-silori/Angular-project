@@ -1,0 +1,169 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Update organization</div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-12">
+                <form [formGroup]="updateOrganizationDetailFG">
+                    <div class="row">
+                        <div class="col-sm-6 me-5">
+                            <mat-form-field class="matFieldWidth100"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Organization ID</mat-label>
+                                <input matInput placeholder="Organization ID" type="number" formControlName="id" />
+                            </mat-form-field>
+                            <mat-form-field class="matFieldWidth100"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Organization name</mat-label>
+                                <input matInput placeholder="Organization Name" type="text" formControlName="name" />
+                                <mat-error *ngIf="errorHandling('name', 'required')">
+                                    Organization name is required
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-sm-3 centerAlignHorizontal">
+                            <lib-profile-logo-upload [imageInp]="logoImg" [showDeleteBtnInp]="showDeleteBtnInp" [removeImgActionInp]="removeImgActionInp" (imageRemoveEvent)="deleteLogo()" (imageSelectedEvent)="imageSelectedEvent($event)"></lib-profile-logo-upload>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <mat-form-field class="matFieldWidth100"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Address</mat-label>
+                                <textarea matInput placeholder="Address" matTextareaAutosize matAutosizeMinRows="1"
+                                    matAutosizeMaxRows="5" formControlName="address1"></textarea>
+                                <mat-error *ngIf="errorHandling('address1', 'required')">
+                                    Organization address is required
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <mat-form-field class="matFieldWidth100"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Select time zone</mat-label>
+                                <mat-select formControlName="timeZoneID">
+                                    <mat-option>
+                                        <ngx-mat-select-search [formControl]="timezoneFilterFC"
+                                            placeholderLabel="Search by country name"
+                                            noEntriesFoundLabel="No matching timezone found.">
+                                        </ngx-mat-select-search>
+                                    </mat-option>
+                                    <mat-option *ngFor="let timezonesM of timezoneFiltered | async"
+                                        [value]="timezonesM.timeZoneID">
+                                        <span class="d-flex justify-content-between">
+                                            {{timezonesM.timeZoneName}} - <span> (UTC {{
+                                                timezonesM.gmtOffset}})</span>
+                                        </span>
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="errorHandling('timeZoneID', 'required')">
+                                    Time Zone is required
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <mat-form-field class="matFieldWidth100"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Select country</mat-label>
+                                <mat-select (selectionChange)="countryChange($event.value)"
+                                    formControlName="countryCode">
+                                    <mat-option>
+                                        <ngx-mat-select-search [formControl]="countryFilterFC"
+                                            placeholderLabel="Search by Country Name"
+                                            noEntriesFoundLabel="No matching country found.">
+                                        </ngx-mat-select-search>
+                                    </mat-option>
+                                    <mat-option *ngFor="let countriesM of countryFiltered | async"
+                                        [value]="countriesM.countryCode">
+                                        <span class="d-flex justify-content-between">
+                                            {{countriesM.countryName}} - <span>{{countriesM.countryCode}}</span>
+                                        </span>
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="errorHandling('countryCode', 'required')">
+                                    Country is required
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-sm-3">
+                            <mat-form-field class="matFieldWidth100"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Select state</mat-label>
+                                <mat-select formControlName="stateCode">
+                                    <mat-option>
+                                        <ngx-mat-select-search [formControl]="stateFilterFC"
+                                            placeholderLabel="Search by State Name"
+                                            noEntriesFoundLabel="No matching state found.">
+                                        </ngx-mat-select-search>
+                                    </mat-option>
+                                    <mat-option *ngFor="let statesM of stateFiltered | async"
+                                        [value]="statesM.stateCode">
+                                        {{statesM.name}}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *ngIf="updateOrganizationDetailFG.get('countryCode').invalid">
+                                    Please select country first
+                                </mat-error>
+                                <mat-error
+                                    *ngIf="errorHandling('stateCode', 'required') && updateOrganizationDetailFG.get('countryCode').valid">
+                                    State is required
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <mat-form-field class="matFieldWidth100"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">City</mat-label>
+                                <input matInput placeholder="City Name" type="text" formControlName="city" />
+                                <mat-error *ngIf="errorHandling('city', 'required')">
+                                    City is required
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <mat-form-field class="matFieldWidth100"
+                                [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                <mat-label class="formLabel">Zipcode</mat-label>
+                                <input matInput placeholder="Zipcode" type="text" formControlName="zipCode" />
+                                <mat-error *ngIf="errorHandling('zipCode', 'required')">
+                                    Zip code is required
+                                </mat-error>
+                                <mat-error *ngIf="updateOrganizationDetailFG.get('zipCode').hasError('pattern')">
+                                    Only text and numbers are allowed in Zip Code.
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="float-end">
+                                <button class="btn btn-secondary me-2" type="button" (click)="cancelButtonAction()">
+                                    {{ ButtonLabelEnum.CANCEL_BTN_LABEL }}
+                                </button>
+                                <button class="btn btn-success" type="button" [ngClass]="{'disabled': isEqual}"
+                                    (click)="updateOrganization()">
+                                    {{ ButtonLabelEnum.UPDATE_BTN_LABEL }}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

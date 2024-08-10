@@ -1,0 +1,57 @@
+import { OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { EscalationLevelCount, EscalationLevelInfo } from '../../../model/escalation.model';
+import { AlertButtonLabelEnum } from '../../../enum/alert.enum';
+import { EscalationController } from '../../../controller/escalation.controller';
+import { StorageService } from '@library/storage-service';
+import { ButtonLabelEnum, DialogEnum, PageTitleEnum } from '@library/tsc-common';
+import { ActivatedRoute } from '@angular/router';
+import { ToastrService } from '@library/toastr-service';
+import * as i0 from "@angular/core";
+export declare class ListComponent implements OnInit {
+    private activatedRoute;
+    private storageService;
+    private toastrService;
+    private escalationController;
+    private dialog;
+    COMMON_CONSTANT: {
+        PRIVACY: string;
+        TERMS: string;
+        PRICING: string;
+        SUPPORT_EMAIL: string;
+        HYPHEN: string;
+        NO_DATA_FOUND: string;
+        NO_DATA: string;
+        EMAIL_PATTERN: string;
+        ZIPCODE_PATTERN: string;
+        GST_NUMBER_PATTERN: string;
+        ALLOWED_IMAGE_TYPES: string[];
+        MAX_IMAGE_SIZE: number;
+    };
+    MATERIAL_CONSTANT: {
+        MAT_RIPPLE_CENTER: boolean;
+    };
+    ButtonLabelEnum: typeof ButtonLabelEnum;
+    AlertButtonLabelEnum: typeof AlertButtonLabelEnum;
+    PageTitleEnum: typeof PageTitleEnum;
+    DialogEnum: typeof DialogEnum;
+    orgID: any;
+    alertRuleID: any;
+    escalationLevelJSON: any[];
+    escalationLevelCountM: EscalationLevelCount;
+    escalationLevelInfoM: EscalationLevelInfo[];
+    constructor(activatedRoute: ActivatedRoute, storageService: StorageService, toastrService: ToastrService, escalationController: EscalationController, dialog: MatDialog);
+    ngOnInit(): void;
+    getEscalationLevelCount(): void;
+    getAllLevelEscalation(): void;
+    getEscalationLevelJSON(escalationLevel: any): any[];
+    isLevelConfigured(levelId: number): boolean;
+    getCorresondingEscLevelConfig(levelId: number): any;
+    hasEscalationDataForPreviousLevel(levelId: number): boolean;
+    hasEscalationDataForLevel(levelId: number): boolean;
+    createUpdateEscalationRuleDialog(levelID: number, action: PageTitleEnum, escLevelConfig?: any): void;
+    openDeleteEscRuleDialog(levelID: any, escLevelConfig: any): void;
+    deleteEscalationRuleDialog(escalationRuleID: any): void;
+    static ɵfac: i0.ɵɵFactoryDeclaration<ListComponent, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<ListComponent, "lib-list", never, {}, {}, never, never>;
+}

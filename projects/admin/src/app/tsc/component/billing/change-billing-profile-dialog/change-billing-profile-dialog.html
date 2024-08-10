@@ -1,0 +1,101 @@
+<div mat-dialog-title class="d-flex justify-content-between align-items-center">
+    <strong class="dialogHeader">
+        Select Billing Profile
+    </strong>
+    <button type="button" class="btn btn-sm btn-success" (click)="createBillingProfile('create')">
+        <fa-icon [icon]="faPlus"></fa-icon>&nbsp;
+        Billing profile
+    </button>
+</div>
+<div class="matDialogContent" mat-dialog-content>
+    <mat-radio-group [formControl]="selectedBillingProfileFC">
+        <div class="col-sm-12" *ngFor="let profile of billingProfileM">
+            <mat-card class="border mb-4 cardOverwrite" style="min-height: 250px; background-color:whitesmoke;">
+                <div class="row">
+                    <div class="fw-bold fs-5 mb-2">
+                        <mat-radio-button [value]="profile.billingProfileID">
+                        </mat-radio-button>
+                        <div class="position-absolute top-0 end-0">
+                            <span *ngIf="profile.isDefault"
+                                class="badge bg-secondary text-capitalize me-2 mt-3">primary</span>
+                        </div>
+                    </div>
+                    <div class="row mt-2 ps-3">
+                        <div class="col-sm-12">
+                            <span class="fw-bold fs-4" *ngIf="profile.companyName">
+                                {{ profile.companyName }}
+                            </span>
+                        </div>
+                        <div class="col-sm-12">
+                            <span>
+                                {{ profile.billingAddress }}, {{ profile.city }}, {{ profile.stateName }}, {{
+                                profile.countryName }}, {{ profile.zipCode }}
+                            </span>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-sm-4">
+                                Billing contact:
+                            </div>
+                            <div class="col-sm-8" *ngIf="profile.userName">
+                                <div>{{ profile.userName }}</div>
+                            </div>
+                            <div class="col-sm-8" *ngIf="!profile.userName">
+                                <div>{{ COMMON_CONSTANT['HYPHEN'] }}</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                Email:
+                            </div>
+                            <div class="col-sm-8" *ngIf="profile.userEmail">
+                                <div>{{ profile.userEmail }}</div>
+                            </div>
+                            <div class="col-sm-8" *ngIf="!profile.userEmail">
+                                <div>{{ COMMON_CONSTANT['HYPHEN'] }}</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                Phone number:
+                            </div>
+                            <div class="col-sm-8">
+                                <div>{{ profile.userCountryCallingCode }}-{{ profile.userContactNumber ?
+                                    profile.userContactNumber : '--' }}</div>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-sm-4">
+                                VAT TIN/CST TIN:
+                            </div>
+                            <div class="col-sm-8" *ngIf="profile.tinNo">
+                                <div>{{ profile.tinNo }}</div>
+                            </div>
+                            <div class="col-sm-8" *ngIf="!profile.tinNo">
+                                <div>{{ COMMON_CONSTANT['HYPHEN'] }}</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                Invoices shared with:
+                            </div>
+                            <div class="col-sm-8" *ngIf="profile.extraInvoiceEmails.length != 0">
+                                <div *ngFor="let email of profile.extraInvoiceEmails">{{ email }}</div>
+                            </div>
+                            <div class="col-sm-8" *ngIf="profile.extraInvoiceEmails.length == 0">
+                                <div>{{ COMMON_CONSTANT['HYPHEN'] }}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </mat-card>
+        </div>
+    </mat-radio-group>
+</div>
+<div class="float-end my-2 mt-2 pb-4">
+    <button type="button" class="btn btn-sm btn-secondary me-2" mat-dialog-close>
+        Cancel
+    </button>
+    <button type="button" class="btn btn-sm btn-success" (click)="selectedBillingProfile()">
+        Save
+    </button>
+</div>

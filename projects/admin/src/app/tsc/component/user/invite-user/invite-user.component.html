@@ -1,0 +1,195 @@
+<div class="content">
+    <div mat-dialog-header>
+        <div class="row">
+            <div class="col-sm-11">
+                <div class="pageTitle dialogHeader fw-bold"> Invite user </div>
+                <div class="pageSubtitle">
+                    Invite teammates to collaborate and use products in your organization.
+                    We’ll ask new users to enter their personal details when they sign up.
+                </div>
+            </div>
+            <div class="col-sm-1">
+                <button mat-icon-button mat-dialog-close cdkFocusInitial class="float-end matDialogClose"
+                    matTooltip="Close" matTooltipPosition="before">
+                    <span class="material-symbols-outlined">
+                        close
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="dialogContent">
+        <div class="row">
+            <form [formGroup]="inviteFG">
+                <div class="row mt-3">
+                    <div class="col-sm-8">
+                        <mat-form-field [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE" class="matFieldWidth100">
+                            <mat-label> Email </mat-label>
+                            <input matInput formControlName="email" type="email">
+                            <mat-error *ngIf="hasError('email', 'required')">
+                                Email is mandatory
+                            </mat-error>
+                            <mat-error *ngIf="hasError('email', 'pattern')">
+                                Please enter valid email.
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <ng-container>
+                        <mat-accordion class="mb-3">
+                            <div class="row">
+                                <span class="pageTitle fs-5">
+                                    Organization access
+                                </span>
+
+                                <div class="col-sm-6 d-flex align-items-center justify-content-between">
+                                    <span class="sectionSubTitle centerAlignVertical">
+                                        <ng-container *ngIf="!organizationAccessAC.value.length; else orgAssigned;">
+                                            There is no organization or facility assigned yet.
+                                        </ng-container>
+                                        <ng-template #orgAssigned>
+                                            Organization or facility assigned.
+                                        </ng-template>
+                                    </span>
+                                    <button type="button" class="btn btn-link"
+                                        (click)="isOrgExpanded = !isOrgExpanded; hidden = false;">
+                                        <fa-icon [icon]="faPlus"></fa-icon>
+                                    </button>
+                                </div>
+                            </div>
+                            <mat-expansion-panel [hidden]="hidden" [expanded]="isOrgExpanded"
+                                class="mat-elevation-z0 cardOverwrite">
+                                <mat-expansion-panel-header hidden style="background-color: rgba(0, 0, 0, 0.04);">
+                                </mat-expansion-panel-header>
+                                <div class="row mt-2">
+                                    <div class="col-sm-8">
+                                        <mat-form-field class="matFieldWidth100"
+                                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                            <mat-label>Select organization</mat-label>
+                                            <mat-select formControlName="organizationAccess" multiple>
+                                                <option-search [filterFC]="orgSelectSearch['filterFC']"
+                                                    placeholder="Search by name"
+                                                    noEntriesFoundLabel="No matching organization found.">
+                                                </option-search>
+                                                <mat-option [value]="-1" (click)="selectAllOrg()"
+                                                    [hidden]="orgSelectSearch['filterFC'].value">
+                                                    Select all
+                                                </mat-option>
+                                                <mat-option (click)="orgSelected()"
+                                                    *ngFor="let org of orgSelectSearch['filteredEntities'] | async"
+                                                    [value]="org['id']">
+                                                    {{ org['name']}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </ng-container>
+                    <ng-container>
+                        <ng-container formArrayName="applicationAccess">
+                            <mat-accordion class="mb-3">
+                                <div class="row">
+                                    <span class="pageTitle fs-5">
+                                        Product access
+                                    </span>
+
+                                    <div class="col-sm-6 d-flex justify-content-between">
+                                        <span class="sectionSubTitle centerAlignVertical">
+                                            <ng-container *ngIf="!selection.hasValue(); else productAssigned;">
+                                                There are no products assigned yet.
+                                            </ng-container>
+                                            <ng-template #productAssigned>
+                                                Product assigned.
+                                            </ng-template>
+                                        </span>
+                                        <button type="button" class="btn btn-link"
+                                            (click)="isProductExpanded = !isProductExpanded; hidden = false;">
+                                            <fa-icon [icon]="faPlus"></fa-icon>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <mat-expansion-panel [hidden]=hidden [expanded]="isProductExpanded"
+                                    class="mat-elevation-z0 p-0 cardOverwrite">
+                                    <mat-expansion-panel-header hidden style="background-color: rgba(0, 0, 0, 0.04);">
+                                    </mat-expansion-panel-header>
+                                    <div class="row">
+                                        <table mat-table [dataSource]="dataSource">
+                                            <ng-container matColumnDef="application">
+                                                <th mat-header-cell *matHeaderCellDef> Product name </th>
+                                                <td mat-cell *matCellDef="let row">
+                                                    {{ row['name'] }}
+                                                </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="isEnabled">
+                                                <th mat-header-cell *matHeaderCellDef>
+                                                    <mat-checkbox (change)="$event ? selectAll() : null"
+                                                        [checked]="selection.hasValue() && isAllSelected()">
+                                                        Access
+                                                    </mat-checkbox>
+                                                </th>
+                                                <td class="px-3" mat-cell *matCellDef="let row; let i = index;"
+                                                    class="text-start">
+                                                    <mat-checkbox (change)="$event ? selection.toggle(row['id']) : null"
+                                                        [checked]="selection.isSelected(row['id'])"></mat-checkbox>
+                                                </td>
+                                            </ng-container>
+
+                                            <ng-container matColumnDef="role">
+                                                <th mat-header-cell *matHeaderCellDef> Role </th>
+                                                <td mat-cell *matCellDef="let row; let i = index;">
+                                                    <ng-container [formGroupName]="i">
+                                                        <div class="row pt-2">
+                                                            <div class="col-sm-8">
+                                                                <mat-form-field class="matFieldWidth100"
+                                                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                                    <mat-label>Select role</mat-label>
+                                                                    <mat-select formControlName="roleID"
+                                                                        [disabled]="toggleField(i, row['id'])"
+                                                                        (selectionChange)="selection.select(row['id'])">
+                                                                        <mat-option>
+                                                                            <ngx-mat-select-search
+                                                                                [formControl]="searchUtility[i]['filterFC']"
+                                                                                placeholderLabel="Search by role name"
+                                                                                noEntriesFoundLabel="No matching role found.">
+                                                                            </ngx-mat-select-search>
+                                                                        </mat-option>
+                                                                        <mat-option
+                                                                            *ngFor="let role of searchUtility[i]['filteredEntities'] | async"
+                                                                            [value]="role['id']">
+                                                                            {{ role['name'] }}
+                                                                        </mat-option>
+                                                                    </mat-select>
+                                                                    <mat-error
+                                                                        *ngIf="this.applicationAccessFA.controls[i].get('roleID').hasError('required')">
+                                                                        Role is mandatory
+                                                                    </mat-error>
+                                                                </mat-form-field>
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+                                                </td>
+                                            </ng-container>
+
+                                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                            <tr mat-row *matRowDef="let task; columns: displayedColumns;"></tr>
+                                        </table>
+                                    </div>
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                        </ng-container>
+                    </ng-container>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="mt-5" align="end">
+        <button class="btn btn-success" (click)="inviteUser()">
+           Invite
+        </button>
+    </div>
+</div>

@@ -1,0 +1,42 @@
+import { EventEmitter, OnInit, SimpleChanges } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { Parameter } from '../../../model/parameter.model';
+import { ParameterService } from '../../../service/parameter.service';
+import { MatSelectSearchService, MaterialFormFieldAppearance } from '@library/tsc-common';
+import { StorageService } from '@library/storage-service';
+import * as i0 from "@angular/core";
+export declare class ParamMetricComponent implements OnInit {
+    private storageService;
+    private parameterService;
+    materialFormFieldAppearance: typeof MaterialFormFieldAppearance;
+    commonConstant: {
+        PRIVACY: string;
+        TERMS: string;
+        PRICING: string;
+        SUPPORT_EMAIL: string;
+        HYPHEN: string;
+        NO_DATA_FOUND: string;
+        NO_DATA: string;
+        EMAIL_PATTERN: string;
+        ZIPCODE_PATTERN: string;
+        GST_NUMBER_PATTERN: string;
+        ALLOWED_IMAGE_TYPES: string[];
+        MAX_IMAGE_SIZE: number;
+    };
+    deviceInp: any;
+    orgID: any;
+    parameterM: Parameter[];
+    allParameterID: any[];
+    totalParameterCount: number;
+    parameterFC: FormControl;
+    paramSearchUtil: MatSelectSearchService;
+    emitFilter: EventEmitter<any>;
+    constructor(storageService: StorageService, parameterService: ParameterService);
+    ngOnInit(): void;
+    ngOnChanges(changes: SimpleChanges): void;
+    getParameterByDeviceID(selectedDevices: any): Promise<void>;
+    selectAllParameters(): void;
+    selectedParameters(): void;
+    static ɵfac: i0.ɵɵFactoryDeclaration<ParamMetricComponent, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<ParamMetricComponent, "lib-param-metric", never, { "deviceInp": "deviceInp"; }, { "emitFilter": "emitFilter"; }, never, never>;
+}

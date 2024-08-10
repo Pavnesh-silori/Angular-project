@@ -1,0 +1,16 @@
+<div class="card main-card cardOverwrite">
+    <nav mat-tab-nav-bar>
+        <!-- <ng-container *ngFor="let tab of database; let i = index;"> -->
+            <a mat-tab-link [routerLink]="['user', 'page']"
+                [active]="'/user/page'">
+                Users
+            </a>
+            <a mat-tab-link [routerLink]="['user', 'page']"
+                [active]="'/role/page'">
+                Roles
+            </a>
+        <!-- </ng-container> -->
+    </nav>
+
+    <router-outlet></router-outlet>
+</div>
