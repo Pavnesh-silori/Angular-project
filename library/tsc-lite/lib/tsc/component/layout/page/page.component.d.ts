@@ -1,0 +1,42 @@
+import { ElementRef, OnInit } from '@angular/core';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
+import { TscLiteButtonLabelEnum } from '../../../enum/button.enum';
+import { LayoutController } from '../../../controller/layout.controller';
+import { StorageService } from '@library/storage-service';
+import { SearchBarOneComponent } from '@library/tsc-common';
+import { ButtonLabelEnum } from '@library/tsc-common';
+import * as i0 from "@angular/core";
+export declare class PageComponent implements OnInit {
+    private storageService;
+    private layoutController;
+    TABLE_CONSTANT: {
+        TABLE_NO_DATA: string;
+        DEFAULT_PAGE_SIZE: number;
+        PAGE_SIZE_OPTION: number[];
+    };
+    TscLiteButtonLabelEnum: typeof TscLiteButtonLabelEnum;
+    ButtonLabelEnum: ButtonLabelEnum;
+    faPlus: import("@fortawesome/fontawesome-common-types").IconDefinition;
+    faEllipsisV: import("@fortawesome/fontawesome-common-types").IconDefinition;
+    orgID: any;
+    displayedColumn: string[];
+    resultLength: number;
+    dataSource: any[];
+    searchFlag: boolean;
+    searchValue: string;
+    searchArr: any[];
+    theme: any;
+    entityTypeLoader: boolean;
+    sort: MatSort;
+    paginator: MatPaginator;
+    refreshBtn: ElementRef;
+    searchBar: SearchBarOneComponent;
+    constructor(storageService: StorageService, layoutController: LayoutController);
+    ngOnInit(): void;
+    ngAfterViewInit(): void;
+    searchFn(value: string): void;
+    resetSearch(): void;
+    static ɵfac: i0.ɵɵFactoryDeclaration<PageComponent, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<PageComponent, "app-page", never, {}, {}, never, never>;
+}

@@ -1,0 +1,24 @@
+<h6 mat-dialog-title class="dialogTitle mb-0">
+    <div class="d-flex align-items-center text-danger">
+        <span class="material-symbols-outlined fs-1 me-1">
+            dangerous
+        </span>
+        <strong >
+            Delete  profile?
+        </strong>
+    </div>
+</h6>
+
+<mat-dialog-content class="mat-typography ps-5 pt-0 pb-0">
+    <div class="card-body breakLine">
+      Are you sure yoy want to remove profile<br /> 
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button class="text btn btn-sm btn-outline-danger border-0 me-2" type="button" (click)="delete()">
+        Remove
+    </button>
+    <button class="text btn btn-sm btn-secondary me-2" type="button" mat-dialog-close>Cancel</button>
+</mat-dialog-actions>
+

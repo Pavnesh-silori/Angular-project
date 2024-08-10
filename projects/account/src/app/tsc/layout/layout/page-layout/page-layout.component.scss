@@ -1,0 +1,15 @@
+$pageLayoutHeaderHeight: 60px;
+$pageLayoutFooterHeight: 60px;
+$pageLayoutSpace: 40px;
+
+.appPageMainOuter {
+    background-color: #f1f3f6;
+    position: relative;
+    min-height: calc(100vh - #{$pageLayoutHeaderHeight});
+}
+
+.appPageMainInner {
+    padding-top: $pageLayoutSpace;
+    padding-bottom: calc(#{$pageLayoutFooterHeight} + #{$pageLayoutSpace});
+    /* Footer height */
+}

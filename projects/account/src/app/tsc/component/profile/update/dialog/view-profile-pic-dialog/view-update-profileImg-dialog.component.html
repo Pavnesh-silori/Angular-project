@@ -1,0 +1,57 @@
+<h6 mat-dialog-title>
+    <strong>Update Profile Picture</strong>
+    <button mat-icon-button mat-dialog-close cdkFocusInitial class="float-end matDialogClose" matTooltip="Close"
+        matTooltipPosition="before">
+        <span class="material-symbols-outlined">close</span>
+    </button>
+</h6>
+<hr class="mt-0" />
+<div mat-dialog-content>
+    <form enctype="multipart/form-data" (submit)="updateProfilePicture()">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <input #imageInput type="file" accept="image/png, image/jpeg, image/jpg" (click)="emptyInput()"
+                        (change)="fileChangeEvent($event)" class="d-none" />
+                    <div class="row" [ngClass]="{'d-none': !hideCropper}">
+                        <div class="col-sm-12">
+                            <img class="border border-3 d-block mx-auto rounded-circle updateImgPreview"
+                                [src]="croppedImage" />
+                        </div>
+                    </div>
+
+                    <div class="cropperDimensions mx-auto" [ngClass]="{'d-none': hideCropper}">
+                        <div class="row">
+                            <div class="col-sm-12 mx-auto">
+                                <image-cropper [imageChangedEvent]="imageChangedEvent" [maintainAspectRatio]="true"
+                                    [roundCropper]="true" format="png,jpg,jpeg" (imageCropped)="imageCropped($event)"
+                                    (imageLoaded)="imageLoaded($event)" (cropperReady)="cropperReady()"
+                                    (loadImageFailed)="loadImageFailed()">
+                                </image-cropper>
+                            </div>
+                            <div class="divider"></div>
+                            <div class="me-3" align="end">
+                                <button type="button" class="text-capitalize btn btn-link" (click)="imageSelected()">
+                                    Choose another
+                                </button>
+                                <button type="button" class="text-uppercase btn btn-primary ms-2"
+                                    (click)="hideCropper = !hideCropper">
+                                    Done
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="divider" [ngClass]="{'d-none': !hideCropper}"></div>
+        <div align="end" [ngClass]="{'d-none': !hideCropper}">
+            <button type="button" class="text-capitalize btn btn-link" (click)="imageSelected()">
+                Choose another
+            </button>
+            <button type="submit" class="text-uppercase btn btn-success ms-2">
+                {{ ButtonLabelEnum['UPDATE_BTN_LABEL']}}
+            </button>
+        </div>
+    </form>
+</div>

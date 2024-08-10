@@ -1,0 +1,28 @@
+.toast-container {
+    pointer-events: auto;
+}
+
+.toast-top-right {
+    top: 72px !important;
+}
+
+#toast-container>div {
+    border-radius: 10px;
+}
+
+// .toast-error {
+//     border: 1px solid $danger;
+//     background-color: #fff;
+// }
+
+// .toast-title {
+//     color: #000;
+// }
+
+// .toast-message {
+//     color: #000;
+// }
+
+// .toast-close-button {
+//     color: #000;
+// }

@@ -1,0 +1,32 @@
+.device{
+    padding-top: 10px;
+    padding-right: 10px;
+}
+
+.operatingSystem .browser{
+    padding-top: 10px;
+}
+
+.material-symbols-outlined{
+    font-size: 15px !important; 
+    padding-left: 10px; 
+    align-items: center; 
+    padding-top: 5px; 
+}
+
+.terminate{
+    display: none;
+}
+
+.data-row:hover .terminate {
+    display: inline-block;
+}
+
+.data-row:hover {
+    background-color: #F2F3F5;
+    cursor: pointer;
+}
+
+.time{
+    color:grey;
+}

@@ -1,0 +1,17 @@
+<div mat-dialog-title>
+    <strong class="dialogHeader">
+        {{ certificationName }}
+    </strong>
+    <button mat-icon-button mat-dialog-close cdkFocusInitial class="float-end matDialogClose" matTooltip="Close"
+        matTooltipPosition="before">
+        <span class="material-symbols-outlined" [mat-dialog-close]="DialogEnum['CLOSE_DR']">
+            close
+        </span>
+    </button>
+</div>
+<hr>
+<mat-dialog-content class="mat-typography ps-5 py-0">
+    <div class="card-body">
+        {{ certificationDefinition }}
+    </div>
+</mat-dialog-content>

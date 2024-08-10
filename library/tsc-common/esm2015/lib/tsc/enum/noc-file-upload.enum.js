@@ -1,0 +1,10 @@
+export var NocFileUploadEnum;
+(function (NocFileUploadEnum) {
+    NocFileUploadEnum[NocFileUploadEnum["MAX_FILE_SIZE"] = 10485760] = "MAX_FILE_SIZE";
+    NocFileUploadEnum["INVALID_FILE_TYPE_ERROR"] = "Invalid file type! Please upload file types: .pdf";
+    NocFileUploadEnum["INVAID_FILE_SIZE_ERROR"] = "Invalid file size! The size limit for file is 10.0 MB. Reduce the file size and try again.";
+    NocFileUploadEnum["INVALID"] = "Something went wrong!";
+    NocFileUploadEnum["UPLOAD_FILE_ERROR"] = "Error while uploading file!";
+    NocFileUploadEnum["NO_FILE"] = "Please upload a file!";
+})(NocFileUploadEnum || (NocFileUploadEnum = {}));
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoibm9jLWZpbGUtdXBsb2FkLmVudW0uanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi8uLi8uLi8uLi8uLi9wcm9qZWN0cy9saWJyYXJ5L3RzYy1jb21tb24vc3JjL2xpYi90c2MvZW51bS9ub2MtZmlsZS11cGxvYWQuZW51bS50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSxNQUFNLENBQU4sSUFBWSxpQkFPWDtBQVBELFdBQVksaUJBQWlCO0lBQ3pCLGtGQUF3QixDQUFBO0lBQ3hCLGtHQUE2RSxDQUFBO0lBQzdFLDBJQUFxSCxDQUFBO0lBQ3JILHNEQUFpQyxDQUFBO0lBQ2pDLHNFQUFpRCxDQUFBO0lBQ2pELHNEQUFpQyxDQUFBO0FBQ3JDLENBQUMsRUFQVyxpQkFBaUIsS0FBakIsaUJBQWlCLFFBTzVCIiwic291cmNlc0NvbnRlbnQiOlsiZXhwb3J0IGVudW0gTm9jRmlsZVVwbG9hZEVudW0ge1xuICAgIE1BWF9GSUxFX1NJWkUgPSAxMDQ4NTc2MCwgLyogMTAgTUIgKi9cbiAgICBJTlZBTElEX0ZJTEVfVFlQRV9FUlJPUiA9ICdJbnZhbGlkIGZpbGUgdHlwZSEgUGxlYXNlIHVwbG9hZCBmaWxlIHR5cGVzOiAucGRmJyxcbiAgICBJTlZBSURfRklMRV9TSVpFX0VSUk9SID0gJ0ludmFsaWQgZmlsZSBzaXplISBUaGUgc2l6ZSBsaW1pdCBmb3IgZmlsZSBpcyAxMC4wIE1CLiBSZWR1Y2UgdGhlIGZpbGUgc2l6ZSBhbmQgdHJ5IGFnYWluLicsXG4gICAgSU5WQUxJRCA9ICdTb21ldGhpbmcgd2VudCB3cm9uZyEnLFxuICAgIFVQTE9BRF9GSUxFX0VSUk9SID0gJ0Vycm9yIHdoaWxlIHVwbG9hZGluZyBmaWxlIScsXG4gICAgTk9fRklMRSA9ICdQbGVhc2UgdXBsb2FkIGEgZmlsZSEnXG59Il19

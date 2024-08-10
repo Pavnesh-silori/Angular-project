@@ -1,0 +1,193 @@
+<div class="card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">{{ pageTitle }}</div>
+            <div class="pageSubtitle">{{ pageSubtitle }}</div>
+        </div>
+
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <lib-search-bar-one class="me-3" #searchBar [searchBy]="searchByPlaceHolder"
+                    (emitSearch)="searchFn($event)"></lib-search-bar-one>
+
+                <button class="btn btn-sm btn-light refreshBtn centerAlign me-3 py-1" #refreshBtn matRipple
+                    [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                    [matTooltip]="ButtonTooltipEnum.REFRESH">
+                    <span class="material-symbols-outlined text-secondary">
+                        refresh
+                    </span>
+                </button>
+
+                <button type="button" class="btn btn-sm btn-success btnRightRadiusZero"
+                    (click)="createFacility(FormAction.CREATE)" matRipple
+                    [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                    [matTooltip]="ButtonTooltipEnum.CREATE">
+                    <fa-icon [icon]="faPlus" class="me-1"></fa-icon>Facility
+                </button>
+
+                <div class="btn-group" ngbDropdown placement="bottom-right" matTooltipPosition="below"
+                    [matTooltip]="ButtonTooltipEnum.MORE">
+                    <button type="button" ngbDropdownToggle class="btn btn-sm btn-success btnLeftRadiusZero">
+                    </button>
+                    <div ngbDropdownMenu>
+                        <button class="dropdown-item" matRipple
+                            [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">
+                            Import
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="bulkActionContainer centerAlignVertical" *ngIf="selection.hasValue() || isAllSelected()">
+            <ng-container *ngTemplateOutlet="icon; 
+            context: {
+                icon: 'delete',
+                tooltip: ButtonTooltipEnum.DELETE,
+                iconClass: 'text-danger deleteIconHover',
+                function: deleteFacility,
+                functionParameter: ['row']
+            }">
+            </ng-container>
+            <button class="btn btn-sm btn-link cursorPointer">Mark as Active</button>
+            <button class="btn btn-sm btn-link cursorPointer">Mark as Inactive</button>
+        </div>
+    
+        <table class="w-100" mat-table matSort #sort="matSort" matSortActive="id" matSortDirection="desc" matSortDisableClear
+            [dataSource]="dataSource">
+    
+            <ng-container matColumnDef="select">
+                <th mat-header-cell *matHeaderCellDef class="bulkActionSelect">
+                    <mat-checkbox (change)="$event ? masterToggle() : null"
+                        [checked]="selection.hasValue() && isAllSelected()">
+                    </mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let row">
+                    <mat-checkbox (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+                    </mat-checkbox>
+                </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>ID</th>
+                <td mat-cell *matCellDef="let row" class="cursorPointer" (click)="viewFacility(row)">{{ row.id ? row.id :
+                    COMMON_CONSTANT.HYPHEN }}</td>
+            </ng-container>
+    
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Name</th>
+                <!-- use below for single column click -->
+                <!-- <td mat-cell *matCellDef="let row">
+                    <a class="link-primary" [routerLink]="['/design/facility', row.id, 'view']">{{ row.name ? row.name : COMMON_CONSTANT.HYPHEN }}</a>
+                </td> -->
+    
+                <!-- use below for multiple column click -->
+                <td mat-cell *matCellDef="let row" class="cursorPointer" (click)="viewFacility(row)">
+                    {{ row.name ? row.name : COMMON_CONSTANT.HYPHEN }}
+                </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="state">
+                <th mat-header-cell *matHeaderCellDef>State</th>
+                <td mat-cell *matCellDef="let row" class="cursorPointer" (click)="viewFacility(row)">{{
+                    row.address.state.name ? row.address.state.name :
+                    COMMON_CONSTANT.HYPHEN }}</td>
+            </ng-container>
+    
+            <ng-container matColumnDef="country">
+                <th mat-header-cell *matHeaderCellDef>Country</th>
+                <td mat-cell *matCellDef="let row" class="cursorPointer" (click)="viewFacility(row)">{{
+                    row.address.country.name ? row.address.country.name :
+                    COMMON_CONSTANT.HYPHEN }}</td>
+            </ng-container>
+    
+            <ng-container matColumnDef="status">
+                <th mat-header-cell *matHeaderCellDef>
+                    <!-- Status -->
+                    <funnel-filter #vehicleType header="Status" type="mono" value="keyID" [entityList]="STATUS_CONSTANT">
+                    </funnel-filter>
+                </th>
+                <td mat-cell *matCellDef="let row" [ngClass]="this.statusService.getStatusClass(row.status)"
+                    class="cursorPointer" (click)="viewFacility(row)">
+                    {{ row.status ? this.statusService.getStatusValue(row.status) : COMMON_CONSTANT.HYPHEN }}
+                </td>
+            </ng-container>
+    
+            <ng-container matColumnDef="option">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let row">
+                    <div class="centerAlignVertical">
+                        <ng-container *ngTemplateOutlet="icon; 
+                        context: {
+                            icon: 'edit',
+                            tooltip: ButtonTooltipEnum.UPDATE,
+                            iconClass: 'text-primary updateIconHover',
+                            function: updateFacility,
+                            functionParameter: [FormAction.UPDATE, row]
+                        }">
+                        </ng-container>
+                        <ng-container *ngTemplateOutlet="icon; 
+                        context: {
+                            icon: 'delete',
+                            tooltip: ButtonTooltipEnum.DELETE,
+                            iconClass: 'text-danger deleteIconHover',
+                            function: deleteFacility,
+                            functionParameter: [row]
+                        }">
+                        </ng-container>
+    
+                        <div class="btn-group" ngbDropdown placement="left-top">
+                            <button type="button" ngbDropdownToggle
+                                class="dropdown-after dropdownAfter iconBtn text-secondary" matTooltipPosition="below"
+                                [matTooltip]="ButtonTooltipEnum.MORE" matRipple
+                                [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">
+                                <fa-icon [icon]="faEllipsisV"></fa-icon>
+                                <!-- <ng-container *ngTemplateOutlet="icon; 
+                                context: {
+                                    icon: 'more_vert',
+                                    tooltip: ButtonTooltipEnum.DELETE,
+                                    class: ''
+                                }">
+                                </ng-container> -->
+                            </button>
+                            <div ngbDropdownMenu>
+                                <button class="dropdown-item">
+                                    More option 1
+                                </button>
+                                <button class="dropdown-item">
+                                    More option 1
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </ng-container>
+    
+            <tr mat-header-row *matHeaderRowDef="displayedColumn"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumn;" class="dataRow"></tr>
+    
+            <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell text-center" [attr.colspan]="displayedColumn.length">
+                    {{ TABLE_CONSTANT.TABLE_NO_DATA }}
+                </td>
+            </tr>
+        </table>
+    
+        <mat-paginator class="roundedBorder" showFirstLastButtons #paginator [length]="dataSourceLength"
+            [pageSize]="TABLE_CONSTANT.DEFAULT_PAGE_SIZE" [pageSizeOptions]="TABLE_CONSTANT.PAGE_SIZE_OPTION">
+        </mat-paginator>        
+    </div>
+
+</div>
+
+<ng-template #icon let-icon="icon" let-tooltip="tooltip" let-iconClass="iconClass" let-function="function"
+    let-functionParameter="functionParameter">
+    <button class="iconBtn centerAlign" [class]="iconClass" matTooltipPosition="below" [matTooltip]="tooltip" matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" (click)="handleClick(function, functionParameter)">
+        <span class="material-symbols-outlined icon">
+            {{ icon }}
+        </span>
+    </button>
+</ng-template>

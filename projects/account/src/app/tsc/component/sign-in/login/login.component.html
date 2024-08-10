@@ -1,0 +1,120 @@
+<ng-container *ngIf="isLoggedOut; else isLoggedIn;">
+    <div class="container">
+        <div class="card main-card appPagesLayoutMain d-flex justify-content-center cardOverwrite">
+            <div class="row">
+                <div class="col-sm-6 px-5 py-5 d-flex justify-content-center align-items-center">
+                    <img class="loginPageImg" src="/assets/images/login.png" alt="Login" />
+                </div>
+
+                <div class="col-sm-6 px-5 py-5 d-flex justify-content-center align-items-center text-center">
+                    <mat-card class="mat-elevation-z0 border rounded-3 w-100">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="c0l-sm-6">
+                                        <img class="signInIcon mb-3" src="/assets/images/tsc-logo-png.png">
+                                    </div>
+                                </div>
+                            </div>
+                            <form [formGroup]="loginFG" (ngSubmit)="login()" autocomplete="off">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <mat-form-field [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE"
+                                            class="matFieldWidth100">
+                                            <mat-label>Email</mat-label>
+                                            <input matInput type="email" placeholder="example@domain.com"
+                                                formControlName="username" />
+                                            <mat-error *ngIf="errorHandling('username', 'required')">
+                                                This is a mandatory field.
+                                            </mat-error>
+                                            <mat-error *ngIf="errorHandling('username', 'email')">
+                                                Please enter valid email.
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <mat-form-field [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE"
+                                            class="matFieldWidth100">
+                                            <mat-label>Password</mat-label>
+                                            <input matInput [type]="hide ? 'password' : 'text'"
+                                                formControlName="password" />
+                                            <button class="text-secondary eyeIcon" type="button" mat-icon-button
+                                                matSuffix (click)="hide = !hide">
+                                                <mat-icon matIcon>{{hide ? 'visibility_off' :
+                                                    'visibility'}}
+                                                </mat-icon>
+                                            </button>
+                                            <mat-error *ngIf="errorHandling('password', 'required')">
+                                                This is a mandatory field.
+                                            </mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+
+                                <div class="row pt-3 pb-4">
+                                    <div class="col-sm-4">
+                                        <div class="float-start">
+                                            <a routerLink="/sign-up/netzero" class="btn btn-primary" matRipple
+                                                [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">
+                                                Sign Up
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-8">
+                                        <div class="float-end">
+                                            <a routerLink="/password/forgot" class="btn-lg btn btn-link">Forgot
+                                                Password</a>
+                                            <button type="submit" class="btn btn-success" matRipple
+                                                [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">
+                                                Sign In
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <div class="card-footer">
+                                Sign in using
+                                <a [href]="googleSso" #tooltip="matTooltip" matTooltipPosition="above"
+                                    matTooltipHideDelay="0" matTooltip="Sign in using Google"><img
+                                        src="/assets/images/google.png" class="ps-3 sso-img"
+                                        alt="Sign in using Google"></a>
+                                <!-- <img src="/assets/images/microsoft.png" class="ps-3 sso-img" alt="Sign in using Azure" #tooltip="matTooltip"
+                                    matTooltipPosition="above" matTooltipHideDelay="0" matTooltip="Cooming soon!"> -->
+                                <a [href]="azureSso" #tooltip="matTooltip" matTooltipPosition="above"
+                                    matTooltipHideDelay="0" matTooltip="Sign in using Azure"><img
+                                        src="/assets/images/azure.png" class="ps-3 sso-img"
+                                        alt="Sign in using Azure"></a>
+                            </div>
+
+                            <div class="divider mt-0"></div>
+
+                            <div>
+                                <a class="btn btn-link text-secondary font-size-2" [href]="COMMON_CONSTANT.PRIVACY"
+                                    target="_blank">Privacy</a>
+                                <a class="btn btn-link text-secondary font-size-2" [href]="COMMON_CONSTANT.TERMS"
+                                    target="_blank">Terms</a>
+                                <!-- <a class="btn btn-link text-secondary font-size-2" target="_blank" href="http://www.freepik.com">Image by Freepik</a> -->
+                            </div>
+                            <div class="font-size-1">
+                                Copyright © LogicLadder
+                            </div>
+                        </div>
+                    </mat-card>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</ng-container>
+
+<ng-template #isLoggedIn>
+    <div class="d-flex h-100 justify-content-center align-items-center">
+        <div class="text-center fs-4"><img class="appLoginLogo" src="/assets/images/tsc-logo-png.png" />
+            <br />
+            <br />
+            <span class="spinner-border spinner-border-sm text-success "></span> ..
+        </div>
+    </div>
+</ng-template>

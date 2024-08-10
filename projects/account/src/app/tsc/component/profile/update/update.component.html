@@ -1,0 +1,106 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="card-body">
+        <div class="d-flex align-items-center">
+            <div class="profileImgContainer userProfileImg">
+                <div class="profileBorder ">
+
+                    <img class="profileImg  border d-block my-auto" [src]="userM?.['profileImgUrl'] ||
+                    libraryUserService.defaultImage(
+                            (userM?.['firstName']?userM['firstName'] + ' ': '') + 
+                            (userM?.['lastName'] == null? '': userM['lastName']),
+                            ProfileImg.PROFILE_IMAGE_DROPDOWN_NAME_VIEW)" alt="profile-image" />
+
+                    <button class="viewImageBtn" type="button" mat-icon-button (click)="chooseProfilePicture()"
+                        #tooltip="matTooltip" matTooltipPosition="above" matTooltip="Click to edit profile picture">
+                        <span class="material-symbols-outlined viewImageIcon">
+                            edit
+                        </span>
+                    </button>
+                    <button class="deleteIcon" matTooltip="Click to delete profile picture"
+                        (click)="deleteProfilePicture()">
+                        <span class="material-symbols-outlined viewImageIcon">
+                            delete
+                        </span>
+                    </button>
+                    <!-- IMAGE INPUT -->
+                    <input #dpUpdate class="d-none" type="file" accept="image/png, image/jpeg, image/jpg"
+                        (change)="updateProfilePicture($event)" />
+                </div>
+            </div>
+            <div class=" profileDisplay ms-3">
+                {{ userM?.['firstName'] }} {{ userM?.['lastName'] }}
+                <br />
+                {{ userM?.['email'] }}
+            </div>
+            <div class="ms-auto p-2"></div>
+        </div>
+
+        <div class="divider"></div>
+
+        <form [formGroup]="updateUserDetailFG" (ngSubmit)="updateUserDetail()">
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label>First Name</mat-label>
+                        <input matInput type="text" placeholder="First Name" formControlName="firstName" required />
+                        <mat-error *ngIf="errorHandling('firstName', 'required')">
+                            First Name is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-sm-6">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label>Last Name</mat-label>
+                        <input matInput type="text" placeholder="Last Name" formControlName="lastName" />
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6 d-none">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label>Select Gender</mat-label>
+                        <mat-select formControlName="gender">
+                            <mat-option disabled>Select Gender</mat-option>
+                            <mat-option *ngFor="let gendersM of GENDER_CONSTANT" [value]="gendersM.keyID">
+                                {{gendersM.name}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="errorHandling('gender', 'required')">
+                            Gender is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="col-sm-6 mt-1">
+                    <ngx-intl-tel-input [preferredCountries]="preferredCountries" [enableAutoCountrySelect]="true"
+                        [enablePlaceholder]="true" customPlaceholder="Contact number" [searchCountryFlag]="true"
+                        [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+                        [selectFirstCountry]="false" [maxLength]="15" [phoneValidation]="true"
+                        [separateDialCode]="separateDialCode" [numberFormat]="PhoneNumberFormat.National"
+                        [formControl]="phoneFormControl">
+                    </ngx-intl-tel-input>
+                    <mat-error *ngIf="phoneFormControl.touched && phoneFormControl.hasError('required')">
+                        Enter phone number.
+                    </mat-error>
+                    <mat-error *ngIf="phoneFormControl.invalid && !phoneFormControl.hasError('required')">Please
+                        input a valid mobile number.</mat-error>
+                </div>
+            </div>
+
+            <div class="float-end my-2">
+                <a class="button btn btn-secondary mx-1" routerLink="/profile">
+                    {{ ButtonLabelEnum.CANCEL_BTN_LABEL }}
+                </a>
+                <button type="submit" class="button btn btn-success ms-1">
+                    {{ ButtonLabelEnum.UPDATE_BTN_LABEL }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

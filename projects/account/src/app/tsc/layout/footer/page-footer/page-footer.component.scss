@@ -1,0 +1,8 @@
+$pageLayoutFooterHeight: 60px;
+
+.pageFooterWrapper {
+    background-color: #1a202c;
+    height: $pageLayoutFooterHeight;
+    position: absolute;
+    bottom: 0;
+}

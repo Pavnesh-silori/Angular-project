@@ -1,0 +1,145 @@
+.deleteIcon{
+    will-change: transform;
+    left: 30px;
+    bottom: 7px;
+    position:absolute !important;
+    width: 25px !important;
+    height: 25px !important;
+    color: white;
+    background-color: rgb(3, 3, 3);
+    border-radius: 50%;
+    border: 1px solid white !important;
+    opacity: 0.5;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.profileBorder{
+    border-style: groove;
+    height: 110px;
+    width: 82px;
+    border-width:2px;
+}
+
+.profileDisplay{
+    padding-bottom: 40px;
+    display: flex !important;
+}
+
+.userProfileImg {
+    will-change: transform;
+    width: 85px;
+}
+
+// profile sidebar
+
+// .profileImg {
+//   height: 80px;
+// }
+
+.profileImgContainer {
+    width: 90px;
+    min-height: 95px;
+    max-height: auto;
+    float: left;
+    margin: 3px;
+    padding: 3px;
+}
+
+.profileImgContainerPage {
+    width: 65px;
+    min-height: 65px;
+}
+
+.profileImgPageView {
+    width: 65px;
+}
+
+.profileImg {
+    aspect-ratio: 1/1;
+    max-width: 100%;
+    height: auto;
+}
+
+.notificationProfileImgContainer {
+    width: 60px;
+    min-height: 95px;
+    max-height: auto;
+    float: left;
+    margin: 3px;
+    padding: 3px;
+}
+
+.userProfileImg {
+    will-change: transform;
+    width: 85px;
+}
+
+.orgLogoImg {
+    will-change: transform;
+    width: auto;
+    max-width: 110px;
+    max-height: 110px;
+    display: flex;
+    flex: auto;
+    align-items: center;
+    justify-content: center;
+
+    :hover {
+        opacity: 0.85;
+        transition: transform 500ms;
+        transform: scale(1.05);
+    }
+}
+
+.userProfileImg:hover button {
+    will-change: transform;
+    opacity: 1;
+    color: white;
+    font-weight: 300;
+    border: 1px solid black !important;
+    transition: transform 500ms;
+}
+
+.profileImgContainer:hover .viewOrgLogoBtn {
+    will-change: transform;
+    opacity: 1;
+    color: white;
+    font-weight: 300;
+    border: 1px solid black !important;
+    transition: transform 500ms;
+}
+
+.viewImageBtn {
+    will-change: transform;
+    right: 2px;
+    bottom: 7px;
+    position: absolute !important;
+    width: 25px !important;
+    height: 25px !important;
+    color: white;
+    background-color: rgb(0, 0, 0);
+    border-radius: 50%;
+    border: 1px solid white !important;
+    opacity: 0.5;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.viewOrgLogoBtn {
+    top: 3px;
+    right: 3px;
+    color: white;
+}
+
+.viewImageIcon {
+    will-change: transform;
+    font-size: small;
+}
+
+.profileImgOrgDrawer {
+    width: 60px;
+    min-height: 65px;
+}

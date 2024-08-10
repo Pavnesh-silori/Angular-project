@@ -1,0 +1,12 @@
+export var PageTitleEnum;
+(function (PageTitleEnum) {
+    PageTitleEnum["CREATE"] = "Create";
+    PageTitleEnum["UPDATE"] = "Update";
+    PageTitleEnum["ADD"] = "Add";
+})(PageTitleEnum || (PageTitleEnum = {}));
+export var ComponentSourceEnum;
+(function (ComponentSourceEnum) {
+    ComponentSourceEnum["PAGE"] = "PAGE";
+    ComponentSourceEnum["DIALOG"] = "DIALOG";
+})(ComponentSourceEnum || (ComponentSourceEnum = {}));
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiY29tbW9uLmVudW0uanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi8uLi8uLi8uLi8uLi9wcm9qZWN0cy9saWJyYXJ5L3RzYy1jb21tb24vc3JjL2xpYi90c2MvZW51bS9jb21tb24uZW51bS50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQSxNQUFNLENBQU4sSUFBWSxhQUlYO0FBSkQsV0FBWSxhQUFhO0lBQ3JCLGtDQUFpQixDQUFBO0lBQ2pCLGtDQUFpQixDQUFBO0lBQ2pCLDRCQUFXLENBQUE7QUFDZixDQUFDLEVBSlcsYUFBYSxLQUFiLGFBQWEsUUFJeEI7QUFFRCxNQUFNLENBQU4sSUFBWSxtQkFHWDtBQUhELFdBQVksbUJBQW1CO0lBQzNCLG9DQUFhLENBQUE7SUFDYix3Q0FBaUIsQ0FBQTtBQUNyQixDQUFDLEVBSFcsbUJBQW1CLEtBQW5CLG1CQUFtQixRQUc5QiIsInNvdXJjZXNDb250ZW50IjpbImV4cG9ydCBlbnVtIFBhZ2VUaXRsZUVudW0ge1xuICAgIENSRUFURSA9ICdDcmVhdGUnLFxuICAgIFVQREFURSA9ICdVcGRhdGUnLFxuICAgIEFERCA9ICdBZGQnXG59XG5cbmV4cG9ydCBlbnVtIENvbXBvbmVudFNvdXJjZUVudW0ge1xuICAgIFBBR0UgPSAnUEFHRScsXG4gICAgRElBTE9HID0gJ0RJQUxPRydcbn1cbiJdfQ==

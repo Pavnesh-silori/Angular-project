@@ -1,0 +1,10 @@
+<div [class]="'app-header ' + (config$ | async).headerTheme">
+    <div class="app-header__content">
+        <div class="app-header-left">
+            <lib-back-button></lib-back-button>
+        </div>
+        <div class="app-header-right">
+            <app-right></app-right>
+        </div>
+    </div>
+</div>

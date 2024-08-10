@@ -1,0 +1,36 @@
+<div class="card main-card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle"> Certifications </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div fxLayout="row wrap" fxLayoutGap="16px grid" *ngIf="!showCertificationDetailsFlag">
+            <div fxFlex="25%" fxFlex.xs="100%" fxFlex.sm="33%" *ngFor="let data of certification">
+                <mat-card class="projectCard mat-elevation-z0 appTile cursorPointer border"
+                    (click)="showCertificationDetails(data)">
+                    <div class="row">
+                        <span class="centerAlign">
+                            <img class="mt-1" src="/assets/images/brave.png" alt="compliance logo">
+                        </span>
+                        <span class="centerAlign">
+                            {{ data.name }}
+                        </span>
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+        <div class="v-sidebar-menu vsm-default" *ngIf="showCertificationDetailsFlag">
+            <div class="vsm-list">
+                <div class="vsm-item mt-2" *ngFor="let data of certification">
+                    <a class="vsm-link" [class.active-item]="data == selectedCertification"
+                        (click)="showCertificationDetails(data)">
+                        <img class="rounded-circle profileImageDropdownView me-2" [src]="'/assets/images/brave.png'"
+                            alt="compliance logo">
+                        <span class="vsm-title">{{data.name}}</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,57 @@
+<div class="card main-card cardOverwrite">
+    <div class="card-body pb-0">
+        <div class="d-flex align-items-center">
+            <div class="profileImgContainer">
+                <img class="profileImg rounded-circle border" [src]="userM?.['profileImgUrl'] || 
+                libraryUserService.defaultImage(
+                        (userM?.['firstName']? userM?.['firstName'] + ' ': '') + 
+                        (userM?.['lastName'] == null? '': userM?.['lastName']),
+                        ProfileImg.PROFILE_IMAGE_DROPDOWN_NAME_VIEW)" alt="profile-image" />
+            </div>
+            <div class="ps-3">{{ userM?.['firstName'] }} {{ userM?.['lastName'] }}<br />{{ userM?.['email'] }}
+            </div>
+            <div class="ms-auto p-2 pt-0">
+                <a class="text-secondary" [routerLink]="['update']" matTooltip="Update" matTooltipPosition="below">
+                    <span class="material-symbols-outlined fs-5">
+                        edit_square
+                    </span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <hr class="text-muted m-0" />
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="fw-bold">Name</div>
+                <div class="">{{ userM?.['firstName'] }} {{ userM?.['lastName'] }}</div>
+            </div>
+            <div class="col-sm-6">
+                <div class="fw-bold">Contact</div>
+                <div class="">{{ userM?.['countryCallingCode'] }}-{{ userM?.['contactNumber'] }}</div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="row">
+            <div class="col-sm-6 d-none">
+                <div class="fw-bold">Gender</div>
+                <div class="">{{ userM?.['genderValue']? userM?.['genderValue'] : COMMON_CONSTANT['HYPHEN'] }}</div>
+            </div>
+            <div class="col-sm-6">
+                <div class="fw-bold">Email</div>
+                <div class="">{{ userM?.['email'] }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card main-card cardOverwrite mt-3">
+    <div class="card-body">
+        <mat-slide-toggle (change)="updateNewsLetterStatus()" [formControl]="userNewsLetterSubFC"></mat-slide-toggle>
+        <span class="ms-1"> Subscribe to our newsletter</span>
+    </div>
+</div>

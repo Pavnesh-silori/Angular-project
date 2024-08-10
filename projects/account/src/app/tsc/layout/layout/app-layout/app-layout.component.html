@@ -1,0 +1,17 @@
+<app-loader-one></app-loader-one>
+<div [ngClass]="{
+    'closed-sidebar' : globals.toggleSidebar
+    }" 
+    class="app-container app-theme-white">
+
+    <app-header></app-header>
+    <app-account-sidebar></app-account-sidebar>
+    <div class="app-main__outer">
+        <div class="app-main__inner">
+            <div [@architectUIAnimation]="o.isActivated ? o.activatedRoute : ''">
+                <router-outlet #o="outlet"></router-outlet>
+            </div>
+        </div>
+        <lib-footer-three></lib-footer-three>
+    </div>
+</div>

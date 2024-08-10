@@ -1,0 +1,40 @@
+import { EventEmitter, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { Shift } from '../../../model/shift.model';
+import { ShiftService } from '../../../service/shift.service';
+import { StorageService } from '@library/storage-service';
+import { MaterialFormFieldAppearance, MatSelectSearchService } from '@library/tsc-common';
+import * as i0 from "@angular/core";
+export declare class ShiftComponent implements OnInit {
+    private storageService;
+    private shiftService;
+    emitFilter: EventEmitter<any>;
+    COMMON_CONSTANT: {
+        PRIVACY: string;
+        TERMS: string;
+        PRICING: string;
+        SUPPORT_EMAIL: string;
+        HYPHEN: string;
+        NO_DATA_FOUND: string;
+        NO_DATA: string;
+        EMAIL_PATTERN: string;
+        ZIPCODE_PATTERN: string;
+        GST_NUMBER_PATTERN: string;
+        ALLOWED_IMAGE_TYPES: string[];
+        MAX_IMAGE_SIZE: number;
+    };
+    MaterialFormFieldAppearance: typeof MaterialFormFieldAppearance;
+    orgID: any;
+    shiftM: Shift[];
+    allShiftID: any[];
+    totalShiftCount: number;
+    multiSelectedShiftFC: FormControl;
+    shiftSearchUtil: MatSelectSearchService;
+    constructor(storageService: StorageService, shiftService: ShiftService);
+    ngOnInit(): void;
+    getShift(): Promise<void>;
+    selectAllShifts(): void;
+    selectedShift(): void;
+    static ɵfac: i0.ɵɵFactoryDeclaration<ShiftComponent, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<ShiftComponent, "lib-shift", never, {}, { "emitFilter": "emitFilter"; }, never, never>;
+}

@@ -1,0 +1,87 @@
+<div [class]="'app-sidebar sidebar-shadow ' + (config$ | async).sidebarTheme">
+    <div class="app-header__logo separator-bottom">
+        <div class="headerLogo">
+            <img class="tscLogoHeader pe-2" src="assets/images/tsc-logo-png.png" />
+        </div>
+        <div class="header__pane ms-auto">
+            <button type="button" class="hamburger close-sidebar-btn hamburger--elastic"
+                [ngClass]="{'is-active' : !globals.toggleSidebar}" (click)="toggleSidebar();">
+                <span class="hamburger-box">
+                    <span class="hamburger-inner"></span>
+                </span>
+            </button>
+        </div>
+    </div>
+    <div class="app-sidebar-content pt-3">
+        <div class="app-sidebar-scroll">
+            <perfect-scrollbar [autoPropagation]="true" class="scroll-container scroll-fix" [config]="config"
+                [scrollIndicators]="true" style="max-width: 600px;">
+                <div class="v-sidebar-menu vsm-default">
+                    <div class="vsm-list">
+
+                        <div class="vsm-item">
+                            <a [routerLink]="['/app']" routerLinkActive="active-item" class="vsm-link"
+                                #tooltip="matTooltip" matTooltipPosition="right" matTooltipHideDelay="0"
+                                [matTooltip]="!this.globals.toggleSidebar ? '' : 'Products'">
+                                <span class="vsm-icon material-symbols-outlined mainSidebarIcon">
+                                    grid_view
+                                </span>
+                                <span class="vsm-title">Products</span>
+                            </a>
+                        </div>
+
+                        <div class="vsm-item mt-1">
+                            <a routerLink="/profile" routerLinkActive="active-item"
+                                [routerLinkActiveOptions]="{exact: true}" class="vsm-link" #tooltip="matTooltip"
+                                matTooltipPosition="right" matTooltipHideDelay="0"
+                                [matTooltip]="!this.globals.toggleSidebar ? '' : 'Profile'">
+                                <span class="vsm-icon mainSidebarIcon">
+                                    <img class="rounded-circle border profileImageHeaderView headerIcon mb-1"
+                                        [src]="user?.['profileImgUrl'] || libraryUserService.defaultImage(user.firstName + ' ' + user?.lastName, ProfileImg.PROFILE_IMAGE_DROPDOWN_NAME_VIEW)" alt="profile-image" />
+                                </span>
+                                <span class="vsm-title">Profile</span>
+                            </a>
+                        </div>
+                        <div class="vsm-item mt-1" TODO-ads-permission>
+                            <a routerLink="/session/list" routerLinkActive="active-item"
+                                [routerLinkActiveOptions]="{exact: true}" class="vsm-link" #tooltip="matTooltip"
+                                matTooltipPosition="right" matTooltipHideDelay="0"
+                                [matTooltip]="!this.globals.toggleSidebar ? '' : 'Sessions'">
+                                <span class="vsm-icon material-symbols-outlined mainSidebarIcon">calendar_today</span>
+                                <span class="vsm-title">Sessions</span>
+                            </a>
+                        </div>
+
+                        <div class="vsm-item mt-1">
+                            <a routerLink="/security/change-password" routerLinkActive="active-item"
+                                [routerLinkActiveOptions]="{exact: true}" class="vsm-link" #tooltip="matTooltip"
+                                matTooltipPosition="right" matTooltipHideDelay="0"
+                                [matTooltip]="!this.globals.toggleSidebar ? '' : 'Security'">
+                                <span class="vsm-icon material-symbols-outlined mainSidebarIcon">
+                                    shield
+                                </span>
+                                <span class="vsm-title">Security</span>
+                            </a>
+                        </div>
+
+                        <div class="vsm-item mt-1">
+                            <a routerLink="/compliance/certifications" routerLinkActive="active-item"
+                                [routerLinkActiveOptions]="{exact: true}" class="vsm-link" #tooltip="matTooltip"
+                                matTooltipPosition="right" matTooltipHideDelay="0"
+                                [matTooltip]="!this.globals.toggleSidebar ? '' : 'Compliance'">
+                                <span class="vsm-icon material-symbols-outlined mainSidebarIcon">
+                                    workspace_premium
+                                </span>
+                                <span class="vsm-title">Compliance</span>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+            </perfect-scrollbar>
+        </div>
+    </div>
+    <div class="app-header__logo logo separator-top" [ngClass]="{'d-none': !globals.toggleSidebar}">
+        <img class="tscLogoFooterClose" src="../assets/images/application-logo/tsc-without-name.png" />
+    </div>
+</div>

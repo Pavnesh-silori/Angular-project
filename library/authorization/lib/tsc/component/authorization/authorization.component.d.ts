@@ -1,0 +1,32 @@
+import { OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthorizationService } from '../../service/authorization.service';
+import { StorageService } from '@library/storage-service';
+import { AuthenticationService } from '@library/authentication-service';
+import { SubscriptionService } from '@library/subscription-service';
+import { ApplicationKeyID, ApplicationService } from '@library/application-service';
+import { RBACService } from '@library/rbac-service';
+import { FeatureService } from '@library/feature-service';
+import * as i0 from "@angular/core";
+export declare class AuthorizationComponent implements OnInit {
+    private router;
+    private activatedRoute;
+    private authorizationService;
+    private storageService;
+    private applicationService;
+    private authenticationService;
+    private subscriptionService;
+    private rbacService;
+    private featureService;
+    ApplicationKeyID: ApplicationKeyID;
+    redirectUrl: string;
+    applicationKeyID: string;
+    token: string;
+    userID: any;
+    orgID: any;
+    constructor(router: Router, activatedRoute: ActivatedRoute, authorizationService: AuthorizationService, storageService: StorageService, applicationService: ApplicationService, authenticationService: AuthenticationService, subscriptionService: SubscriptionService, rbacService: RBACService, featureService: FeatureService);
+    ngOnInit(): void;
+    getAuthorizationByApp(applicationKeyID: any, orgID: any): Promise<void>;
+    static ɵfac: i0.ɵɵFactoryDeclaration<AuthorizationComponent, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<AuthorizationComponent, "lib-authorization", never, {}, {}, never, never>;
+}

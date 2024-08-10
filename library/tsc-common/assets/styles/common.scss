@@ -1,0 +1,60 @@
+// card shadow effect override
+.cardOverwrite {
+    box-shadow: none !important;
+    border-radius: 16px !important;
+}
+
+.cardBackgroundColor {
+    background: whitesmoke;
+}
+
+.centerAlign {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.centerAlignHorizontal {
+    display: flex;
+    justify-content: center;
+}
+
+.centerAlignVertical {
+    display: flex;
+    align-items: center;
+}
+
+.cursorPointer {
+    cursor: pointer !important;
+}
+
+.cursorDefault {
+    cursor: default;
+}
+
+.breakLine {
+    white-space: pre-line !important;
+}
+
+.h100 {
+    min-height: calc(100vh - 168px);
+}
+
+.roundedBorder {
+    border-radius: 16px !important;
+}
+
+.cardIcon {
+    width: 20px;
+    height: 20px;
+}
+
+.dropdownAfter::after {
+    display: none;
+}
+
+.funnelFilter {
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}

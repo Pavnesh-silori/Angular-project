@@ -1,0 +1,18 @@
+{
+  "name": "@library/date",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^12.2.0",
+    "@angular/core": "^12.2.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "main": "bundles/library-date.umd.js",
+  "module": "fesm2015/library-date.js",
+  "es2015": "fesm2015/library-date.js",
+  "esm2015": "esm2015/library-date.js",
+  "fesm2015": "fesm2015/library-date.js",
+  "typings": "library-date.d.ts",
+  "sideEffects": false
+}

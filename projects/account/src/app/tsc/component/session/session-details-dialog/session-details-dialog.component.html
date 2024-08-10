@@ -1,0 +1,106 @@
+<div class="content">
+    <div mat-dialog-header>
+        <div class="row centerAlign">
+            <div class="col-sm-5">
+                <div class="row d-flex align-items-center">
+                    <div class="col-sm-2">
+                        <img [src]="checkDevice(session.device)" alt="device" width="50" height="50" class="device" />
+                    </div>
+                    <div class="col-sm-10 pb-2">
+                        <div class="row m-0 pt-3">
+                            <span>{{checkDeviceName(session.device)}}</span>
+                        </div>
+                        <div class="row m-0 pb-1" style="color:grey;">
+                            <span>{{getTime(session.loginTime)}}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-5">
+                <span *ngIf="session.sessionFlag==true" class="badge rounded-pill bg-success text-white">Current Session</span>
+            </div>
+            <div class="col-sm-2">
+                <button mat-icon-button mat-dialog-close cdkFocusInitial class="float-end matDialogClose"
+                    matTooltip="Close" matTooltipPosition="before">
+                    <span class="material-symbols-outlined">
+                        close
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <hr />
+    <div mat-dialog-content class="card main-card cardOverwrite">
+        <div class="row pt-4">
+            <div class="col-sm-6">
+                <div class="row">
+                    <span class="subHead">Started Time</span>
+                </div>
+                <div class="row m-0 pt-1">
+                    {{session.loginTime}} UTC
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="row">
+                    <span class="subHead">Operating System</span>
+                </div>
+                <div class="row d-flex align-items-center pt-1">
+                    <div class="col-sm-1">
+                        <img [src]="checkOperatingSystem(session.operatingSystem)" alt="Operating System" width="20"
+                            height="20" class="operatingSystem" />
+                    </div>
+                    <div class="col-sm-11 pt-1" style="margin-left: -5px;">
+                        {{checkOperatingSystemName(session.operatingSystem)}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row pt-4">
+            <div class="col-sm-6">
+                <div class="row">
+                    <span class="subHead">Browser</span>
+                </div>
+                <div class="row d-flex align-items-center pt-1">
+                    <div class="col-sm-1">
+                        <img [src]="checkBrowser(session.browser)" alt="Browser" width="20" height="20"
+                            class="browser" />
+                    </div>
+                    <div class="col-sm-11 pt-1" style="margin-left: -5px;">
+                        {{checkBrowserName(session.browser)}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="row">
+                    <span class="subHead">IP Address</span>
+                </div>
+                <div class="row m-0 pt-1">
+                    {{checkIpAddress(session.ipAddress)}}
+                </div>
+            </div>
+        </div>
+        <div class="row pt-4">
+            <div class="col-sm-6">
+                <div class="row">
+                    <span class="subHead">Location</span>
+                </div>
+                <div class="row m-0 pt-1">
+                    {{checkLocation(session.location)}}
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="row">
+                    <span class="subHead">Mac Address</span>
+                </div>
+                <div class="row m-0 pt-1">
+                    {{checkMacAddress(session.macAddress)}}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <div mat-dialog-actions align="start" class="py-4">
+        <button class="btn btn-success" style="background-color: rgb(166, 31, 31); border: none;"
+        *ngIf="session.sessionFlag==false" (click)="openDialog(session)">
+            Terminate </button>
+    </div> -->
+</div>

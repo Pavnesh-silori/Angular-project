@@ -1,0 +1,56 @@
+<h6 mat-dialog-title>
+    <strong [ngClass]="{'d-none': hideCropper}">Crop Image</strong>
+    <strong [ngClass]="{'d-none': !hideCropper}">Preview</strong>
+    <button type="button" class="btn float-end" mat-icon-button 
+        #tooltip="matTooltip" matTooltipPosition="above" matTooltip="Close">
+        <span class="material-symbols-outlined fw-bold" mat-dialog-close>
+            close
+        </span>
+    </button>
+</h6>
+<hr />
+<div mat-dialog-content>
+    <form enctype="multipart/form-data">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="row" [ngClass]="{'d-none': !hideCropper}">
+                        <div class="col-sm-12">
+                            <img class="border border-3 d-block mx-auto rounded-circle updateImgPreview" [src]="croppedImage" />
+                        </div>
+                    </div>
+
+                    <div class="cropperDimensions mx-auto" [ngClass]="{'d-none': hideCropper}">
+                        <div class="row">
+                            <div class="col-sm-12 mx-auto">
+                                <image-cropper [imageChangedEvent]="imageChangedEvent" 
+                                    [maintainAspectRatio]="true" [roundCropper]="true"
+                                    format="png,jpg,jpeg" (imageCropped)="imageCropped($event)"
+                                    (imageLoaded)="imageLoaded($event)" (cropperReady)="cropperReady()"
+                                    (loadImageFailed)="loadImageFailed()">
+                                </image-cropper>
+                            </div>
+                            <div class="divider"></div>
+                            <div align="end">
+                                <button type="button" class="text-uppercase btn btn-primary ms-2"
+                                    (click)="hideCropper = !hideCropper">
+                                    Crop
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="divider" [ngClass]="{'d-none': !hideCropper}"></div>
+        <div align="end" [ngClass]="{'d-none': !hideCropper}">
+            <button type="button" class="text-uppercase btn btn-secondary" 
+                mat-dialog-close>Cancel
+            </button>
+            <button type="button" class="text-uppercase btn btn-success ms-2" 
+                (click)="updateProfilePicture()">
+                Upload
+            </button>
+        </div>
+    </form>
+</div>

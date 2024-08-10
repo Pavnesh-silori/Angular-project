@@ -1,0 +1,19 @@
+{
+    "id": 123456781,
+    "name": "Facility 1",
+    "status": "ACTIVE",
+    "timeZone": "Asia/Kolkata",
+    "address": {
+        "addressLineOne": "Address Line1",
+        "country": {
+            "name": "India",
+            "code": "IN"
+        },
+        "state": {
+            "name": "Delhi",
+            "code": "IN-DL"
+        },
+        "city": "Delhi 2",
+        "zipCode": "123456"
+    }
+}

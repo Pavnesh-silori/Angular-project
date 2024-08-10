@@ -1,0 +1,48 @@
+import { EventEmitter, OnInit, SimpleChanges } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { DropdownTypeEnum } from '../../../enum/dropdown.enum';
+import { Device } from '../../../model/device.model';
+import { DeviceService } from '../../../service/device.service';
+import { StorageService } from '@library/storage-service';
+import { MaterialFormFieldAppearance, MatSelectSearchService } from '@library/tsc-common';
+import * as i0 from "@angular/core";
+export declare class DeviceComponent implements OnInit {
+    private storageService;
+    private deviceService;
+    dropdownTypeInp: DropdownTypeEnum;
+    entityInp: any;
+    commonConstant: {
+        PRIVACY: string;
+        TERMS: string;
+        PRICING: string;
+        SUPPORT_EMAIL: string;
+        HYPHEN: string;
+        NO_DATA_FOUND: string;
+        NO_DATA: string;
+        EMAIL_PATTERN: string;
+        ZIPCODE_PATTERN: string;
+        GST_NUMBER_PATTERN: string;
+        ALLOWED_IMAGE_TYPES: string[];
+        MAX_IMAGE_SIZE: number;
+    };
+    materialFormFieldAppearance: typeof MaterialFormFieldAppearance;
+    dropdownTypeEnum: typeof DropdownTypeEnum;
+    deviceM: Device[];
+    orgID: any;
+    dropdownType: any;
+    allDeviceID: any[];
+    totalDeviceCount: number;
+    deviceFC: FormControl;
+    multipleDeviceFC: FormControl;
+    deviceSearchUtil: MatSelectSearchService;
+    emitFilter: EventEmitter<any>;
+    constructor(storageService: StorageService, deviceService: DeviceService);
+    ngOnInit(): void;
+    ngOnChanges(changes: SimpleChanges): void;
+    getDevicesByEntityID(entityID: any): Promise<void>;
+    onChange(selectedDevice: any): void;
+    selectAllDevices(): void;
+    selectedDevices(): void;
+    static ɵfac: i0.ɵɵFactoryDeclaration<DeviceComponent, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<DeviceComponent, "lib-device", never, { "dropdownTypeInp": "dropdownTypeInp"; "entityInp": "entityInp"; }, { "emitFilter": "emitFilter"; }, never, never>;
+}

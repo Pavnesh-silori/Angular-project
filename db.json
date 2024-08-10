@@ -1,0 +1,117 @@
+{
+    "posts": [
+        {
+            "id": 1,
+            "title": "json-server",
+            "author": "typicode"
+        }
+    ],
+    "comments": [
+        {
+            "id": 1,
+            "body": "some comment",
+            "postId": 1
+        }
+    ],
+    "profile": {
+        "name": "typicode"
+    },
+    "design-facility-create": [],
+    "design-facility-view": {
+        "id": 123456781,
+        "name": "Facility 1",
+        "status": "ACTIVE",
+        "timeZone": "Asia/Kolkata",
+        "address": {
+            "addressLineOne": "Address Line1",
+            "country": {
+                "name": "India",
+                "code": "IN"
+            },
+            "state": {
+                "name": "Delhi",
+                "code": "IN-DL"
+            },
+            "city": "Delhi 2",
+            "zipCode": "123456"
+        }
+    },
+    "design-facility-update": [],
+    "design-facility-page": {
+        "totalCount": 4,
+        "records": [
+            {
+                "id": 123456781,
+                "name": "Facility 1",
+                "status": "ACTIVE",
+                "address": {
+                    "addressLineOne": "Address Line1",
+                    "country": {
+                        "name": "India",
+                        "code": ""
+                    },
+                    "state": {
+                        "name": "Delhi",
+                        "code": ""
+                    },
+                    "city": "Delhi",
+                    "zipCode": ""
+                }
+            },
+            {
+                "id": 123456782,
+                "name": "Facility 1",
+                "status": "ACTIVE",
+                "address": {
+                    "addressLineOne": "Address Line1",
+                    "country": {
+                        "name": "India",
+                        "code": ""
+                    },
+                    "state": {
+                        "name": "Delhi",
+                        "code": ""
+                    },
+                    "city": "Delhi",
+                    "zipCode": ""
+                }
+            },
+            {
+                "id": 123456783,
+                "name": "Facility 1",
+                "status": "ACTIVE",
+                "address": {
+                    "addressLineOne": "Address Line1",
+                    "country": {
+                        "name": "India",
+                        "code": ""
+                    },
+                    "state": {
+                        "name": "Delhi",
+                        "code": ""
+                    },
+                    "city": "Delhi",
+                    "zipCode": ""
+                }
+            },
+            {
+                "id": 123456784,
+                "name": "Facility 1",
+                "status": "ACTIVE",
+                "address": {
+                    "addressLineOne": "Address Line1",
+                    "country": {
+                        "name": "India",
+                        "code": ""
+                    },
+                    "state": {
+                        "name": "Delhi",
+                        "code": ""
+                    },
+                    "city": "Delhi",
+                    "zipCode": ""
+                }
+            }
+        ]
+    }
+}

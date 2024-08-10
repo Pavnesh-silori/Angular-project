@@ -1,0 +1,177 @@
+<div class="container">
+    <div class="card main-card appPageLayoutMain centerAlignHorizontal cardOverwrite">
+        <div class="row">
+            <div class="col-sm-6 p-5 centerAlign">
+                <img class="userSignUpImg" src="/assets/images/user-sign-up.png" alt="user sign up" />
+            </div>
+
+            <div class="col-sm-6 p-5 centerAlign">
+                <mat-card class="mat-elevation-z0 border rounded-3 w-100">
+
+                    <div class="card-body">
+                        <div class="fs-4 text-capitalize text-center">
+                            User sign up
+                        </div>
+                        <br />
+
+                        <form [formGroup]="userSignUpFG" (ngSubmit)="userSignUp()" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="col-sm-9">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <mat-form-field class="matFieldWidth100"
+                                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                <mat-label>First Name</mat-label>
+                                                <input matInput type="text" placeholder="First name"
+                                                    formControlName="firstName" required />
+                                                <mat-error *ngIf="errorHandling('firstName', 'required')">
+                                                    First name is required.
+                                                </mat-error>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <mat-form-field class="matFieldWidth100"
+                                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                                <mat-label>Last Name</mat-label>
+                                                <input matInput type="text" placeholder="Last name"
+                                                    formControlName="lastName" />
+                                            </mat-form-field>
+                                        </div>
+                                    </div>
+
+                                    <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <mat-label>Select Gender</mat-label>
+                                        <mat-select formControlName="gender">
+                                            <mat-option disabled>Select Gender</mat-option>
+                                            <mat-option *ngFor="let gendersM of genderM" [value]="gendersM.keyID">
+                                                {{ gendersM.name }}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+
+                                    <div class="row">
+                                        <ngx-intl-tel-input [preferredCountries]="preferredCountries" [enableAutoCountrySelect]="true"
+                                            [enablePlaceholder]="true" [selectedCountryISO]="userCountryCode ? userCountryCode : null"
+                                            [searchCountryFlag]="true" [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]"
+                                            [selectFirstCountry]="false" [maxLength]="15" [phoneValidation]="true" [separateDialCode]="separateDialCode"
+                                            [numberFormat]="PhoneNumberFormat.National" [formControl]="phoneFormControl">
+                                        </ngx-intl-tel-input>
+                                        <mat-error *ngIf="phoneFormControl.touched && phoneFormControl.hasError('required')">
+                                            Mobile number is required.
+                                        </mat-error>
+                                        <mat-error
+                                            *ngIf="phoneFormControl.invalid && !phoneFormControl.hasError('required')">Please
+                                            input a valid mobile number.</mat-error>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-3 text-center">
+                                    <div class="profileImgPreviewContainer">
+                                        <img class="border border-3 rounded-circle profileImgPreview float-end"
+                                            [src]="profileImg || '/assets/images/default-profile-img.jpg'"
+                                            alt="profile-image" />
+                                    </div>
+                                    <input #imageInput class="d-none" id="profileImg" type="file" accept="image/*"
+                                        (change)="onFileChange($event, 'profileImg')" />
+                                    <div>
+                                        <span class="text-center">
+                                            <button class="btn btn-primary btn-sm text-center mt-3" type="button"
+                                                (click)="fileUploadBtn('profileImg')" matRipple
+                                                [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">
+                                                Upload Image
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row mt-2">
+                                <div class="col-sm-6">
+                                    <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <mat-label>Create Password</mat-label>
+                                        <input matInput [type]="hidePassword ? 'password' : 'text'"
+                                            placeholder="Create Password" formControlName="password"
+                                            autocomplete="new-password" required />
+                                        <button class="text-secondary eyeIcon" type="button" mat-icon-button matSuffix
+                                            (click)="hidePassword = !hidePassword">
+                                            <mat-icon matIcon>
+                                                {{hidePassword ? 'visibility_off' : 'visibility'}}
+                                            </mat-icon>
+                                        </button>
+                                        <mat-error *ngIf="errorHandling('password', 'required')">
+                                            Password is required.
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="col-sm-6">
+                                    <mat-form-field class="matFieldWidth100"
+                                    [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                                        <mat-label>Confirm Password</mat-label>
+                                        <input matInput [type]="hideConfirmPass ? 'password' : 'text'"
+                                            formControlName="confirmPassword" autocomplete="new-password" required />
+                                        <button class="text-secondary eyeIcon" type="button" mat-icon-button matSuffix
+                                            (click)="hideConfirmPass = !hideConfirmPass">
+                                            <mat-icon matIcon>
+                                                {{hideConfirmPass ? 'visibility_off' : 'visibility'}}
+                                            </mat-icon>
+                                        </button>
+                                        <mat-error *ngIf="errorHandling('confirmPassword', 'required')">
+                                            Confirm password is required.
+                                        </mat-error>
+                                        <mat-error *ngIf="errorHandling('confirmPassword', 'passwordMismatch')">
+                                            Password mismatch.
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+
+                                <div class="row mb-2">
+                                    <div class="col-sm-6" *ngFor="let policy of passwordPolicyList">
+                                        <div class="d-flex align-items-center fontSize mt-2">
+                                            <svg *ngIf="!isPasswordPolicyMatch(policy)" fill="#A1A7AC" class="check-circle-fill
+                                                bi flex-shrink-0 me-2 extraInfoCardIcon" viewBox="0 0 16 16">
+                                                <path
+                                                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                                            </svg>
+                                            <svg *ngIf="isPasswordPolicyMatch(policy)" fill="currentColor"
+                                                class="check-circle-fill bi flex-shrink-0 extraInfoCardIcon verifiedIcon me-2"
+                                                viewBox="0 0 16 16">
+                                                <path
+                                                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                                            </svg>
+                                            <span
+                                                [ngClass]="{'text-dark': isPasswordPolicyMatch(policy), 'text-secondary': !isPasswordPolicyMatch(policy)}">
+                                                {{ policy.name }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <mat-checkbox formControlName="isTCAccepted">
+                                <div class="matCheckBox font-size-2 text-secondary">
+                                    By signing up, you agree to the Logicladder <a class="link-primary" target="_blank"
+                                        [href]="COMMON_CONSTANT.TERMS">Terms of
+                                        Service</a> and <a class="link-primary" target="_blank"
+                                        [href]="COMMON_CONSTANT.PRIVACY">Privacy Statement</a>.
+                                    Preview will be provisioned in English only.
+                                </div>
+                            </mat-checkbox>
+                            <mat-error class="font-size-2"
+                                *ngIf="(!isTCAcceptedValue && submitted) || (isTCAcceptedTouched && !isTCAcceptedValue)">
+                                Please accept the terms of service.
+                            </mat-error>
+
+                            <div class="d-flex justify-content-end mt-3">
+                                <button type="submit" class="btn btn-success" matRipple
+                                    [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">Sign Up</button>
+                            </div>
+                        </form>
+                    </div>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>

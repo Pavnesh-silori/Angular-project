@@ -1,0 +1,77 @@
+{
+    "totalCount": 4,
+    "records": [
+        {
+            "id": 123456781,
+            "name": "Facility 1",
+            "status": "ACTIVE",
+            "address": {
+                "addressLineOne": "Address Line1",
+                "country": {
+                    "name": "India",
+                    "code": ""
+                },
+                "state": {
+                    "name": "Delhi",
+                    "code": ""
+                },
+                "city": "Delhi",
+                "zipCode": ""
+            }
+        },
+        {
+            "id": 123456782,
+            "name": "Facility 1",
+            "status": "ACTIVE",
+            "address": {
+                "addressLineOne": "Address Line1",
+                "country": {
+                    "name": "India",
+                    "code": ""
+                },
+                "state": {
+                    "name": "Delhi",
+                    "code": ""
+                },
+                "city": "Delhi",
+                "zipCode": ""
+            }
+        },
+        {
+            "id": 123456783,
+            "name": "Facility 1",
+            "status": "ACTIVE",
+            "address": {
+                "addressLineOne": "Address Line1",
+                "country": {
+                    "name": "India",
+                    "code": ""
+                },
+                "state": {
+                    "name": "Delhi",
+                    "code": ""
+                },
+                "city": "Delhi",
+                "zipCode": ""
+            }
+        },
+        {
+            "id": 123456784,
+            "name": "Facility 1",
+            "status": "ACTIVE",
+            "address": {
+                "addressLineOne": "Address Line1",
+                "country": {
+                    "name": "India",
+                    "code": ""
+                },
+                "state": {
+                    "name": "Delhi",
+                    "code": ""
+                },
+                "city": "Delhi",
+                "zipCode": ""
+            }
+        }
+    ]
+}

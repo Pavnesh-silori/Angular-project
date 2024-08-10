@@ -1,0 +1,135 @@
+<div class="headerContainer p-0" #header>
+    <div class="headerLeftContainer">
+        <div class="pageTitle">{{ pageTitle }}</div>
+        <div class="pageSubtitle">{{ pageSubtitle }}</div>
+    </div>
+
+    <div class="headerRightContainer">
+        <div class="headerRightContainerInner">
+            <button class="btn btn-sm centerAlign py-1 iconBtn" matRipple
+                [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                [matTooltip]="ButtonTooltipEnum.CLOSE" mat-dialog-close>
+                <span class="material-symbols-outlined">
+                    close
+                </span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<mat-dialog-content class="mat-typography customScrollBar pt-2" #body>
+    <form [formGroup]="createFacilityFG" (ngSubmit)="onSubmit(action)">
+        <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+            <mat-label class="formLabel">Facility name</mat-label>
+            <input class="formPlaceholder" type="text" placeholder="Facility name" matInput formControlName="name" required />
+            <mat-error *ngIf="errorHandling(createFacilityFG, 'name', 'required')">
+                {{ FormErrorEnum.REQUIRED }}
+            </mat-error>
+        </mat-form-field>
+
+        <div formGroupName="address">
+
+            <!-- Similarly, for the description input field, we will follow the same practice as the address. -->
+
+            <mat-form-field class="matFieldWidth100" [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE"
+                [hintLabel]="'Max ' + addressCharMaxLength +' characters'">
+                <mat-label class="formLabel">Address</mat-label>
+                <textarea #addressLineOne class="formPlaceholder" placeholder="Address" matInput
+                    [maxlength]="addressCharMaxLength" formControlName="addressLineOne" required ></textarea>
+                <mat-hint align="end">{{addressLineOne.value?.length || 0}}/{{ addressCharMaxLength }}
+                </mat-hint>
+                <mat-error *ngIf="errorHandling(createFacilityFG, 'address.addressLineOne', 'required')">
+                    {{ FormErrorEnum.REQUIRED }}
+                </mat-error>
+            </mat-form-field>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <div formGroupName="country">
+                        <mat-form-field class="matFieldWidth100"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel">Select country</mat-label>
+                            <mat-select formControlName="code" (selectionChange)="countryChange($event.value)" required>
+                                <mat-option>
+                                    <ngx-mat-select-search [formControl]="countrySelectSearch.filterFC"
+                                        placeholderLabel="Search by country name or code"
+                                        [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                    </ngx-mat-select-search>
+                                </mat-option>
+
+                                <mat-option *ngFor="let country of countrySelectSearch.filteredEntities | async"
+                                    [value]="country.countryCode">
+                                    {{ country.countryName }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="errorHandling(createFacilityFG, 'address.country.code', 'required')">
+                                {{ FormErrorEnum.REQUIRED }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="col-sm-6">
+                    <div formGroupName="state">
+                        <mat-form-field class="matFieldWidth100"
+                            [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                            <mat-label class="formLabel">Select state</mat-label>
+                            <mat-select formControlName="code" required>
+                                <mat-option>
+                                    <ngx-mat-select-search [formControl]="stateSelectSearch.filterFC"
+                                        placeholderLabel="Search by state name"
+                                        [noEntriesFoundLabel]="COMMON_CONSTANT.NO_MATCH_FOUND">
+                                    </ngx-mat-select-search>
+                                </mat-option>
+
+                                <mat-option *ngFor="let state of stateSelectSearch.filteredEntities | async"
+                                    [value]="state.stateCode">
+                                    {{ state.name }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="errorHandling(createFacilityFG, 'address.state.code', 'required')">
+                                {{ FormErrorEnum.REQUIRED }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-6">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">City name</mat-label>
+                        <input class="formPlaceholder" type="text" placeholder="City name" matInput
+                            formControlName="city" required />
+                        <mat-error *ngIf="errorHandling(createFacilityFG, 'address.city', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="col-sm-6">
+                    <mat-form-field class="matFieldWidth100"
+                        [appearance]="MaterialFormFieldAppearance.FORM_FIELD_APPEARANCE">
+                        <mat-label class="formLabel">Zipcode</mat-label>
+                        <input class="formPlaceholder" type="text" placeholder="Zipcode" matInput
+                            formControlName="zipCode" required />
+                        <mat-error *ngIf="errorHandling(createFacilityFG, 'address.zipCode', 'required')">
+                            {{ FormErrorEnum.REQUIRED }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+
+        <button class="d-none" type="submit" #formSubmitBtn></button>
+    </form>
+</mat-dialog-content>
+
+<div class="tscDialogFooter" #footer>
+    <button class="btn btn-sm btn-success" [ngClass]="{'disabled': isEqual && action == FormAction.UPDATE}"
+        (click)="formSubmitBtn.click()" matRipple [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+        [matTooltip]="ButtonTooltipEnum.NO_CHANGE"> {{
+        tSCCommonService.getButtonLabel(action) }}</button>
+    <button class="btn btn-sm btn-secondary me-2" mat-dialog-close matRipple
+        [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER">Cancel</button>
+</div>

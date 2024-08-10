@@ -1,0 +1,117 @@
+<div class="card cardOverwrite h100">
+    <div class="headerContainer">
+        <div class="headerLeftContainer">
+            <div class="pageTitle">Facility</div>
+            <div class="pageSubtitle">View facility</div>
+        </div>
+
+        <div class="headerRightContainer">
+            <div class="headerRightContainerInner">
+                <button class="btn btn-sm btn-light centerAlign me-3 py-1 headerIconBtn refreshBtn"
+                    (click)="getFacilityByID(rootOrgID, facilityID)" matRipple
+                    [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                    [matTooltip]="ButtonTooltipEnum.REFRESH">
+                    <span class="material-symbols-outlined">
+                        refresh
+                    </span>
+                </button>
+                <button class="btn btn-sm btn-light centerAlign me-3 py-1 headerIconBtn updateBtn" (click)="updateFacility(FormAction.UPDATE, facility)" matRipple
+                    [matRippleCentered]="MATERIAL_CONSTANT.MAT_RIPPLE_CENTER" matTooltipPosition="below"
+                    [matTooltip]="ButtonTooltipEnum.UPDATE">
+                    <span class="material-symbols-outlined">
+                        edit
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-12">
+                <mat-card class="border cardOverwrite">
+                    <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'ID',
+                        value: facility.id,
+                        class: 'pt-1'
+                    }">
+                    </ng-container>
+
+                    <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Name',
+                        value: facility.name,
+                        class: 'pt-3'
+                    }">
+                    </ng-container>
+
+                    <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Status',
+                        value: statusService.getStatusValue(facility.status),
+                        class: 'pt-3',
+                        valueClass: statusService.getStatusClass(facility.status)
+                    }">
+                    </ng-container>
+
+                    <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Timezone',
+                        value: facility.timeZone,
+                        class: 'pt-3'
+                    }">
+                    </ng-container>
+                </mat-card>
+            </div>
+        </div>
+
+        <div class="row pt-3">
+            <div class="col-sm-12">
+                <mat-card class="border cardOverwrite">
+                    <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Address',
+                        value: facility.address.addressLineOne,
+                        class: 'pt-1'
+                    }">
+                    </ng-container>
+
+                    <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'City',
+                        value: facility.address.city,
+                        class: 'pt-3'
+                    }">
+                    </ng-container>
+
+                    <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'State',
+                        value: facility.address.state.name,
+                        class: 'pt-3'
+                    }">
+                    </ng-container>
+
+                    <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Country',
+                        value: facility.address.country.name,
+                        class: 'pt-3'
+                    }">
+                    </ng-container>
+
+                    <ng-container *ngTemplateOutlet="labelValue; context: {
+                        label: 'Zipcode',
+                        value: facility.address.zipCode,
+                        class: 'pt-3'
+                    }">
+                    </ng-container>
+                </mat-card>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #labelValue let-label="label" let-value="value" let-class="class" let-valueClass="valueClass">
+    <div class="row" [class]="class">
+        <div class="col-sm-4">
+            {{ label }}
+        </div>
+        <div class="col-sm-8 fw-bold" [class]="valueClass">
+            {{ value ? value : COMMON_CONSTANT.HYPHEN }}
+        </div>
+    </div>
+</ng-template>

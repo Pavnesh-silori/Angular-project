@@ -1,0 +1,12 @@
+.updateImgPreview {
+    width: 250px;
+}
+
+image-cropper .cropper {
+    outline: rgb(0 0 0 / 75%) solid 100vw !important;
+}
+
+.cropperDimensions {
+    max-width: 350px;
+    max-height: auto;
+}

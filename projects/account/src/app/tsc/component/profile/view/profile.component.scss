@@ -1,0 +1,18 @@
+.profileImgContainer {
+    width: 90px;
+    min-height: 95px;
+    max-height: auto;
+    float: left;
+    margin: 3px;
+    padding: 3px;
+}
+
+.profileImgPageView {
+    width: 65px;
+}
+
+.profileImg {
+    aspect-ratio: 1/1;
+    max-width: 100%;
+    height: auto;
+}
